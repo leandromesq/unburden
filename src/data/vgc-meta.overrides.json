@@ -1,0 +1,13 @@
+{
+  "format": "gen9vgc2026",
+  "minWeightedUsage": 0.001,
+  "commonMoveLimit": 8,
+  "commonAbilityLimit": 3,
+  "speciesIdOverrides": {
+    "landorus": "landorustherian",
+    "urshifu": "urshifurapidstrike",
+    "ogerpon": "ogerponwellspring",
+    "indeedee": "indeedeef"
+  },
+  "profileOverrides": {}
+}

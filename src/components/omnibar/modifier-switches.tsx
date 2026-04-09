@@ -23,7 +23,7 @@ interface ModifierSwitchesProps {
 
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
-    <div className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-zinc-500">
+    <div className="theme-text-dim mb-3 text-xs font-semibold uppercase tracking-[0.24em]">
       {children}
     </div>
   );
@@ -31,7 +31,7 @@ function SectionLabel({ children }: { children: ReactNode }) {
 
 function GroupLabel({ children }: { children: ReactNode }) {
   return (
-    <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-zinc-400">
+    <div className="theme-text-muted mb-2 text-[11px] font-semibold uppercase tracking-[0.22em]">
       {children}
     </div>
   );
@@ -52,14 +52,15 @@ function ModifierButton({
     <button
       type="button"
       tabIndex={-1}
-      disabled={disabled || active}
+      aria-pressed={active}
+      disabled={disabled}
       onClick={onClick}
-      className={`rounded-full border px-3 py-2 text-sm transition ${
+      className={`rounded-full px-3 py-2 text-sm ${
         active
-          ? "cursor-default border-emerald-400/40 bg-emerald-400/10 text-emerald-200"
+          ? "theme-chip-active"
           : disabled
-            ? "cursor-not-allowed border-zinc-800 bg-zinc-950/50 text-zinc-600"
-            : "border-zinc-700 bg-zinc-900/85 text-zinc-300 hover:border-zinc-500 hover:text-zinc-100"
+            ? "theme-chip-disabled cursor-not-allowed"
+            : "theme-chip"
       }`}
     >
       {label}
@@ -83,7 +84,7 @@ function TokenGroup({
   emptyText?: string;
 }) {
   return (
-    <section className="rounded-2xl border border-zinc-800/80 bg-zinc-950/45 p-3">
+    <section className="theme-subpanel rounded-2xl p-3">
       <GroupLabel>{title}</GroupLabel>
       {tokens.length ? (
         <div className="flex flex-wrap gap-2">
@@ -102,7 +103,7 @@ function TokenGroup({
           })}
         </div>
       ) : (
-        <div className="text-sm text-zinc-600">{emptyText ?? "No options yet."}</div>
+        <div className="theme-text-faint text-sm">{emptyText ?? "No options yet."}</div>
       )}
     </section>
   );
@@ -120,7 +121,7 @@ function HpPercentageControl({
   const options = [25, 50, 75];
 
   return (
-    <section className="rounded-2xl border border-zinc-800/80 bg-zinc-950/45 p-3">
+    <section className="theme-subpanel rounded-2xl p-3">
       <GroupLabel>Current HP</GroupLabel>
       <div className="flex flex-wrap gap-2">
         {options.map((percent) => (
@@ -137,12 +138,16 @@ function HpPercentageControl({
           tabIndex={-1}
           disabled={disabled || value === null}
           onClick={() => onChange(null)}
-          className="rounded-full border border-zinc-700 bg-zinc-900/85 px-3 py-2 text-sm text-zinc-300 transition hover:border-zinc-500 hover:text-zinc-100 disabled:cursor-not-allowed disabled:border-zinc-800 disabled:bg-zinc-950/50 disabled:text-zinc-600"
+          className={`rounded-full px-3 py-2 text-sm ${
+            disabled || value === null
+              ? "theme-chip-disabled cursor-not-allowed"
+              : "theme-chip"
+          }`}
         >
           Reset
         </button>
       </div>
-      <div className="mt-2 text-sm text-zinc-500">
+      <div className="theme-text-dim mt-2 text-sm">
         {value === null ? "Default: full HP" : `Using ${value}% current HP`}
       </div>
     </section>
@@ -162,20 +167,11 @@ function StageControl({
   disabled?: boolean;
   onChange: (value: number) => void;
 }) {
-  const accentClass =
-    scope === "attacker" ? "accent-emerald-400" : "accent-sky-400";
-  const badgeClass =
-    scope === "attacker"
-      ? "border-emerald-400/25 bg-emerald-400/10 text-emerald-200"
-      : "border-sky-400/25 bg-sky-400/10 text-sky-200";
-
   return (
-    <section className="rounded-2xl border border-zinc-800/80 bg-zinc-950/45 p-3">
+    <section className="theme-subpanel rounded-2xl p-3">
       <div className="mb-3 flex items-center justify-between gap-3">
         <GroupLabel>{title}</GroupLabel>
-        <div
-          className={`rounded-full border px-2.5 py-1 font-mono text-xs ${badgeClass}`}
-        >
+        <div className="theme-badge rounded-full px-2.5 py-1 font-mono text-xs">
           {value > 0 ? `+${value}` : value}
         </div>
       </div>
@@ -184,7 +180,11 @@ function StageControl({
           type="button"
           tabIndex={-1}
           disabled={disabled || value <= -6}
-          className="h-9 w-9 rounded-full border border-zinc-700 bg-zinc-900/85 text-zinc-300 transition hover:border-zinc-500 hover:text-zinc-100 disabled:cursor-not-allowed disabled:border-zinc-800 disabled:bg-zinc-950/50 disabled:text-zinc-600"
+          className={`h-9 w-9 rounded-full ${
+            disabled || value <= -6
+              ? "theme-chip-disabled cursor-not-allowed"
+              : "theme-chip"
+          }`}
           onClick={() => onChange(Math.max(-6, value - 1))}
         >
           -
@@ -199,9 +199,13 @@ function StageControl({
             value={value}
             disabled={disabled}
             onChange={(event) => onChange(Number(event.currentTarget.value))}
-            className={`h-2 w-full cursor-pointer appearance-none rounded-full bg-zinc-800 ${accentClass} disabled:cursor-not-allowed`}
+            className="h-2 w-full cursor-pointer appearance-none rounded-full disabled:cursor-not-allowed"
+            style={{
+              background: "var(--surface-4)",
+              accentColor: "var(--accent)",
+            }}
           />
-          <div className="mt-2 flex justify-between font-mono text-[11px] text-zinc-500">
+          <div className="theme-text-dim mt-2 flex justify-between font-mono text-[11px]">
             <span>-6</span>
             <span>0</span>
             <span>+6</span>
@@ -211,21 +215,29 @@ function StageControl({
           type="button"
           tabIndex={-1}
           disabled={disabled || value >= 6}
-          className="h-9 w-9 rounded-full border border-zinc-700 bg-zinc-900/85 text-zinc-300 transition hover:border-zinc-500 hover:text-zinc-100 disabled:cursor-not-allowed disabled:border-zinc-800 disabled:bg-zinc-950/50 disabled:text-zinc-600"
+          className={`h-9 w-9 rounded-full ${
+            disabled || value >= 6
+              ? "theme-chip-disabled cursor-not-allowed"
+              : "theme-chip"
+          }`}
           onClick={() => onChange(Math.min(6, value + 1))}
         >
           +
         </button>
       </div>
       <div className="mt-3 flex items-center justify-between gap-3">
-        <div className="text-sm text-zinc-500">
+        <div className="theme-text-dim text-sm">
           {scope === "attacker" ? "Atk / SpA stage" : "Def / SpD stage"}
         </div>
         <button
           type="button"
           tabIndex={-1}
           disabled={disabled || value === 0}
-          className="rounded-full border border-zinc-700 bg-zinc-900/85 px-3 py-1.5 text-xs text-zinc-300 transition hover:border-zinc-500 hover:text-zinc-100 disabled:cursor-not-allowed disabled:border-zinc-800 disabled:bg-zinc-950/50 disabled:text-zinc-600"
+          className={`rounded-full px-3 py-1.5 text-xs ${
+            disabled || value === 0
+              ? "theme-chip-disabled cursor-not-allowed"
+              : "theme-chip"
+          }`}
           onClick={() => onChange(0)}
         >
           Reset
@@ -261,7 +273,7 @@ function SideColumn({
   onHpChange: (value: number | null) => void;
 }) {
   return (
-    <section className="rounded-[28px] border border-zinc-800/80 bg-zinc-950/50 p-4">
+    <section className="theme-panel rounded-[28px] p-4">
       <SectionLabel>{title}</SectionLabel>
       <div className="grid gap-3">
         <StageControl
@@ -389,8 +401,8 @@ export function ModifierSwitches({ textareaRef }: ModifierSwitchesProps) {
   };
 
   return (
-    <div className="border-t border-zinc-800/80 px-4 py-4">
-      <section className="mb-5 rounded-[28px] border border-zinc-800/80 bg-zinc-950/50 p-4">
+    <div className="theme-divider border-t px-4 py-4">
+      <section className="theme-panel mb-5 rounded-[28px] p-4">
         <SectionLabel>Global</SectionLabel>
         <div className="grid gap-3 md:grid-cols-3">
           <TokenGroup

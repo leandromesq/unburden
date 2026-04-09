@@ -13,16 +13,16 @@ export function normalizeKoText(value: string | undefined) {
 
 export function koTextTone(value: string) {
   if (/OHKO/i.test(value)) {
-    return "text-emerald-400";
+    return "theme-ko-strong";
   }
 
   if (/2HKO/i.test(value)) {
-    return "text-amber-300";
+    return "theme-ko-medium";
   }
 
   if (/[3-9]HKO/i.test(value)) {
-    return "text-rose-300";
+    return "theme-ko-soft";
   }
 
-  return "text-zinc-400";
+  return "theme-text-dim";
 }

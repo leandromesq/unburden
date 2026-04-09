@@ -12,21 +12,26 @@ export function OmniComposer() {
   const issues = useOmniStore((state) => state.issues);
   const calculationReady = useOmniStore((state) => state.calculationReady);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  const scrollToResults = () => {
+    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <section className="mx-auto w-full max-w-5xl text-left">
-      <div className="overflow-hidden rounded-[32px] border border-zinc-800 bg-[linear-gradient(180deg,rgba(18,20,28,0.98),rgba(10,12,18,0.98))] shadow-[0_24px_100px_rgba(0,0,0,0.42)]">
-        <OmniTextarea textareaRef={textareaRef} />
+      <div className="theme-composer rounded-[32px]">
+        <OmniTextarea textareaRef={textareaRef} onSubmitReady={scrollToResults} />
         <QuickSuggestions textareaRef={textareaRef} />
         <ModifierSwitches textareaRef={textareaRef} />
         {issues.length > 0 ? (
-          <div className="border-t border-zinc-800/80 px-5 py-3 text-sm text-zinc-500">
+          <div className="theme-divider theme-text-dim border-t px-5 py-3 text-sm">
             {issues[0]}
           </div>
         ) : null}
       </div>
       {calculationReady ? (
-        <div className="mt-5">
+        <div ref={resultsRef} className="mt-5">
           <ResultsPanel />
         </div>
       ) : null}

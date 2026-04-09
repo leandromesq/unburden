@@ -17,6 +17,7 @@ function summarize(nature: string, hp: number, def: number, spd: number) {
 
 export function getArchetypeConfigs(
   defender: PokemonEntry,
+  moveCategory: "Physical" | "Special",
   defenderNature?: string,
   defenderInvestment: "auto" | "max_def" | "max_spd" = "auto",
 ): ArchetypeConfig[] {
@@ -27,7 +28,11 @@ export function getArchetypeConfigs(
         ? false
         : defenderNature
           ? ["Bold", "Impish", "Relaxed", "Lax"].includes(defenderNature)
-          : defender.baseStats.def >= defender.baseStats.spd;
+          : moveCategory === "Physical"
+            ? true
+            : moveCategory === "Special"
+              ? false
+              : defender.baseStats.def >= defender.baseStats.spd;
   const glassNature = defenderNature ?? "Hardy";
   const midNature = defenderNature ?? "Hardy";
   const tankNature = defenderNature ?? (prioritizeDefense ? "Bold" : "Calm");

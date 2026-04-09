@@ -10,6 +10,7 @@ import {
   formatAbilityToken,
   formatModifierToken,
   normalizeModifierValue,
+  parseAbilitySymbol,
 } from "@/lib/parser/grammar";
 import { getAutocompleteState } from "@/lib/parser/inline-suggestions";
 import { compactWhitespace, joinTokenValues } from "@/lib/parser/tokenize";
@@ -86,7 +87,7 @@ function insertChipToken(input: string, scope: ChipScope, token: string) {
   const activeChips = buildActiveChipTokens(normalizedInput);
 
   if (activeChips[scope].includes(token)) {
-    return normalizedInput;
+    return removeChipToken(normalizedInput, scope, token);
   }
 
   const attackerTokens = structure.attacker.rawTokens.map((entry) => entry.raw);
@@ -113,6 +114,63 @@ function insertChipToken(input: string, scope: ChipScope, token: string) {
     : attackerTokens;
 
   return [...baseTokens, token].join(" ").trim();
+}
+
+function toCanonicalScopeToken(scope: ChipScope, raw: string) {
+  if (scope !== "global" && /^%\d{1,3}$/i.test(raw)) {
+    return raw;
+  }
+
+  const ability = parseAbilitySymbol(raw);
+  if (ability && scope !== "global" && ability.scope === scope) {
+    return formatAbilityToken(scope, ability.ability);
+  }
+
+  if (scope === "attacker" && (raw.startsWith(">") || raw.toLowerCase().startsWith("a:"))) {
+    const value = normalizeModifierValue(
+      raw.startsWith(">") ? raw.slice(1) : raw.slice(2),
+    );
+    return formatModifierToken("attacker", value);
+  }
+
+  if (scope === "defender" && (raw.startsWith("<") || raw.toLowerCase().startsWith("d:"))) {
+    const value = normalizeModifierValue(
+      raw.startsWith("<") ? raw.slice(1) : raw.slice(2),
+    );
+    return formatModifierToken("defender", value);
+  }
+
+  if (scope === "global" && (raw.startsWith("~") || raw.toLowerCase().startsWith("g:"))) {
+    const value = normalizeModifierValue(
+      raw.startsWith("~") ? raw.slice(1) : raw.slice(2),
+    );
+    return formatModifierToken("global", value);
+  }
+
+  return null;
+}
+
+function removeChipToken(input: string, scope: ChipScope, token: string) {
+  const normalizedInput = compactWhitespace(input);
+  const structure = analyzeCommandStructure(normalizedInput);
+  const attackerTokens = structure.attacker.rawTokens
+    .filter((entry) => toCanonicalScopeToken("attacker", entry.raw) !== token)
+    .map((entry) => entry.raw);
+  const defenderTokens = structure.defender.rawTokens
+    .filter((entry) => toCanonicalScopeToken("defender", entry.raw) !== token)
+    .map((entry) => entry.raw);
+  const baseTokens = structure.lexed.hasDelimiter
+    ? [...attackerTokens, "x", ...defenderTokens]
+    : attackerTokens;
+
+  if (scope === "global") {
+    return baseTokens
+      .filter((entry) => toCanonicalScopeToken("global", entry) !== token)
+      .join(" ")
+      .trim();
+  }
+
+  return baseTokens.join(" ").trim();
 }
 
 function stripStatModifierTokens(

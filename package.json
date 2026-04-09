@@ -9,7 +9,9 @@
     "lint": "eslint",
     "test": "jest",
     "test:watch": "jest --watch",
-    "generate:data": "tsx scripts/generate-static-data.ts"
+    "generate:data": "tsx scripts/generate-static-data.ts",
+    "generate:vgc-meta": "tsx scripts/generate-vgc-meta.ts",
+    "generate:all": "npm run generate:data && npm run generate:vgc-meta"
   },
   "dependencies": {
     "@pkmn/data": "^0.10.7",

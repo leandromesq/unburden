@@ -376,6 +376,7 @@ export function buildCalculationContext(parsed: ParsedCommand) {
     defenderAbility,
     archetypes: getArchetypeConfigs(
       defender,
+      move.category as "Physical" | "Special",
       parsed.defenderNature,
       parsed.defenderInvestment ?? "auto",
     ),

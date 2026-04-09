@@ -2,6 +2,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import { createRef } from "react";
 
 import { ModifierSwitches } from "@/components/omnibar/modifier-switches";
+import { OmniComposer } from "@/components/omnibar/omni-composer";
 import { OmniTextarea } from "@/components/omnibar/omni-textarea";
 import { QuickSuggestions } from "@/components/omnibar/quick-suggestions";
 import { ResultsPanel } from "@/components/omnibar/results-panel";
@@ -48,7 +49,7 @@ describe("omnibar components", () => {
     expect(useOmniStore.getState().input).toBe("flutter mane !moonblast");
   });
 
-  test("modifier chip inserts only once for the current input", () => {
+  test("modifier chip toggles its token in the current input", () => {
     const textareaRef = createRef<HTMLTextAreaElement>();
 
     render(<ModifierSwitches textareaRef={textareaRef} />);
@@ -60,11 +61,13 @@ describe("omnibar components", () => {
     });
 
     fireEvent.click(screen.getByRole("button", { name: /^Rain$/i }));
-    fireEvent.click(screen.getByRole("button", { name: /^Rain$/i }));
-
     expect(useOmniStore.getState().input).toBe(
       "flutter mane !moonblast x ogerpon ~rain",
     );
+
+    fireEvent.click(screen.getByRole("button", { name: /^Rain$/i }));
+
+    expect(useOmniStore.getState().input).toBe("flutter mane !moonblast x ogerpon");
   });
 
   test("stage slider rewrites attacker and defender stages intuitively", () => {
@@ -152,5 +155,24 @@ describe("omnibar components", () => {
 
     expect(document.activeElement).toBe(textareaRef.current);
     expect(useOmniStore.getState().input).toBe("flutter mane !moonblast x ogerpon");
+  });
+
+  test("Enter scrolls to the results when a calculation is ready", () => {
+    const scrollIntoView = jest.fn();
+
+    Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
+      configurable: true,
+      value: scrollIntoView,
+    });
+
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("flutter mane !moonblast x ogerpon");
+    });
+
+    fireEvent.keyDown(screen.getByTestId("omni-textarea"), { key: "Enter" });
+
+    expect(scrollIntoView).toHaveBeenCalled();
   });
 });

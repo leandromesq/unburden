@@ -7,16 +7,17 @@ import { useOmniStore } from "@/store/use-omni-store";
 
 interface OmniTextareaProps {
   textareaRef: RefObject<HTMLTextAreaElement | null>;
+  onSubmitReady?: () => void;
 }
 
 const MAX_TEXTAREA_HEIGHT = 176;
 
-export function OmniTextarea({ textareaRef }: OmniTextareaProps) {
+export function OmniTextarea({ textareaRef, onSubmitReady }: OmniTextareaProps) {
   const input = useOmniStore((state) => state.input);
   const activeSuggestion = useOmniStore((state) => state.activeSuggestion);
+  const calculationReady = useOmniStore((state) => state.calculationReady);
   const setInput = useOmniStore((state) => state.setInput);
   const applySuggestion = useOmniStore((state) => state.applySuggestion);
-  const [scrollState, setScrollState] = useState({ left: 0, top: 0 });
   const [caretAtEnd, setCaretAtEnd] = useState(true);
   const localRef = useRef<HTMLTextAreaElement>(null);
   const ref = textareaRef ?? localRef;
@@ -50,7 +51,7 @@ export function OmniTextarea({ textareaRef }: OmniTextareaProps) {
         value={input}
         spellCheck={false}
         placeholder="flutter mane !moonblast %75 * >+1 x ogerpon %50 <+nature ~rain"
-        className="relative z-10 block min-h-[88px] w-full resize-none border-0 bg-transparent px-5 py-4 text-left font-mono text-lg leading-8 tracking-[-0.02em] text-zinc-100 outline-none placeholder:text-zinc-500 md:text-xl"
+        className="theme-input relative z-10 block min-h-[88px] w-full resize-none border-0 bg-transparent px-5 py-4 text-left font-mono text-lg leading-8 tracking-[-0.02em] outline-none md:text-xl"
         onChange={(event) => setInput(event.target.value)}
         onKeyDown={(event) => {
           if (event.key === "Tab") {
@@ -70,6 +71,11 @@ export function OmniTextarea({ textareaRef }: OmniTextareaProps) {
               });
             }
           }
+
+          if (event.key === "Enter" && !event.shiftKey && calculationReady) {
+            event.preventDefault();
+            onSubmitReady?.();
+          }
         }}
         onSelect={(event) => {
           const element = event.currentTarget;
@@ -78,19 +84,8 @@ export function OmniTextarea({ textareaRef }: OmniTextareaProps) {
               element.selectionEnd === element.value.length,
           );
         }}
-        onScroll={(event) => {
-          setScrollState({
-            left: event.currentTarget.scrollLeft,
-            top: event.currentTarget.scrollTop,
-          });
-        }}
       />
-      <GhostSuggestion
-        value={input}
-        ghostText={ghostText}
-        scrollLeft={scrollState.left}
-        scrollTop={scrollState.top}
-      />
+      <GhostSuggestion value={input} ghostText={ghostText} textareaRef={ref} />
     </div>
   );
 }

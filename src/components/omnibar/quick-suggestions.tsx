@@ -23,7 +23,7 @@ export function QuickSuggestions({ textareaRef }: QuickSuggestionsProps) {
           key={`${option.value}-${index}`}
           type="button"
           tabIndex={-1}
-          className="rounded-full border border-zinc-700 bg-zinc-900/85 px-3 py-1.5 text-sm text-zinc-300 transition hover:border-zinc-500 hover:text-zinc-100"
+          className="theme-chip rounded-full px-3 py-1.5 text-sm"
           onClick={() => {
             applySuggestionText(option.applyText);
             requestAnimationFrame(() => {
@@ -38,9 +38,11 @@ export function QuickSuggestions({ textareaRef }: QuickSuggestionsProps) {
             });
           }}
         >
-          <span className="font-mono text-zinc-100">{option.value}</span>
+          <span className="font-mono" style={{ color: "var(--text)" }}>
+            {option.value}
+          </span>
           {option.label !== option.value ? (
-            <span className="ml-2 text-zinc-500">{option.label}</span>
+            <span className="theme-text-dim ml-2">{option.label}</span>
           ) : null}
         </button>
       ))}

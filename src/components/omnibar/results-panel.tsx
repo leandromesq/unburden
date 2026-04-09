@@ -6,7 +6,7 @@ import { useOmniStore } from "@/store/use-omni-store";
 
 function BlockTitle({ archetype }: { archetype: string }) {
   return (
-    <div className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-500">
+    <div className="theme-text-dim text-xs font-semibold uppercase tracking-[0.24em]">
       {archetype === "glass" ? "Min Bulk" : archetype === "mid" ? "Mid Bulk" : "Max Bulk"}
     </div>
   );
@@ -34,27 +34,29 @@ export function ResultsPanel() {
         return (
           <article
             key={result.archetype}
-            className="rounded-[28px] border border-zinc-800 bg-zinc-950/75 p-4 shadow-[0_10px_40px_rgba(0,0,0,0.22)]"
+            className="theme-panel rounded-[28px] p-4"
           >
             <div className="mb-3 flex items-start justify-between gap-3">
               <div>
                 <BlockTitle archetype={result.archetype} />
-                <div className="mt-2 text-sm text-zinc-500">{archetype.summary}</div>
+                <div className="theme-text-dim mt-2 text-sm">{archetype.summary}</div>
               </div>
               <div className={`text-sm font-medium ${koTextTone(result.koChanceText)}`}>
                 {result.koChanceText}
               </div>
             </div>
-            <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/70 px-4 py-3">
-              <div className="text-sm leading-6 text-zinc-200">{result.contextText}</div>
-              <div className="mt-2 font-mono text-base text-zinc-50">{result.damageText}</div>
+            <div className="theme-subpanel rounded-2xl px-4 py-3">
+              <div className="theme-text-muted text-sm leading-6">{result.contextText}</div>
+              <div className="mt-2 font-mono text-base" style={{ color: "var(--text)" }}>
+                {result.damageText}
+              </div>
             </div>
             {result.assumptions.length ? (
               <div className="mt-3 flex flex-wrap gap-2">
                 {result.assumptions.map((assumption) => (
                   <div
                     key={`${result.archetype}-${assumption}`}
-                    className="rounded-full border border-zinc-800 bg-zinc-900/60 px-3 py-1.5 text-xs text-zinc-300"
+                    className="theme-chip rounded-full px-3 py-1.5 text-xs"
                   >
                     {assumption}
                   </div>

@@ -47,4 +47,20 @@ describe("damage engine", () => {
     expect(result.assumptions).toContain("Defender HP: 50%");
     expect(result.assumptions).toContain("Critical hit");
   });
+
+  test("auto max bulk prioritizes the relevant defense for the move category", () => {
+    const physicalParsed = parseCommand("incineroar !flare-blitz x tinkaton").parsed;
+    const specialParsed = parseCommand("flutter mane !moonblast x tinkaton").parsed;
+    const physicalContext = buildCalculationContext(physicalParsed!);
+    const specialContext = buildCalculationContext(specialParsed!);
+
+    expect(physicalContext?.archetypes[2]).toMatchObject({
+      evs: { hp: 252, def: 252, spd: 4 },
+      nature: "Bold",
+    });
+    expect(specialContext?.archetypes[2]).toMatchObject({
+      evs: { hp: 252, def: 4, spd: 252 },
+      nature: "Calm",
+    });
+  });
 });

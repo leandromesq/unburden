@@ -1,18 +1,71 @@
 "use client";
 
+import { useLayoutEffect, useRef, type RefObject } from "react";
+
 interface GhostSuggestionProps {
   value: string;
   ghostText: string;
-  scrollLeft: number;
-  scrollTop: number;
+  textareaRef: RefObject<HTMLTextAreaElement | null>;
 }
 
-export function GhostSuggestion({
-  value,
-  ghostText,
-  scrollLeft,
-  scrollTop,
-}: GhostSuggestionProps) {
+const TEXT_MIRROR_STYLE_KEYS = [
+  "borderTopWidth",
+  "borderRightWidth",
+  "borderBottomWidth",
+  "borderLeftWidth",
+  "boxSizing",
+  "fontFamily",
+  "fontFeatureSettings",
+  "fontKerning",
+  "fontSize",
+  "fontStretch",
+  "fontStyle",
+  "fontVariant",
+  "fontVariantLigatures",
+  "fontWeight",
+  "letterSpacing",
+  "lineHeight",
+  "paddingTop",
+  "paddingRight",
+  "paddingBottom",
+  "paddingLeft",
+  "tabSize",
+  "textAlign",
+  "textIndent",
+  "textRendering",
+  "textTransform",
+  "whiteSpace",
+  "wordBreak",
+  "wordSpacing",
+  "overflowWrap",
+  "direction",
+] as const;
+
+export function GhostSuggestion({ value, ghostText, textareaRef }: GhostSuggestionProps) {
+  const flowRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const textarea = textareaRef.current;
+    const flow = flowRef.current;
+
+    if (!textarea || !flow || !ghostText) {
+      return;
+    }
+
+    const computedStyle = window.getComputedStyle(textarea);
+
+    flow.style.width = `${textarea.clientWidth}px`;
+    flow.style.transform = `translate(${-textarea.scrollLeft}px, ${-textarea.scrollTop}px)`;
+
+    for (const key of TEXT_MIRROR_STYLE_KEYS) {
+      flow.style[key] = computedStyle[key];
+    }
+
+    flow.style.whiteSpace = "pre-wrap";
+    flow.style.wordBreak = "break-word";
+    flow.style.overflowWrap = "break-word";
+  }, [ghostText, textareaRef, value]);
+
   if (!ghostText) {
     return null;
   }
@@ -20,15 +73,11 @@ export function GhostSuggestion({
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 overflow-hidden px-5 py-4 text-left text-lg leading-8 text-zinc-500 md:text-xl"
+      className="pointer-events-none absolute inset-0 overflow-hidden"
     >
-      <div
-        className="whitespace-pre-wrap break-words text-left font-mono tracking-[-0.02em]"
-        data-testid="ghost-suggestion"
-        style={{ transform: `translate(${-scrollLeft}px, ${-scrollTop}px)` }}
-      >
-        <span className="invisible">{value}</span>
-        <span>{ghostText}</span>
+      <div ref={flowRef} data-testid="ghost-suggestion">
+        <span className="invisible">{value || "\u200b"}</span>
+        <span className="theme-ghost-text">{ghostText}</span>
       </div>
     </div>
   );
