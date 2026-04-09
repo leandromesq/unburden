@@ -1,0 +1,94 @@
+[
+  {
+    "alias": "bloodmoon",
+    "pokemonId": "ursalunabloodmoon"
+  },
+  {
+    "alias": "bloodmoon ursaluna",
+    "pokemonId": "ursalunabloodmoon"
+  },
+  {
+    "alias": "bm ursaluna",
+    "pokemonId": "ursalunabloodmoon"
+  },
+  {
+    "alias": "firepon",
+    "pokemonId": "ogerponhearthflame"
+  },
+  {
+    "alias": "fmane",
+    "pokemonId": "fluttermane"
+  },
+  {
+    "alias": "indeedee",
+    "pokemonId": "indeedeef"
+  },
+  {
+    "alias": "lando",
+    "pokemonId": "landorustherian"
+  },
+  {
+    "alias": "lando t",
+    "pokemonId": "landorustherian"
+  },
+  {
+    "alias": "landorus",
+    "pokemonId": "landorustherian"
+  },
+  {
+    "alias": "ogerpon",
+    "pokemonId": "ogerponwellspring"
+  },
+  {
+    "alias": "ogerpon cornerstone",
+    "pokemonId": "ogerponcornerstone"
+  },
+  {
+    "alias": "ogerpon fire",
+    "pokemonId": "ogerponhearthflame"
+  },
+  {
+    "alias": "ogerpon hearthflame",
+    "pokemonId": "ogerponhearthflame"
+  },
+  {
+    "alias": "ogerpon rock",
+    "pokemonId": "ogerponcornerstone"
+  },
+  {
+    "alias": "ogerpon water",
+    "pokemonId": "ogerponwellspring"
+  },
+  {
+    "alias": "p2",
+    "pokemonId": "porygon2"
+  },
+  {
+    "alias": "rapid urshifu",
+    "pokemonId": "urshifurapidstrike"
+  },
+  {
+    "alias": "rbolt",
+    "pokemonId": "ragingbolt"
+  },
+  {
+    "alias": "rockpon",
+    "pokemonId": "ogerponcornerstone"
+  },
+  {
+    "alias": "ursaluna bloodmoon",
+    "pokemonId": "ursalunabloodmoon"
+  },
+  {
+    "alias": "urshifu",
+    "pokemonId": "urshifurapidstrike"
+  },
+  {
+    "alias": "urshifu water",
+    "pokemonId": "urshifurapidstrike"
+  },
+  {
+    "alias": "waterpon",
+    "pokemonId": "ogerponwellspring"
+  }
+]

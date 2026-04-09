@@ -1,0 +1,3506 @@
+[
+  {
+    "pokemonId": "abomasnow",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "aipom",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "alcremie",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "alomomola",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "altaria",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ambipom",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "amoonguss",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ampharos",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "annihilape",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "appletun",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "applin",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "araquanid",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arbok",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arboliva",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arcanine",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arcaninehisui",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arceus",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arceusbug",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arceusdark",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arceusdragon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arceuselectric",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arceusfairy",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arceusfighting",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arceusfire",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arceusflying",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arceusghost",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arceusgrass",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arceusground",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arceusice",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arceuspoison",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arceuspsychic",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arceusrock",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arceussteel",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arceuswater",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "archaludon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arctibax",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ariados",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "armarouge",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "arrokuda",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "articuno",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "articunogalar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "avalugg",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "avalugghisui",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "axew",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "azelf",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "azumarill",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "azurill",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "bagon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "banette",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "barboach",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "barraskewda",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "basculegion",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "basculegionf",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "basculin",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "basculinbluestriped",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "basculinwhitestriped",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "bastiodon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "baxcalibur",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "bayleef",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "beartic",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "beldum",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "bellibolt",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "bellossom",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "bellsprout",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "bergmite",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "bisharp",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "blastoise",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "blaziken",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "blissey",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "blitzle",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "bombirdier",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "bonsly",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "bounsweet",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "braixen",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "brambleghast",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "bramblin",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "braviary",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "braviaryhisui",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "breloom",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "brionne",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "bronzong",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "bronzor",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "brutebonnet",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "bruxish",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "buizel",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "bulbasaur",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cacnea",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cacturne",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "calyrex",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "calyrexice",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "calyrexshadow",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "camerupt",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "capsakid",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "carbink",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "carkol",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ceruledge",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cetitan",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cetoddle",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "chandelure",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "chansey",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "charcadet",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "charizard",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "charjabug",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "charmander",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "charmeleon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "chesnaught",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "chespin",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "chewtle",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "chienpao",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "chikorita",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "chimchar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "chimecho",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "chinchou",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "chingling",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "chiyu",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cinccino",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cinderace",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "clauncher",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "clawitzer",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "clefable",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "clefairy",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cleffa",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "clodsire",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cloyster",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "coalossal",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cobalion",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "combee",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "combusken",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "comfey",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "conkeldurr",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "copperajah",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "corphish",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "corviknight",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "corvisquire",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cosmoem",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cosmog",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cottonee",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "crabominable",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "crabrawler",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cramorant",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cramorantgorging",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cramorantgulping",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cranidos",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "crawdaunt",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cresselia",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "croagunk",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "crocalor",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "croconaw",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cryogonal",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cubchoo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cufant",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cutiefly",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cyclizar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "cyndaquil",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dachsbun",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "darkrai",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dartrix",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "decidueye",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "decidueyehisui",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dedenne",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "deerling",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "deino",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "delibird",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "delphox",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "deoxys",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "deoxysattack",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "deoxysdefense",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "deoxysspeed",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dewgong",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dewott",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dewpider",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dialga",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dialgaorigin",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "diancie",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "diglett",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "diglettalola",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dipplin",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ditto",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dodrio",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "doduo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dolliv",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dondozo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "donphan",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dragalge",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dragapult",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dragonair",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dragonite",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "drakloak",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dratini",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "drednaw",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dreepy",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "drifblim",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "drifloon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "drilbur",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "drizzile",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "drowzee",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ducklett",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dudunsparce",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dudunsparcethreesegment",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dugtrio",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dugtrioalola",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dunsparce",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "duosion",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "duraludon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dusclops",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "dusknoir",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "duskull",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "eelektrik",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "eelektross",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "eevee",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "eiscue",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "eiscuenoice",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ekans",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "electabuzz",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "electivire",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "electrode",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "electrodehisui",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "elekid",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "emboar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "empoleon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "enamorus",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "enamorustherian",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "entei",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "espathra",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "espeon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "espurr",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "eternatus",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "excadrill",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "exeggcute",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "exeggutor",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "exeggutoralola",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "falinks",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "farigiraf",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "feebas",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "fennekin",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "feraligatr",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "fezandipiti",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "fidough",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "finizen",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "finneon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "flaaffy",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "flabebe",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "flamigo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "flapple",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "flareon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "fletchinder",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "fletchling",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "flittle",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "floatzel",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "floette",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "floragato",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "florges",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "fluttermane",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "flygon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "fomantis",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "foongus",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "forretress",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "fraxure",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "frigibax",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "froakie",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "frogadier",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "froslass",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "frosmoth",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "fuecoco",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "furret",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gabite",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gallade",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "galvantula",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "garchomp",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gardevoir",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "garganacl",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gastly",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gastrodon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gengar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "geodude",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "geodudealola",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gholdengo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gible",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gimmighoul",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gimmighoulroaming",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "girafarig",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "giratina",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "giratinaorigin",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "glaceon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "glalie",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "glastrier",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gligar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "glimmet",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "glimmora",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gliscor",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gloom",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gogoat",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "golduck",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "golem",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "golemalola",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "golett",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "golurk",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "goodra",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "goodrahisui",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "goomy",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gothita",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gothitelle",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gothorita",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gougingfire",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "grafaiai",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "granbull",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "graveler",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "graveleralola",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "greattusk",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "greavard",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "greedent",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "greninja",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "greninjabond",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "grimer",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "grimeralola",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "grimmsnarl",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "grookey",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "grotle",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "groudon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "grovyle",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "growlithe",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "growlithehisui",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "grubbin",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "grumpig",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gulpin",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gumshoos",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gurdurr",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "gyarados",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "hakamoo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "happiny",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "hariyama",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "hatenna",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "hatterene",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "hattrem",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "haunter",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "hawlucha",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "haxorus",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "heatran",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "heracross",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "hippopotas",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "hippowdon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "hitmonchan",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "hitmonlee",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "hitmontop",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "honchkrow",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "hooh",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "hoopa",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "hoopaunbound",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "hoothoot",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "hoppip",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "horsea",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "houndoom",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "houndour",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "houndstone",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "hydrapple",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "hydreigon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "hypno",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "igglybuff",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "illumise",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "impidimp",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "incineroar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "indeedee",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "indeedeef",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "infernape",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "inkay",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "inteleon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ironboulder",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ironbundle",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ironcrown",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ironhands",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ironjugulis",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ironleaves",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ironmoth",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ironthorns",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "irontreads",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ironvaliant",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ivysaur",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "jangmoo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "jigglypuff",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "jirachi",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "jolteon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "joltik",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "jumpluff",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "keldeo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "keldeoresolute",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "kilowattrel",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "kingambit",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "kingdra",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "kirlia",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "klawf",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "kleavor",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "klefki",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "koffing",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "komala",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "kommoo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "koraidon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "kricketot",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "kricketune",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "krokorok",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "krookodile",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "kubfu",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "kyogre",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "kyurem",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "kyuremblack",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "kyuremwhite",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "lampent",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "landorus",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "landorustherian",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "lanturn",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "lapras",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "larvesta",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "larvitar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "latias",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "latios",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "leafeon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "leavanny",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "lechonk",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "lilligant",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "lilliganthisui",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "litleo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "litten",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "litwick",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "lokix",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "lombre",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "lotad",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "lucario",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ludicolo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "lugia",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "lumineon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "lunala",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "lurantis",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "luvdisc",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "luxio",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "luxray",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "lycanroc",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "lycanrocdusk",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "lycanrocmidnight",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mabosstiff",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "magby",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "magcargo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "magearna",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "magearnaoriginal",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "magikarp",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "magmar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "magmortar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "magnemite",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "magneton",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "magnezone",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "makuhita",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "malamar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mamoswine",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "manaphy",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mandibuzz",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mankey",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mareanie",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mareep",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "marill",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "marshtomp",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "maschiff",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "masquerain",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "maushold",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mausholdfour",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "medicham",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "meditite",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "meganium",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "meloetta",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "meloettapirouette",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "meowscarada",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "meowstic",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "meowsticf",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "meowth",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "meowthalola",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "meowthgalar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mesprit",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "metagross",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "metang",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mew",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mewtwo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mienfoo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mienshao",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mightyena",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "milcery",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "milotic",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mimikyu",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mimikyubusted",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "minccino",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "minior",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "miniormeteor",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "minun",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "miraidon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "misdreavus",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mismagius",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "moltres",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "moltresgalar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "monferno",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "morgrem",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "morpeko",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "morpekohangry",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mudbray",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mudkip",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mudsdale",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "muk",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "mukalola",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "munchlax",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "munkidori",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "murkrow",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "nacli",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "naclstack",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "necrozma",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "necrozmadawnwings",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "necrozmaduskmane",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ninetales",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ninetalesalola",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "noctowl",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "noibat",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "noivern",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "nosepass",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "numel",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "nuzleaf",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "nymble",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "oddish",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ogerpon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ogerponcornerstone",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ogerponcornerstonetera",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ogerponhearthflame",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ogerponhearthflametera",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ogerpontealtera",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ogerponwellspring",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ogerponwellspringtera",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "oinkologne",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "oinkolognef",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "okidogi",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "oranguru",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "oricorio",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "oricoriopau",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "oricoriopompom",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "oricoriosensu",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "orthworm",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "oshawott",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "overqwil",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pachirisu",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "palafin",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "palafinhero",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "palkia",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "palkiaorigin",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "palossand",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "passimian",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pawmi",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pawmo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pawmot",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pawniard",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pecharunt",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pelipper",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "perrserker",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "persian",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "persianalola",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "petilil",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "phanpy",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "phantump",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "phione",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pichu",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pignite",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pikachu",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pikachualola",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pikachuhoenn",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pikachukalos",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pikachuoriginal",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pikachupartner",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pikachusinnoh",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pikachuunova",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pikachuworld",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pikipek",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "piloswine",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pincurchin",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pineco",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "piplup",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "plusle",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "politoed",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "poliwag",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "poliwhirl",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "poliwrath",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "poltchageist",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "poltchageistartisan",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "polteageist",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "polteageistantique",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "poochyena",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "popplio",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "porygon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "porygon2",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "porygonz",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "primarina",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "primeape",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "prinplup",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "probopass",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "psyduck",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pupitar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "pyroar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "quagsire",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "quaquaval",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "quaxly",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "quaxwell",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "quilava",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "quilladin",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "qwilfish",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "qwilfishhisui",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "raboot",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rabsca",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ragingbolt",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "raichu",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "raichualola",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "raikou",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ralts",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rampardos",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rayquaza",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "regice",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "regidrago",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "regieleki",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "regigigas",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "regirock",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "registeel",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rellor",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "reshiram",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "reuniclus",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "revavroom",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rhydon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rhyhorn",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rhyperior",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ribombee",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rillaboom",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "riolu",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "roaringmoon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rockruff",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rockruffdusk",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rolycoly",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rookidee",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rotom",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rotomfan",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rotomfrost",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rotomheat",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rotommow",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rotomwash",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rowlet",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "rufflet",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sableye",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "salamence",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "salandit",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "salazzle",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "samurott",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "samurotthisui",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sandaconda",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sandile",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sandshrew",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sandshrewalola",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sandslash",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sandslashalola",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sandygast",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sandyshocks",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sawsbuck",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "scatterbug",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sceptile",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "scizor",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "scorbunny",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "scovillain",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "scrafty",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "scraggy",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "screamtail",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "scyther",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "seadra",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "seedot",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "seel",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sentret",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "serperior",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "servine",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "seviper",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sewaddle",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "shaymin",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "shayminsky",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "shelgon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "shellder",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "shellos",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "shieldon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "shiftry",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "shinx",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "shroodle",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "shroomish",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "shuppet",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "silicobra",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sinistcha",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sinistchamasterpiece",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sinistea",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sinisteaantique",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "skarmory",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "skeledirge",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "skiddo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "skiploom",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "skrelp",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "skuntank",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "skwovet",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "slaking",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "slakoth",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sliggoo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sliggoohisui",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "slitherwing",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "slowbro",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "slowbrogalar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "slowking",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "slowkinggalar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "slowpoke",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "slowpokegalar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "slugma",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "smeargle",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "smoliv",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sneasel",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sneaselhisui",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sneasler",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "snivy",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "snom",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "snorlax",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "snorunt",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "snover",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "snubbull",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sobble",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "solgaleo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "solosis",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "spectrier",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "spewpa",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "spidops",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "spinarak",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "spiritomb",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "spoink",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sprigatito",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "squawkabilly",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "squawkabillyblue",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "squawkabillywhite",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "squawkabillyyellow",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "squirtle",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "stantler",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "staraptor",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "staravia",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "starly",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "steenee",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "stonjourner",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "stunky",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sudowoodo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "suicune",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sunflora",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sunkern",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "surskit",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "swablu",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "swadloon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "swalot",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "swampert",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "swanna",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "swinub",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "sylveon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tadbulb",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "talonflame",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tandemaus",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tarountula",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tatsugiri",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tatsugiridroopy",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tatsugiristretchy",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tauros",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "taurospaldeaaqua",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "taurospaldeablaze",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "taurospaldeacombat",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "teddiursa",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tentacool",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tentacruel",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tepig",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "terapagos",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "terapagosstellar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "terapagosterastal",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "terrakion",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "thundurus",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "thundurustherian",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "thwackey",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "timburr",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tinglu",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tinkatink",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tinkaton",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tinkatuff",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "toedscool",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "toedscruel",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "torchic",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "torkoal",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tornadus",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tornadustherian",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "torracat",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "torterra",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "totodile",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "toucannon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "toxapex",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "toxel",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "toxicroak",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "toxtricity",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "toxtricitylowkey",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "trapinch",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "treecko",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "trevenant",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tropius",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "trumbeak",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tsareena",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "turtwig",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tynamo",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "typhlosion",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "typhlosionhisui",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tyranitar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "tyrogue",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "umbreon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ursaluna",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ursalunabloodmoon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "ursaring",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "urshifu",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "urshifurapidstrike",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "uxie",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "vaporeon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "varoom",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "veluza",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "venomoth",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "venonat",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "venusaur",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "vespiquen",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "vibrava",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "victreebel",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "vigoroth",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "vikavolt",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "vileplume",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "virizion",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "vivillon",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "vivillonfancy",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "vivillonpokeball",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "volbeat",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "volcanion",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "volcarona",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "voltorb",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "voltorbhisui",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "vullaby",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "vulpix",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "vulpixalola",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "walkingwake",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "wartortle",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "wattrel",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "weavile",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "weepinbell",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "weezing",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "weezinggalar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "whimsicott",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "whiscash",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "wigglytuff",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "wiglett",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "wingull",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "wochien",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "wooper",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "wooperpaldea",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "wugtrio",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "wyrdeer",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "yanma",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "yanmega",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "yungoos",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "zacian",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "zaciancrowned",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "zamazenta",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "zamazentacrowned",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "zangoose",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "zapdos",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "zapdosgalar",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "zarude",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "zarudedada",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "zebstrika",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "zekrom",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "zoroark",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "zoroarkhisui",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "zorua",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "zoruahisui",
+    "moveIds": []
+  },
+  {
+    "pokemonId": "zweilous",
+    "moveIds": []
+  }
+]

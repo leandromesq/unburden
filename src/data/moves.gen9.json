@@ -1,0 +1,9417 @@
+[
+  {
+    "id": "absorb",
+    "name": "Absorb",
+    "aliases": [
+      "absorb"
+    ],
+    "type": "Grass",
+    "category": "Special",
+    "basePower": 20,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "accelerock",
+    "name": "Accelerock",
+    "aliases": [
+      "accelerock"
+    ],
+    "type": "Rock",
+    "category": "Physical",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "acid",
+    "name": "Acid",
+    "aliases": [
+      "acid"
+    ],
+    "type": "Poison",
+    "category": "Special",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "acidarmor",
+    "name": "Acid Armor",
+    "aliases": [
+      "acid armor",
+      "acidarmor"
+    ],
+    "type": "Poison",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "acidspray",
+    "name": "Acid Spray",
+    "aliases": [
+      "acid spray",
+      "acidspray"
+    ],
+    "type": "Poison",
+    "category": "Special",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "acrobatics",
+    "name": "Acrobatics",
+    "aliases": [
+      "acrobatics"
+    ],
+    "type": "Flying",
+    "category": "Physical",
+    "basePower": 55,
+    "accuracy": 100,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "acupressure",
+    "name": "Acupressure",
+    "aliases": [
+      "acupressure"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "adjacentAllyOrSelf",
+    "isSpread": false
+  },
+  {
+    "id": "aerialace",
+    "name": "Aerial Ace",
+    "aliases": [
+      "aerial ace",
+      "aerialace"
+    ],
+    "type": "Flying",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": null,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "aeroblast",
+    "name": "Aeroblast",
+    "aliases": [
+      "aeroblast"
+    ],
+    "type": "Flying",
+    "category": "Special",
+    "basePower": 100,
+    "accuracy": 95,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "afteryou",
+    "name": "After You",
+    "aliases": [
+      "after you",
+      "afteryou"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "agility",
+    "name": "Agility",
+    "aliases": [
+      "agility"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "aircutter",
+    "name": "Air Cutter",
+    "aliases": [
+      "air cutter",
+      "aircutter"
+    ],
+    "type": "Flying",
+    "category": "Special",
+    "basePower": 60,
+    "accuracy": 95,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "airslash",
+    "name": "Air Slash",
+    "aliases": [
+      "air slash",
+      "airslash"
+    ],
+    "type": "Flying",
+    "category": "Special",
+    "basePower": 75,
+    "accuracy": 95,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "alluringvoice",
+    "name": "Alluring Voice",
+    "aliases": [
+      "alluring voice",
+      "alluringvoice"
+    ],
+    "type": "Fairy",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "allyswitch",
+    "name": "Ally Switch",
+    "aliases": [
+      "ally switch",
+      "allyswitch"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "amnesia",
+    "name": "Amnesia",
+    "aliases": [
+      "amnesia"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "ancientpower",
+    "name": "Ancient Power",
+    "aliases": [
+      "ancient power",
+      "ancientpower"
+    ],
+    "type": "Rock",
+    "category": "Special",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "appleacid",
+    "name": "Apple Acid",
+    "aliases": [
+      "apple acid",
+      "appleacid"
+    ],
+    "type": "Grass",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "aquacutter",
+    "name": "Aqua Cutter",
+    "aliases": [
+      "aqua cutter",
+      "aquacutter"
+    ],
+    "type": "Water",
+    "category": "Physical",
+    "basePower": 70,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "aquajet",
+    "name": "Aqua Jet",
+    "aliases": [
+      "aqua jet",
+      "aquajet"
+    ],
+    "type": "Water",
+    "category": "Physical",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "aquaring",
+    "name": "Aqua Ring",
+    "aliases": [
+      "aqua ring",
+      "aquaring"
+    ],
+    "type": "Water",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "aquastep",
+    "name": "Aqua Step",
+    "aliases": [
+      "aqua step",
+      "aquastep"
+    ],
+    "type": "Water",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "aquatail",
+    "name": "Aqua Tail",
+    "aliases": [
+      "aqua tail",
+      "aquatail"
+    ],
+    "type": "Water",
+    "category": "Physical",
+    "basePower": 90,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "armthrust",
+    "name": "Arm Thrust",
+    "aliases": [
+      "arm thrust",
+      "armthrust"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 15,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "armorcannon",
+    "name": "Armor Cannon",
+    "aliases": [
+      "armor cannon",
+      "armorcannon"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "aromaticmist",
+    "name": "Aromatic Mist",
+    "aliases": [
+      "aromatic mist",
+      "aromaticmist"
+    ],
+    "type": "Fairy",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "adjacentAlly",
+    "isSpread": false
+  },
+  {
+    "id": "assurance",
+    "name": "Assurance",
+    "aliases": [
+      "assurance"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "astonish",
+    "name": "Astonish",
+    "aliases": [
+      "astonish"
+    ],
+    "type": "Ghost",
+    "category": "Physical",
+    "basePower": 30,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "astralbarrage",
+    "name": "Astral Barrage",
+    "aliases": [
+      "astral barrage",
+      "astralbarrage"
+    ],
+    "type": "Ghost",
+    "category": "Special",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "attackorder",
+    "name": "Attack Order",
+    "aliases": [
+      "attack order",
+      "attackorder"
+    ],
+    "type": "Bug",
+    "category": "Physical",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "attract",
+    "name": "Attract",
+    "aliases": [
+      "attract"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "aurasphere",
+    "name": "Aura Sphere",
+    "aliases": [
+      "aura sphere",
+      "aurasphere"
+    ],
+    "type": "Fighting",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": null,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "aurawheel",
+    "name": "Aura Wheel",
+    "aliases": [
+      "aura wheel",
+      "aurawheel"
+    ],
+    "type": "Electric",
+    "category": "Physical",
+    "basePower": 110,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "aurorabeam",
+    "name": "Aurora Beam",
+    "aliases": [
+      "aurora beam",
+      "aurorabeam"
+    ],
+    "type": "Ice",
+    "category": "Special",
+    "basePower": 65,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "auroraveil",
+    "name": "Aurora Veil",
+    "aliases": [
+      "aurora veil",
+      "auroraveil"
+    ],
+    "type": "Ice",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "allySide",
+    "isSpread": false
+  },
+  {
+    "id": "avalanche",
+    "name": "Avalanche",
+    "aliases": [
+      "avalanche"
+    ],
+    "type": "Ice",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "axekick",
+    "name": "Axe Kick",
+    "aliases": [
+      "axe kick",
+      "axekick"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "babydolleyes",
+    "name": "Baby-Doll Eyes",
+    "aliases": [
+      "baby-doll eyes",
+      "baby doll eyes",
+      "babydolleyes"
+    ],
+    "type": "Fairy",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "banefulbunker",
+    "name": "Baneful Bunker",
+    "aliases": [
+      "baneful bunker",
+      "banefulbunker"
+    ],
+    "type": "Poison",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "barbbarrage",
+    "name": "Barb Barrage",
+    "aliases": [
+      "barb barrage",
+      "barbbarrage"
+    ],
+    "type": "Poison",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "batonpass",
+    "name": "Baton Pass",
+    "aliases": [
+      "baton pass",
+      "batonpass"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "beakblast",
+    "name": "Beak Blast",
+    "aliases": [
+      "beak blast",
+      "beakblast"
+    ],
+    "type": "Flying",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "beatup",
+    "name": "Beat Up",
+    "aliases": [
+      "beat up",
+      "beatup"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "behemothbash",
+    "name": "Behemoth Bash",
+    "aliases": [
+      "behemoth bash",
+      "behemothbash"
+    ],
+    "type": "Steel",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "behemothblade",
+    "name": "Behemoth Blade",
+    "aliases": [
+      "behemoth blade",
+      "behemothblade"
+    ],
+    "type": "Steel",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "belch",
+    "name": "Belch",
+    "aliases": [
+      "belch"
+    ],
+    "type": "Poison",
+    "category": "Special",
+    "basePower": 120,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "bellydrum",
+    "name": "Belly Drum",
+    "aliases": [
+      "belly drum",
+      "bellydrum"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "bind",
+    "name": "Bind",
+    "aliases": [
+      "bind"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 15,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "bite",
+    "name": "Bite",
+    "aliases": [
+      "bite"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "bitterblade",
+    "name": "Bitter Blade",
+    "aliases": [
+      "bitter blade",
+      "bitterblade"
+    ],
+    "type": "Fire",
+    "category": "Physical",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "bittermalice",
+    "name": "Bitter Malice",
+    "aliases": [
+      "bitter malice",
+      "bittermalice"
+    ],
+    "type": "Ghost",
+    "category": "Special",
+    "basePower": 75,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "blastburn",
+    "name": "Blast Burn",
+    "aliases": [
+      "blast burn",
+      "blastburn"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 150,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "blazekick",
+    "name": "Blaze Kick",
+    "aliases": [
+      "blaze kick",
+      "blazekick"
+    ],
+    "type": "Fire",
+    "category": "Physical",
+    "basePower": 85,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "bleakwindstorm",
+    "name": "Bleakwind Storm",
+    "aliases": [
+      "bleakwind storm",
+      "bleakwindstorm"
+    ],
+    "type": "Flying",
+    "category": "Special",
+    "basePower": 100,
+    "accuracy": 80,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "blizzard",
+    "name": "Blizzard",
+    "aliases": [
+      "blizzard"
+    ],
+    "type": "Ice",
+    "category": "Special",
+    "basePower": 110,
+    "accuracy": 70,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "block",
+    "name": "Block",
+    "aliases": [
+      "block"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "bloodmoon",
+    "name": "Blood Moon",
+    "aliases": [
+      "blood moon",
+      "bloodmoon"
+    ],
+    "type": "Normal",
+    "category": "Special",
+    "basePower": 140,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "blueflare",
+    "name": "Blue Flare",
+    "aliases": [
+      "blue flare",
+      "blueflare"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 130,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "bodypress",
+    "name": "Body Press",
+    "aliases": [
+      "body press",
+      "bodypress"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "bodyslam",
+    "name": "Body Slam",
+    "aliases": [
+      "body slam",
+      "bodyslam"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 85,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "boltstrike",
+    "name": "Bolt Strike",
+    "aliases": [
+      "bolt strike",
+      "boltstrike"
+    ],
+    "type": "Electric",
+    "category": "Physical",
+    "basePower": 130,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "bonerush",
+    "name": "Bone Rush",
+    "aliases": [
+      "bone rush",
+      "bonerush"
+    ],
+    "type": "Ground",
+    "category": "Physical",
+    "basePower": 25,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "boomburst",
+    "name": "Boomburst",
+    "aliases": [
+      "boomburst"
+    ],
+    "type": "Normal",
+    "category": "Special",
+    "basePower": 140,
+    "accuracy": 100,
+    "target": "allAdjacent",
+    "isSpread": true
+  },
+  {
+    "id": "bounce",
+    "name": "Bounce",
+    "aliases": [
+      "bounce"
+    ],
+    "type": "Flying",
+    "category": "Physical",
+    "basePower": 85,
+    "accuracy": 85,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "branchpoke",
+    "name": "Branch Poke",
+    "aliases": [
+      "branch poke",
+      "branchpoke"
+    ],
+    "type": "Grass",
+    "category": "Physical",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "bravebird",
+    "name": "Brave Bird",
+    "aliases": [
+      "brave bird",
+      "bravebird"
+    ],
+    "type": "Flying",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "breakingswipe",
+    "name": "Breaking Swipe",
+    "aliases": [
+      "breaking swipe",
+      "breakingswipe"
+    ],
+    "type": "Dragon",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "brickbreak",
+    "name": "Brick Break",
+    "aliases": [
+      "brick break",
+      "brickbreak"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 75,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "brine",
+    "name": "Brine",
+    "aliases": [
+      "brine"
+    ],
+    "type": "Water",
+    "category": "Special",
+    "basePower": 65,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "brutalswing",
+    "name": "Brutal Swing",
+    "aliases": [
+      "brutal swing",
+      "brutalswing"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "allAdjacent",
+    "isSpread": true
+  },
+  {
+    "id": "bubblebeam",
+    "name": "Bubble Beam",
+    "aliases": [
+      "bubble beam",
+      "bubblebeam"
+    ],
+    "type": "Water",
+    "category": "Special",
+    "basePower": 65,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "bugbite",
+    "name": "Bug Bite",
+    "aliases": [
+      "bug bite",
+      "bugbite"
+    ],
+    "type": "Bug",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "bugbuzz",
+    "name": "Bug Buzz",
+    "aliases": [
+      "bug buzz",
+      "bugbuzz"
+    ],
+    "type": "Bug",
+    "category": "Special",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "bulkup",
+    "name": "Bulk Up",
+    "aliases": [
+      "bulk up",
+      "bulkup"
+    ],
+    "type": "Fighting",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "bulldoze",
+    "name": "Bulldoze",
+    "aliases": [
+      "bulldoze"
+    ],
+    "type": "Ground",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "allAdjacent",
+    "isSpread": true
+  },
+  {
+    "id": "bulletpunch",
+    "name": "Bullet Punch",
+    "aliases": [
+      "bullet punch",
+      "bulletpunch"
+    ],
+    "type": "Steel",
+    "category": "Physical",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "bulletseed",
+    "name": "Bullet Seed",
+    "aliases": [
+      "bullet seed",
+      "bulletseed"
+    ],
+    "type": "Grass",
+    "category": "Physical",
+    "basePower": 25,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "burningbulwark",
+    "name": "Burning Bulwark",
+    "aliases": [
+      "burning bulwark",
+      "burningbulwark"
+    ],
+    "type": "Fire",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "burningjealousy",
+    "name": "Burning Jealousy",
+    "aliases": [
+      "burning jealousy",
+      "burningjealousy"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 70,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "calmmind",
+    "name": "Calm Mind",
+    "aliases": [
+      "calm mind",
+      "calmmind"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "ceaselessedge",
+    "name": "Ceaseless Edge",
+    "aliases": [
+      "ceaseless edge",
+      "ceaselessedge"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 65,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "celebrate",
+    "name": "Celebrate",
+    "aliases": [
+      "celebrate"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "charge",
+    "name": "Charge",
+    "aliases": [
+      "charge"
+    ],
+    "type": "Electric",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "chargebeam",
+    "name": "Charge Beam",
+    "aliases": [
+      "charge beam",
+      "chargebeam"
+    ],
+    "type": "Electric",
+    "category": "Special",
+    "basePower": 50,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "charm",
+    "name": "Charm",
+    "aliases": [
+      "charm"
+    ],
+    "type": "Fairy",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "chillingwater",
+    "name": "Chilling Water",
+    "aliases": [
+      "chilling water",
+      "chillingwater"
+    ],
+    "type": "Water",
+    "category": "Special",
+    "basePower": 50,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "chillyreception",
+    "name": "Chilly Reception",
+    "aliases": [
+      "chilly reception",
+      "chillyreception"
+    ],
+    "type": "Ice",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "all",
+    "isSpread": false
+  },
+  {
+    "id": "chloroblast",
+    "name": "Chloroblast",
+    "aliases": [
+      "chloroblast"
+    ],
+    "type": "Grass",
+    "category": "Special",
+    "basePower": 150,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "circlethrow",
+    "name": "Circle Throw",
+    "aliases": [
+      "circle throw",
+      "circlethrow"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "clangingscales",
+    "name": "Clanging Scales",
+    "aliases": [
+      "clanging scales",
+      "clangingscales"
+    ],
+    "type": "Dragon",
+    "category": "Special",
+    "basePower": 110,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "clangoroussoul",
+    "name": "Clangorous Soul",
+    "aliases": [
+      "clangorous soul",
+      "clangoroussoul"
+    ],
+    "type": "Dragon",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "clearsmog",
+    "name": "Clear Smog",
+    "aliases": [
+      "clear smog",
+      "clearsmog"
+    ],
+    "type": "Poison",
+    "category": "Special",
+    "basePower": 50,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "closecombat",
+    "name": "Close Combat",
+    "aliases": [
+      "close combat",
+      "closecombat"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "coaching",
+    "name": "Coaching",
+    "aliases": [
+      "coaching"
+    ],
+    "type": "Fighting",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "adjacentAlly",
+    "isSpread": false
+  },
+  {
+    "id": "coil",
+    "name": "Coil",
+    "aliases": [
+      "coil"
+    ],
+    "type": "Poison",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "collisioncourse",
+    "name": "Collision Course",
+    "aliases": [
+      "collision course",
+      "collisioncourse"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "comeuppance",
+    "name": "Comeuppance",
+    "aliases": [
+      "comeuppance"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "scripted",
+    "isSpread": false
+  },
+  {
+    "id": "confide",
+    "name": "Confide",
+    "aliases": [
+      "confide"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "confuseray",
+    "name": "Confuse Ray",
+    "aliases": [
+      "confuse ray",
+      "confuseray"
+    ],
+    "type": "Ghost",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "confusion",
+    "name": "Confusion",
+    "aliases": [
+      "confusion"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 50,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "conversion",
+    "name": "Conversion",
+    "aliases": [
+      "conversion"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "conversion2",
+    "name": "Conversion 2",
+    "aliases": [
+      "conversion 2",
+      "conversion2"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "copycat",
+    "name": "Copycat",
+    "aliases": [
+      "copycat"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "cosmicpower",
+    "name": "Cosmic Power",
+    "aliases": [
+      "cosmic power",
+      "cosmicpower"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "cottonguard",
+    "name": "Cotton Guard",
+    "aliases": [
+      "cotton guard",
+      "cottonguard"
+    ],
+    "type": "Grass",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "cottonspore",
+    "name": "Cotton Spore",
+    "aliases": [
+      "cotton spore",
+      "cottonspore"
+    ],
+    "type": "Grass",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "counter",
+    "name": "Counter",
+    "aliases": [
+      "counter"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "scripted",
+    "isSpread": false
+  },
+  {
+    "id": "courtchange",
+    "name": "Court Change",
+    "aliases": [
+      "court change",
+      "courtchange"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "all",
+    "isSpread": false
+  },
+  {
+    "id": "covet",
+    "name": "Covet",
+    "aliases": [
+      "covet"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "crabhammer",
+    "name": "Crabhammer",
+    "aliases": [
+      "crabhammer"
+    ],
+    "type": "Water",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "crosschop",
+    "name": "Cross Chop",
+    "aliases": [
+      "cross chop",
+      "crosschop"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 80,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "crosspoison",
+    "name": "Cross Poison",
+    "aliases": [
+      "cross poison",
+      "crosspoison"
+    ],
+    "type": "Poison",
+    "category": "Physical",
+    "basePower": 70,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "crunch",
+    "name": "Crunch",
+    "aliases": [
+      "crunch"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "crushclaw",
+    "name": "Crush Claw",
+    "aliases": [
+      "crush claw",
+      "crushclaw"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 75,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "crushgrip",
+    "name": "Crush Grip",
+    "aliases": [
+      "crush grip",
+      "crushgrip"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "curse",
+    "name": "Curse",
+    "aliases": [
+      "curse"
+    ],
+    "type": "Ghost",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "darkpulse",
+    "name": "Dark Pulse",
+    "aliases": [
+      "dark pulse",
+      "darkpulse"
+    ],
+    "type": "Dark",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "darkvoid",
+    "name": "Dark Void",
+    "aliases": [
+      "dark void",
+      "darkvoid"
+    ],
+    "type": "Dark",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 50,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "darkestlariat",
+    "name": "Darkest Lariat",
+    "aliases": [
+      "darkest lariat",
+      "darkestlariat"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 85,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "dazzlinggleam",
+    "name": "Dazzling Gleam",
+    "aliases": [
+      "dazzling gleam",
+      "dazzlinggleam"
+    ],
+    "type": "Fairy",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "decorate",
+    "name": "Decorate",
+    "aliases": [
+      "decorate"
+    ],
+    "type": "Fairy",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "defendorder",
+    "name": "Defend Order",
+    "aliases": [
+      "defend order",
+      "defendorder"
+    ],
+    "type": "Bug",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "defensecurl",
+    "name": "Defense Curl",
+    "aliases": [
+      "defense curl",
+      "defensecurl"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "defog",
+    "name": "Defog",
+    "aliases": [
+      "defog"
+    ],
+    "type": "Flying",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "destinybond",
+    "name": "Destiny Bond",
+    "aliases": [
+      "destiny bond",
+      "destinybond"
+    ],
+    "type": "Ghost",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "detect",
+    "name": "Detect",
+    "aliases": [
+      "detect"
+    ],
+    "type": "Fighting",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "diamondstorm",
+    "name": "Diamond Storm",
+    "aliases": [
+      "diamond storm",
+      "diamondstorm"
+    ],
+    "type": "Rock",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 95,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "dig",
+    "name": "Dig",
+    "aliases": [
+      "dig"
+    ],
+    "type": "Ground",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "direclaw",
+    "name": "Dire Claw",
+    "aliases": [
+      "dire claw",
+      "direclaw"
+    ],
+    "type": "Poison",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "disable",
+    "name": "Disable",
+    "aliases": [
+      "disable"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "disarmingvoice",
+    "name": "Disarming Voice",
+    "aliases": [
+      "disarming voice",
+      "disarmingvoice"
+    ],
+    "type": "Fairy",
+    "category": "Special",
+    "basePower": 40,
+    "accuracy": null,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "discharge",
+    "name": "Discharge",
+    "aliases": [
+      "discharge"
+    ],
+    "type": "Electric",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "allAdjacent",
+    "isSpread": true
+  },
+  {
+    "id": "dive",
+    "name": "Dive",
+    "aliases": [
+      "dive"
+    ],
+    "type": "Water",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "doodle",
+    "name": "Doodle",
+    "aliases": [
+      "doodle"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "adjacentFoe",
+    "isSpread": false
+  },
+  {
+    "id": "doomdesire",
+    "name": "Doom Desire",
+    "aliases": [
+      "doom desire",
+      "doomdesire"
+    ],
+    "type": "Steel",
+    "category": "Special",
+    "basePower": 140,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "doublehit",
+    "name": "Double Hit",
+    "aliases": [
+      "double hit",
+      "doublehit"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 35,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "doublekick",
+    "name": "Double Kick",
+    "aliases": [
+      "double kick",
+      "doublekick"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 30,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "doubleshock",
+    "name": "Double Shock",
+    "aliases": [
+      "double shock",
+      "doubleshock"
+    ],
+    "type": "Electric",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "doubleteam",
+    "name": "Double Team",
+    "aliases": [
+      "double team",
+      "doubleteam"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "doubleedge",
+    "name": "Double-Edge",
+    "aliases": [
+      "double-edge",
+      "double edge",
+      "doubleedge"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "dracometeor",
+    "name": "Draco Meteor",
+    "aliases": [
+      "draco meteor",
+      "dracometeor"
+    ],
+    "type": "Dragon",
+    "category": "Special",
+    "basePower": 130,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "dragonascent",
+    "name": "Dragon Ascent",
+    "aliases": [
+      "dragon ascent",
+      "dragonascent"
+    ],
+    "type": "Flying",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "dragonbreath",
+    "name": "Dragon Breath",
+    "aliases": [
+      "dragon breath",
+      "dragonbreath"
+    ],
+    "type": "Dragon",
+    "category": "Special",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "dragoncheer",
+    "name": "Dragon Cheer",
+    "aliases": [
+      "dragon cheer",
+      "dragoncheer"
+    ],
+    "type": "Dragon",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "adjacentAlly",
+    "isSpread": false
+  },
+  {
+    "id": "dragonclaw",
+    "name": "Dragon Claw",
+    "aliases": [
+      "dragon claw",
+      "dragonclaw"
+    ],
+    "type": "Dragon",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "dragondance",
+    "name": "Dragon Dance",
+    "aliases": [
+      "dragon dance",
+      "dragondance"
+    ],
+    "type": "Dragon",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "dragondarts",
+    "name": "Dragon Darts",
+    "aliases": [
+      "dragon darts",
+      "dragondarts"
+    ],
+    "type": "Dragon",
+    "category": "Physical",
+    "basePower": 50,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "dragonenergy",
+    "name": "Dragon Energy",
+    "aliases": [
+      "dragon energy",
+      "dragonenergy"
+    ],
+    "type": "Dragon",
+    "category": "Special",
+    "basePower": 150,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "dragonhammer",
+    "name": "Dragon Hammer",
+    "aliases": [
+      "dragon hammer",
+      "dragonhammer"
+    ],
+    "type": "Dragon",
+    "category": "Physical",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "dragonpulse",
+    "name": "Dragon Pulse",
+    "aliases": [
+      "dragon pulse",
+      "dragonpulse"
+    ],
+    "type": "Dragon",
+    "category": "Special",
+    "basePower": 85,
+    "accuracy": 100,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "dragonrush",
+    "name": "Dragon Rush",
+    "aliases": [
+      "dragon rush",
+      "dragonrush"
+    ],
+    "type": "Dragon",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 75,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "dragontail",
+    "name": "Dragon Tail",
+    "aliases": [
+      "dragon tail",
+      "dragontail"
+    ],
+    "type": "Dragon",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "drainpunch",
+    "name": "Drain Punch",
+    "aliases": [
+      "drain punch",
+      "drainpunch"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 75,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "drainingkiss",
+    "name": "Draining Kiss",
+    "aliases": [
+      "draining kiss",
+      "drainingkiss"
+    ],
+    "type": "Fairy",
+    "category": "Special",
+    "basePower": 50,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "dreameater",
+    "name": "Dream Eater",
+    "aliases": [
+      "dream eater",
+      "dreameater"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "drillpeck",
+    "name": "Drill Peck",
+    "aliases": [
+      "drill peck",
+      "drillpeck"
+    ],
+    "type": "Flying",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "drillrun",
+    "name": "Drill Run",
+    "aliases": [
+      "drill run",
+      "drillrun"
+    ],
+    "type": "Ground",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "drumbeating",
+    "name": "Drum Beating",
+    "aliases": [
+      "drum beating",
+      "drumbeating"
+    ],
+    "type": "Grass",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "dualwingbeat",
+    "name": "Dual Wingbeat",
+    "aliases": [
+      "dual wingbeat",
+      "dualwingbeat"
+    ],
+    "type": "Flying",
+    "category": "Physical",
+    "basePower": 40,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "dynamaxcannon",
+    "name": "Dynamax Cannon",
+    "aliases": [
+      "dynamax cannon",
+      "dynamaxcannon"
+    ],
+    "type": "Dragon",
+    "category": "Special",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "dynamicpunch",
+    "name": "Dynamic Punch",
+    "aliases": [
+      "dynamic punch",
+      "dynamicpunch"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 50,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "earthpower",
+    "name": "Earth Power",
+    "aliases": [
+      "earth power",
+      "earthpower"
+    ],
+    "type": "Ground",
+    "category": "Special",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "earthquake",
+    "name": "Earthquake",
+    "aliases": [
+      "earthquake"
+    ],
+    "type": "Ground",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "allAdjacent",
+    "isSpread": true
+  },
+  {
+    "id": "echoedvoice",
+    "name": "Echoed Voice",
+    "aliases": [
+      "echoed voice",
+      "echoedvoice"
+    ],
+    "type": "Normal",
+    "category": "Special",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "eerieimpulse",
+    "name": "Eerie Impulse",
+    "aliases": [
+      "eerie impulse",
+      "eerieimpulse"
+    ],
+    "type": "Electric",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "eeriespell",
+    "name": "Eerie Spell",
+    "aliases": [
+      "eerie spell",
+      "eeriespell"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "electricterrain",
+    "name": "Electric Terrain",
+    "aliases": [
+      "electric terrain",
+      "electricterrain"
+    ],
+    "type": "Electric",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "all",
+    "isSpread": false
+  },
+  {
+    "id": "electroball",
+    "name": "Electro Ball",
+    "aliases": [
+      "electro ball",
+      "electroball"
+    ],
+    "type": "Electric",
+    "category": "Special",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "electrodrift",
+    "name": "Electro Drift",
+    "aliases": [
+      "electro drift",
+      "electrodrift"
+    ],
+    "type": "Electric",
+    "category": "Special",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "electroshot",
+    "name": "Electro Shot",
+    "aliases": [
+      "electro shot",
+      "electroshot"
+    ],
+    "type": "Electric",
+    "category": "Special",
+    "basePower": 130,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "electroweb",
+    "name": "Electroweb",
+    "aliases": [
+      "electroweb"
+    ],
+    "type": "Electric",
+    "category": "Special",
+    "basePower": 55,
+    "accuracy": 95,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "ember",
+    "name": "Ember",
+    "aliases": [
+      "ember"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "encore",
+    "name": "Encore",
+    "aliases": [
+      "encore"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "endeavor",
+    "name": "Endeavor",
+    "aliases": [
+      "endeavor"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "endure",
+    "name": "Endure",
+    "aliases": [
+      "endure"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "energyball",
+    "name": "Energy Ball",
+    "aliases": [
+      "energy ball",
+      "energyball"
+    ],
+    "type": "Grass",
+    "category": "Special",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "entrainment",
+    "name": "Entrainment",
+    "aliases": [
+      "entrainment"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "eruption",
+    "name": "Eruption",
+    "aliases": [
+      "eruption"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 150,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "esperwing",
+    "name": "Esper Wing",
+    "aliases": [
+      "esper wing",
+      "esperwing"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "expandingforce",
+    "name": "Expanding Force",
+    "aliases": [
+      "expanding force",
+      "expandingforce"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "explosion",
+    "name": "Explosion",
+    "aliases": [
+      "explosion"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 250,
+    "accuracy": 100,
+    "target": "allAdjacent",
+    "isSpread": true
+  },
+  {
+    "id": "extrasensory",
+    "name": "Extrasensory",
+    "aliases": [
+      "extrasensory"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "extremespeed",
+    "name": "Extreme Speed",
+    "aliases": [
+      "extreme speed",
+      "extremespeed"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "facade",
+    "name": "Facade",
+    "aliases": [
+      "facade"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 70,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "fairylock",
+    "name": "Fairy Lock",
+    "aliases": [
+      "fairy lock",
+      "fairylock"
+    ],
+    "type": "Fairy",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "all",
+    "isSpread": false
+  },
+  {
+    "id": "fairywind",
+    "name": "Fairy Wind",
+    "aliases": [
+      "fairy wind",
+      "fairywind"
+    ],
+    "type": "Fairy",
+    "category": "Special",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "fakeout",
+    "name": "Fake Out",
+    "aliases": [
+      "fake out",
+      "fakeout"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "faketears",
+    "name": "Fake Tears",
+    "aliases": [
+      "fake tears",
+      "faketears"
+    ],
+    "type": "Dark",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "falsesurrender",
+    "name": "False Surrender",
+    "aliases": [
+      "false surrender",
+      "falsesurrender"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "falseswipe",
+    "name": "False Swipe",
+    "aliases": [
+      "false swipe",
+      "falseswipe"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "featherdance",
+    "name": "Feather Dance",
+    "aliases": [
+      "feather dance",
+      "featherdance"
+    ],
+    "type": "Flying",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "feint",
+    "name": "Feint",
+    "aliases": [
+      "feint"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 30,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "fellstinger",
+    "name": "Fell Stinger",
+    "aliases": [
+      "fell stinger",
+      "fellstinger"
+    ],
+    "type": "Bug",
+    "category": "Physical",
+    "basePower": 50,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "ficklebeam",
+    "name": "Fickle Beam",
+    "aliases": [
+      "fickle beam",
+      "ficklebeam"
+    ],
+    "type": "Dragon",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "fierydance",
+    "name": "Fiery Dance",
+    "aliases": [
+      "fiery dance",
+      "fierydance"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "fierywrath",
+    "name": "Fiery Wrath",
+    "aliases": [
+      "fiery wrath",
+      "fierywrath"
+    ],
+    "type": "Dark",
+    "category": "Special",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "filletaway",
+    "name": "Fillet Away",
+    "aliases": [
+      "fillet away",
+      "filletaway"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "finalgambit",
+    "name": "Final Gambit",
+    "aliases": [
+      "final gambit",
+      "finalgambit"
+    ],
+    "type": "Fighting",
+    "category": "Special",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "fireblast",
+    "name": "Fire Blast",
+    "aliases": [
+      "fire blast",
+      "fireblast"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 110,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "firefang",
+    "name": "Fire Fang",
+    "aliases": [
+      "fire fang",
+      "firefang"
+    ],
+    "type": "Fire",
+    "category": "Physical",
+    "basePower": 65,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "firelash",
+    "name": "Fire Lash",
+    "aliases": [
+      "fire lash",
+      "firelash"
+    ],
+    "type": "Fire",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "firepledge",
+    "name": "Fire Pledge",
+    "aliases": [
+      "fire pledge",
+      "firepledge"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "firepunch",
+    "name": "Fire Punch",
+    "aliases": [
+      "fire punch",
+      "firepunch"
+    ],
+    "type": "Fire",
+    "category": "Physical",
+    "basePower": 75,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "firespin",
+    "name": "Fire Spin",
+    "aliases": [
+      "fire spin",
+      "firespin"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 35,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "firstimpression",
+    "name": "First Impression",
+    "aliases": [
+      "first impression",
+      "firstimpression"
+    ],
+    "type": "Bug",
+    "category": "Physical",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "fissure",
+    "name": "Fissure",
+    "aliases": [
+      "fissure"
+    ],
+    "type": "Ground",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 30,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "flail",
+    "name": "Flail",
+    "aliases": [
+      "flail"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "flamecharge",
+    "name": "Flame Charge",
+    "aliases": [
+      "flame charge",
+      "flamecharge"
+    ],
+    "type": "Fire",
+    "category": "Physical",
+    "basePower": 50,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "flamewheel",
+    "name": "Flame Wheel",
+    "aliases": [
+      "flame wheel",
+      "flamewheel"
+    ],
+    "type": "Fire",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "flamethrower",
+    "name": "Flamethrower",
+    "aliases": [
+      "flamethrower"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "flareblitz",
+    "name": "Flare Blitz",
+    "aliases": [
+      "flare blitz",
+      "flareblitz"
+    ],
+    "type": "Fire",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "flashcannon",
+    "name": "Flash Cannon",
+    "aliases": [
+      "flash cannon",
+      "flashcannon"
+    ],
+    "type": "Steel",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "flatter",
+    "name": "Flatter",
+    "aliases": [
+      "flatter"
+    ],
+    "type": "Dark",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "fleurcannon",
+    "name": "Fleur Cannon",
+    "aliases": [
+      "fleur cannon",
+      "fleurcannon"
+    ],
+    "type": "Fairy",
+    "category": "Special",
+    "basePower": 130,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "fling",
+    "name": "Fling",
+    "aliases": [
+      "fling"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "flipturn",
+    "name": "Flip Turn",
+    "aliases": [
+      "flip turn",
+      "flipturn"
+    ],
+    "type": "Water",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "floralhealing",
+    "name": "Floral Healing",
+    "aliases": [
+      "floral healing",
+      "floralhealing"
+    ],
+    "type": "Fairy",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "flowertrick",
+    "name": "Flower Trick",
+    "aliases": [
+      "flower trick",
+      "flowertrick"
+    ],
+    "type": "Grass",
+    "category": "Physical",
+    "basePower": 70,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "fly",
+    "name": "Fly",
+    "aliases": [
+      "fly"
+    ],
+    "type": "Flying",
+    "category": "Physical",
+    "basePower": 90,
+    "accuracy": 95,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "flyingpress",
+    "name": "Flying Press",
+    "aliases": [
+      "flying press",
+      "flyingpress"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 95,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "focusblast",
+    "name": "Focus Blast",
+    "aliases": [
+      "focus blast",
+      "focusblast"
+    ],
+    "type": "Fighting",
+    "category": "Special",
+    "basePower": 120,
+    "accuracy": 70,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "focusenergy",
+    "name": "Focus Energy",
+    "aliases": [
+      "focus energy",
+      "focusenergy"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "focuspunch",
+    "name": "Focus Punch",
+    "aliases": [
+      "focus punch",
+      "focuspunch"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 150,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "followme",
+    "name": "Follow Me",
+    "aliases": [
+      "follow me",
+      "followme"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "forcepalm",
+    "name": "Force Palm",
+    "aliases": [
+      "force palm",
+      "forcepalm"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "forestscurse",
+    "name": "Forest's Curse",
+    "aliases": [
+      "forest's curse",
+      "forests curse",
+      "forestscurse"
+    ],
+    "type": "Grass",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "foulplay",
+    "name": "Foul Play",
+    "aliases": [
+      "foul play",
+      "foulplay"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 95,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "freezeshock",
+    "name": "Freeze Shock",
+    "aliases": [
+      "freeze shock",
+      "freezeshock"
+    ],
+    "type": "Ice",
+    "category": "Physical",
+    "basePower": 140,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "freezedry",
+    "name": "Freeze-Dry",
+    "aliases": [
+      "freeze-dry",
+      "freeze dry",
+      "freezedry"
+    ],
+    "type": "Ice",
+    "category": "Special",
+    "basePower": 70,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "freezingglare",
+    "name": "Freezing Glare",
+    "aliases": [
+      "freezing glare",
+      "freezingglare"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "frenzyplant",
+    "name": "Frenzy Plant",
+    "aliases": [
+      "frenzy plant",
+      "frenzyplant"
+    ],
+    "type": "Grass",
+    "category": "Special",
+    "basePower": 150,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "frostbreath",
+    "name": "Frost Breath",
+    "aliases": [
+      "frost breath",
+      "frostbreath"
+    ],
+    "type": "Ice",
+    "category": "Special",
+    "basePower": 60,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "furyattack",
+    "name": "Fury Attack",
+    "aliases": [
+      "fury attack",
+      "furyattack"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 15,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "furycutter",
+    "name": "Fury Cutter",
+    "aliases": [
+      "fury cutter",
+      "furycutter"
+    ],
+    "type": "Bug",
+    "category": "Physical",
+    "basePower": 40,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "furyswipes",
+    "name": "Fury Swipes",
+    "aliases": [
+      "fury swipes",
+      "furyswipes"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 18,
+    "accuracy": 80,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "fusionbolt",
+    "name": "Fusion Bolt",
+    "aliases": [
+      "fusion bolt",
+      "fusionbolt"
+    ],
+    "type": "Electric",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "fusionflare",
+    "name": "Fusion Flare",
+    "aliases": [
+      "fusion flare",
+      "fusionflare"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "futuresight",
+    "name": "Future Sight",
+    "aliases": [
+      "future sight",
+      "futuresight"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "gastroacid",
+    "name": "Gastro Acid",
+    "aliases": [
+      "gastro acid",
+      "gastroacid"
+    ],
+    "type": "Poison",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "gigadrain",
+    "name": "Giga Drain",
+    "aliases": [
+      "giga drain",
+      "gigadrain"
+    ],
+    "type": "Grass",
+    "category": "Special",
+    "basePower": 75,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "gigaimpact",
+    "name": "Giga Impact",
+    "aliases": [
+      "giga impact",
+      "gigaimpact"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 150,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "gigatonhammer",
+    "name": "Gigaton Hammer",
+    "aliases": [
+      "gigaton hammer",
+      "gigatonhammer"
+    ],
+    "type": "Steel",
+    "category": "Physical",
+    "basePower": 160,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "glaciallance",
+    "name": "Glacial Lance",
+    "aliases": [
+      "glacial lance",
+      "glaciallance"
+    ],
+    "type": "Ice",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "glaciate",
+    "name": "Glaciate",
+    "aliases": [
+      "glaciate"
+    ],
+    "type": "Ice",
+    "category": "Special",
+    "basePower": 65,
+    "accuracy": 95,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "glaiverush",
+    "name": "Glaive Rush",
+    "aliases": [
+      "glaive rush",
+      "glaiverush"
+    ],
+    "type": "Dragon",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "glare",
+    "name": "Glare",
+    "aliases": [
+      "glare"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "grassknot",
+    "name": "Grass Knot",
+    "aliases": [
+      "grass knot",
+      "grassknot"
+    ],
+    "type": "Grass",
+    "category": "Special",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "grasspledge",
+    "name": "Grass Pledge",
+    "aliases": [
+      "grass pledge",
+      "grasspledge"
+    ],
+    "type": "Grass",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "grassyglide",
+    "name": "Grassy Glide",
+    "aliases": [
+      "grassy glide",
+      "grassyglide"
+    ],
+    "type": "Grass",
+    "category": "Physical",
+    "basePower": 55,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "grassyterrain",
+    "name": "Grassy Terrain",
+    "aliases": [
+      "grassy terrain",
+      "grassyterrain"
+    ],
+    "type": "Grass",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "all",
+    "isSpread": false
+  },
+  {
+    "id": "gravapple",
+    "name": "Grav Apple",
+    "aliases": [
+      "grav apple",
+      "gravapple"
+    ],
+    "type": "Grass",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "gravity",
+    "name": "Gravity",
+    "aliases": [
+      "gravity"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "all",
+    "isSpread": false
+  },
+  {
+    "id": "growl",
+    "name": "Growl",
+    "aliases": [
+      "growl"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "growth",
+    "name": "Growth",
+    "aliases": [
+      "growth"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "guardsplit",
+    "name": "Guard Split",
+    "aliases": [
+      "guard split",
+      "guardsplit"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "guardswap",
+    "name": "Guard Swap",
+    "aliases": [
+      "guard swap",
+      "guardswap"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "guillotine",
+    "name": "Guillotine",
+    "aliases": [
+      "guillotine"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 30,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "gunkshot",
+    "name": "Gunk Shot",
+    "aliases": [
+      "gunk shot",
+      "gunkshot"
+    ],
+    "type": "Poison",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 80,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "gust",
+    "name": "Gust",
+    "aliases": [
+      "gust"
+    ],
+    "type": "Flying",
+    "category": "Special",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "gyroball",
+    "name": "Gyro Ball",
+    "aliases": [
+      "gyro ball",
+      "gyroball"
+    ],
+    "type": "Steel",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "hammerarm",
+    "name": "Hammer Arm",
+    "aliases": [
+      "hammer arm",
+      "hammerarm"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "happyhour",
+    "name": "Happy Hour",
+    "aliases": [
+      "happy hour",
+      "happyhour"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "allySide",
+    "isSpread": false
+  },
+  {
+    "id": "hardpress",
+    "name": "Hard Press",
+    "aliases": [
+      "hard press",
+      "hardpress"
+    ],
+    "type": "Steel",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "harden",
+    "name": "Harden",
+    "aliases": [
+      "harden"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "haze",
+    "name": "Haze",
+    "aliases": [
+      "haze"
+    ],
+    "type": "Ice",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "all",
+    "isSpread": false
+  },
+  {
+    "id": "headsmash",
+    "name": "Head Smash",
+    "aliases": [
+      "head smash",
+      "headsmash"
+    ],
+    "type": "Rock",
+    "category": "Physical",
+    "basePower": 150,
+    "accuracy": 80,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "headbutt",
+    "name": "Headbutt",
+    "aliases": [
+      "headbutt"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 70,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "headlongrush",
+    "name": "Headlong Rush",
+    "aliases": [
+      "headlong rush",
+      "headlongrush"
+    ],
+    "type": "Ground",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "healbell",
+    "name": "Heal Bell",
+    "aliases": [
+      "heal bell",
+      "healbell"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "allyTeam",
+    "isSpread": false
+  },
+  {
+    "id": "healpulse",
+    "name": "Heal Pulse",
+    "aliases": [
+      "heal pulse",
+      "healpulse"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "healingwish",
+    "name": "Healing Wish",
+    "aliases": [
+      "healing wish",
+      "healingwish"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "heartswap",
+    "name": "Heart Swap",
+    "aliases": [
+      "heart swap",
+      "heartswap"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "heatcrash",
+    "name": "Heat Crash",
+    "aliases": [
+      "heat crash",
+      "heatcrash"
+    ],
+    "type": "Fire",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "heatwave",
+    "name": "Heat Wave",
+    "aliases": [
+      "heat wave",
+      "heatwave"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 95,
+    "accuracy": 90,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "heavyslam",
+    "name": "Heavy Slam",
+    "aliases": [
+      "heavy slam",
+      "heavyslam"
+    ],
+    "type": "Steel",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "helpinghand",
+    "name": "Helping Hand",
+    "aliases": [
+      "helping hand",
+      "helpinghand"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "adjacentAlly",
+    "isSpread": false
+  },
+  {
+    "id": "hex",
+    "name": "Hex",
+    "aliases": [
+      "hex"
+    ],
+    "type": "Ghost",
+    "category": "Special",
+    "basePower": 65,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "highhorsepower",
+    "name": "High Horsepower",
+    "aliases": [
+      "high horsepower",
+      "highhorsepower"
+    ],
+    "type": "Ground",
+    "category": "Physical",
+    "basePower": 95,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "highjumpkick",
+    "name": "High Jump Kick",
+    "aliases": [
+      "high jump kick",
+      "highjumpkick"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 130,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "honeclaws",
+    "name": "Hone Claws",
+    "aliases": [
+      "hone claws",
+      "honeclaws"
+    ],
+    "type": "Dark",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "hornattack",
+    "name": "Horn Attack",
+    "aliases": [
+      "horn attack",
+      "hornattack"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 65,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "horndrill",
+    "name": "Horn Drill",
+    "aliases": [
+      "horn drill",
+      "horndrill"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 30,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "hornleech",
+    "name": "Horn Leech",
+    "aliases": [
+      "horn leech",
+      "hornleech"
+    ],
+    "type": "Grass",
+    "category": "Physical",
+    "basePower": 75,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "howl",
+    "name": "Howl",
+    "aliases": [
+      "howl"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "allies",
+    "isSpread": false
+  },
+  {
+    "id": "hurricane",
+    "name": "Hurricane",
+    "aliases": [
+      "hurricane"
+    ],
+    "type": "Flying",
+    "category": "Special",
+    "basePower": 110,
+    "accuracy": 70,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "hydrocannon",
+    "name": "Hydro Cannon",
+    "aliases": [
+      "hydro cannon",
+      "hydrocannon"
+    ],
+    "type": "Water",
+    "category": "Special",
+    "basePower": 150,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "hydropump",
+    "name": "Hydro Pump",
+    "aliases": [
+      "hydro pump",
+      "hydropump"
+    ],
+    "type": "Water",
+    "category": "Special",
+    "basePower": 110,
+    "accuracy": 80,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "hydrosteam",
+    "name": "Hydro Steam",
+    "aliases": [
+      "hydro steam",
+      "hydrosteam"
+    ],
+    "type": "Water",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "hyperbeam",
+    "name": "Hyper Beam",
+    "aliases": [
+      "hyper beam",
+      "hyperbeam"
+    ],
+    "type": "Normal",
+    "category": "Special",
+    "basePower": 150,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "hyperdrill",
+    "name": "Hyper Drill",
+    "aliases": [
+      "hyper drill",
+      "hyperdrill"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "hypervoice",
+    "name": "Hyper Voice",
+    "aliases": [
+      "hyper voice",
+      "hypervoice"
+    ],
+    "type": "Normal",
+    "category": "Special",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "hyperspacefury",
+    "name": "Hyperspace Fury",
+    "aliases": [
+      "hyperspace fury",
+      "hyperspacefury"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "hyperspacehole",
+    "name": "Hyperspace Hole",
+    "aliases": [
+      "hyperspace hole",
+      "hyperspacehole"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "hypnosis",
+    "name": "Hypnosis",
+    "aliases": [
+      "hypnosis"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 60,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "icebeam",
+    "name": "Ice Beam",
+    "aliases": [
+      "ice beam",
+      "icebeam"
+    ],
+    "type": "Ice",
+    "category": "Special",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "iceburn",
+    "name": "Ice Burn",
+    "aliases": [
+      "ice burn",
+      "iceburn"
+    ],
+    "type": "Ice",
+    "category": "Special",
+    "basePower": 140,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "icefang",
+    "name": "Ice Fang",
+    "aliases": [
+      "ice fang",
+      "icefang"
+    ],
+    "type": "Ice",
+    "category": "Physical",
+    "basePower": 65,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "icehammer",
+    "name": "Ice Hammer",
+    "aliases": [
+      "ice hammer",
+      "icehammer"
+    ],
+    "type": "Ice",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "icepunch",
+    "name": "Ice Punch",
+    "aliases": [
+      "ice punch",
+      "icepunch"
+    ],
+    "type": "Ice",
+    "category": "Physical",
+    "basePower": 75,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "iceshard",
+    "name": "Ice Shard",
+    "aliases": [
+      "ice shard",
+      "iceshard"
+    ],
+    "type": "Ice",
+    "category": "Physical",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "icespinner",
+    "name": "Ice Spinner",
+    "aliases": [
+      "ice spinner",
+      "icespinner"
+    ],
+    "type": "Ice",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "iciclecrash",
+    "name": "Icicle Crash",
+    "aliases": [
+      "icicle crash",
+      "iciclecrash"
+    ],
+    "type": "Ice",
+    "category": "Physical",
+    "basePower": 85,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "iciclespear",
+    "name": "Icicle Spear",
+    "aliases": [
+      "icicle spear",
+      "iciclespear"
+    ],
+    "type": "Ice",
+    "category": "Physical",
+    "basePower": 25,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "icywind",
+    "name": "Icy Wind",
+    "aliases": [
+      "icy wind",
+      "icywind"
+    ],
+    "type": "Ice",
+    "category": "Special",
+    "basePower": 55,
+    "accuracy": 95,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "imprison",
+    "name": "Imprison",
+    "aliases": [
+      "imprison"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "incinerate",
+    "name": "Incinerate",
+    "aliases": [
+      "incinerate"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "infernalparade",
+    "name": "Infernal Parade",
+    "aliases": [
+      "infernal parade",
+      "infernalparade"
+    ],
+    "type": "Ghost",
+    "category": "Special",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "inferno",
+    "name": "Inferno",
+    "aliases": [
+      "inferno"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 100,
+    "accuracy": 50,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "infestation",
+    "name": "Infestation",
+    "aliases": [
+      "infestation"
+    ],
+    "type": "Bug",
+    "category": "Special",
+    "basePower": 20,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "ingrain",
+    "name": "Ingrain",
+    "aliases": [
+      "ingrain"
+    ],
+    "type": "Grass",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "instruct",
+    "name": "Instruct",
+    "aliases": [
+      "instruct"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "irondefense",
+    "name": "Iron Defense",
+    "aliases": [
+      "iron defense",
+      "irondefense"
+    ],
+    "type": "Steel",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "ironhead",
+    "name": "Iron Head",
+    "aliases": [
+      "iron head",
+      "ironhead"
+    ],
+    "type": "Steel",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "irontail",
+    "name": "Iron Tail",
+    "aliases": [
+      "iron tail",
+      "irontail"
+    ],
+    "type": "Steel",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 75,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "ivycudgel",
+    "name": "Ivy Cudgel",
+    "aliases": [
+      "ivy cudgel",
+      "ivycudgel"
+    ],
+    "type": "Grass",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "jawlock",
+    "name": "Jaw Lock",
+    "aliases": [
+      "jaw lock",
+      "jawlock"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "jetpunch",
+    "name": "Jet Punch",
+    "aliases": [
+      "jet punch",
+      "jetpunch"
+    ],
+    "type": "Water",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "judgment",
+    "name": "Judgment",
+    "aliases": [
+      "judgment"
+    ],
+    "type": "Normal",
+    "category": "Special",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "junglehealing",
+    "name": "Jungle Healing",
+    "aliases": [
+      "jungle healing",
+      "junglehealing"
+    ],
+    "type": "Grass",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "allies",
+    "isSpread": false
+  },
+  {
+    "id": "knockoff",
+    "name": "Knock Off",
+    "aliases": [
+      "knock off",
+      "knockoff"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 65,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "kowtowcleave",
+    "name": "Kowtow Cleave",
+    "aliases": [
+      "kowtow cleave",
+      "kowtowcleave"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 85,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "lashout",
+    "name": "Lash Out",
+    "aliases": [
+      "lash out",
+      "lashout"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 75,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "lastresort",
+    "name": "Last Resort",
+    "aliases": [
+      "last resort",
+      "lastresort"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 140,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "lastrespects",
+    "name": "Last Respects",
+    "aliases": [
+      "last respects",
+      "lastrespects"
+    ],
+    "type": "Ghost",
+    "category": "Physical",
+    "basePower": 50,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "lavaplume",
+    "name": "Lava Plume",
+    "aliases": [
+      "lava plume",
+      "lavaplume"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "allAdjacent",
+    "isSpread": true
+  },
+  {
+    "id": "leafblade",
+    "name": "Leaf Blade",
+    "aliases": [
+      "leaf blade",
+      "leafblade"
+    ],
+    "type": "Grass",
+    "category": "Physical",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "leafstorm",
+    "name": "Leaf Storm",
+    "aliases": [
+      "leaf storm",
+      "leafstorm"
+    ],
+    "type": "Grass",
+    "category": "Special",
+    "basePower": 130,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "leafage",
+    "name": "Leafage",
+    "aliases": [
+      "leafage"
+    ],
+    "type": "Grass",
+    "category": "Physical",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "leechlife",
+    "name": "Leech Life",
+    "aliases": [
+      "leech life",
+      "leechlife"
+    ],
+    "type": "Bug",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "leechseed",
+    "name": "Leech Seed",
+    "aliases": [
+      "leech seed",
+      "leechseed"
+    ],
+    "type": "Grass",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "leer",
+    "name": "Leer",
+    "aliases": [
+      "leer"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "lick",
+    "name": "Lick",
+    "aliases": [
+      "lick"
+    ],
+    "type": "Ghost",
+    "category": "Physical",
+    "basePower": 30,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "lifedew",
+    "name": "Life Dew",
+    "aliases": [
+      "life dew",
+      "lifedew"
+    ],
+    "type": "Water",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "allies",
+    "isSpread": false
+  },
+  {
+    "id": "lightscreen",
+    "name": "Light Screen",
+    "aliases": [
+      "light screen",
+      "lightscreen"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "allySide",
+    "isSpread": false
+  },
+  {
+    "id": "liquidation",
+    "name": "Liquidation",
+    "aliases": [
+      "liquidation"
+    ],
+    "type": "Water",
+    "category": "Physical",
+    "basePower": 85,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "lockon",
+    "name": "Lock-On",
+    "aliases": [
+      "lock-on",
+      "lock on",
+      "lockon"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "lowkick",
+    "name": "Low Kick",
+    "aliases": [
+      "low kick",
+      "lowkick"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "lowsweep",
+    "name": "Low Sweep",
+    "aliases": [
+      "low sweep",
+      "lowsweep"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 65,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "luminacrash",
+    "name": "Lumina Crash",
+    "aliases": [
+      "lumina crash",
+      "luminacrash"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "lunarblessing",
+    "name": "Lunar Blessing",
+    "aliases": [
+      "lunar blessing",
+      "lunarblessing"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "allies",
+    "isSpread": false
+  },
+  {
+    "id": "lunardance",
+    "name": "Lunar Dance",
+    "aliases": [
+      "lunar dance",
+      "lunardance"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "lunge",
+    "name": "Lunge",
+    "aliases": [
+      "lunge"
+    ],
+    "type": "Bug",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "lusterpurge",
+    "name": "Luster Purge",
+    "aliases": [
+      "luster purge",
+      "lusterpurge"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 95,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "machpunch",
+    "name": "Mach Punch",
+    "aliases": [
+      "mach punch",
+      "machpunch"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "magicpowder",
+    "name": "Magic Powder",
+    "aliases": [
+      "magic powder",
+      "magicpowder"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "magicroom",
+    "name": "Magic Room",
+    "aliases": [
+      "magic room",
+      "magicroom"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "all",
+    "isSpread": false
+  },
+  {
+    "id": "magicalleaf",
+    "name": "Magical Leaf",
+    "aliases": [
+      "magical leaf",
+      "magicalleaf"
+    ],
+    "type": "Grass",
+    "category": "Special",
+    "basePower": 60,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "magmastorm",
+    "name": "Magma Storm",
+    "aliases": [
+      "magma storm",
+      "magmastorm"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 100,
+    "accuracy": 75,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "magnetrise",
+    "name": "Magnet Rise",
+    "aliases": [
+      "magnet rise",
+      "magnetrise"
+    ],
+    "type": "Electric",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "magneticflux",
+    "name": "Magnetic Flux",
+    "aliases": [
+      "magnetic flux",
+      "magneticflux"
+    ],
+    "type": "Electric",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "allySide",
+    "isSpread": false
+  },
+  {
+    "id": "makeitrain",
+    "name": "Make It Rain",
+    "aliases": [
+      "make it rain",
+      "makeitrain"
+    ],
+    "type": "Steel",
+    "category": "Special",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "malignantchain",
+    "name": "Malignant Chain",
+    "aliases": [
+      "malignant chain",
+      "malignantchain"
+    ],
+    "type": "Poison",
+    "category": "Special",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "matchagotcha",
+    "name": "Matcha Gotcha",
+    "aliases": [
+      "matcha gotcha",
+      "matchagotcha"
+    ],
+    "type": "Grass",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 90,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "meanlook",
+    "name": "Mean Look",
+    "aliases": [
+      "mean look",
+      "meanlook"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "megadrain",
+    "name": "Mega Drain",
+    "aliases": [
+      "mega drain",
+      "megadrain"
+    ],
+    "type": "Grass",
+    "category": "Special",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "megakick",
+    "name": "Mega Kick",
+    "aliases": [
+      "mega kick",
+      "megakick"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 75,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "megapunch",
+    "name": "Mega Punch",
+    "aliases": [
+      "mega punch",
+      "megapunch"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "megahorn",
+    "name": "Megahorn",
+    "aliases": [
+      "megahorn"
+    ],
+    "type": "Bug",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "memento",
+    "name": "Memento",
+    "aliases": [
+      "memento"
+    ],
+    "type": "Dark",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "metalburst",
+    "name": "Metal Burst",
+    "aliases": [
+      "metal burst",
+      "metalburst"
+    ],
+    "type": "Steel",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "scripted",
+    "isSpread": false
+  },
+  {
+    "id": "metalclaw",
+    "name": "Metal Claw",
+    "aliases": [
+      "metal claw",
+      "metalclaw"
+    ],
+    "type": "Steel",
+    "category": "Physical",
+    "basePower": 50,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "metalsound",
+    "name": "Metal Sound",
+    "aliases": [
+      "metal sound",
+      "metalsound"
+    ],
+    "type": "Steel",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "meteorbeam",
+    "name": "Meteor Beam",
+    "aliases": [
+      "meteor beam",
+      "meteorbeam"
+    ],
+    "type": "Rock",
+    "category": "Special",
+    "basePower": 120,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "meteormash",
+    "name": "Meteor Mash",
+    "aliases": [
+      "meteor mash",
+      "meteormash"
+    ],
+    "type": "Steel",
+    "category": "Physical",
+    "basePower": 90,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "metronome",
+    "name": "Metronome",
+    "aliases": [
+      "metronome"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "mightycleave",
+    "name": "Mighty Cleave",
+    "aliases": [
+      "mighty cleave",
+      "mightycleave"
+    ],
+    "type": "Rock",
+    "category": "Physical",
+    "basePower": 95,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "milkdrink",
+    "name": "Milk Drink",
+    "aliases": [
+      "milk drink",
+      "milkdrink"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "mimic",
+    "name": "Mimic",
+    "aliases": [
+      "mimic"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "minimize",
+    "name": "Minimize",
+    "aliases": [
+      "minimize"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "mirrorcoat",
+    "name": "Mirror Coat",
+    "aliases": [
+      "mirror coat",
+      "mirrorcoat"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "scripted",
+    "isSpread": false
+  },
+  {
+    "id": "mist",
+    "name": "Mist",
+    "aliases": [
+      "mist"
+    ],
+    "type": "Ice",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "allySide",
+    "isSpread": false
+  },
+  {
+    "id": "mistball",
+    "name": "Mist Ball",
+    "aliases": [
+      "mist ball",
+      "mistball"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 95,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "mistyexplosion",
+    "name": "Misty Explosion",
+    "aliases": [
+      "misty explosion",
+      "mistyexplosion"
+    ],
+    "type": "Fairy",
+    "category": "Special",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "allAdjacent",
+    "isSpread": true
+  },
+  {
+    "id": "mistyterrain",
+    "name": "Misty Terrain",
+    "aliases": [
+      "misty terrain",
+      "mistyterrain"
+    ],
+    "type": "Fairy",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "all",
+    "isSpread": false
+  },
+  {
+    "id": "moonblast",
+    "name": "Moonblast",
+    "aliases": [
+      "moonblast"
+    ],
+    "type": "Fairy",
+    "category": "Special",
+    "basePower": 95,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "moongeistbeam",
+    "name": "Moongeist Beam",
+    "aliases": [
+      "moongeist beam",
+      "moongeistbeam"
+    ],
+    "type": "Ghost",
+    "category": "Special",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "moonlight",
+    "name": "Moonlight",
+    "aliases": [
+      "moonlight"
+    ],
+    "type": "Fairy",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "morningsun",
+    "name": "Morning Sun",
+    "aliases": [
+      "morning sun",
+      "morningsun"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "mortalspin",
+    "name": "Mortal Spin",
+    "aliases": [
+      "mortal spin",
+      "mortalspin"
+    ],
+    "type": "Poison",
+    "category": "Physical",
+    "basePower": 30,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "mountaingale",
+    "name": "Mountain Gale",
+    "aliases": [
+      "mountain gale",
+      "mountaingale"
+    ],
+    "type": "Ice",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "mudshot",
+    "name": "Mud Shot",
+    "aliases": [
+      "mud shot",
+      "mudshot"
+    ],
+    "type": "Ground",
+    "category": "Special",
+    "basePower": 55,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "mudslap",
+    "name": "Mud-Slap",
+    "aliases": [
+      "mud-slap",
+      "mud slap",
+      "mudslap"
+    ],
+    "type": "Ground",
+    "category": "Special",
+    "basePower": 20,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "muddywater",
+    "name": "Muddy Water",
+    "aliases": [
+      "muddy water",
+      "muddywater"
+    ],
+    "type": "Water",
+    "category": "Special",
+    "basePower": 90,
+    "accuracy": 85,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "mysticalfire",
+    "name": "Mystical Fire",
+    "aliases": [
+      "mystical fire",
+      "mysticalfire"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 75,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "mysticalpower",
+    "name": "Mystical Power",
+    "aliases": [
+      "mystical power",
+      "mysticalpower"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 70,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "nastyplot",
+    "name": "Nasty Plot",
+    "aliases": [
+      "nasty plot",
+      "nastyplot"
+    ],
+    "type": "Dark",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "nightdaze",
+    "name": "Night Daze",
+    "aliases": [
+      "night daze",
+      "nightdaze"
+    ],
+    "type": "Dark",
+    "category": "Special",
+    "basePower": 85,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "nightshade",
+    "name": "Night Shade",
+    "aliases": [
+      "night shade",
+      "nightshade"
+    ],
+    "type": "Ghost",
+    "category": "Special",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "nightslash",
+    "name": "Night Slash",
+    "aliases": [
+      "night slash",
+      "nightslash"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 70,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "noretreat",
+    "name": "No Retreat",
+    "aliases": [
+      "no retreat",
+      "noretreat"
+    ],
+    "type": "Fighting",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "nobleroar",
+    "name": "Noble Roar",
+    "aliases": [
+      "noble roar",
+      "nobleroar"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "nuzzle",
+    "name": "Nuzzle",
+    "aliases": [
+      "nuzzle"
+    ],
+    "type": "Electric",
+    "category": "Physical",
+    "basePower": 20,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "orderup",
+    "name": "Order Up",
+    "aliases": [
+      "order up",
+      "orderup"
+    ],
+    "type": "Dragon",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "originpulse",
+    "name": "Origin Pulse",
+    "aliases": [
+      "origin pulse",
+      "originpulse"
+    ],
+    "type": "Water",
+    "category": "Special",
+    "basePower": 110,
+    "accuracy": 85,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "outrage",
+    "name": "Outrage",
+    "aliases": [
+      "outrage"
+    ],
+    "type": "Dragon",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "randomNormal",
+    "isSpread": false
+  },
+  {
+    "id": "overdrive",
+    "name": "Overdrive",
+    "aliases": [
+      "overdrive"
+    ],
+    "type": "Electric",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "overheat",
+    "name": "Overheat",
+    "aliases": [
+      "overheat"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 130,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "painsplit",
+    "name": "Pain Split",
+    "aliases": [
+      "pain split",
+      "painsplit"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "paraboliccharge",
+    "name": "Parabolic Charge",
+    "aliases": [
+      "parabolic charge",
+      "paraboliccharge"
+    ],
+    "type": "Electric",
+    "category": "Special",
+    "basePower": 65,
+    "accuracy": 100,
+    "target": "allAdjacent",
+    "isSpread": true
+  },
+  {
+    "id": "partingshot",
+    "name": "Parting Shot",
+    "aliases": [
+      "parting shot",
+      "partingshot"
+    ],
+    "type": "Dark",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "payday",
+    "name": "Pay Day",
+    "aliases": [
+      "pay day",
+      "payday"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "payback",
+    "name": "Payback",
+    "aliases": [
+      "payback"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 50,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "peck",
+    "name": "Peck",
+    "aliases": [
+      "peck"
+    ],
+    "type": "Flying",
+    "category": "Physical",
+    "basePower": 35,
+    "accuracy": 100,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "perishsong",
+    "name": "Perish Song",
+    "aliases": [
+      "perish song",
+      "perishsong"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "all",
+    "isSpread": false
+  },
+  {
+    "id": "petalblizzard",
+    "name": "Petal Blizzard",
+    "aliases": [
+      "petal blizzard",
+      "petalblizzard"
+    ],
+    "type": "Grass",
+    "category": "Physical",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "allAdjacent",
+    "isSpread": true
+  },
+  {
+    "id": "petaldance",
+    "name": "Petal Dance",
+    "aliases": [
+      "petal dance",
+      "petaldance"
+    ],
+    "type": "Grass",
+    "category": "Special",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "randomNormal",
+    "isSpread": false
+  },
+  {
+    "id": "phantomforce",
+    "name": "Phantom Force",
+    "aliases": [
+      "phantom force",
+      "phantomforce"
+    ],
+    "type": "Ghost",
+    "category": "Physical",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "photongeyser",
+    "name": "Photon Geyser",
+    "aliases": [
+      "photon geyser",
+      "photongeyser"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "pinmissile",
+    "name": "Pin Missile",
+    "aliases": [
+      "pin missile",
+      "pinmissile"
+    ],
+    "type": "Bug",
+    "category": "Physical",
+    "basePower": 25,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "playnice",
+    "name": "Play Nice",
+    "aliases": [
+      "play nice",
+      "playnice"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "playrough",
+    "name": "Play Rough",
+    "aliases": [
+      "play rough",
+      "playrough"
+    ],
+    "type": "Fairy",
+    "category": "Physical",
+    "basePower": 90,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "pluck",
+    "name": "Pluck",
+    "aliases": [
+      "pluck"
+    ],
+    "type": "Flying",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "poisonfang",
+    "name": "Poison Fang",
+    "aliases": [
+      "poison fang",
+      "poisonfang"
+    ],
+    "type": "Poison",
+    "category": "Physical",
+    "basePower": 50,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "poisongas",
+    "name": "Poison Gas",
+    "aliases": [
+      "poison gas",
+      "poisongas"
+    ],
+    "type": "Poison",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 90,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "poisonjab",
+    "name": "Poison Jab",
+    "aliases": [
+      "poison jab",
+      "poisonjab"
+    ],
+    "type": "Poison",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "poisonpowder",
+    "name": "Poison Powder",
+    "aliases": [
+      "poison powder",
+      "poisonpowder"
+    ],
+    "type": "Poison",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 75,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "poisonsting",
+    "name": "Poison Sting",
+    "aliases": [
+      "poison sting",
+      "poisonsting"
+    ],
+    "type": "Poison",
+    "category": "Physical",
+    "basePower": 15,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "poisontail",
+    "name": "Poison Tail",
+    "aliases": [
+      "poison tail",
+      "poisontail"
+    ],
+    "type": "Poison",
+    "category": "Physical",
+    "basePower": 50,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "pollenpuff",
+    "name": "Pollen Puff",
+    "aliases": [
+      "pollen puff",
+      "pollenpuff"
+    ],
+    "type": "Bug",
+    "category": "Special",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "poltergeist",
+    "name": "Poltergeist",
+    "aliases": [
+      "poltergeist"
+    ],
+    "type": "Ghost",
+    "category": "Physical",
+    "basePower": 110,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "populationbomb",
+    "name": "Population Bomb",
+    "aliases": [
+      "population bomb",
+      "populationbomb"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 20,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "pounce",
+    "name": "Pounce",
+    "aliases": [
+      "pounce"
+    ],
+    "type": "Bug",
+    "category": "Physical",
+    "basePower": 50,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "pound",
+    "name": "Pound",
+    "aliases": [
+      "pound"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "powdersnow",
+    "name": "Powder Snow",
+    "aliases": [
+      "powder snow",
+      "powdersnow"
+    ],
+    "type": "Ice",
+    "category": "Special",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "powergem",
+    "name": "Power Gem",
+    "aliases": [
+      "power gem",
+      "powergem"
+    ],
+    "type": "Rock",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "powersplit",
+    "name": "Power Split",
+    "aliases": [
+      "power split",
+      "powersplit"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "powerswap",
+    "name": "Power Swap",
+    "aliases": [
+      "power swap",
+      "powerswap"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "powertrick",
+    "name": "Power Trick",
+    "aliases": [
+      "power trick",
+      "powertrick"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "powertrip",
+    "name": "Power Trip",
+    "aliases": [
+      "power trip",
+      "powertrip"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 20,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "powerwhip",
+    "name": "Power Whip",
+    "aliases": [
+      "power whip",
+      "powerwhip"
+    ],
+    "type": "Grass",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "precipiceblades",
+    "name": "Precipice Blades",
+    "aliases": [
+      "precipice blades",
+      "precipiceblades"
+    ],
+    "type": "Ground",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 85,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "present",
+    "name": "Present",
+    "aliases": [
+      "present"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "prismaticlaser",
+    "name": "Prismatic Laser",
+    "aliases": [
+      "prismatic laser",
+      "prismaticlaser"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 160,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "protect",
+    "name": "Protect",
+    "aliases": [
+      "protect"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "psybeam",
+    "name": "Psybeam",
+    "aliases": [
+      "psybeam"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 65,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "psyblade",
+    "name": "Psyblade",
+    "aliases": [
+      "psyblade"
+    ],
+    "type": "Psychic",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "psychup",
+    "name": "Psych Up",
+    "aliases": [
+      "psych up",
+      "psychup"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "psychic",
+    "name": "Psychic",
+    "aliases": [
+      "psychic"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "psychicfangs",
+    "name": "Psychic Fangs",
+    "aliases": [
+      "psychic fangs",
+      "psychicfangs"
+    ],
+    "type": "Psychic",
+    "category": "Physical",
+    "basePower": 85,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "psychicnoise",
+    "name": "Psychic Noise",
+    "aliases": [
+      "psychic noise",
+      "psychicnoise"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 75,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "psychicterrain",
+    "name": "Psychic Terrain",
+    "aliases": [
+      "psychic terrain",
+      "psychicterrain"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "all",
+    "isSpread": false
+  },
+  {
+    "id": "psychoboost",
+    "name": "Psycho Boost",
+    "aliases": [
+      "psycho boost",
+      "psychoboost"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 140,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "psychocut",
+    "name": "Psycho Cut",
+    "aliases": [
+      "psycho cut",
+      "psychocut"
+    ],
+    "type": "Psychic",
+    "category": "Physical",
+    "basePower": 70,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "psyshieldbash",
+    "name": "Psyshield Bash",
+    "aliases": [
+      "psyshield bash",
+      "psyshieldbash"
+    ],
+    "type": "Psychic",
+    "category": "Physical",
+    "basePower": 70,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "psyshock",
+    "name": "Psyshock",
+    "aliases": [
+      "psyshock"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "psystrike",
+    "name": "Psystrike",
+    "aliases": [
+      "psystrike"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "pyroball",
+    "name": "Pyro Ball",
+    "aliases": [
+      "pyro ball",
+      "pyroball"
+    ],
+    "type": "Fire",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "quash",
+    "name": "Quash",
+    "aliases": [
+      "quash"
+    ],
+    "type": "Dark",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "quickattack",
+    "name": "Quick Attack",
+    "aliases": [
+      "quick attack",
+      "quickattack"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "quickguard",
+    "name": "Quick Guard",
+    "aliases": [
+      "quick guard",
+      "quickguard"
+    ],
+    "type": "Fighting",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "allySide",
+    "isSpread": false
+  },
+  {
+    "id": "quiverdance",
+    "name": "Quiver Dance",
+    "aliases": [
+      "quiver dance",
+      "quiverdance"
+    ],
+    "type": "Bug",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "ragefist",
+    "name": "Rage Fist",
+    "aliases": [
+      "rage fist",
+      "ragefist"
+    ],
+    "type": "Ghost",
+    "category": "Physical",
+    "basePower": 50,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "ragepowder",
+    "name": "Rage Powder",
+    "aliases": [
+      "rage powder",
+      "ragepowder"
+    ],
+    "type": "Bug",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "ragingbull",
+    "name": "Raging Bull",
+    "aliases": [
+      "raging bull",
+      "ragingbull"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "ragingfury",
+    "name": "Raging Fury",
+    "aliases": [
+      "raging fury",
+      "ragingfury"
+    ],
+    "type": "Fire",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "randomNormal",
+    "isSpread": false
+  },
+  {
+    "id": "raindance",
+    "name": "Rain Dance",
+    "aliases": [
+      "rain dance",
+      "raindance"
+    ],
+    "type": "Water",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "all",
+    "isSpread": false
+  },
+  {
+    "id": "rapidspin",
+    "name": "Rapid Spin",
+    "aliases": [
+      "rapid spin",
+      "rapidspin"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 50,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "razorleaf",
+    "name": "Razor Leaf",
+    "aliases": [
+      "razor leaf",
+      "razorleaf"
+    ],
+    "type": "Grass",
+    "category": "Physical",
+    "basePower": 55,
+    "accuracy": 95,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "razorshell",
+    "name": "Razor Shell",
+    "aliases": [
+      "razor shell",
+      "razorshell"
+    ],
+    "type": "Water",
+    "category": "Physical",
+    "basePower": 75,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "recover",
+    "name": "Recover",
+    "aliases": [
+      "recover"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "recycle",
+    "name": "Recycle",
+    "aliases": [
+      "recycle"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "reflect",
+    "name": "Reflect",
+    "aliases": [
+      "reflect"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "allySide",
+    "isSpread": false
+  },
+  {
+    "id": "reflecttype",
+    "name": "Reflect Type",
+    "aliases": [
+      "reflect type",
+      "reflecttype"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "relicsong",
+    "name": "Relic Song",
+    "aliases": [
+      "relic song",
+      "relicsong"
+    ],
+    "type": "Normal",
+    "category": "Special",
+    "basePower": 75,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "rest",
+    "name": "Rest",
+    "aliases": [
+      "rest"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "retaliate",
+    "name": "Retaliate",
+    "aliases": [
+      "retaliate"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 70,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "revelationdance",
+    "name": "Revelation Dance",
+    "aliases": [
+      "revelation dance",
+      "revelationdance"
+    ],
+    "type": "Normal",
+    "category": "Special",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "reversal",
+    "name": "Reversal",
+    "aliases": [
+      "reversal"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "revivalblessing",
+    "name": "Revival Blessing",
+    "aliases": [
+      "revival blessing",
+      "revivalblessing"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "risingvoltage",
+    "name": "Rising Voltage",
+    "aliases": [
+      "rising voltage",
+      "risingvoltage"
+    ],
+    "type": "Electric",
+    "category": "Special",
+    "basePower": 70,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "roar",
+    "name": "Roar",
+    "aliases": [
+      "roar"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "roaroftime",
+    "name": "Roar of Time",
+    "aliases": [
+      "roar of time",
+      "roaroftime"
+    ],
+    "type": "Dragon",
+    "category": "Special",
+    "basePower": 150,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "rockblast",
+    "name": "Rock Blast",
+    "aliases": [
+      "rock blast",
+      "rockblast"
+    ],
+    "type": "Rock",
+    "category": "Physical",
+    "basePower": 25,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "rockpolish",
+    "name": "Rock Polish",
+    "aliases": [
+      "rock polish",
+      "rockpolish"
+    ],
+    "type": "Rock",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "rockslide",
+    "name": "Rock Slide",
+    "aliases": [
+      "rock slide",
+      "rockslide"
+    ],
+    "type": "Rock",
+    "category": "Physical",
+    "basePower": 75,
+    "accuracy": 90,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "rocksmash",
+    "name": "Rock Smash",
+    "aliases": [
+      "rock smash",
+      "rocksmash"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "rockthrow",
+    "name": "Rock Throw",
+    "aliases": [
+      "rock throw",
+      "rockthrow"
+    ],
+    "type": "Rock",
+    "category": "Physical",
+    "basePower": 50,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "rocktomb",
+    "name": "Rock Tomb",
+    "aliases": [
+      "rock tomb",
+      "rocktomb"
+    ],
+    "type": "Rock",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "rockwrecker",
+    "name": "Rock Wrecker",
+    "aliases": [
+      "rock wrecker",
+      "rockwrecker"
+    ],
+    "type": "Rock",
+    "category": "Physical",
+    "basePower": 150,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "roleplay",
+    "name": "Role Play",
+    "aliases": [
+      "role play",
+      "roleplay"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "rollout",
+    "name": "Rollout",
+    "aliases": [
+      "rollout"
+    ],
+    "type": "Rock",
+    "category": "Physical",
+    "basePower": 30,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "roost",
+    "name": "Roost",
+    "aliases": [
+      "roost"
+    ],
+    "type": "Flying",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "round",
+    "name": "Round",
+    "aliases": [
+      "round"
+    ],
+    "type": "Normal",
+    "category": "Special",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "ruination",
+    "name": "Ruination",
+    "aliases": [
+      "ruination"
+    ],
+    "type": "Dark",
+    "category": "Special",
+    "basePower": 0,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "sacredfire",
+    "name": "Sacred Fire",
+    "aliases": [
+      "sacred fire",
+      "sacredfire"
+    ],
+    "type": "Fire",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "sacredsword",
+    "name": "Sacred Sword",
+    "aliases": [
+      "sacred sword",
+      "sacredsword"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "safeguard",
+    "name": "Safeguard",
+    "aliases": [
+      "safeguard"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "allySide",
+    "isSpread": false
+  },
+  {
+    "id": "saltcure",
+    "name": "Salt Cure",
+    "aliases": [
+      "salt cure",
+      "saltcure"
+    ],
+    "type": "Rock",
+    "category": "Physical",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "sandattack",
+    "name": "Sand Attack",
+    "aliases": [
+      "sand attack",
+      "sandattack"
+    ],
+    "type": "Ground",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "sandtomb",
+    "name": "Sand Tomb",
+    "aliases": [
+      "sand tomb",
+      "sandtomb"
+    ],
+    "type": "Ground",
+    "category": "Physical",
+    "basePower": 35,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "sandsearstorm",
+    "name": "Sandsear Storm",
+    "aliases": [
+      "sandsear storm",
+      "sandsearstorm"
+    ],
+    "type": "Ground",
+    "category": "Special",
+    "basePower": 100,
+    "accuracy": 80,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "sandstorm",
+    "name": "Sandstorm",
+    "aliases": [
+      "sandstorm"
+    ],
+    "type": "Rock",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "all",
+    "isSpread": false
+  },
+  {
+    "id": "scald",
+    "name": "Scald",
+    "aliases": [
+      "scald"
+    ],
+    "type": "Water",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "scaleshot",
+    "name": "Scale Shot",
+    "aliases": [
+      "scale shot",
+      "scaleshot"
+    ],
+    "type": "Dragon",
+    "category": "Physical",
+    "basePower": 25,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "scaryface",
+    "name": "Scary Face",
+    "aliases": [
+      "scary face",
+      "scaryface"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "scorchingsands",
+    "name": "Scorching Sands",
+    "aliases": [
+      "scorching sands",
+      "scorchingsands"
+    ],
+    "type": "Ground",
+    "category": "Special",
+    "basePower": 70,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "scratch",
+    "name": "Scratch",
+    "aliases": [
+      "scratch"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "screech",
+    "name": "Screech",
+    "aliases": [
+      "screech"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "secretsword",
+    "name": "Secret Sword",
+    "aliases": [
+      "secret sword",
+      "secretsword"
+    ],
+    "type": "Fighting",
+    "category": "Special",
+    "basePower": 85,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "seedbomb",
+    "name": "Seed Bomb",
+    "aliases": [
+      "seed bomb",
+      "seedbomb"
+    ],
+    "type": "Grass",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "seedflare",
+    "name": "Seed Flare",
+    "aliases": [
+      "seed flare",
+      "seedflare"
+    ],
+    "type": "Grass",
+    "category": "Special",
+    "basePower": 120,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "seismictoss",
+    "name": "Seismic Toss",
+    "aliases": [
+      "seismic toss",
+      "seismictoss"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "selfdestruct",
+    "name": "Self-Destruct",
+    "aliases": [
+      "self-destruct",
+      "self destruct",
+      "selfdestruct"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 200,
+    "accuracy": 100,
+    "target": "allAdjacent",
+    "isSpread": true
+  },
+  {
+    "id": "shadowball",
+    "name": "Shadow Ball",
+    "aliases": [
+      "shadow ball",
+      "shadowball"
+    ],
+    "type": "Ghost",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "shadowclaw",
+    "name": "Shadow Claw",
+    "aliases": [
+      "shadow claw",
+      "shadowclaw"
+    ],
+    "type": "Ghost",
+    "category": "Physical",
+    "basePower": 70,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "shadowforce",
+    "name": "Shadow Force",
+    "aliases": [
+      "shadow force",
+      "shadowforce"
+    ],
+    "type": "Ghost",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "shadowpunch",
+    "name": "Shadow Punch",
+    "aliases": [
+      "shadow punch",
+      "shadowpunch"
+    ],
+    "type": "Ghost",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "shadowsneak",
+    "name": "Shadow Sneak",
+    "aliases": [
+      "shadow sneak",
+      "shadowsneak"
+    ],
+    "type": "Ghost",
+    "category": "Physical",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "shedtail",
+    "name": "Shed Tail",
+    "aliases": [
+      "shed tail",
+      "shedtail"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "sheercold",
+    "name": "Sheer Cold",
+    "aliases": [
+      "sheer cold",
+      "sheercold"
+    ],
+    "type": "Ice",
+    "category": "Special",
+    "basePower": 0,
+    "accuracy": 30,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "shellsidearm",
+    "name": "Shell Side Arm",
+    "aliases": [
+      "shell side arm",
+      "shellsidearm"
+    ],
+    "type": "Poison",
+    "category": "Special",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "shellsmash",
+    "name": "Shell Smash",
+    "aliases": [
+      "shell smash",
+      "shellsmash"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "shelter",
+    "name": "Shelter",
+    "aliases": [
+      "shelter"
+    ],
+    "type": "Steel",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "shiftgear",
+    "name": "Shift Gear",
+    "aliases": [
+      "shift gear",
+      "shiftgear"
+    ],
+    "type": "Steel",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "shockwave",
+    "name": "Shock Wave",
+    "aliases": [
+      "shock wave",
+      "shockwave"
+    ],
+    "type": "Electric",
+    "category": "Special",
+    "basePower": 60,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "shoreup",
+    "name": "Shore Up",
+    "aliases": [
+      "shore up",
+      "shoreup"
+    ],
+    "type": "Ground",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "silktrap",
+    "name": "Silk Trap",
+    "aliases": [
+      "silk trap",
+      "silktrap"
+    ],
+    "type": "Bug",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "simplebeam",
+    "name": "Simple Beam",
+    "aliases": [
+      "simple beam",
+      "simplebeam"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "sing",
+    "name": "Sing",
+    "aliases": [
+      "sing"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 55,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "sketch",
+    "name": "Sketch",
+    "aliases": [
+      "sketch"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "skillswap",
+    "name": "Skill Swap",
+    "aliases": [
+      "skill swap",
+      "skillswap"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "skittersmack",
+    "name": "Skitter Smack",
+    "aliases": [
+      "skitter smack",
+      "skittersmack"
+    ],
+    "type": "Bug",
+    "category": "Physical",
+    "basePower": 70,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "skyattack",
+    "name": "Sky Attack",
+    "aliases": [
+      "sky attack",
+      "skyattack"
+    ],
+    "type": "Flying",
+    "category": "Physical",
+    "basePower": 140,
+    "accuracy": 90,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "slackoff",
+    "name": "Slack Off",
+    "aliases": [
+      "slack off",
+      "slackoff"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "slam",
+    "name": "Slam",
+    "aliases": [
+      "slam"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 75,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "slash",
+    "name": "Slash",
+    "aliases": [
+      "slash"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 70,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "sleeppowder",
+    "name": "Sleep Powder",
+    "aliases": [
+      "sleep powder",
+      "sleeppowder"
+    ],
+    "type": "Grass",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 75,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "sleeptalk",
+    "name": "Sleep Talk",
+    "aliases": [
+      "sleep talk",
+      "sleeptalk"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "sludge",
+    "name": "Sludge",
+    "aliases": [
+      "sludge"
+    ],
+    "type": "Poison",
+    "category": "Special",
+    "basePower": 65,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "sludgebomb",
+    "name": "Sludge Bomb",
+    "aliases": [
+      "sludge bomb",
+      "sludgebomb"
+    ],
+    "type": "Poison",
+    "category": "Special",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "sludgewave",
+    "name": "Sludge Wave",
+    "aliases": [
+      "sludge wave",
+      "sludgewave"
+    ],
+    "type": "Poison",
+    "category": "Special",
+    "basePower": 95,
+    "accuracy": 100,
+    "target": "allAdjacent",
+    "isSpread": true
+  },
+  {
+    "id": "smackdown",
+    "name": "Smack Down",
+    "aliases": [
+      "smack down",
+      "smackdown"
+    ],
+    "type": "Rock",
+    "category": "Physical",
+    "basePower": 50,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "smartstrike",
+    "name": "Smart Strike",
+    "aliases": [
+      "smart strike",
+      "smartstrike"
+    ],
+    "type": "Steel",
+    "category": "Physical",
+    "basePower": 70,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "smog",
+    "name": "Smog",
+    "aliases": [
+      "smog"
+    ],
+    "type": "Poison",
+    "category": "Special",
+    "basePower": 30,
+    "accuracy": 70,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "smokescreen",
+    "name": "Smokescreen",
+    "aliases": [
+      "smokescreen"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "snarl",
+    "name": "Snarl",
+    "aliases": [
+      "snarl"
+    ],
+    "type": "Dark",
+    "category": "Special",
+    "basePower": 55,
+    "accuracy": 95,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "snipeshot",
+    "name": "Snipe Shot",
+    "aliases": [
+      "snipe shot",
+      "snipeshot"
+    ],
+    "type": "Water",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "snore",
+    "name": "Snore",
+    "aliases": [
+      "snore"
+    ],
+    "type": "Normal",
+    "category": "Special",
+    "basePower": 50,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "snowscape",
+    "name": "Snowscape",
+    "aliases": [
+      "snowscape"
+    ],
+    "type": "Ice",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "all",
+    "isSpread": false
+  },
+  {
+    "id": "soak",
+    "name": "Soak",
+    "aliases": [
+      "soak"
+    ],
+    "type": "Water",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "softboiled",
+    "name": "Soft-Boiled",
+    "aliases": [
+      "soft-boiled",
+      "soft boiled",
+      "softboiled"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "solarbeam",
+    "name": "Solar Beam",
+    "aliases": [
+      "solar beam",
+      "solarbeam"
+    ],
+    "type": "Grass",
+    "category": "Special",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "solarblade",
+    "name": "Solar Blade",
+    "aliases": [
+      "solar blade",
+      "solarblade"
+    ],
+    "type": "Grass",
+    "category": "Physical",
+    "basePower": 125,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "spacialrend",
+    "name": "Spacial Rend",
+    "aliases": [
+      "spacial rend",
+      "spacialrend"
+    ],
+    "type": "Dragon",
+    "category": "Special",
+    "basePower": 100,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "spark",
+    "name": "Spark",
+    "aliases": [
+      "spark"
+    ],
+    "type": "Electric",
+    "category": "Physical",
+    "basePower": 65,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "sparklingaria",
+    "name": "Sparkling Aria",
+    "aliases": [
+      "sparkling aria",
+      "sparklingaria"
+    ],
+    "type": "Water",
+    "category": "Special",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "allAdjacent",
+    "isSpread": true
+  },
+  {
+    "id": "speedswap",
+    "name": "Speed Swap",
+    "aliases": [
+      "speed swap",
+      "speedswap"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "spicyextract",
+    "name": "Spicy Extract",
+    "aliases": [
+      "spicy extract",
+      "spicyextract"
+    ],
+    "type": "Grass",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "spikes",
+    "name": "Spikes",
+    "aliases": [
+      "spikes"
+    ],
+    "type": "Ground",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "foeSide",
+    "isSpread": false
+  },
+  {
+    "id": "spikyshield",
+    "name": "Spiky Shield",
+    "aliases": [
+      "spiky shield",
+      "spikyshield"
+    ],
+    "type": "Grass",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "spinout",
+    "name": "Spin Out",
+    "aliases": [
+      "spin out",
+      "spinout"
+    ],
+    "type": "Steel",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "spiritbreak",
+    "name": "Spirit Break",
+    "aliases": [
+      "spirit break",
+      "spiritbreak"
+    ],
+    "type": "Fairy",
+    "category": "Physical",
+    "basePower": 75,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "spiritshackle",
+    "name": "Spirit Shackle",
+    "aliases": [
+      "spirit shackle",
+      "spiritshackle"
+    ],
+    "type": "Ghost",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "spitup",
+    "name": "Spit Up",
+    "aliases": [
+      "spit up",
+      "spitup"
+    ],
+    "type": "Normal",
+    "category": "Special",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "spite",
+    "name": "Spite",
+    "aliases": [
+      "spite"
+    ],
+    "type": "Ghost",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "splash",
+    "name": "Splash",
+    "aliases": [
+      "splash"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "spore",
+    "name": "Spore",
+    "aliases": [
+      "spore"
+    ],
+    "type": "Grass",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "springtidestorm",
+    "name": "Springtide Storm",
+    "aliases": [
+      "springtide storm",
+      "springtidestorm"
+    ],
+    "type": "Fairy",
+    "category": "Special",
+    "basePower": 100,
+    "accuracy": 80,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "stealthrock",
+    "name": "Stealth Rock",
+    "aliases": [
+      "stealth rock",
+      "stealthrock"
+    ],
+    "type": "Rock",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "foeSide",
+    "isSpread": false
+  },
+  {
+    "id": "steameruption",
+    "name": "Steam Eruption",
+    "aliases": [
+      "steam eruption",
+      "steameruption"
+    ],
+    "type": "Water",
+    "category": "Special",
+    "basePower": 110,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "steelbeam",
+    "name": "Steel Beam",
+    "aliases": [
+      "steel beam",
+      "steelbeam"
+    ],
+    "type": "Steel",
+    "category": "Special",
+    "basePower": 140,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "steelroller",
+    "name": "Steel Roller",
+    "aliases": [
+      "steel roller",
+      "steelroller"
+    ],
+    "type": "Steel",
+    "category": "Physical",
+    "basePower": 130,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "steelwing",
+    "name": "Steel Wing",
+    "aliases": [
+      "steel wing",
+      "steelwing"
+    ],
+    "type": "Steel",
+    "category": "Physical",
+    "basePower": 70,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "stickyweb",
+    "name": "Sticky Web",
+    "aliases": [
+      "sticky web",
+      "stickyweb"
+    ],
+    "type": "Bug",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "foeSide",
+    "isSpread": false
+  },
+  {
+    "id": "stockpile",
+    "name": "Stockpile",
+    "aliases": [
+      "stockpile"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "stomp",
+    "name": "Stomp",
+    "aliases": [
+      "stomp"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 65,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "stompingtantrum",
+    "name": "Stomping Tantrum",
+    "aliases": [
+      "stomping tantrum",
+      "stompingtantrum"
+    ],
+    "type": "Ground",
+    "category": "Physical",
+    "basePower": 75,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "stoneaxe",
+    "name": "Stone Axe",
+    "aliases": [
+      "stone axe",
+      "stoneaxe"
+    ],
+    "type": "Rock",
+    "category": "Physical",
+    "basePower": 65,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "stoneedge",
+    "name": "Stone Edge",
+    "aliases": [
+      "stone edge",
+      "stoneedge"
+    ],
+    "type": "Rock",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 80,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "storedpower",
+    "name": "Stored Power",
+    "aliases": [
+      "stored power",
+      "storedpower"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 20,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "strangesteam",
+    "name": "Strange Steam",
+    "aliases": [
+      "strange steam",
+      "strangesteam"
+    ],
+    "type": "Fairy",
+    "category": "Special",
+    "basePower": 90,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "strength",
+    "name": "Strength",
+    "aliases": [
+      "strength"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "strengthsap",
+    "name": "Strength Sap",
+    "aliases": [
+      "strength sap",
+      "strengthsap"
+    ],
+    "type": "Grass",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "stringshot",
+    "name": "String Shot",
+    "aliases": [
+      "string shot",
+      "stringshot"
+    ],
+    "type": "Bug",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 95,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "struggle",
+    "name": "Struggle",
+    "aliases": [
+      "struggle"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 50,
+    "accuracy": null,
+    "target": "randomNormal",
+    "isSpread": false
+  },
+  {
+    "id": "strugglebug",
+    "name": "Struggle Bug",
+    "aliases": [
+      "struggle bug",
+      "strugglebug"
+    ],
+    "type": "Bug",
+    "category": "Special",
+    "basePower": 50,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "stuffcheeks",
+    "name": "Stuff Cheeks",
+    "aliases": [
+      "stuff cheeks",
+      "stuffcheeks"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "stunspore",
+    "name": "Stun Spore",
+    "aliases": [
+      "stun spore",
+      "stunspore"
+    ],
+    "type": "Grass",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 75,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "substitute",
+    "name": "Substitute",
+    "aliases": [
+      "substitute"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "suckerpunch",
+    "name": "Sucker Punch",
+    "aliases": [
+      "sucker punch",
+      "suckerpunch"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 70,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "sunnyday",
+    "name": "Sunny Day",
+    "aliases": [
+      "sunny day",
+      "sunnyday"
+    ],
+    "type": "Fire",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "all",
+    "isSpread": false
+  },
+  {
+    "id": "sunsteelstrike",
+    "name": "Sunsteel Strike",
+    "aliases": [
+      "sunsteel strike",
+      "sunsteelstrike"
+    ],
+    "type": "Steel",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "superfang",
+    "name": "Super Fang",
+    "aliases": [
+      "super fang",
+      "superfang"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 0,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "supercellslam",
+    "name": "Supercell Slam",
+    "aliases": [
+      "supercell slam",
+      "supercellslam"
+    ],
+    "type": "Electric",
+    "category": "Physical",
+    "basePower": 100,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "superpower",
+    "name": "Superpower",
+    "aliases": [
+      "superpower"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "supersonic",
+    "name": "Supersonic",
+    "aliases": [
+      "supersonic"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 55,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "surf",
+    "name": "Surf",
+    "aliases": [
+      "surf"
+    ],
+    "type": "Water",
+    "category": "Special",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "allAdjacent",
+    "isSpread": true
+  },
+  {
+    "id": "surgingstrikes",
+    "name": "Surging Strikes",
+    "aliases": [
+      "surging strikes",
+      "surgingstrikes"
+    ],
+    "type": "Water",
+    "category": "Physical",
+    "basePower": 25,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "swagger",
+    "name": "Swagger",
+    "aliases": [
+      "swagger"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "swallow",
+    "name": "Swallow",
+    "aliases": [
+      "swallow"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "sweetkiss",
+    "name": "Sweet Kiss",
+    "aliases": [
+      "sweet kiss",
+      "sweetkiss"
+    ],
+    "type": "Fairy",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 75,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "sweetscent",
+    "name": "Sweet Scent",
+    "aliases": [
+      "sweet scent",
+      "sweetscent"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "swift",
+    "name": "Swift",
+    "aliases": [
+      "swift"
+    ],
+    "type": "Normal",
+    "category": "Special",
+    "basePower": 60,
+    "accuracy": null,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "switcheroo",
+    "name": "Switcheroo",
+    "aliases": [
+      "switcheroo"
+    ],
+    "type": "Dark",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "swordsdance",
+    "name": "Swords Dance",
+    "aliases": [
+      "swords dance",
+      "swordsdance"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "synthesis",
+    "name": "Synthesis",
+    "aliases": [
+      "synthesis"
+    ],
+    "type": "Grass",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "syrupbomb",
+    "name": "Syrup Bomb",
+    "aliases": [
+      "syrup bomb",
+      "syrupbomb"
+    ],
+    "type": "Grass",
+    "category": "Special",
+    "basePower": 60,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "tachyoncutter",
+    "name": "Tachyon Cutter",
+    "aliases": [
+      "tachyon cutter",
+      "tachyoncutter"
+    ],
+    "type": "Steel",
+    "category": "Special",
+    "basePower": 50,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "tackle",
+    "name": "Tackle",
+    "aliases": [
+      "tackle"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "tailglow",
+    "name": "Tail Glow",
+    "aliases": [
+      "tail glow",
+      "tailglow"
+    ],
+    "type": "Bug",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "tailslap",
+    "name": "Tail Slap",
+    "aliases": [
+      "tail slap",
+      "tailslap"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 25,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "tailwhip",
+    "name": "Tail Whip",
+    "aliases": [
+      "tail whip",
+      "tailwhip"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "tailwind",
+    "name": "Tailwind",
+    "aliases": [
+      "tailwind"
+    ],
+    "type": "Flying",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "allySide",
+    "isSpread": false
+  },
+  {
+    "id": "takedown",
+    "name": "Take Down",
+    "aliases": [
+      "take down",
+      "takedown"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 90,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "takeheart",
+    "name": "Take Heart",
+    "aliases": [
+      "take heart",
+      "takeheart"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "tarshot",
+    "name": "Tar Shot",
+    "aliases": [
+      "tar shot",
+      "tarshot"
+    ],
+    "type": "Rock",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "taunt",
+    "name": "Taunt",
+    "aliases": [
+      "taunt"
+    ],
+    "type": "Dark",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "tearfullook",
+    "name": "Tearful Look",
+    "aliases": [
+      "tearful look",
+      "tearfullook"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "teatime",
+    "name": "Teatime",
+    "aliases": [
+      "teatime"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "all",
+    "isSpread": false
+  },
+  {
+    "id": "teeterdance",
+    "name": "Teeter Dance",
+    "aliases": [
+      "teeter dance",
+      "teeterdance"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "allAdjacent",
+    "isSpread": true
+  },
+  {
+    "id": "teleport",
+    "name": "Teleport",
+    "aliases": [
+      "teleport"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "temperflare",
+    "name": "Temper Flare",
+    "aliases": [
+      "temper flare",
+      "temperflare"
+    ],
+    "type": "Fire",
+    "category": "Physical",
+    "basePower": 75,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "terablast",
+    "name": "Tera Blast",
+    "aliases": [
+      "tera blast",
+      "terablast"
+    ],
+    "type": "Normal",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "terastarstorm",
+    "name": "Tera Starstorm",
+    "aliases": [
+      "tera starstorm",
+      "terastarstorm"
+    ],
+    "type": "Normal",
+    "category": "Special",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "terrainpulse",
+    "name": "Terrain Pulse",
+    "aliases": [
+      "terrain pulse",
+      "terrainpulse"
+    ],
+    "type": "Normal",
+    "category": "Special",
+    "basePower": 50,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "thief",
+    "name": "Thief",
+    "aliases": [
+      "thief"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "thrash",
+    "name": "Thrash",
+    "aliases": [
+      "thrash"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "randomNormal",
+    "isSpread": false
+  },
+  {
+    "id": "throatchop",
+    "name": "Throat Chop",
+    "aliases": [
+      "throat chop",
+      "throatchop"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "thunder",
+    "name": "Thunder",
+    "aliases": [
+      "thunder"
+    ],
+    "type": "Electric",
+    "category": "Special",
+    "basePower": 110,
+    "accuracy": 70,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "thundercage",
+    "name": "Thunder Cage",
+    "aliases": [
+      "thunder cage",
+      "thundercage"
+    ],
+    "type": "Electric",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "thunderfang",
+    "name": "Thunder Fang",
+    "aliases": [
+      "thunder fang",
+      "thunderfang"
+    ],
+    "type": "Electric",
+    "category": "Physical",
+    "basePower": 65,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "thunderpunch",
+    "name": "Thunder Punch",
+    "aliases": [
+      "thunder punch",
+      "thunderpunch"
+    ],
+    "type": "Electric",
+    "category": "Physical",
+    "basePower": 75,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "thundershock",
+    "name": "Thunder Shock",
+    "aliases": [
+      "thunder shock",
+      "thundershock"
+    ],
+    "type": "Electric",
+    "category": "Special",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "thunderwave",
+    "name": "Thunder Wave",
+    "aliases": [
+      "thunder wave",
+      "thunderwave"
+    ],
+    "type": "Electric",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "thunderbolt",
+    "name": "Thunderbolt",
+    "aliases": [
+      "thunderbolt"
+    ],
+    "type": "Electric",
+    "category": "Special",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "thunderclap",
+    "name": "Thunderclap",
+    "aliases": [
+      "thunderclap"
+    ],
+    "type": "Electric",
+    "category": "Special",
+    "basePower": 70,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "thunderouskick",
+    "name": "Thunderous Kick",
+    "aliases": [
+      "thunderous kick",
+      "thunderouskick"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "tickle",
+    "name": "Tickle",
+    "aliases": [
+      "tickle"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "tidyup",
+    "name": "Tidy Up",
+    "aliases": [
+      "tidy up",
+      "tidyup"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "topsyturvy",
+    "name": "Topsy-Turvy",
+    "aliases": [
+      "topsy-turvy",
+      "topsy turvy",
+      "topsyturvy"
+    ],
+    "type": "Dark",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "torchsong",
+    "name": "Torch Song",
+    "aliases": [
+      "torch song",
+      "torchsong"
+    ],
+    "type": "Fire",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "torment",
+    "name": "Torment",
+    "aliases": [
+      "torment"
+    ],
+    "type": "Dark",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "toxic",
+    "name": "Toxic",
+    "aliases": [
+      "toxic"
+    ],
+    "type": "Poison",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "toxicspikes",
+    "name": "Toxic Spikes",
+    "aliases": [
+      "toxic spikes",
+      "toxicspikes"
+    ],
+    "type": "Poison",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "foeSide",
+    "isSpread": false
+  },
+  {
+    "id": "toxicthread",
+    "name": "Toxic Thread",
+    "aliases": [
+      "toxic thread",
+      "toxicthread"
+    ],
+    "type": "Poison",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "trailblaze",
+    "name": "Trailblaze",
+    "aliases": [
+      "trailblaze"
+    ],
+    "type": "Grass",
+    "category": "Physical",
+    "basePower": 50,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "transform",
+    "name": "Transform",
+    "aliases": [
+      "transform"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "triattack",
+    "name": "Tri Attack",
+    "aliases": [
+      "tri attack",
+      "triattack"
+    ],
+    "type": "Normal",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "trick",
+    "name": "Trick",
+    "aliases": [
+      "trick"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "trickroom",
+    "name": "Trick Room",
+    "aliases": [
+      "trick room",
+      "trickroom"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "all",
+    "isSpread": false
+  },
+  {
+    "id": "triplearrows",
+    "name": "Triple Arrows",
+    "aliases": [
+      "triple arrows",
+      "triplearrows"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "tripleaxel",
+    "name": "Triple Axel",
+    "aliases": [
+      "triple axel",
+      "tripleaxel"
+    ],
+    "type": "Ice",
+    "category": "Physical",
+    "basePower": 20,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "tripledive",
+    "name": "Triple Dive",
+    "aliases": [
+      "triple dive",
+      "tripledive"
+    ],
+    "type": "Water",
+    "category": "Physical",
+    "basePower": 30,
+    "accuracy": 95,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "triplekick",
+    "name": "Triple Kick",
+    "aliases": [
+      "triple kick",
+      "triplekick"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 10,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "tropkick",
+    "name": "Trop Kick",
+    "aliases": [
+      "trop kick",
+      "tropkick"
+    ],
+    "type": "Grass",
+    "category": "Physical",
+    "basePower": 70,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "twinbeam",
+    "name": "Twin Beam",
+    "aliases": [
+      "twin beam",
+      "twinbeam"
+    ],
+    "type": "Psychic",
+    "category": "Special",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "twister",
+    "name": "Twister",
+    "aliases": [
+      "twister"
+    ],
+    "type": "Dragon",
+    "category": "Special",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "uturn",
+    "name": "U-turn",
+    "aliases": [
+      "u-turn",
+      "u turn",
+      "uturn"
+    ],
+    "type": "Bug",
+    "category": "Physical",
+    "basePower": 70,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "upperhand",
+    "name": "Upper Hand",
+    "aliases": [
+      "upper hand",
+      "upperhand"
+    ],
+    "type": "Fighting",
+    "category": "Physical",
+    "basePower": 65,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "uproar",
+    "name": "Uproar",
+    "aliases": [
+      "uproar"
+    ],
+    "type": "Normal",
+    "category": "Special",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "randomNormal",
+    "isSpread": false
+  },
+  {
+    "id": "vacuumwave",
+    "name": "Vacuum Wave",
+    "aliases": [
+      "vacuum wave",
+      "vacuumwave"
+    ],
+    "type": "Fighting",
+    "category": "Special",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "venoshock",
+    "name": "Venoshock",
+    "aliases": [
+      "venoshock"
+    ],
+    "type": "Poison",
+    "category": "Special",
+    "basePower": 65,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "victorydance",
+    "name": "Victory Dance",
+    "aliases": [
+      "victory dance",
+      "victorydance"
+    ],
+    "type": "Fighting",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "vinewhip",
+    "name": "Vine Whip",
+    "aliases": [
+      "vine whip",
+      "vinewhip"
+    ],
+    "type": "Grass",
+    "category": "Physical",
+    "basePower": 45,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "visegrip",
+    "name": "Vise Grip",
+    "aliases": [
+      "vise grip",
+      "visegrip"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 55,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "voltswitch",
+    "name": "Volt Switch",
+    "aliases": [
+      "volt switch",
+      "voltswitch"
+    ],
+    "type": "Electric",
+    "category": "Special",
+    "basePower": 70,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "volttackle",
+    "name": "Volt Tackle",
+    "aliases": [
+      "volt tackle",
+      "volttackle"
+    ],
+    "type": "Electric",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "watergun",
+    "name": "Water Gun",
+    "aliases": [
+      "water gun",
+      "watergun"
+    ],
+    "type": "Water",
+    "category": "Special",
+    "basePower": 40,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "waterpledge",
+    "name": "Water Pledge",
+    "aliases": [
+      "water pledge",
+      "waterpledge"
+    ],
+    "type": "Water",
+    "category": "Special",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "waterpulse",
+    "name": "Water Pulse",
+    "aliases": [
+      "water pulse",
+      "waterpulse"
+    ],
+    "type": "Water",
+    "category": "Special",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "watershuriken",
+    "name": "Water Shuriken",
+    "aliases": [
+      "water shuriken",
+      "watershuriken"
+    ],
+    "type": "Water",
+    "category": "Special",
+    "basePower": 15,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "waterspout",
+    "name": "Water Spout",
+    "aliases": [
+      "water spout",
+      "waterspout"
+    ],
+    "type": "Water",
+    "category": "Special",
+    "basePower": 150,
+    "accuracy": 100,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "waterfall",
+    "name": "Waterfall",
+    "aliases": [
+      "waterfall"
+    ],
+    "type": "Water",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "wavecrash",
+    "name": "Wave Crash",
+    "aliases": [
+      "wave crash",
+      "wavecrash"
+    ],
+    "type": "Water",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "weatherball",
+    "name": "Weather Ball",
+    "aliases": [
+      "weather ball",
+      "weatherball"
+    ],
+    "type": "Normal",
+    "category": "Special",
+    "basePower": 50,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "whirlpool",
+    "name": "Whirlpool",
+    "aliases": [
+      "whirlpool"
+    ],
+    "type": "Water",
+    "category": "Special",
+    "basePower": 35,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "whirlwind",
+    "name": "Whirlwind",
+    "aliases": [
+      "whirlwind"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "wickedblow",
+    "name": "Wicked Blow",
+    "aliases": [
+      "wicked blow",
+      "wickedblow"
+    ],
+    "type": "Dark",
+    "category": "Physical",
+    "basePower": 75,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "wideguard",
+    "name": "Wide Guard",
+    "aliases": [
+      "wide guard",
+      "wideguard"
+    ],
+    "type": "Rock",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "allySide",
+    "isSpread": false
+  },
+  {
+    "id": "wildcharge",
+    "name": "Wild Charge",
+    "aliases": [
+      "wild charge",
+      "wildcharge"
+    ],
+    "type": "Electric",
+    "category": "Physical",
+    "basePower": 90,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "wildboltstorm",
+    "name": "Wildbolt Storm",
+    "aliases": [
+      "wildbolt storm",
+      "wildboltstorm"
+    ],
+    "type": "Electric",
+    "category": "Special",
+    "basePower": 100,
+    "accuracy": 80,
+    "target": "allAdjacentFoes",
+    "isSpread": true
+  },
+  {
+    "id": "willowisp",
+    "name": "Will-O-Wisp",
+    "aliases": [
+      "will-o-wisp",
+      "will o wisp",
+      "willowisp"
+    ],
+    "type": "Fire",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 85,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "wingattack",
+    "name": "Wing Attack",
+    "aliases": [
+      "wing attack",
+      "wingattack"
+    ],
+    "type": "Flying",
+    "category": "Physical",
+    "basePower": 60,
+    "accuracy": 100,
+    "target": "any",
+    "isSpread": false
+  },
+  {
+    "id": "wish",
+    "name": "Wish",
+    "aliases": [
+      "wish"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "withdraw",
+    "name": "Withdraw",
+    "aliases": [
+      "withdraw"
+    ],
+    "type": "Water",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "wonderroom",
+    "name": "Wonder Room",
+    "aliases": [
+      "wonder room",
+      "wonderroom"
+    ],
+    "type": "Psychic",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "all",
+    "isSpread": false
+  },
+  {
+    "id": "woodhammer",
+    "name": "Wood Hammer",
+    "aliases": [
+      "wood hammer",
+      "woodhammer"
+    ],
+    "type": "Grass",
+    "category": "Physical",
+    "basePower": 120,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "workup",
+    "name": "Work Up",
+    "aliases": [
+      "work up",
+      "workup"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "self",
+    "isSpread": false
+  },
+  {
+    "id": "worryseed",
+    "name": "Worry Seed",
+    "aliases": [
+      "worry seed",
+      "worryseed"
+    ],
+    "type": "Grass",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "wrap",
+    "name": "Wrap",
+    "aliases": [
+      "wrap"
+    ],
+    "type": "Normal",
+    "category": "Physical",
+    "basePower": 15,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "xscissor",
+    "name": "X-Scissor",
+    "aliases": [
+      "x-scissor",
+      "x scissor",
+      "xscissor"
+    ],
+    "type": "Bug",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "yawn",
+    "name": "Yawn",
+    "aliases": [
+      "yawn"
+    ],
+    "type": "Normal",
+    "category": "Status",
+    "basePower": 0,
+    "accuracy": null,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "zapcannon",
+    "name": "Zap Cannon",
+    "aliases": [
+      "zap cannon",
+      "zapcannon"
+    ],
+    "type": "Electric",
+    "category": "Special",
+    "basePower": 120,
+    "accuracy": 50,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "zenheadbutt",
+    "name": "Zen Headbutt",
+    "aliases": [
+      "zen headbutt",
+      "zenheadbutt"
+    ],
+    "type": "Psychic",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
+    "id": "zingzap",
+    "name": "Zing Zap",
+    "aliases": [
+      "zing zap",
+      "zingzap"
+    ],
+    "type": "Electric",
+    "category": "Physical",
+    "basePower": 80,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  }
+]
