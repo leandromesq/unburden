@@ -449,20 +449,6 @@ Aqui `@assault-vest` é do defensor.
 
 Depois que o Pokémon é resolvido em um segmento, tokens soltos passam a ser interpretados como possíveis modificadores daquele lado, não como outro Pokémon.
 
-### 4. Prefixos legados foram removidos
-
-Não são mais aceitos:
-
-```txt
->+1
-<reflect
-a:+1
-d:reflect
-g:rain
-```
-
-A sintaxe canônica é apenas a sintaxe segmentada atual.
-
 ## Exemplos Completos
 
 ### Exemplo mínimo
@@ -519,18 +505,6 @@ Motivo:
 
 - o cálculo exige `!move`
 
-### Uso de prefixos legados
-
-```txt
-politoed !muddy-water >+1 x incineroar
-```
-
-Motivo:
-
-- `>` e `<`
-- `a:`, `d:` e `g:`
-
-não são mais suportados
 
 ### Move no defensor
 
