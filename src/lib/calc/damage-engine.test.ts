@@ -104,4 +104,19 @@ describe("damage engine", () => {
     expect(context?.attacker.name).toBe("Charizard");
     expect(context?.attackerAbility).toBe("Blaze");
   });
+
+  test("applies defender items that mitigate or bulk special damage", () => {
+    const neutral = parseCommand("charizard !heat-wave x tinkaton").parsed;
+    const occa = parseCommand("charizard !heat-wave x tinkaton @occa-berry").parsed;
+    const vest = parseCommand("charizard !heat-wave x tinkaton @assault-vest").parsed;
+
+    const [neutralResult] = calculateDamageResults(neutral!);
+    const [occaResult] = calculateDamageResults(occa!);
+    const [vestResult] = calculateDamageResults(vest!);
+
+    expect(occaResult.maxPercentage).toBeLessThan(neutralResult.maxPercentage);
+    expect(vestResult.maxPercentage).toBeLessThan(neutralResult.maxPercentage);
+    expect(occaResult.assumptions).toContain("Defender item: Occa Berry");
+    expect(vestResult.assumptions).toContain("Defender item: Assault Vest");
+  });
 });

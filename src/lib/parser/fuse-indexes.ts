@@ -2,9 +2,9 @@ import Fuse from "fuse.js";
 
 import {
   formAliasMap,
+  legalPokemonData,
   moveData,
   pokemonById,
-  pokemonData,
   normalizeAlias,
 } from "@/lib/data/loaders";
 import type { MoveEntry, PokemonEntry } from "@/lib/types";
@@ -19,7 +19,9 @@ function buildUniqueAliasMap<T extends { aliases: string[] }>(entries: T[]) {
   const bucket = new Map<string, T[]>();
 
   for (const entry of entries) {
-    const normalizedAliases = new Set(entry.aliases.map((alias) => normalizeAlias(alias)));
+    const normalizedAliases = new Set(
+      entry.aliases.map((alias) => normalizeAlias(alias)),
+    );
 
     for (const alias of normalizedAliases) {
       const normalized = normalizeAlias(alias);
@@ -40,10 +42,10 @@ function buildUniqueAliasMap<T extends { aliases: string[] }>(entries: T[]) {
   return map;
 }
 
-const pokemonExactMap = buildUniqueAliasMap(pokemonData);
+const pokemonExactMap = buildUniqueAliasMap(legalPokemonData);
 const moveExactMap = buildUniqueAliasMap(moveData);
 
-const pokemonFuse = new Fuse(pokemonData, {
+const pokemonFuse = new Fuse(legalPokemonData, {
   includeScore: true,
   ignoreLocation: true,
   threshold: 0.3,
@@ -63,7 +65,9 @@ const moveFuse = new Fuse(moveData, {
   ],
 });
 
-export function resolvePokemonEntity(query: string): ResolvedMatch<PokemonEntry> | null {
+export function resolvePokemonEntity(
+  query: string,
+): ResolvedMatch<PokemonEntry> | null {
   if (!query.trim()) {
     return null;
   }
@@ -95,7 +99,9 @@ export function resolvePokemonEntity(query: string): ResolvedMatch<PokemonEntry>
   };
 }
 
-export function resolveMoveEntity(query: string): ResolvedMatch<MoveEntry> | null {
+export function resolveMoveEntity(
+  query: string,
+): ResolvedMatch<MoveEntry> | null {
   if (!query.trim()) {
     return null;
   }
@@ -119,16 +125,21 @@ export function resolveMoveEntity(query: string): ResolvedMatch<MoveEntry> | nul
   };
 }
 
-export function searchPokemonEntities(query: string, limit = 5): ResolvedMatch<PokemonEntry>[] {
+export function searchPokemonEntities(
+  query: string,
+  limit = 5,
+): ResolvedMatch<PokemonEntry>[] {
   if (!query.trim()) {
     return [];
   }
 
   const normalized = normalizeAlias(query);
   const exact = resolveExactPokemonEntity(query);
-  const fuzzyMatches = pokemonFuse.search(normalized, { limit }).filter((match) => {
-    return (match.score ?? 1) <= 0.3;
-  });
+  const fuzzyMatches = pokemonFuse
+    .search(normalized, { limit })
+    .filter((match) => {
+      return (match.score ?? 1) <= 0.3;
+    });
   const results: ResolvedMatch<PokemonEntry>[] = [];
 
   if (exact) {
@@ -150,7 +161,9 @@ export function searchPokemonEntities(query: string, limit = 5): ResolvedMatch<P
   return results.slice(0, limit);
 }
 
-export function resolveExactPokemonEntity(query: string): ResolvedMatch<PokemonEntry> | null {
+export function resolveExactPokemonEntity(
+  query: string,
+): ResolvedMatch<PokemonEntry> | null {
   if (!query.trim()) {
     return null;
   }

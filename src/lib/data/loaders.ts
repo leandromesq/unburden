@@ -3,16 +3,35 @@ import learnsets from "@/data/learnsets.gen9.json";
 import moves from "@/data/moves.gen9.json";
 import pokemon from "@/data/pokemon.gen9.json";
 import vgcMeta from "@/data/vgc-meta.json";
+import activeRegulationConfig from "@/data/regulations/active.json";
+import regulationMA from "@/data/regulations/regulation-m-a.json";
 import type {
   FormAliasEntry,
   LearnsetEntry,
   MoveEntry,
   PokemonEntry,
+  RegulationEntry,
   VgcMetaProfile,
 } from "@/lib/types";
 
 export const pokemonData = pokemon as PokemonEntry[];
 export const moveData = moves as MoveEntry[];
+
+const regulationRegistry: Record<string, RegulationEntry> = {
+  "regulation-m-a": regulationMA as RegulationEntry,
+};
+
+const activeRegulation: RegulationEntry =
+  regulationRegistry[activeRegulationConfig.regulationId] ??
+  regulationRegistry["regulation-m-a"];
+
+const legalIds = new Set(activeRegulation.allowedPokemonIds);
+
+export { activeRegulation };
+
+export const legalPokemonData: PokemonEntry[] = pokemonData.filter((entry) =>
+  legalIds.has(entry.id),
+);
 const learnsetData = learnsets as LearnsetEntry[];
 const vgcMetaProfiles = vgcMeta as VgcMetaProfile[];
 const formAliasData = formAliases as FormAliasEntry[];
@@ -29,7 +48,9 @@ export function normalizeAlias(value: string) {
     .trim();
 }
 
-export const pokemonById = new Map(pokemonData.map((entry) => [entry.id, entry]));
+export const pokemonById = new Map(
+  pokemonData.map((entry) => [entry.id, entry]),
+);
 export const moveById = new Map(moveData.map((entry) => [entry.id, entry]));
 export const learnsetByPokemonId = new Map(
   learnsetData.map((entry) => [entry.pokemonId, entry]),
@@ -48,21 +69,18 @@ const metaItemPool = Array.from(
       .map((itemName) => [normalizeId(itemName), itemName]),
   ).entries(),
 );
-export const allowedItemIds = new Set(
-  metaItemPool.map(([itemId]) => itemId),
-);
-export const itemDisplayById = new Map(
-  metaItemPool,
-);
+export const allowedItemIds = new Set(metaItemPool.map(([itemId]) => itemId));
+export const itemDisplayById = new Map(metaItemPool);
 
 const megaEvolutionPool = pokemonData
-  .filter(
-    (entry) => entry.isMega && entry.requiredItem && entry.baseSpeciesId,
-  )
-  .map((entry) => [
-    `${entry.baseSpeciesId}:${normalizeId(entry.requiredItem!)}`,
-    entry.id,
-  ] as const);
+  .filter((entry) => entry.isMega && entry.requiredItem && entry.baseSpeciesId)
+  .map(
+    (entry) =>
+      [
+        `${entry.baseSpeciesId}:${normalizeId(entry.requiredItem!)}`,
+        entry.id,
+      ] as const,
+  );
 
 const megaEvolutionByBaseIdAndItem = new Map(megaEvolutionPool);
 

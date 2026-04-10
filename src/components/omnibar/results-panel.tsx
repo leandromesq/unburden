@@ -6,8 +6,19 @@ import { useOmniStore } from "@/store/use-omni-store";
 
 function BlockTitle({ archetype }: { archetype: string }) {
   return (
-    <div className="theme-text-dim text-xs font-semibold uppercase tracking-[0.24em]">
-      {archetype === "glass" ? "Min Bulk" : archetype === "mid" ? "Mid Bulk" : "Max Bulk"}
+    <div className="mb-2 flex items-center gap-2">
+      <div
+        className="h-3.5 w-0.5 rounded-full"
+        style={{ background: "var(--accent)" }}
+        aria-hidden
+      />
+      <div className="theme-text-dim text-xs font-semibold uppercase tracking-[0.24em]">
+        {archetype === "glass"
+          ? "Min Bulk"
+          : archetype === "mid"
+            ? "Mid Bulk"
+            : "Max Bulk"}
+      </div>
     </div>
   );
 }
@@ -34,20 +45,29 @@ export function ResultsPanel() {
         return (
           <article
             key={result.archetype}
-            className="theme-panel rounded-[28px] p-4"
+            className="theme-panel rounded-3xl p-4"
           >
-            <div className="mb-3 flex items-start justify-between gap-3">
-              <div>
-                <BlockTitle archetype={result.archetype} />
-                <div className="theme-text-dim mt-2 text-sm">{archetype.summary}</div>
-              </div>
-              <div className={`text-sm font-medium ${koTextTone(result.koChanceText)}`}>
-                {result.koChanceText}
+            <div className="mb-3">
+              <BlockTitle archetype={result.archetype} />
+              <div className="flex items-end justify-between gap-3">
+                <div className="theme-text-dim text-sm">
+                  {archetype.summary}
+                </div>
+                <div
+                  className={`shrink-0 text-sm font-semibold tabular-nums ${koTextTone(result.koChanceText)}`}
+                >
+                  {result.koChanceText}
+                </div>
               </div>
             </div>
             <div className="theme-subpanel rounded-2xl px-4 py-3">
-              <div className="theme-text-muted text-sm leading-6">{result.contextText}</div>
-              <div className="mt-2 font-mono text-base" style={{ color: "var(--text)" }}>
+              <div className="theme-text-muted text-sm leading-6">
+                {result.contextText}
+              </div>
+              <div
+                className="mt-2 font-mono text-base"
+                style={{ color: "var(--text)" }}
+              >
                 {result.damageText}
               </div>
             </div>
@@ -56,7 +76,11 @@ export function ResultsPanel() {
                 {result.assumptions.map((assumption) => (
                   <div
                     key={`${result.archetype}-${assumption}`}
-                    className="theme-chip rounded-full px-3 py-1.5 text-xs"
+                    className="rounded-full border px-3 py-1 text-xs"
+                    style={{
+                      borderColor: "var(--line-strong)",
+                      color: "var(--text-dim)",
+                    }}
                   >
                     {assumption}
                   </div>

@@ -19,36 +19,27 @@ describe("omnibar components", () => {
     render(<OmniTextarea textareaRef={textareaRef} />);
 
     act(() => {
-      useOmniStore.getState().setInput("flutter m");
+      useOmniStore.getState().setInput("poli");
     });
 
     const textarea = screen.getByTestId("omni-textarea");
     textareaRef.current?.focus();
     fireEvent.keyDown(textarea, { key: "Tab" });
 
-    expect(useOmniStore.getState().input).toBe("flutter mane");
+    expect(useOmniStore.getState().input).toBe("politoed");
     expect(document.activeElement).toBe(textareaRef.current);
   });
 
-  test("Arrow keys navigate suggestion options and Tab applies the highlighted one", () => {
-    const textareaRef = createRef<HTMLTextAreaElement>();
-
-    render(<OmniTextarea textareaRef={textareaRef} />);
-
+  test("suggestion navigation advances the highlighted option", () => {
     act(() => {
-      useOmniStore.getState().setInput("flutter mane !moonblast x ogerpon ");
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar ");
     });
 
-    const textarea = screen.getByTestId("omni-textarea");
-    textareaRef.current?.focus();
+    act(() => {
+      useOmniStore.getState().moveSuggestionSelection(1);
+    });
 
-    fireEvent.keyDown(textarea, { key: "ArrowDown" });
-    fireEvent.keyDown(textarea, { key: "Tab" });
-
-    expect(useOmniStore.getState().input).toBe(
-      "flutter mane !moonblast x ogerpon <-5",
-    );
-    expect(document.activeElement).toBe(textareaRef.current);
+    expect(useOmniStore.getState().highlightedSuggestionIndex).toBe(1);
   });
 
   test("quick suggestion buttons apply canonical tokens", () => {
@@ -62,12 +53,12 @@ describe("omnibar components", () => {
     );
 
     act(() => {
-      useOmniStore.getState().setInput("flutter mane mo");
+      useOmniStore.getState().setInput("politoed mud");
     });
 
-    fireEvent.click(screen.getByRole("button", { name: /!moonblast/i }));
+    fireEvent.click(screen.getByRole("button", { name: /!muddy-water/i }));
 
-    expect(useOmniStore.getState().input).toBe("flutter mane !moonblast");
+    expect(useOmniStore.getState().input).toBe("politoed !muddy-water");
   });
 
   test("modifier chip toggles its token in the current input", () => {
@@ -78,17 +69,17 @@ describe("omnibar components", () => {
     act(() => {
       useOmniStore
         .getState()
-        .setInput("flutter mane !moonblast x ogerpon");
+        .setInput("incineroar !flare-blitz x tinkaton");
     });
 
     fireEvent.click(screen.getByRole("button", { name: /^Rain$/i }));
     expect(useOmniStore.getState().input).toBe(
-      "flutter mane !moonblast x ogerpon ~rain",
+      "incineroar !flare-blitz x tinkaton ~rain",
     );
 
     fireEvent.click(screen.getByRole("button", { name: /^Rain$/i }));
 
-    expect(useOmniStore.getState().input).toBe("flutter mane !moonblast x ogerpon");
+    expect(useOmniStore.getState().input).toBe("incineroar !flare-blitz x tinkaton");
   });
 
   test("stage slider rewrites attacker and defender stages intuitively", () => {
@@ -99,21 +90,21 @@ describe("omnibar components", () => {
     act(() => {
       useOmniStore
         .getState()
-        .setInput("flutter mane !moonblast >+2 x ogerpon <-1");
+        .setInput("incineroar !flare-blitz +2 x tinkaton -1");
     });
 
     fireEvent.change(screen.getByLabelText("attacker stage slider"), {
       target: { value: "4" },
     });
     expect(useOmniStore.getState().input).toBe(
-      "flutter mane !moonblast >+4 x ogerpon <-1",
+      "incineroar !flare-blitz +4 x tinkaton -1",
     );
 
     fireEvent.change(screen.getByLabelText("defender stage slider"), {
       target: { value: "0" },
     });
     expect(useOmniStore.getState().input).toBe(
-      "flutter mane !moonblast >+4 x ogerpon",
+      "incineroar !flare-blitz +4 x tinkaton",
     );
   });
 
@@ -125,21 +116,21 @@ describe("omnibar components", () => {
     act(() => {
       useOmniStore
         .getState()
-        .setInput("regieleki !electro-ball >spe+2 x amoonguss <spe-1");
+        .setInput("incineroar !flare-blitz spe+2 x tinkaton spe-1");
     });
 
     fireEvent.change(screen.getByLabelText("attacker speed slider"), {
       target: { value: "6" },
     });
     expect(useOmniStore.getState().input).toBe(
-      "regieleki !electro-ball >spe+6 x amoonguss <spe-1",
+      "incineroar !flare-blitz spe+6 x tinkaton spe-1",
     );
 
     fireEvent.change(screen.getByLabelText("defender speed slider"), {
       target: { value: "0" },
     });
     expect(useOmniStore.getState().input).toBe(
-      "regieleki !electro-ball >spe+6 x amoonguss",
+      "incineroar !flare-blitz spe+6 x tinkaton",
     );
   });
 
@@ -151,7 +142,7 @@ describe("omnibar components", () => {
     act(() => {
       useOmniStore
         .getState()
-        .setInput("flutter mane !moonblast x ogerpon");
+        .setInput("incineroar !flare-blitz x tinkaton");
     });
 
     const hp25Buttons = screen.getAllByRole("button", { name: "25%" });
@@ -159,17 +150,17 @@ describe("omnibar components", () => {
 
     fireEvent.click(hp25Buttons[0]);
     expect(useOmniStore.getState().input).toBe(
-      "flutter mane !moonblast %25 x ogerpon",
+      "incineroar !flare-blitz %25 x tinkaton",
     );
 
     fireEvent.click(hp50Buttons[1]);
     expect(useOmniStore.getState().input).toBe(
-      "flutter mane !moonblast %25 x ogerpon %50",
+      "incineroar !flare-blitz %25 x tinkaton %50",
     );
 
     fireEvent.click(hp50Buttons[0]);
     expect(useOmniStore.getState().input).toBe(
-      "flutter mane !moonblast %50 x ogerpon %50",
+      "incineroar !flare-blitz %50 x tinkaton %50",
     );
   });
 
@@ -177,12 +168,12 @@ describe("omnibar components", () => {
     render(<ResultsPanel />);
 
     act(() => {
-      useOmniStore.getState().setInput("flutter mane x ogerpon");
+      useOmniStore.getState().setInput("politoed x incineroar");
     });
     expect(screen.queryByTestId("results-panel")).not.toBeInTheDocument();
 
     act(() => {
-      useOmniStore.getState().setInput("flutter mane !moonblast x ogerpon");
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
     });
     expect(screen.getByTestId("results-panel")).toBeInTheDocument();
   });
@@ -193,7 +184,7 @@ describe("omnibar components", () => {
     render(<OmniTextarea textareaRef={textareaRef} />);
 
     act(() => {
-      useOmniStore.getState().setInput("flutter mane !moonblast x ogerpon ");
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar ");
     });
 
     const textarea = screen.getByTestId("omni-textarea");
@@ -201,7 +192,7 @@ describe("omnibar components", () => {
     fireEvent.keyDown(textarea, { key: "Tab" });
 
     expect(document.activeElement).toBe(textareaRef.current);
-    expect(useOmniStore.getState().input).toBe("flutter mane !moonblast x ogerpon <-6");
+    expect(useOmniStore.getState().input).toBe("politoed !muddy-water x incineroar ~rain");
   });
 
   test("Enter scrolls to the results when a calculation is ready", () => {
@@ -215,7 +206,7 @@ describe("omnibar components", () => {
     render(<OmniComposer />);
 
     act(() => {
-      useOmniStore.getState().setInput("flutter mane !moonblast x ogerpon");
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
     });
 
     fireEvent.keyDown(screen.getByTestId("omni-textarea"), { key: "Enter" });
@@ -227,12 +218,24 @@ describe("omnibar components", () => {
     render(<OmniComposer />);
 
     act(() => {
-      useOmniStore.getState().setInput("flutter mane !moonblast x ogerpon");
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
     });
 
-    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("Flutter Mane");
-    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("Moonblast");
-    expect(screen.getByTestId("defender-summary")).toHaveTextContent("Ogerpon-Wellspring");
+    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("Politoed");
+    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("Muddy Water");
+    expect(screen.getByTestId("defender-summary")).toHaveTextContent("Incineroar");
+  });
+
+  test("renders an explicit defender item in the defender summary", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore
+        .getState()
+        .setInput("charizard !heat-wave x tinkaton @assault-vest");
+    });
+
+    expect(screen.getByTestId("defender-summary")).toHaveTextContent("Assault Vest");
   });
 
   test("does not auto-add weather before the defender side is resolved", () => {
@@ -259,92 +262,118 @@ describe("omnibar components", () => {
     expect(useOmniStore.getState().input).toBe("poli ");
   });
 
-  test("automatically adds weather from a resolved weather-setting ability", () => {
+  test("surfaces weather from a resolved weather-setting ability as an opt-in suggestion", () => {
     act(() => {
       useOmniStore.getState().setInput("torkoal !heat-wave x tinkaton");
     });
 
-    expect(useOmniStore.getState().input).toBe(
-      "torkoal !heat-wave x tinkaton ~sun",
-    );
+    expect(useOmniStore.getState().input).toBe("torkoal !heat-wave x tinkaton");
+    expect(useOmniStore.getState().suggestionOptions[0]?.value).toBe("~sun");
   });
 
-  test("automatically adds terrain from a resolved terrain-setting ability", () => {
+  test("preserves a trailing space after a resolved field setter prompt", () => {
+    const textareaRef = createRef<HTMLTextAreaElement>();
+
+    render(<OmniTextarea textareaRef={textareaRef} />);
+
     act(() => {
-      useOmniStore.getState().setInput("rillaboom !wood-hammer x tinkaton");
+      useOmniStore
+        .getState()
+        .setInput("politoed !muddy-water x incineroar");
     });
 
-    expect(useOmniStore.getState().input).toBe(
-      "rillaboom !wood-hammer x tinkaton ~grassy-terrain",
-    );
+    const textarea = screen.getByTestId("omni-textarea");
+    fireEvent.change(textarea, {
+      target: { value: "politoed !muddy-water x incineroar ", selectionStart: 35 },
+      currentTarget: { value: "politoed !muddy-water x incineroar ", selectionStart: 35 },
+    });
+
+    expect(useOmniStore.getState().input).toBe("politoed !muddy-water x incineroar ");
   });
 
-  test("automatically updates the prompt for mega-stone weather setters", () => {
+  test("surfaces rain from another resolved weather-setting ability as an opt-in suggestion", () => {
+    act(() => {
+      useOmniStore.getState().setInput("pelipper !hurricane x tinkaton");
+    });
+
+    expect(useOmniStore.getState().input).toBe("pelipper !hurricane x tinkaton");
+    expect(useOmniStore.getState().suggestionOptions[0]?.value).toBe("~rain");
+  });
+
+  test("surfaces weather for mega-stone setters as an opt-in suggestion", () => {
     act(() => {
       useOmniStore.getState().setInput("charizard !heat-wave @charizardite-y x tinkaton");
     });
 
     expect(useOmniStore.getState().input).toBe(
-      "charizard !heat-wave @charizardite-y x tinkaton ~sun",
+      "charizard !heat-wave @charizardite-y x tinkaton",
     );
+    expect(useOmniStore.getState().suggestionOptions[0]?.value).toBe("~sun");
   });
 
-  test("replaces stale automatic weather and terrain tokens when the prompt changes", () => {
+  test("updates the recommended field suggestion when the prompt changes", () => {
     act(() => {
       useOmniStore.getState().setInput("torkoal !heat-wave x tinkaton");
     });
-    expect(useOmniStore.getState().input).toBe(
-      "torkoal !heat-wave x tinkaton ~sun",
-    );
+    expect(useOmniStore.getState().suggestionOptions[0]?.value).toBe("~sun");
 
     act(() => {
-      useOmniStore.getState().setInput("flutter mane !moonblast x tinkaton");
+      useOmniStore.getState().setInput("incineroar !flare-blitz x tinkaton");
     });
-    expect(useOmniStore.getState().input).toBe(
-      "flutter mane !moonblast x tinkaton",
-    );
+    expect(useOmniStore.getState().input).toBe("incineroar !flare-blitz x tinkaton");
+    expect(useOmniStore.getState().suggestionOptions[0]?.value).not.toBe("~sun");
   });
 
-  test("lets the user delete an auto-added global token without re-adding it", () => {
+  test("lets the user opt in to the suggested global token with Tab", () => {
     act(() => {
       useOmniStore.getState().setInput("politoed !muddy-water x tinkaton");
+    });
+    expect(useOmniStore.getState().input).toBe("politoed !muddy-water x tinkaton");
+    expect(useOmniStore.getState().suggestionOptions[0]?.value).toBe("~rain");
+
+    act(() => {
+      useOmniStore.getState().applySuggestion();
     });
     expect(useOmniStore.getState().input).toBe(
       "politoed !muddy-water x tinkaton ~rain",
     );
-
-    act(() => {
-      useOmniStore.getState().setInput("politoed !muddy-water x tinkaton");
-    });
-    expect(useOmniStore.getState().input).toBe(
-      "politoed !muddy-water x tinkaton",
-    );
-
-    act(() => {
-      useOmniStore.getState().setInput("politoed !muddy-water >+1 x tinkaton");
-    });
-    expect(useOmniStore.getState().input).toBe(
-      "politoed !muddy-water >+1 x tinkaton",
-    );
   });
 
-  test("uses the slower pokemon when weather setters conflict", () => {
+  test("prefers the slower pokemon when weather setters conflict", () => {
     act(() => {
       useOmniStore.getState().setInput("pelipper !hurricane x torkoal");
     });
 
-    expect(useOmniStore.getState().input).toBe(
-      "pelipper !hurricane x torkoal ~sun",
-    );
+    expect(useOmniStore.getState().input).toBe("pelipper !hurricane x torkoal");
+    expect(useOmniStore.getState().suggestionOptions[0]?.value).toBe("~sun");
   });
 
-  test("uses the slower pokemon when terrain setters conflict", () => {
+  test("typing [ auto-closes brackets and keeps the caret inside", () => {
+    const textareaRef = createRef<HTMLTextAreaElement>();
+
+    render(<OmniTextarea textareaRef={textareaRef} />);
+
     act(() => {
-      useOmniStore.getState().setInput("miraidon !electro-drift x rillaboom");
+      useOmniStore.getState().setInput("incineroar !flare-blitz x tinkaton ");
     });
 
+    const textarea = screen.getByTestId("omni-textarea");
+    textareaRef.current?.focus();
+    textareaRef.current?.setSelectionRange(
+      textareaRef.current.value.length,
+      textareaRef.current.value.length,
+    );
+
+    fireEvent.keyDown(textarea, { key: "[" });
+
     expect(useOmniStore.getState().input).toBe(
-      "miraidon !electro-drift x rillaboom ~grassy-terrain",
+      "incineroar !flare-blitz x tinkaton []",
+    );
+    expect(textareaRef.current?.selectionStart).toBe(
+      "incineroar !flare-blitz x tinkaton [".length,
+    );
+    expect(textareaRef.current?.selectionEnd).toBe(
+      "incineroar !flare-blitz x tinkaton [".length,
     );
   });
 });

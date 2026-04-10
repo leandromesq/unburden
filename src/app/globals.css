@@ -1,291 +1,290 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: dark;
-  --bg: #0a0a0c;
-  --bg-elevated: #121216;
-  --surface: #14141a;
-  --surface-2: #101116;
-  --surface-3: #1a1b22;
-  --surface-4: #20212a;
-  --line: rgba(255, 255, 255, 0.18);
-  --line-strong: rgba(255, 255, 255, 0.28);
-  --accent: #ef4444;
-  --accent-strong: #ff7a7a;
-  --accent-soft: rgba(239, 68, 68, 0.22);
-  --accent-softer: rgba(239, 68, 68, 0.12);
-  --accent-border: rgba(239, 68, 68, 0.62);
-  --text: #f5f5f7;
-  --text-muted: #c2c3cb;
-  --text-dim: #7d7e87;
-  --text-faint: #65666e;
-  --grid: rgba(255, 255, 255, 0.04);
-  --selection: rgba(239, 68, 68, 0.22);
-  --shadow: 0 24px 100px rgba(0, 0, 0, 0.42);
-  --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.22);
-  --accent-text-strong: #ff8e8e;
-  --accent-text-mid: #ff7373;
-  --accent-text-soft: #ffb0b0;
+    color-scheme: dark;
+    --bg: #09090b;
+    --bg-elevated: #0d0d10;
+    --surface: #111114;
+    --surface-2: #0f0f12;
+    --surface-3: #17171b;
+    --surface-4: #1e1e23;
+    --line: rgba(255, 255, 255, 0.08);
+    --line-strong: rgba(255, 255, 255, 0.13);
+    --accent: #ef4444;
+    --accent-strong: #f87171;
+    --accent-soft: rgba(239, 68, 68, 0.15);
+    --accent-softer: rgba(239, 68, 68, 0.08);
+    --accent-border: rgba(239, 68, 68, 0.48);
+    --text: #f3f3f6;
+    --text-muted: #b0b1bc;
+    --text-dim: #6a6b75;
+    --text-faint: #52535c;
+    --grid: rgba(255, 255, 255, 0.025);
+    --selection: rgba(239, 68, 68, 0.18);
+    --shadow: 0 8px 48px rgba(0, 0, 0, 0.56);
+    --shadow-soft: 0 2px 16px rgba(0, 0, 0, 0.32);
+    --shadow-overlay: 0 12px 48px rgba(0, 0, 0, 0.64);
+    --accent-text-strong: #fca5a5;
+    --accent-text-mid: #f87171;
+    --accent-text-soft: #fecaca;
 }
 
 html[data-theme="light"] {
-  color-scheme: light;
-  --bg: #f7f3ef;
-  --bg-elevated: #fffcf8;
-  --surface: #ffffff;
-  --surface-2: #fbf6f1;
-  --surface-3: #f5eee8;
-  --surface-4: #ede4dd;
-  --line: rgba(18, 18, 22, 0.16);
-  --line-strong: rgba(18, 18, 22, 0.26);
-  --accent: #d92d2d;
-  --accent-strong: #b21b1b;
-  --accent-soft: rgba(217, 45, 45, 0.16);
-  --accent-softer: rgba(217, 45, 45, 0.1);
-  --accent-border: rgba(217, 45, 45, 0.52);
-  --text: #17171a;
-  --text-muted: #53545d;
-  --text-dim: #83848d;
-  --text-faint: #9d9ea6;
-  --grid: rgba(18, 18, 22, 0.05);
-  --selection: rgba(217, 45, 45, 0.16);
-  --shadow: 0 24px 90px rgba(16, 16, 22, 0.08);
-  --shadow-soft: 0 10px 32px rgba(16, 16, 22, 0.07);
-  --accent-text-strong: #b21b1b;
-  --accent-text-mid: #c72a2a;
-  --accent-text-soft: #a14646;
+    color-scheme: light;
+    --bg: #f3efe9;
+    --bg-elevated: #f9f6f2;
+    --surface: #ffffff;
+    --surface-2: #f6f2ee;
+    --surface-3: #eee8e2;
+    --surface-4: #e5ddd5;
+    --line: rgba(20, 20, 26, 0.09);
+    --line-strong: rgba(20, 20, 26, 0.16);
+    --accent: #dc2626;
+    --accent-strong: #b91c1c;
+    --accent-soft: rgba(220, 38, 38, 0.11);
+    --accent-softer: rgba(220, 38, 38, 0.06);
+    --accent-border: rgba(220, 38, 38, 0.4);
+    --text: #18181b;
+    --text-muted: #4c4d58;
+    --text-dim: #7c7d87;
+    --text-faint: #9899a2;
+    --grid: rgba(20, 20, 26, 0.035);
+    --selection: rgba(220, 38, 38, 0.12);
+    --shadow: 0 4px 24px rgba(16, 16, 20, 0.1);
+    --shadow-soft: 0 2px 10px rgba(16, 16, 20, 0.07);
+    --shadow-overlay: 0 8px 40px rgba(16, 16, 20, 0.16);
+    --accent-text-strong: #991b1b;
+    --accent-text-mid: #b91c1c;
+    --accent-text-soft: #7f1d1d;
 }
 
 @theme inline {
-  --font-sans: var(--font-space-grotesk);
-  --font-mono: var(--font-jetbrains-mono);
+    --font-sans: var(--font-space-grotesk);
+    --font-mono: var(--font-jetbrains-mono);
 }
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 html,
 body {
-  min-height: 100%;
+    min-height: 100%;
 }
 
 body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-space-grotesk), sans-serif;
-  transition:
-    background-color 180ms ease,
-    color 180ms ease;
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-space-grotesk), sans-serif;
+    transition:
+        background-color 180ms ease,
+        color 180ms ease;
 }
 
 button,
 input,
 textarea {
-  font: inherit;
+    font: inherit;
 }
 
 button {
-  color: inherit;
+    color: inherit;
 }
 
 .scrollbar-none {
-  scrollbar-width: none;
+    scrollbar-width: none;
 }
 
 .scrollbar-none::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
+/* ── Page ─────────────────────────────────────────────────── */
+
 .theme-page {
-  background:
-    radial-gradient(circle at top, var(--accent-softer), transparent 32%),
-    radial-gradient(circle at bottom right, var(--accent-softer), transparent 28%),
-    linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg) 100%);
-  color: var(--text);
+    background:
+        radial-gradient(
+            ellipse 90% 35% at 50% -2%,
+            var(--accent-softer),
+            transparent
+        ),
+        var(--bg);
+    color: var(--text);
 }
 
 .theme-page-grid {
-  background-image:
-    linear-gradient(var(--grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size: 56px 56px;
+    background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 56px 56px;
 }
+
+/* ── Kicker badge ─────────────────────────────────────────── */
 
 .theme-kicker {
-  border: 1px solid var(--accent-border);
-  background: var(--accent-soft);
-  color: var(--accent);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
-    0 10px 24px rgba(0, 0, 0, 0.12);
+    border: 1px solid var(--accent-border);
+    background: var(--accent-softer);
+    color: var(--accent);
 }
 
+/* ── Composer (main input card) ───────────────────────────── */
+
 .theme-composer {
-  overflow: hidden;
-  border: 1px solid var(--line-strong);
-  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
-  box-shadow:
-    0 0 0 1px var(--line) inset,
-    0 0 0 2px rgba(255, 255, 255, 0.02),
-    var(--shadow);
-  transition:
-    border-color 180ms ease,
-    box-shadow 180ms ease,
-    background 180ms ease;
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+    transition: border-color 160ms ease;
 }
 
 .theme-composer:focus-within {
-  border-color: var(--accent-border);
-  box-shadow:
-    0 0 0 1px var(--accent-border),
-    0 0 0 4px var(--accent-softer),
-    var(--shadow);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-softer);
 }
 
+/* ── Panels ───────────────────────────────────────────────── */
+
 .theme-panel {
-  border: 1px solid var(--line-strong);
-  background: var(--surface-2);
-  box-shadow:
-    0 0 0 1px var(--line) inset,
-    var(--shadow-soft);
+    border: 1px solid var(--line-strong);
+    background: var(--surface-2);
 }
 
 .theme-subpanel {
-  border: 1px solid var(--line-strong);
-  background: var(--surface-3);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+    border: 1px solid var(--line);
+    background: var(--surface-3);
 }
 
 .theme-subpanel-strong {
-  border: 1px solid var(--line-strong);
-  background: var(--surface-4);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+    border: 1px solid var(--line-strong);
+    background: var(--surface-4);
 }
+
+/* ── Divider ──────────────────────────────────────────────── */
 
 .theme-divider {
-  border-color: var(--line);
+    border-color: var(--line);
 }
 
+/* ── Text utilities ───────────────────────────────────────── */
+
 .theme-text-muted {
-  color: var(--text-muted);
+    color: var(--text-muted);
 }
 
 .theme-text-dim {
-  color: var(--text-dim);
+    color: var(--text-dim);
 }
 
 .theme-text-faint {
-  color: var(--text-faint);
+    color: var(--text-faint);
 }
 
 .theme-inline-code {
-  color: var(--text-muted);
+    color: var(--text-muted);
 }
 
+/* ── Chips ────────────────────────────────────────────────── */
+
+/*
+ * Flat, border-only chips — no gradients, no shadows, no lift.
+ * Active state uses a red border + very subtle tint (Premier Ball stripe).
+ */
+
 .theme-chip {
-  border: 1px solid var(--line-strong);
-  background: linear-gradient(180deg, var(--surface-3) 0%, var(--surface-2) 100%);
-  color: var(--text-muted);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.02) inset,
-    0 4px 14px rgba(0, 0, 0, 0.08);
-  transition:
-    border-color 160ms ease,
-    background 160ms ease,
-    color 160ms ease,
-    transform 160ms ease;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--text-dim);
+    transition:
+        border-color 140ms ease,
+        color 140ms ease,
+        background 140ms ease;
 }
 
 .theme-chip:hover {
-  border-color: var(--accent-border);
-  background: linear-gradient(180deg, var(--accent-softer) 0%, var(--surface-2) 100%);
-  color: var(--text);
-  transform: translateY(-1px);
+    border-color: var(--accent-border);
+    color: var(--text-muted);
+    background: var(--accent-softer);
 }
 
 .theme-chip-active {
-  border-color: var(--accent-border);
-  background: var(--accent-soft);
-  color: var(--accent-strong);
-  box-shadow: none;
+    border: 1px solid var(--accent-border);
+    background: var(--accent-softer);
+    color: var(--accent-strong);
 }
 
 .theme-chip-disabled {
-  border-color: var(--line);
-  background: var(--surface-2);
-  color: var(--text-faint);
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--text-faint);
+    opacity: 0.55;
 }
+
+/* ── Badge ────────────────────────────────────────────────── */
 
 .theme-badge {
-  border: 1px solid var(--accent-border);
-  background: var(--accent-soft);
-  color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent-softer) inset;
+    border: 1px solid var(--accent-border);
+    background: var(--accent-softer);
+    color: var(--accent-strong);
 }
 
+/* ── Input / Textarea ─────────────────────────────────────── */
+
 .theme-input {
-  color: var(--text);
-  caret-color: var(--accent);
+    color: var(--text);
+    caret-color: var(--accent);
 }
 
 .theme-input::placeholder {
-  color: var(--text-dim);
+    color: var(--text-dim);
 }
 
 .theme-input::selection {
-  background: var(--selection);
+    background: var(--selection);
 }
 
 .theme-ghost-text {
-  color: var(--text-dim);
+    color: var(--text-dim);
 }
 
+/* ── Theme toggle ─────────────────────────────────────────── */
+
 .theme-toggle {
-  border: 1px solid var(--line-strong);
-  background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 100%);
-  box-shadow:
-    0 0 0 1px var(--line) inset,
-    var(--shadow-soft);
+    border: 1px solid var(--line-strong);
+    background: var(--surface-3);
 }
 
 .theme-toggle-option {
-  border: 1px solid var(--line);
-  background: transparent;
-  color: var(--text-muted);
-  transition:
-    border-color 160ms ease,
-    background 160ms ease,
-    color 160ms ease,
-    transform 160ms ease,
-    box-shadow 160ms ease;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-dim);
+    transition:
+        border-color 140ms ease,
+        background 140ms ease,
+        color 140ms ease;
 }
 
 .theme-toggle-option:hover {
-  color: var(--text);
-  border-color: var(--line-strong);
-  background: var(--surface-3);
-  transform: translateY(-1px);
+    color: var(--text-muted);
+    background: var(--surface-4);
+    border-color: var(--line-strong);
 }
 
 .theme-toggle-option-active {
-  border-color: var(--accent-border);
-  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-strong) 100%);
-  color: white;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.14) inset,
-    0 12px 28px rgba(217, 45, 45, 0.24);
+    border: 1px solid var(--accent-border);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
 }
 
+/* ── KO text tones ────────────────────────────────────────── */
+
 .theme-ko-strong {
-  color: var(--accent-text-strong);
+    color: var(--accent-text-strong);
 }
 
 .theme-ko-medium {
-  color: var(--accent-text-mid);
+    color: var(--accent-text-mid);
 }
 
 .theme-ko-soft {
-  color: var(--accent-text-soft);
+    color: var(--accent-text-soft);
 }

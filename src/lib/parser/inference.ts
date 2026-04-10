@@ -1,4 +1,5 @@
 import {
+  itemDisplayById,
   learnsetByPokemonId,
   moveById,
   normalizeAlias,
@@ -118,6 +119,68 @@ export function inferDefaultItem(pokemonId: string) {
     pokemon?.requiredItem ??
     null
   );
+}
+
+export function getSuggestedItems(pokemonId: string, query = "", limit = 6) {
+  const pokemon = pokemonById.get(pokemonId);
+  const meta =
+    vgcMetaByPokemonId.get(pokemonId) ??
+    (pokemon?.baseSpeciesId ? vgcMetaByPokemonId.get(pokemon.baseSpeciesId) : undefined);
+  const normalizedQuery = normalizeAlias(query);
+  const curatedItems = [
+    meta?.defaultItem,
+    ...(meta?.commonItems ?? []),
+    pokemon?.requiredItem,
+  ].filter((itemName): itemName is string => Boolean(itemName));
+  const globalMatches = Array.from(itemDisplayById.values()).filter((itemName) => {
+    if (!normalizedQuery) {
+      return false;
+    }
+
+    return normalizeAlias(itemName).includes(normalizedQuery);
+  });
+  const scoreItem = (itemName: string) => {
+    const normalizedItem = normalizeAlias(itemName);
+
+    if (!normalizedQuery) {
+      return 0;
+    }
+
+    if (normalizedItem.startsWith(normalizedQuery)) {
+      return 0;
+    }
+
+    if (normalizedItem.includes(normalizedQuery)) {
+      return 1;
+    }
+
+    return 2;
+  };
+
+  return Array.from(new Set([...curatedItems, ...globalMatches]))
+    .filter((itemName) => scoreItem(itemName) < 2)
+    .sort((left, right) => {
+      const scoreDelta = scoreItem(left) - scoreItem(right);
+      if (scoreDelta !== 0) {
+        return scoreDelta;
+      }
+
+      const leftCuratedIndex = curatedItems.indexOf(left);
+      const rightCuratedIndex = curatedItems.indexOf(right);
+      if (leftCuratedIndex !== -1 || rightCuratedIndex !== -1) {
+        if (leftCuratedIndex === -1) {
+          return 1;
+        }
+        if (rightCuratedIndex === -1) {
+          return -1;
+        }
+
+        return leftCuratedIndex - rightCuratedIndex;
+      }
+
+      return left.localeCompare(right);
+    })
+    .slice(0, limit);
 }
 
 export function getAutoGlobalTokenForAbilityName(ability: string | undefined) {

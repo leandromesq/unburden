@@ -19,6 +19,7 @@ import {
   formatModifierToken,
   normalizeModifierValue,
   parseAbilitySymbol,
+  slugifySymbolValue,
 } from "@/lib/parser/grammar";
 import {
   getAutoGlobalTokenForAbilityName,
@@ -38,6 +39,7 @@ type ChipScope = keyof ActiveChipTokens;
 
 interface OmniStore {
   input: string;
+  cursorIndex: number;
   parsed: ParsedCommand | null;
   activeSuggestion: SuggestionState | null;
   suggestionOptions: SuggestionOption[];
@@ -49,19 +51,25 @@ interface OmniStore {
   activeChipTokens: ActiveChipTokens;
   results: DamageResult[];
   issues: string[];
-  setInput: (input: string) => void;
+  setInput: (input: string, cursorIndex?: number) => void;
+  setCursorIndex: (cursorIndex: number) => void;
   moveSuggestionSelection: (delta: number) => void;
   applySuggestion: () => void;
   applySuggestionText: (nextInput: string) => void;
   insertChip: (scope: ChipScope, token: string) => void;
   setStatModifier: (scope: "attacker" | "defender", value: number) => void;
   setSpeedModifier: (scope: "attacker" | "defender", value: number) => void;
-  setHpPercentage: (scope: "attacker" | "defender", value: number | null) => void;
+  setHpPercentage: (
+    scope: "attacker" | "defender",
+    value: number | null,
+  ) => void;
   recompute: () => void;
+  setAttackerMove: (moveName: string) => void;
 }
 
 const initialState = {
   input: "",
+  cursorIndex: 0,
   parsed: null as ParsedCommand | null,
   activeSuggestion: null as SuggestionState | null,
   suggestionOptions: [] as SuggestionOption[],
@@ -76,6 +84,10 @@ const initialState = {
 };
 
 type AutoFieldCategory = "weather" | "terrain";
+
+function isLegacyScopedToken(raw: string) {
+  return /^(?:[adg]:|>|<)/i.test(raw);
+}
 
 function resolveParsedSpecies(
   segment: ReturnType<typeof analyzeCommandStructure>["attacker"],
@@ -106,8 +118,9 @@ function resolveScopedAbilityName(
     const normalized = normalizeAlias(explicitAbility);
 
     return (
-      knownAbilities.find((ability) => normalizeAlias(ability) === normalized) ??
-      explicitAbility
+      knownAbilities.find(
+        (ability) => normalizeAlias(ability) === normalized,
+      ) ?? explicitAbility
     );
   }
 
@@ -152,40 +165,6 @@ function getGlobalTokenCategory(token: string): AutoFieldCategory | null {
   return null;
 }
 
-function stripAutoGlobalTokens(input: string, autoTokens: string[]) {
-  if (!autoTokens.length) {
-    return input;
-  }
-
-  const hadTrailingWhitespace = /\s$/.test(input);
-  const structure = analyzeCommandStructure(input);
-  const keepToken = (raw: string) => {
-    const canonical = toCanonicalScopeToken("global", raw);
-    return !canonical || !autoTokens.includes(canonical);
-  };
-  const attackerTokens = structure.attacker.rawTokens
-    .filter((entry) => keepToken(entry.raw))
-    .map((entry) => entry.raw);
-  const defenderTokens = structure.defender.rawTokens
-    .filter((entry) => keepToken(entry.raw))
-    .map((entry) => entry.raw);
-  const baseTokens = structure.lexed.hasDelimiter
-    ? [...attackerTokens, "x", ...defenderTokens]
-    : attackerTokens;
-
-  const stripped = compactWhitespace(baseTokens.join(" "));
-  return hadTrailingWhitespace && stripped ? `${stripped} ` : stripped;
-}
-
-function inputHasAllAutoTokens(input: string, autoTokens: string[]) {
-  if (!autoTokens.length) {
-    return false;
-  }
-
-  const activeGlobals = buildActiveChipTokens(input).global;
-  return autoTokens.every((token) => activeGlobals.includes(token));
-}
-
 function deriveAutoGlobalState(input: string) {
   const structure = analyzeCommandStructure(input);
   const attacker = resolveParsedSpecies(structure.attacker);
@@ -200,7 +179,11 @@ function deriveAutoGlobalState(input: string) {
 
   const parsed = parseCommand(input).parsed;
 
-  if (!parsed || !structure.attacker.speciesExact || !structure.defender.speciesExact) {
+  if (
+    !parsed ||
+    !structure.attacker.speciesExact ||
+    !structure.defender.speciesExact
+  ) {
     return {
       key: null,
       tokens: [] as string[],
@@ -208,21 +191,27 @@ function deriveAutoGlobalState(input: string) {
   }
 
   const attackerResolved = attacker
-    ? resolveMegaEvolution(attacker.id, structure.attacker.itemToken?.value) ?? attacker
+    ? (resolveMegaEvolution(attacker.id, structure.attacker.itemToken?.value) ??
+      attacker)
+    : null;
+  const defenderResolved = defender
+    ? (resolveMegaEvolution(defender.id, structure.defender.itemToken?.value) ??
+      defender)
     : null;
   const attackerAbility = resolveScopedAbilityName(
     attackerResolved?.id,
     structure.attacker.abilityToken?.value,
   );
   const defenderAbility = resolveScopedAbilityName(
-    defender?.id,
+    defenderResolved?.id,
     structure.defender.abilityToken?.value,
   );
   const attackerFinal = attackerResolved ?? attacker;
+  const defenderFinal = defenderResolved ?? defender;
   const contextKey = [
     attackerFinal.id,
     normalizeAlias(attackerAbility ?? ""),
-    defender.id,
+    defenderFinal.id,
     normalizeAlias(defenderAbility ?? ""),
   ].join("|");
   const candidates = [
@@ -232,7 +221,7 @@ function deriveAutoGlobalState(input: string) {
     },
     {
       token: getAutoGlobalTokenForAbilityName(defenderAbility),
-      speed: defender.baseStats.spe,
+      speed: defenderFinal.baseStats.spe,
     },
   ]
     .map((candidate) => {
@@ -273,15 +262,19 @@ function deriveAutoGlobalState(input: string) {
   const nextAutoTokens: string[] = [];
 
   for (const [category, entries] of desiredByCategory.entries()) {
-    const hasManualCategoryToken = Array.from(manualGlobalTokens).some((token) => {
-      return getGlobalTokenCategory(token) === category;
-    });
+    const hasManualCategoryToken = Array.from(manualGlobalTokens).some(
+      (token) => {
+        return getGlobalTokenCategory(token) === category;
+      },
+    );
 
     if (hasManualCategoryToken) {
       continue;
     }
 
-    const uniqueTokens = Array.from(new Set(entries.map((entry) => entry.token)));
+    const uniqueTokens = Array.from(
+      new Set(entries.map((entry) => entry.token)),
+    );
 
     if (uniqueTokens.length === 1) {
       nextAutoTokens.push(formatModifierToken("global", uniqueTokens[0]));
@@ -306,58 +299,56 @@ function deriveAutoGlobalState(input: string) {
 
 function applyAutoGlobalTokens(
   input: string,
-  previousAutoTokens: string[],
-  previousContextKey: string | null,
-  previousDismissedContextKey: string | null,
+  _previousAutoTokens: string[],
+  _previousContextKey: string | null,
+  _previousDismissedContextKey: string | null,
 ) {
-  const hadPreviousAutoTokens = inputHasAllAutoTokens(input, previousAutoTokens);
-  const strippedInput = stripAutoGlobalTokens(input, previousAutoTokens);
-  const autoState = deriveAutoGlobalState(strippedInput);
-  let dismissedContextKey = previousDismissedContextKey;
+  void _previousAutoTokens;
+  void _previousContextKey;
+  void _previousDismissedContextKey;
 
-  if (!autoState.key) {
-    dismissedContextKey = null;
-  } else if (
-    previousAutoTokens.length &&
-    !hadPreviousAutoTokens &&
-    previousContextKey === autoState.key
-  ) {
-    dismissedContextKey = autoState.key;
-  } else if (dismissedContextKey && dismissedContextKey !== autoState.key) {
-    dismissedContextKey = null;
-  }
-
-  const shouldKeepExistingAuto =
-    hadPreviousAutoTokens &&
-    previousContextKey !== null &&
-    previousContextKey === autoState.key;
-  const shouldAutoApplyNew =
-    Boolean(autoState.key) &&
-    previousContextKey !== autoState.key &&
-    dismissedContextKey !== autoState.key;
-
-  if (!autoState.tokens.length || (!shouldKeepExistingAuto && !shouldAutoApplyNew)) {
-    return {
-      input: strippedInput,
-      autoAppliedGlobalTokens: [],
-      autoGlobalContextKey: autoState.key,
-      dismissedAutoGlobalContextKey: dismissedContextKey,
-    };
-  }
-
-  const structure = analyzeCommandStructure(strippedInput);
-  const attackerTokens = structure.attacker.rawTokens.map((entry) => entry.raw);
-  const defenderTokens = structure.defender.rawTokens.map((entry) => entry.raw);
-  const baseTokens = structure.lexed.hasDelimiter
-    ? [...attackerTokens, "x", ...defenderTokens]
-    : attackerTokens;
-
+  const autoState = deriveAutoGlobalState(input);
   return {
-    input: compactWhitespace([...baseTokens, ...autoState.tokens].join(" ")),
+    input,
     autoAppliedGlobalTokens: autoState.tokens,
     autoGlobalContextKey: autoState.key,
-    dismissedAutoGlobalContextKey: dismissedContextKey,
+    dismissedAutoGlobalContextKey: null,
   };
+}
+
+function buildRecommendedGlobalOptions(
+  input: string,
+  recommendedTokens: string[],
+): SuggestionOption[] {
+  const baseInput = input.trimEnd();
+
+  return recommendedTokens.map((token) => ({
+    type: "modifier",
+    value: token,
+    label: token,
+    applyText: baseInput ? `${baseInput} ${token}` : token,
+  }));
+}
+
+function prioritizeRecommendedGlobals(
+  input: string,
+  options: SuggestionOption[],
+  recommendedTokens: string[],
+) {
+  if (!recommendedTokens.length || !options.length) {
+    return recommendedTokens.length
+      ? buildRecommendedGlobalOptions(input, recommendedTokens)
+      : options;
+  }
+
+  const recommendedSet = new Set(recommendedTokens);
+  const synthesized = buildRecommendedGlobalOptions(input, recommendedTokens).filter(
+    (option) => !options.some((existing) => existing.value === option.value),
+  );
+  const prioritized = options.filter((option) => recommendedSet.has(option.value));
+  const remaining = options.filter((option) => !recommendedSet.has(option.value));
+
+  return [...synthesized, ...prioritized, ...remaining];
 }
 
 function buildActiveChipTokens(input: string): ActiveChipTokens {
@@ -368,18 +359,32 @@ function buildActiveChipTokens(input: string): ActiveChipTokens {
       ...structure.attacker.modifierTokens.map((token) =>
         formatModifierToken("attacker", token.value),
       ),
-      ...(structure.attacker.hpToken ? [`%${structure.attacker.hpToken.value}`] : []),
+      ...(structure.attacker.hpToken
+        ? [`%${structure.attacker.hpToken.value}`]
+        : []),
       ...(structure.attacker.abilityToken
-        ? [formatAbilityToken("attacker", structure.attacker.abilityToken.value)]
+        ? [
+            formatAbilityToken(
+              "attacker",
+              structure.attacker.abilityToken.value,
+            ),
+          ]
         : []),
     ],
     defender: [
       ...structure.defender.modifierTokens.map((token) =>
         formatModifierToken("defender", token.value),
       ),
-      ...(structure.defender.hpToken ? [`%${structure.defender.hpToken.value}`] : []),
+      ...(structure.defender.hpToken
+        ? [`%${structure.defender.hpToken.value}`]
+        : []),
       ...(structure.defender.abilityToken
-        ? [formatAbilityToken("defender", structure.defender.abilityToken.value)]
+        ? [
+            formatAbilityToken(
+              "defender",
+              structure.defender.abilityToken.value,
+            ),
+          ]
         : []),
     ],
     global: structure.globalTokens.map((token) =>
@@ -389,27 +394,52 @@ function buildActiveChipTokens(input: string): ActiveChipTokens {
 }
 
 function insertChipToken(input: string, scope: ChipScope, token: string) {
-  const normalizedInput = compactWhitespace(input);
-  const structure = analyzeCommandStructure(normalizedInput);
+  let normalizedInput = compactWhitespace(input);
   const activeChips = buildActiveChipTokens(normalizedInput);
 
   if (activeChips[scope].includes(token)) {
     return removeChipToken(normalizedInput, scope, token);
   }
 
+  if (scope === "global") {
+    const rawValue = token.startsWith("~")
+      ? token.slice(1)
+      : token.toLowerCase().startsWith("g:")
+        ? token.slice(2)
+        : token;
+    const definition = GLOBAL_MODIFIER_MAP.get(
+      normalizeModifierValue(rawValue),
+    );
+    if (
+      definition?.section === "weather" ||
+      definition?.section === "terrain"
+    ) {
+      normalizedInput = stripGlobalSectionTokens(
+        normalizedInput,
+        definition.section,
+      );
+    }
+  }
+
+  const structure = analyzeCommandStructure(normalizedInput);
   const attackerTokens = structure.attacker.rawTokens.map((entry) => entry.raw);
   const defenderTokens = structure.defender.rawTokens.map((entry) => entry.raw);
 
   if (scope === "attacker") {
     if (structure.lexed.hasDelimiter) {
-      return [...attackerTokens, token, "x", ...defenderTokens].join(" ").trim();
+      return [...attackerTokens, token, "x", ...defenderTokens]
+        .join(" ")
+        .trim();
     }
 
     return [...attackerTokens, token].join(" ").trim();
   }
 
   if (scope === "defender") {
-    if (!structure.lexed.hasDelimiter || !joinTokenValues(structure.defender.speciesTokens)) {
+    if (
+      !structure.lexed.hasDelimiter ||
+      !joinTokenValues(structure.defender.speciesTokens)
+    ) {
       return normalizedInput;
     }
 
@@ -424,34 +454,37 @@ function insertChipToken(input: string, scope: ChipScope, token: string) {
 }
 
 function toCanonicalScopeToken(scope: ChipScope, raw: string) {
+  if (isLegacyScopedToken(raw)) {
+    return null;
+  }
+
   if (scope !== "global" && /^%\d{1,3}$/i.test(raw)) {
     return raw;
   }
 
-  const ability = parseAbilitySymbol(raw);
+  const ability = parseAbilitySymbol(
+    raw,
+    scope === "global" ? undefined : scope,
+  );
   if (ability && scope !== "global" && ability.scope === scope) {
     return formatAbilityToken(scope, ability.ability);
   }
 
-  if (scope === "attacker" && (raw.startsWith(">") || raw.toLowerCase().startsWith("a:"))) {
-    const value = normalizeModifierValue(
-      raw.startsWith(">") ? raw.slice(1) : raw.slice(2),
-    );
-    return formatModifierToken("attacker", value);
+  const normalizedValue =
+    scope === "global" && raw.startsWith("~")
+      ? normalizeModifierValue(raw.slice(1))
+      : normalizeModifierValue(raw);
+
+  if (scope === "attacker" && ATTACKER_MODIFIER_MAP.has(normalizedValue)) {
+    return formatModifierToken("attacker", normalizedValue);
   }
 
-  if (scope === "defender" && (raw.startsWith("<") || raw.toLowerCase().startsWith("d:"))) {
-    const value = normalizeModifierValue(
-      raw.startsWith("<") ? raw.slice(1) : raw.slice(2),
-    );
-    return formatModifierToken("defender", value);
+  if (scope === "defender" && DEFENDER_MODIFIER_MAP.has(normalizedValue)) {
+    return formatModifierToken("defender", normalizedValue);
   }
 
-  if (scope === "global" && (raw.startsWith("~") || raw.toLowerCase().startsWith("g:"))) {
-    const value = normalizeModifierValue(
-      raw.startsWith("~") ? raw.slice(1) : raw.slice(2),
-    );
-    return formatModifierToken("global", value);
+  if (scope === "global" && GLOBAL_MODIFIER_MAP.has(normalizedValue)) {
+    return formatModifierToken("global", normalizedValue);
   }
 
   return null;
@@ -480,33 +513,45 @@ function removeChipToken(input: string, scope: ChipScope, token: string) {
   return baseTokens.join(" ").trim();
 }
 
+function stripGlobalSectionTokens(
+  input: string,
+  section: "weather" | "terrain",
+): string {
+  const normalizedInput = compactWhitespace(input);
+  const structure = analyzeCommandStructure(normalizedInput);
+  const attackerTokens = structure.attacker.rawTokens.map((entry) => entry.raw);
+  const defenderTokens = structure.defender.rawTokens.map((entry) => entry.raw);
+  const baseTokens = structure.lexed.hasDelimiter
+    ? [...attackerTokens, "x", ...defenderTokens]
+    : attackerTokens;
+
+  return baseTokens
+    .filter((raw) => {
+      const canonical = toCanonicalScopeToken("global", raw);
+      if (canonical === null) return true;
+      const tokenValue = canonical.slice(1); // strip leading "~"
+      const definition = GLOBAL_MODIFIER_MAP.get(tokenValue);
+      return definition?.section !== section;
+    })
+    .join(" ")
+    .trim();
+}
+
 function stripModifierTokensByKind(
   scope: "attacker" | "defender",
   tokens: ReturnType<typeof analyzeCommandStructure>["attacker"]["rawTokens"],
   kind: "stat_mod" | "speed_mod",
 ) {
-  const modifierMap = scope === "attacker" ? ATTACKER_MODIFIER_MAP : DEFENDER_MODIFIER_MAP;
+  const modifierMap =
+    scope === "attacker" ? ATTACKER_MODIFIER_MAP : DEFENDER_MODIFIER_MAP;
 
   return tokens.filter((entry) => {
     const raw = entry.raw;
-    const isScopedToken =
-      scope === "attacker"
-        ? raw.toLowerCase().startsWith("a:") || raw.startsWith(">")
-        : raw.toLowerCase().startsWith("d:") || raw.startsWith("<");
-
-    if (!isScopedToken) {
-      return true;
+    if (isLegacyScopedToken(raw)) {
+      return false;
     }
 
-    const value = normalizeModifierValue(
-      scope === "attacker"
-        ? raw.toLowerCase().startsWith("a:")
-          ? raw.slice(2)
-          : raw.slice(1)
-        : raw.toLowerCase().startsWith("d:")
-          ? raw.slice(2)
-          : raw.slice(1),
-    );
+    const value = normalizeModifierValue(raw);
     const definition = value ? modifierMap.get(value) : undefined;
 
     return definition?.kind !== kind;
@@ -523,12 +568,20 @@ function setScopedStageToken(
   const structure = analyzeCommandStructure(normalizedInput);
   const attackerTokens = (
     scope === "attacker"
-      ? stripModifierTokensByKind("attacker", structure.attacker.rawTokens, kind)
+      ? stripModifierTokensByKind(
+          "attacker",
+          structure.attacker.rawTokens,
+          kind,
+        )
       : structure.attacker.rawTokens
   ).map((entry) => entry.raw);
   const defenderTokens = (
     scope === "defender"
-      ? stripModifierTokensByKind("defender", structure.defender.rawTokens, kind)
+      ? stripModifierTokensByKind(
+          "defender",
+          structure.defender.rawTokens,
+          kind,
+        )
       : structure.defender.rawTokens
   ).map((entry) => entry.raw);
   const token =
@@ -536,11 +589,19 @@ function setScopedStageToken(
       ? null
       : formatModifierToken(
           scope,
-          kind === "speed_mod" ? (value > 0 ? `spe+${value}` : `spe${value}`) : value > 0 ? `+${value}` : `${value}`,
+          kind === "speed_mod"
+            ? value > 0
+              ? `spe+${value}`
+              : `spe${value}`
+            : value > 0
+              ? `+${value}`
+              : `${value}`,
         );
 
   if (scope === "attacker") {
-    const nextAttackerTokens = token ? [...attackerTokens, token] : attackerTokens;
+    const nextAttackerTokens = token
+      ? [...attackerTokens, token]
+      : attackerTokens;
     if (structure.lexed.hasDelimiter) {
       return [...nextAttackerTokens, "x", ...defenderTokens].join(" ").trim();
     }
@@ -548,39 +609,64 @@ function setScopedStageToken(
     return nextAttackerTokens.join(" ").trim();
   }
 
-  if (!structure.lexed.hasDelimiter || !joinTokenValues(structure.defender.speciesTokens)) {
+  if (
+    !structure.lexed.hasDelimiter ||
+    !joinTokenValues(structure.defender.speciesTokens)
+  ) {
     return normalizedInput;
   }
 
-  const nextDefenderTokens = token ? [...defenderTokens, token] : defenderTokens;
+  const nextDefenderTokens = token
+    ? [...defenderTokens, token]
+    : defenderTokens;
   return [...attackerTokens, "x", ...nextDefenderTokens].join(" ").trim();
 }
 
-function setStatModifierToken(input: string, scope: "attacker" | "defender", value: number) {
+function setStatModifierToken(
+  input: string,
+  scope: "attacker" | "defender",
+  value: number,
+) {
   return setScopedStageToken(input, scope, value, "stat_mod");
 }
 
-function setSpeedModifierToken(input: string, scope: "attacker" | "defender", value: number) {
+function setSpeedModifierToken(
+  input: string,
+  scope: "attacker" | "defender",
+  value: number,
+) {
   return setScopedStageToken(input, scope, value, "speed_mod");
 }
 
-function stripHpTokens(tokens: ReturnType<typeof analyzeCommandStructure>["attacker"]["rawTokens"]) {
+function stripHpTokens(
+  tokens: ReturnType<typeof analyzeCommandStructure>["attacker"]["rawTokens"],
+) {
   return tokens.filter((entry) => !/^%\d{1,3}$/i.test(entry.raw));
 }
 
-function setHpPercentageToken(input: string, scope: "attacker" | "defender", value: number | null) {
+function setHpPercentageToken(
+  input: string,
+  scope: "attacker" | "defender",
+  value: number | null,
+) {
   const normalizedInput = compactWhitespace(input);
   const structure = analyzeCommandStructure(normalizedInput);
   const attackerTokens = (
-    scope === "attacker" ? stripHpTokens(structure.attacker.rawTokens) : structure.attacker.rawTokens
+    scope === "attacker"
+      ? stripHpTokens(structure.attacker.rawTokens)
+      : structure.attacker.rawTokens
   ).map((entry) => entry.raw);
   const defenderTokens = (
-    scope === "defender" ? stripHpTokens(structure.defender.rawTokens) : structure.defender.rawTokens
+    scope === "defender"
+      ? stripHpTokens(structure.defender.rawTokens)
+      : structure.defender.rawTokens
   ).map((entry) => entry.raw);
   const token = value === null ? null : `%${Math.max(1, Math.min(100, value))}`;
 
   if (scope === "attacker") {
-    const nextAttackerTokens = token ? [...attackerTokens, token] : attackerTokens;
+    const nextAttackerTokens = token
+      ? [...attackerTokens, token]
+      : attackerTokens;
     if (structure.lexed.hasDelimiter) {
       return [...nextAttackerTokens, "x", ...defenderTokens].join(" ").trim();
     }
@@ -588,11 +674,16 @@ function setHpPercentageToken(input: string, scope: "attacker" | "defender", val
     return nextAttackerTokens.join(" ").trim();
   }
 
-  if (!structure.lexed.hasDelimiter || !joinTokenValues(structure.defender.speciesTokens)) {
+  if (
+    !structure.lexed.hasDelimiter ||
+    !joinTokenValues(structure.defender.speciesTokens)
+  ) {
     return normalizedInput;
   }
 
-  const nextDefenderTokens = token ? [...defenderTokens, token] : defenderTokens;
+  const nextDefenderTokens = token
+    ? [...defenderTokens, token]
+    : defenderTokens;
   return [...attackerTokens, "x", ...nextDefenderTokens].join(" ").trim();
 }
 
@@ -601,6 +692,7 @@ function computeState(
   previousAutoTokens: string[] = [],
   previousContextKey: string | null = null,
   previousDismissedContextKey: string | null = null,
+  cursorIndex = input.length,
 ) {
   const normalizedInput = input.replace(/\s+$/g, (match) => match);
   const withAutoTokens = applyAutoGlobalTokens(
@@ -610,33 +702,53 @@ function computeState(
     previousDismissedContextKey,
   );
   const parsedResult = parseCommand(withAutoTokens.input);
-  const autocomplete = getAutocompleteState(withAutoTokens.input);
+  const nextCursorIndex = Math.min(cursorIndex, withAutoTokens.input.length);
+  const autocomplete = getAutocompleteState(withAutoTokens.input, nextCursorIndex);
+  const suggestionOptions = prioritizeRecommendedGlobals(
+    withAutoTokens.input,
+    autocomplete.suggestionOptions,
+    withAutoTokens.autoAppliedGlobalTokens,
+  );
 
   return {
     input: withAutoTokens.input,
+    cursorIndex: nextCursorIndex,
     parsed: parsedResult.parsed,
     activeSuggestion: autocomplete.activeSuggestion,
-    suggestionOptions: autocomplete.suggestionOptions,
-    highlightedSuggestionIndex: autocomplete.suggestionOptions.length ? 0 : -1,
+    suggestionOptions,
+    highlightedSuggestionIndex: suggestionOptions.length ? 0 : -1,
     calculationReady: Boolean(parsedResult.parsed),
     autoAppliedGlobalTokens: withAutoTokens.autoAppliedGlobalTokens,
     autoGlobalContextKey: withAutoTokens.autoGlobalContextKey,
     dismissedAutoGlobalContextKey: withAutoTokens.dismissedAutoGlobalContextKey,
     activeChipTokens: buildActiveChipTokens(withAutoTokens.input),
     issues: parsedResult.issues,
-    results: parsedResult.parsed ? calculateDamageResults(parsedResult.parsed) : [],
+    results: parsedResult.parsed
+      ? calculateDamageResults(parsedResult.parsed)
+      : [],
   };
 }
 
 export const useOmniStore = create<OmniStore>((set, get) => ({
   ...initialState,
-  setInput: (input) =>
+  setInput: (input, cursorIndex) =>
     set(
       computeState(
         input,
         get().autoAppliedGlobalTokens,
         get().autoGlobalContextKey,
         get().dismissedAutoGlobalContextKey,
+        cursorIndex ?? input.length,
+      ),
+    ),
+  setCursorIndex: (cursorIndex) =>
+    set(
+      computeState(
+        get().input,
+        get().autoAppliedGlobalTokens,
+        get().autoGlobalContextKey,
+        get().dismissedAutoGlobalContextKey,
+        cursorIndex,
       ),
     ),
   moveSuggestionSelection: (delta) => {
@@ -743,6 +855,41 @@ export const useOmniStore = create<OmniStore>((set, get) => ({
         get().dismissedAutoGlobalContextKey,
       ),
     ),
+  setAttackerMove: (moveName) => {
+    const currentInput = compactWhitespace(get().input);
+    const structure = analyzeCommandStructure(currentInput);
+
+    // Remove any existing move token from attacker tokens
+    const attackerTokens = structure.attacker.rawTokens
+      .filter((t) => {
+        const n = t.normalized;
+        return !n.startsWith("m:") && !n.startsWith("!");
+      })
+      .map((t) => t.raw);
+
+    // Append the new move token (slugified)
+    const moveSlug = slugifySymbolValue(moveName);
+    const newAttackerTokens = [...attackerTokens, `!${moveSlug}`];
+
+    let newInput: string;
+    if (structure.lexed.hasDelimiter) {
+      const defenderTokens = structure.defender.rawTokens.map((t) => t.raw);
+      newInput = [...newAttackerTokens, "x", ...defenderTokens]
+        .join(" ")
+        .trim();
+    } else {
+      newInput = newAttackerTokens.join(" ").trim();
+    }
+
+    set(
+      computeState(
+        newInput,
+        get().autoAppliedGlobalTokens,
+        get().autoGlobalContextKey,
+        get().dismissedAutoGlobalContextKey,
+      ),
+    );
+  },
 }));
 
 export function resetOmniStore() {

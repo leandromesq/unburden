@@ -201,6 +201,10 @@ interface CommandParseResult {
   issues: string[];
 }
 
+function isLegacyScopedToken(token: string) {
+  return /^(?:[adg]:|>|<)/i.test(token);
+}
+
 export function parseCommand(input: string): CommandParseResult {
   const structure = analyzeCommandStructure(input);
   const issues: string[] = [];
@@ -208,7 +212,8 @@ export function parseCommand(input: string): CommandParseResult {
   const defenderMatch = resolveParsedSpecies(structure.defender);
   const moveToken = structure.attacker.moveToken;
   const move = moveToken ? resolveMoveName(moveToken.value) : null;
-  const item = resolveItemDisplay(structure.attacker.itemToken?.value);
+  const attackerItem = resolveItemDisplay(structure.attacker.itemToken?.value);
+  const defenderItem = resolveItemDisplay(structure.defender.itemToken?.value);
 
   if (!structure.lexed.hasDelimiter) {
     issues.push("Use x to split attacker and defender.");
@@ -223,11 +228,15 @@ export function parseCommand(input: string): CommandParseResult {
   }
 
   if (structure.attacker.postExplicitFreeTokens.length) {
-    issues.push("Attacker modifiers must use symbolic tokens like >, !, @, or >[...].");
+    issues.push(
+      "Attacker tokens after !move must use known segment-scoped forms like @item, %75, [Ability], +1, +nature, or helping-hand.",
+    );
   }
 
   if (structure.defender.postExplicitFreeTokens.length) {
-    issues.push("Defender modifiers must use symbolic tokens like <, ~, or <[...].");
+    issues.push(
+      "Defender tokens must use known segment-scoped forms like @item, %75, [Ability], +1, +nature, or reflect.",
+    );
   }
 
   if (structure.attacker.leadingRemainderTokens.length && !moveToken) {
@@ -241,7 +250,9 @@ export function parseCommand(input: string): CommandParseResult {
   }
 
   if (structure.defender.leadingRemainderTokens.length) {
-    issues.push("Defender-side modifiers must use < or ~ tokens.");
+    issues.push(
+      "Unrecognized defender token. Use segment-scoped tokens like @item, %75, [Ability], +nature, reflect, or ~rain.",
+    );
   }
 
   if (structure.attacker.misplacedTokens.length || structure.defender.misplacedTokens.length) {
@@ -261,14 +272,29 @@ export function parseCommand(input: string): CommandParseResult {
   ];
 
   if (unknownTokens.length) {
-    issues.push(`Unknown symbolic token: ${unknownTokens[0].raw}`);
+    issues.push(`Unknown modifier token: ${unknownTokens[0].raw}`);
   }
 
-  if (structure.attacker.itemToken && !item) {
+  if (structure.attacker.itemToken && !attackerItem) {
     issues.push(`Unknown attacker item: ${structure.attacker.itemToken.raw}`);
   }
 
-  if (!attackerMatch || !defenderMatch || !move) {
+  if (structure.defender.itemToken && !defenderItem) {
+    issues.push(`Unknown defender item: ${structure.defender.itemToken.raw}`);
+  }
+
+  const legacyTokens = [
+    ...structure.attacker.leadingRemainderTokens,
+    ...structure.attacker.postExplicitFreeTokens,
+    ...structure.defender.leadingRemainderTokens,
+    ...structure.defender.postExplicitFreeTokens,
+  ].filter((token) => isLegacyScopedToken(token.raw));
+
+  if (legacyTokens.length) {
+    issues.push("Legacy prefixes >, <, a:, d:, and g: are no longer supported.");
+  }
+
+  if (!attackerMatch || !defenderMatch || !move || legacyTokens.length) {
     return { parsed: null, issues: unique(issues) };
   }
 
@@ -316,7 +342,8 @@ export function parseCommand(input: string): CommandParseResult {
       isCriticalHit,
       attackerNature,
       attackerAbility,
-      attackerItem: item,
+      attackerItem,
+      defenderItem,
       attackerInvestment: modifiers.attackerInvestment,
       defenderNature,
       defenderAbility,

@@ -2,19 +2,19 @@ import { parseCommand } from "@/lib/parser/command-parser";
 
 describe("parseCommand", () => {
   test("parses an explicit symbolic command", () => {
-    const result = parseCommand("flutter mane !moonblast x ogerpon");
+    const result = parseCommand("politoed !muddy-water x incineroar");
 
     expect(result.parsed).toMatchObject({
-      attacker: "Flutter Mane",
-      defender: "Ogerpon-Wellspring",
-      move: "Moonblast",
+      attacker: "Politoed",
+      defender: "Incineroar",
+      move: "Muddy Water",
       attackerStatMod: 0,
     });
     expect(result.issues).toHaveLength(0);
   });
 
   test("requires an explicit attacker move", () => {
-    const result = parseCommand("flutter mane x ogerpon");
+    const result = parseCommand("politoed x incineroar");
 
     expect(result.parsed).toBeNull();
     expect(result.issues).toContain("Add an explicit attacker move with !<move>.");
@@ -22,7 +22,7 @@ describe("parseCommand", () => {
 
   test("parses compact attacker, defender and global modifiers", () => {
     const result = parseCommand(
-      "flutter mane !moonblast >+1 >+nature x ogerpon <+2 <+nature <reflect ~rain",
+      "politoed !muddy-water +1 +nature x incineroar +2 +nature reflect ~rain",
     );
 
     expect(result.parsed).toMatchObject({
@@ -38,41 +38,53 @@ describe("parseCommand", () => {
   });
 
   test("marks Make It Rain as a doubles spread move", () => {
-    const result = parseCommand("gholdengo !make-it-rain x incineroar");
+    const result = parseCommand("charizard !heat-wave x tinkaton");
 
-    expect(result.parsed?.move).toBe("Make It Rain");
+    expect(result.parsed?.move).toBe("Heat Wave");
     expect(result.parsed?.isDoubleTarget).toBe(true);
   });
 
   test("forces trick room into parsed global effects", () => {
-    const result = parseCommand("archaludon !electro-shot ~trick-room x amoonguss");
+    const result = parseCommand("charizard !heat-wave ~trick-room x incineroar");
 
     expect(result.parsed?.globalEffects).toContain("trick_room");
   });
 
   test("parses explicit scoped abilities", () => {
     const result = parseCommand(
-      "flutter mane !moonblast >[Protosynthesis] x ogerpon <[Water Absorb]",
+      "politoed !muddy-water [Drizzle] x incineroar [Intimidate]",
     );
 
     expect(result.parsed).toMatchObject({
-      attackerAbility: "Protosynthesis",
-      defenderAbility: "Water Absorb",
+      attackerAbility: "Drizzle",
+      defenderAbility: "Intimidate",
     });
   });
 
-  test("accepts fuzzy pokemon and move resolution inside symbolic grammar", () => {
-    const result = parseCommand("fluter mane !moonblst x ogerpon");
+  test("parses attacker and defender items by segment position", () => {
+    const result = parseCommand(
+      "charizard !heat-wave @life-orb x tinkaton @assault-vest",
+    );
 
     expect(result.parsed).toMatchObject({
-      attacker: "Flutter Mane",
-      move: "Moonblast",
-      defender: "Ogerpon-Wellspring",
+      attackerItem: "Life Orb",
+      defenderItem: "Assault Vest",
+    });
+    expect(result.issues).toHaveLength(0);
+  });
+
+  test("accepts fuzzy pokemon and move resolution inside symbolic grammar", () => {
+    const result = parseCommand("politoe !mudy-water x incineroar");
+
+    expect(result.parsed).toMatchObject({
+      attacker: "Politoed",
+      move: "Muddy Water",
+      defender: "Incineroar",
     });
   });
 
   test("rejects low-confidence unresolved inputs", () => {
-    const result = parseCommand("zzzzzz !moonblast x ogerpon");
+    const result = parseCommand("zzzzzz !muddy-water x incineroar");
 
     expect(result.parsed).toBeNull();
     expect(result.issues).toContain("Could not resolve attacker.");
@@ -80,7 +92,7 @@ describe("parseCommand", () => {
 
   test("accepts legacy nature aliases and normalizes them", () => {
     const result = parseCommand(
-      "flutter mane !moonblast >positive-nature x ogerpon <neg-nature",
+      "politoed !muddy-water positive-nature x incineroar neg-nature",
     );
 
     expect(result.parsed).toMatchObject({
@@ -91,7 +103,7 @@ describe("parseCommand", () => {
 
   test("clamps attacker and defender stages to the -6..+6 range", () => {
     const result = parseCommand(
-      "flutter mane !moonblast >+6 >+3 x ogerpon <-4 <-5",
+      "politoed !muddy-water +6 +3 x incineroar -4 -5",
     );
 
     expect(result.parsed).toMatchObject({
@@ -102,7 +114,7 @@ describe("parseCommand", () => {
 
   test("parses dedicated speed stage tokens for both sides", () => {
     const result = parseCommand(
-      "regieleki !electro-ball >spe+4 x amoonguss <spe-2",
+      "charizard !heat-wave spe+4 x incineroar spe-2",
     );
 
     expect(result.parsed).toMatchObject({
@@ -113,7 +125,7 @@ describe("parseCommand", () => {
 
   test("parses attacker and defender hp percentages plus critical hit", () => {
     const result = parseCommand(
-      "flutter mane !moonblast %75 * x ogerpon %50",
+      "politoed !muddy-water %75 * x incineroar %50",
     );
 
     expect(result.parsed).toMatchObject({
@@ -131,6 +143,15 @@ describe("parseCommand", () => {
       move: "Heat Wave",
       defender: "Tinkaton",
     });
+  });
+
+  test("rejects removed legacy side prefixes", () => {
+    const result = parseCommand("politoed !muddy-water >+1 x incineroar");
+
+    expect(result.parsed).toBeNull();
+    expect(result.issues).toContain(
+      "Legacy prefixes >, <, a:, d:, and g: are no longer supported.",
+    );
   });
 
   test("does not treat the x in mega x as the attacker-defender separator", () => {

@@ -1,8 +1,10 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Documentação
 
-## Getting Started
+- [Sintaxe do prompt do Omniboost](./docs/sintaxe-do-prompt.pt-BR.md)
 
-First, run the development server:
+## Desenvolvimento
+
+Para subir o projeto localmente:
 
 ```bash
 npm run dev

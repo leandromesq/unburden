@@ -316,6 +316,10 @@ function describeAssumptions(
     assumptions.push(`Item: ${parsed.attackerItem}`);
   }
 
+  if (parsed.defenderItem) {
+    assumptions.push(`Defender item: ${parsed.defenderItem}`);
+  }
+
   if (normalizeId(parsed.attacker) !== normalizeId(attackerSpeciesName)) {
     assumptions.push(`Mega Evolution: ${attackerSpeciesName}`);
   }
@@ -387,7 +391,7 @@ export function buildCalculationContext(parsed: ParsedCommand) {
   }
 
   const attacker = resolveMegaEvolution(parsedAttacker.id, parsed.attackerItem) ?? parsedAttacker;
-  const defender = parsedDefender;
+  const defender = resolveMegaEvolution(parsedDefender.id, parsed.defenderItem) ?? parsedDefender;
 
   const isPhysical = move.category === "Physical";
   const attackInvestment =
@@ -495,6 +499,7 @@ export function calculateDamageResults(parsed: ParsedCommand): DamageResult[] {
         new Pokemon(9, context.defender.name, {
           level: 50,
           ability: context.defenderAbility,
+          item: parsed.defenderItem,
           nature: archetype.nature,
           ivs: {
             hp: 31,
@@ -522,6 +527,7 @@ export function calculateDamageResults(parsed: ParsedCommand): DamageResult[] {
       ),
       level: 50,
       ability: context.defenderAbility,
+      item: parsed.defenderItem,
       nature: archetype.nature,
       ivs: {
         hp: 31,

@@ -292,7 +292,7 @@ const GLOBAL_MODIFIERS: ModifierDefinition[] = [
   {
     scope: "global",
     token: "electric-terrain",
-    label: "Electric Terrain",
+    label: "Electric",
     section: "terrain",
     kind: "global_effect",
     globalEffect: "electric_terrain",
@@ -300,7 +300,7 @@ const GLOBAL_MODIFIERS: ModifierDefinition[] = [
   {
     scope: "global",
     token: "grassy-terrain",
-    label: "Grassy Terrain",
+    label: "Grassy",
     section: "terrain",
     kind: "global_effect",
     globalEffect: "grassy_terrain",
@@ -308,7 +308,7 @@ const GLOBAL_MODIFIERS: ModifierDefinition[] = [
   {
     scope: "global",
     token: "psychic-terrain",
-    label: "Psychic Terrain",
+    label: "Psychic",
     section: "terrain",
     kind: "global_effect",
     globalEffect: "psychic_terrain",
@@ -316,7 +316,7 @@ const GLOBAL_MODIFIERS: ModifierDefinition[] = [
   {
     scope: "global",
     token: "misty-terrain",
-    label: "Misty Terrain",
+    label: "Misty",
     section: "terrain",
     kind: "global_effect",
     globalEffect: "misty_terrain",
@@ -368,28 +368,33 @@ export function normalizeModifierValue(value: string) {
 }
 
 export function formatModifierToken(scope: ModifierScope, token: string) {
-  const prefix = scope === "attacker" ? ">" : scope === "defender" ? "<" : "~";
-  return `${prefix}${token}`;
+  if (scope === "global") {
+    return `~${token}`;
+  }
+
+  return token;
 }
 
-export function formatAbilityToken(scope: "attacker" | "defender", ability: string) {
-  const prefix = scope === "attacker" ? ">" : "<";
-  return `${prefix}[${ability}]`;
+export function formatAbilityToken(
+  _scope: "attacker" | "defender",
+  ability: string,
+) {
+  return `[${ability}]`;
 }
 
-export function parseAbilitySymbol(token: string) {
-  const match = token.match(/^([ad][:]|>|<)\[(.+)\]$/i);
+export function parseAbilitySymbol(
+  token: string,
+  fallbackScope?: "attacker" | "defender",
+) {
+  const plainMatch = token.match(/^\[(.+)\]$/);
 
-  if (!match) {
+  if (!plainMatch || !fallbackScope) {
     return null;
   }
 
   return {
-    scope:
-      match[1].toLowerCase() === "a:" || match[1] === ">"
-        ? ("attacker" as const)
-        : ("defender" as const),
-    ability: match[2].trim(),
+    scope: fallbackScope,
+    ability: plainMatch[1].trim(),
   };
 }
 
@@ -401,7 +406,10 @@ export function buildInitialChipState(): ActiveChipTokens {
   };
 }
 
-export function buildCommonAbilities(profile: VgcMetaProfile | undefined, speciesAbilities: string[]) {
+export function buildCommonAbilities(
+  profile: VgcMetaProfile | undefined,
+  speciesAbilities: string[],
+) {
   const abilities = [
     profile?.defaultAbility,
     ...(profile?.commonAbilities ?? []),

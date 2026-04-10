@@ -1,6 +1,6 @@
 "use client";
 
-import type { RefObject, ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
 import {
@@ -17,10 +17,6 @@ import {
 import { getSuggestedAbilities } from "@/lib/parser/inference";
 import { useOmniStore } from "@/store/use-omni-store";
 
-interface ModifierSwitchesProps {
-  textareaRef: RefObject<HTMLTextAreaElement | null>;
-}
-
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
     <div className="theme-text-dim mb-3 text-xs font-semibold uppercase tracking-[0.24em]">
@@ -31,7 +27,7 @@ function SectionLabel({ children }: { children: ReactNode }) {
 
 function GroupLabel({ children }: { children: ReactNode }) {
   return (
-    <div className="theme-text-muted mb-2 text-[11px] font-semibold uppercase tracking-[0.22em]">
+    <div className="theme-text-dim mb-2 text-[11px] font-semibold uppercase tracking-[0.22em]">
       {children}
     </div>
   );
@@ -55,7 +51,7 @@ function ModifierButton({
       aria-pressed={active}
       disabled={disabled}
       onClick={onClick}
-      className={`rounded-full px-3 py-2 text-sm ${
+      className={`rounded-full px-3 py-1.5 text-sm ${
         active
           ? "theme-chip-active"
           : disabled
@@ -103,7 +99,9 @@ function TokenGroup({
           })}
         </div>
       ) : (
-        <div className="theme-text-faint text-sm">{emptyText ?? "No options yet."}</div>
+        <div className="theme-text-faint text-sm">
+          {emptyText ?? "No options yet."}
+        </div>
       )}
     </section>
   );
@@ -138,7 +136,7 @@ function HpPercentageControl({
           tabIndex={-1}
           disabled={disabled || value === null}
           onClick={() => onChange(null)}
-          className={`rounded-full px-3 py-2 text-sm ${
+          className={`rounded-full px-3 py-1.5 text-sm ${
             disabled || value === null
               ? "theme-chip-disabled cursor-not-allowed"
               : "theme-chip"
@@ -171,7 +169,7 @@ function StageControl({
 }) {
   return (
     <section className="theme-subpanel rounded-2xl p-3">
-      <div className="mb-3 flex items-center justify-between gap-3">
+      <div className="mb-2 flex items-center justify-between gap-3">
         <GroupLabel>{title}</GroupLabel>
         <div className="theme-badge rounded-full px-2.5 py-1 font-mono text-xs">
           {value > 0 ? `+${value}` : value}
@@ -203,7 +201,7 @@ function StageControl({
             onChange={(event) => onChange(Number(event.currentTarget.value))}
             className="h-2 w-full cursor-pointer appearance-none rounded-full disabled:cursor-not-allowed"
             style={{
-              background: "var(--surface-4)",
+              background: "var(--line-strong)",
               accentColor: "var(--accent)",
             }}
           />
@@ -285,7 +283,9 @@ function SideColumn({
         <StageControl
           title="Multipliers"
           ariaLabel={`${lowerTitle} stage slider`}
-          summary={lowerTitle === "attacker" ? "Atk / SpA stage" : "Def / SpD stage"}
+          summary={
+            lowerTitle === "attacker" ? "Atk / SpA stage" : "Def / SpD stage"
+          }
           value={stageValue}
           disabled={disabled}
           onChange={onStageChange}
@@ -323,7 +323,9 @@ function SideColumn({
           activeTokens={activeTokens}
           disabled={disabled}
           onInsert={onInsert}
-          emptyText={disabled ? "Resolve this side first." : "No ability suggestions."}
+          emptyText={
+            disabled ? "Resolve this side first." : "No ability suggestions."
+          }
         />
       </div>
     </section>
@@ -337,7 +339,7 @@ function toGroupTokens(scope: ModifierScope, tokens: ModifierDefinition[]) {
   }));
 }
 
-export function ModifierSwitches({ textareaRef }: ModifierSwitchesProps) {
+export function ModifierSwitches() {
   const input = useOmniStore((state) => state.input);
   const activeChipTokens = useOmniStore((state) => state.activeChipTokens);
   const insertChip = useOmniStore((state) => state.insertChip);
@@ -345,9 +347,13 @@ export function ModifierSwitches({ textareaRef }: ModifierSwitchesProps) {
   const setSpeedModifier = useOmniStore((state) => state.setSpeedModifier);
   const setHpPercentage = useOmniStore((state) => state.setHpPercentage);
   const structure = analyzeCommandStructure(input);
-  const attackerResolved = structure.attacker.speciesExact ?? structure.attacker.speciesMatch;
-  const defenderResolved = structure.defender.speciesExact ?? structure.defender.speciesMatch;
-  const defenderReady = Boolean(structure.lexed.hasDelimiter && defenderResolved);
+  const attackerResolved =
+    structure.attacker.speciesExact ?? structure.attacker.speciesMatch;
+  const defenderResolved =
+    structure.defender.speciesExact ?? structure.defender.speciesMatch;
+  const defenderReady = Boolean(
+    structure.lexed.hasDelimiter && defenderResolved,
+  );
   const attackerHpPercent = structure.attacker.hpToken
     ? Number(structure.attacker.hpToken.value)
     : null;
@@ -361,7 +367,9 @@ export function ModifierSwitches({ textareaRef }: ModifierSwitchesProps) {
       6,
       structure.attacker.modifierTokens.reduce((sum, token) => {
         const definition = ATTACKER_MODIFIER_MAP.get(token.value);
-        return definition?.kind === "stat_mod" ? sum + (definition.statMod ?? 0) : sum;
+        return definition?.kind === "stat_mod"
+          ? sum + (definition.statMod ?? 0)
+          : sum;
       }, 0),
     ),
   );
@@ -371,7 +379,9 @@ export function ModifierSwitches({ textareaRef }: ModifierSwitchesProps) {
       6,
       structure.attacker.modifierTokens.reduce((sum, token) => {
         const definition = ATTACKER_MODIFIER_MAP.get(token.value);
-        return definition?.kind === "speed_mod" ? sum + (definition.statMod ?? 0) : sum;
+        return definition?.kind === "speed_mod"
+          ? sum + (definition.statMod ?? 0)
+          : sum;
       }, 0),
     ),
   );
@@ -381,7 +391,9 @@ export function ModifierSwitches({ textareaRef }: ModifierSwitchesProps) {
       6,
       structure.defender.modifierTokens.reduce((sum, token) => {
         const definition = DEFENDER_MODIFIER_MAP.get(token.value);
-        return definition?.kind === "stat_mod" ? sum + (definition.statMod ?? 0) : sum;
+        return definition?.kind === "stat_mod"
+          ? sum + (definition.statMod ?? 0)
+          : sum;
       }, 0),
     ),
   );
@@ -391,53 +403,48 @@ export function ModifierSwitches({ textareaRef }: ModifierSwitchesProps) {
       6,
       structure.defender.modifierTokens.reduce((sum, token) => {
         const definition = DEFENDER_MODIFIER_MAP.get(token.value);
-        return definition?.kind === "speed_mod" ? sum + (definition.statMod ?? 0) : sum;
+        return definition?.kind === "speed_mod"
+          ? sum + (definition.statMod ?? 0)
+          : sum;
       }, 0),
     ),
   );
 
-  const focusTextarea = () => {
-    requestAnimationFrame(() => {
-      const element = textareaRef.current;
-      if (!element) {
-        return;
-      }
-
-      const cursor = element.value.length;
-      element.focus();
-      element.setSelectionRange(cursor, cursor);
-    });
-  };
-
   const attackerAbilityTokens = attackerResolved
-    ? getSuggestedAbilities(attackerResolved.entry.id, "", 4).map((ability) => ({
-        token: formatAbilityToken("attacker", ability),
-        label: ability,
-      }))
+    ? getSuggestedAbilities(attackerResolved.entry.id, "", 4).map(
+        (ability) => ({
+          token: formatAbilityToken("attacker", ability),
+          label: ability,
+        }),
+      )
     : [];
   const defenderAbilityTokens = defenderResolved
-    ? getSuggestedAbilities(defenderResolved.entry.id, "", 4).map((ability) => ({
-        token: formatAbilityToken("defender", ability),
-        label: ability,
-      }))
+    ? getSuggestedAbilities(defenderResolved.entry.id, "", 4).map(
+        (ability) => ({
+          token: formatAbilityToken("defender", ability),
+          label: ability,
+        }),
+      )
     : [];
 
-  const handleInsert = (scope: "attacker" | "defender" | "global", token: string) => {
+  const handleInsert = (
+    scope: "attacker" | "defender" | "global",
+    token: string,
+  ) => {
     insertChip(scope, token);
-    focusTextarea();
   };
 
   const handleStageChange = (scope: "attacker" | "defender", value: number) => {
     setStatModifier(scope, value);
-    focusTextarea();
   };
   const handleSpeedChange = (scope: "attacker" | "defender", value: number) => {
     setSpeedModifier(scope, value);
-    focusTextarea();
   };
-  const handleHpChange = (scope: "attacker" | "defender", value: number | null) => {
+  const handleHpChange = (
+    scope: "attacker" | "defender",
+    value: number | null,
+  ) => {
     setHpPercentage(scope, value);
-    focusTextarea();
   };
 
   return (
@@ -449,7 +456,9 @@ export function ModifierSwitches({ textareaRef }: ModifierSwitchesProps) {
             title="Weather"
             tokens={toGroupTokens(
               "global",
-              GLOBAL_CHIP_DEFINITIONS.filter((definition) => definition.section === "weather"),
+              GLOBAL_CHIP_DEFINITIONS.filter(
+                (definition) => definition.section === "weather",
+              ),
             )}
             activeTokens={activeChipTokens.global}
             onInsert={(token) => handleInsert("global", token)}
@@ -458,7 +467,9 @@ export function ModifierSwitches({ textareaRef }: ModifierSwitchesProps) {
             title="Terrain"
             tokens={toGroupTokens(
               "global",
-              GLOBAL_CHIP_DEFINITIONS.filter((definition) => definition.section === "terrain"),
+              GLOBAL_CHIP_DEFINITIONS.filter(
+                (definition) => definition.section === "terrain",
+              ),
             )}
             activeTokens={activeChipTokens.global}
             onInsert={(token) => handleInsert("global", token)}
@@ -485,7 +496,9 @@ export function ModifierSwitches({ textareaRef }: ModifierSwitchesProps) {
           hpPercent={attackerHpPercent}
           statTokens={toGroupTokens(
             "attacker",
-            ATTACKER_CHIP_DEFINITIONS.filter((definition) => definition.section === "stats"),
+            ATTACKER_CHIP_DEFINITIONS.filter(
+              (definition) => definition.section === "stats",
+            ),
           )}
           effectTokens={toGroupTokens(
             "attacker",
@@ -508,7 +521,9 @@ export function ModifierSwitches({ textareaRef }: ModifierSwitchesProps) {
           hpPercent={defenderHpPercent}
           statTokens={toGroupTokens(
             "defender",
-            DEFENDER_CHIP_DEFINITIONS.filter((definition) => definition.section === "stats"),
+            DEFENDER_CHIP_DEFINITIONS.filter(
+              (definition) => definition.section === "stats",
+            ),
           )}
           effectTokens={toGroupTokens(
             "defender",

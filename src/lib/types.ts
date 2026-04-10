@@ -1,3 +1,11 @@
+export interface RegulationEntry {
+  id: string;
+  name: string;
+  seasons: string[];
+  dateRange: string;
+  allowedPokemonIds: string[];
+}
+
 export type BulkArchetype = "glass" | "mid" | "tank";
 
 export type GlobalEffect =
@@ -29,7 +37,7 @@ export type SuggestionSlot =
   | "attacker_modifier_or_item_or_ability"
   | "separator"
   | "defender_pokemon"
-  | "defender_modifier_or_ability"
+  | "defender_modifier_or_item_or_ability"
   | "global_modifier";
 
 export interface VgcMetaProfile {
@@ -57,6 +65,7 @@ export interface ParsedCommand {
   attackerSideEffects: SideEffect[];
   defenderSideEffects: SideEffect[];
   attackerItem?: string;
+  defenderItem?: string;
   attackerNature?: string;
   attackerAbility?: string;
   defenderNature?: string;
@@ -136,4 +145,27 @@ export interface ActiveChipTokens {
   attacker: string[];
   defender: string[];
   global: string[];
+}
+
+export interface StatSpread {
+  hp: number;
+  atk: number;
+  def: number;
+  spa: number;
+  spd: number;
+  spe: number;
+}
+
+export interface ImportedSet {
+  speciesId: string;
+  speciesName: string;
+  nickname?: string;
+  item?: string;
+  ability?: string;
+  level: number;
+  nature: string;
+  evs: StatSpread;
+  ivs: StatSpread;
+  moves: string[];
+  teraType?: string;
 }

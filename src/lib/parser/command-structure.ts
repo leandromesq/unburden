@@ -56,12 +56,19 @@ interface CommandStructure {
   globalTokens: SymbolToken[];
 }
 
-function isExplicitToken(token: LexToken) {
-  return /^(m:|a:|d:|g:|!|@|>|<|~|\*|%)/i.test(token.normalized);
+function isLegacyScopedSymbol(token: string) {
+  return /^(?:[adg]:|>|<)/i.test(token);
 }
 
-function parseSymbolToken(token: LexToken): SymbolToken | null {
-  const ability = parseAbilitySymbol(token.raw);
+function isExplicitToken(token: LexToken) {
+  return /^(m:|!|@|~|\*|%|\[)/i.test(token.normalized);
+}
+
+function parseExplicitSymbolToken(
+  token: LexToken,
+  side: "attacker" | "defender",
+): SymbolToken | null {
+  const ability = parseAbilitySymbol(token.raw, side);
   if (ability) {
     return {
       raw: token.raw,
@@ -116,41 +123,56 @@ function parseSymbolToken(token: LexToken): SymbolToken | null {
     };
   }
 
-  if (token.normalized.startsWith("a:") || token.normalized.startsWith(">")) {
-    return {
-      raw: token.raw,
-      normalized: token.normalized,
-      kind: "modifier",
-      scope: "attacker",
-      value: normalizeModifierValue(
-        token.normalized.startsWith("a:") ? token.raw.slice(2) : token.raw.slice(1),
-      ),
-      source: token,
-    };
-  }
-
-  if (token.normalized.startsWith("d:") || token.normalized.startsWith("<")) {
-    return {
-      raw: token.raw,
-      normalized: token.normalized,
-      kind: "modifier",
-      scope: "defender",
-      value: normalizeModifierValue(
-        token.normalized.startsWith("d:") ? token.raw.slice(2) : token.raw.slice(1),
-      ),
-      source: token,
-    };
-  }
-
-  if (token.normalized.startsWith("g:") || token.normalized.startsWith("~")) {
+  if (token.normalized.startsWith("~")) {
     return {
       raw: token.raw,
       normalized: token.normalized,
       kind: "modifier",
       scope: "global",
       value: normalizeModifierValue(
-        token.normalized.startsWith("g:") ? token.raw.slice(2) : token.raw.slice(1),
+        token.raw.slice(1),
       ),
+      source: token,
+    };
+  }
+
+  return null;
+}
+
+function parseBareSegmentToken(
+  token: LexToken,
+  side: "attacker" | "defender",
+): SymbolToken | null {
+  if (isLegacyScopedSymbol(token.raw)) {
+    return null;
+  }
+
+  const normalizedValue = normalizeModifierValue(token.raw);
+
+  if (
+    side === "attacker" &&
+    ATTACKER_MODIFIER_MAP.has(normalizedValue)
+  ) {
+    return {
+      raw: token.raw,
+      normalized: token.normalized,
+      kind: "modifier",
+      scope: "attacker",
+      value: normalizedValue,
+      source: token,
+    };
+  }
+
+  if (
+    side === "defender" &&
+    DEFENDER_MODIFIER_MAP.has(normalizedValue)
+  ) {
+    return {
+      raw: token.raw,
+      normalized: token.normalized,
+      kind: "modifier",
+      scope: "defender",
+      value: normalizedValue,
       source: token,
     };
   }
@@ -186,19 +208,48 @@ function analyzeSegment(tokens: LexToken[], side: "attacker" | "defender"): Segm
   const explicitSlice = firstExplicitIndex === -1 ? [] : tokens.slice(firstExplicitIndex);
 
   const { exact, speciesTokens, remainderTokens } = findSpeciesSplit(leadingFreeTokens);
-  const symbolTokens = explicitSlice
-    .map((token) => parseSymbolToken(token))
+  const explicitSymbolTokens = explicitSlice
+    .map((token) => parseExplicitSymbolToken(token, side))
     .filter((token): token is SymbolToken => Boolean(token));
-  const postExplicitFreeTokens = explicitSlice.filter((token) => !isExplicitToken(token));
   const moveToken = side === "attacker"
-    ? symbolTokens.find((token) => token.kind === "move")
+    ? explicitSymbolTokens.find((token) => token.kind === "move")
     : undefined;
-  const itemToken = side === "attacker"
-    ? symbolTokens.find((token) => token.kind === "item")
-    : undefined;
-  const abilityToken = symbolTokens.find(
-    (token) => token.kind === "ability" && token.scope === side,
+  const bareTokenCandidates = [
+    ...(side === "defender" ? remainderTokens : []),
+    ...((side === "defender" || moveToken)
+      ? explicitSlice.filter((token) => !isExplicitToken(token))
+      : []),
+  ];
+  const parsedBareTokens: SymbolToken[] = [];
+  const parsedBareTokenPositions = new Set<string>();
+
+  for (const token of bareTokenCandidates) {
+    const parsedToken = parseBareSegmentToken(token, side);
+
+    if (!parsedToken) {
+      continue;
+    }
+
+    parsedBareTokens.push(parsedToken);
+    parsedBareTokenPositions.add(`${token.start}:${token.end}`);
+  }
+
+  const unresolvedRemainderTokens =
+    side === "defender"
+      ? remainderTokens.filter(
+          (token) => !parsedBareTokenPositions.has(`${token.start}:${token.end}`),
+        )
+      : remainderTokens;
+  const postExplicitFreeTokens = explicitSlice.filter(
+    (token) =>
+      !isExplicitToken(token) &&
+      !parsedBareTokenPositions.has(`${token.start}:${token.end}`),
   );
+  const symbolTokens = [...explicitSymbolTokens, ...parsedBareTokens];
+  const itemToken = symbolTokens.filter((token) => token.kind === "item").at(-1);
+  const abilityToken = symbolTokens.filter(
+    (token) => token.kind === "ability" && token.scope === side,
+  ).at(-1);
   const hpToken = symbolTokens.filter((token) => token.kind === "hp").at(-1);
   const criticalToken = symbolTokens.filter((token) => token.kind === "critical").at(-1);
   const modifierTokens = symbolTokens.filter(
@@ -213,7 +264,7 @@ function analyzeSegment(tokens: LexToken[], side: "attacker" | "defender"): Segm
     }
 
     if (token.kind === "item") {
-      return side !== "attacker";
+      return false;
     }
 
     if (token.kind === "ability") {
@@ -247,7 +298,7 @@ function analyzeSegment(tokens: LexToken[], side: "attacker" | "defender"): Segm
     speciesText,
     speciesExact: exact,
     speciesMatch: speciesText ? resolvePokemonEntity(speciesText) : null,
-    leadingRemainderTokens: exact ? remainderTokens : [],
+    leadingRemainderTokens: exact ? unresolvedRemainderTokens : [],
     postExplicitFreeTokens,
     symbolTokens,
     modifierTokens,

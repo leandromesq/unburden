@@ -22,19 +22,19 @@ export function OmniComposer() {
 
   return (
     <section className="mx-auto w-full max-w-7xl text-left">
-      <div className="grid gap-4 xl:grid-cols-[240px_minmax(0,1fr)_240px] xl:items-start">
+      <div className="grid gap-4 xl:grid-cols-[280px_minmax(0,1fr)_280px] xl:items-start">
         <div className="order-2 xl:order-1">
           <PokemonSideSummary side="attacker" />
         </div>
         <div className="order-1 xl:order-2">
           <div className="relative">
-            <div className="theme-composer rounded-[32px]">
+            <div className="theme-composer rounded-4xl">
               <OmniTextarea
                 textareaRef={textareaRef}
                 onSubmitReady={scrollToResults}
               />
               <QuickSuggestions textareaRef={textareaRef} />
-              <ModifierSwitches textareaRef={textareaRef} />
+              <ModifierSwitches />
               {issues.length > 0 ? (
                 <div className="theme-divider theme-text-dim border-t px-5 py-3 text-sm">
                   {issues[0]}
