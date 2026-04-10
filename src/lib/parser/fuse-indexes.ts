@@ -9,7 +9,7 @@ import {
 } from "@/lib/data/loaders";
 import type { MoveEntry, PokemonEntry } from "@/lib/types";
 
-export interface ResolvedMatch<T> {
+interface ResolvedMatch<T> {
   entry: T;
   score: number;
   matchType: "exact" | "fuzzy" | "form_alias";
@@ -19,7 +19,9 @@ function buildUniqueAliasMap<T extends { aliases: string[] }>(entries: T[]) {
   const bucket = new Map<string, T[]>();
 
   for (const entry of entries) {
-    for (const alias of entry.aliases) {
+    const normalizedAliases = new Set(entry.aliases.map((alias) => normalizeAlias(alias)));
+
+    for (const alias of normalizedAliases) {
       const normalized = normalizeAlias(alias);
       const existing = bucket.get(normalized) ?? [];
       existing.push(entry);
@@ -148,37 +150,6 @@ export function searchPokemonEntities(query: string, limit = 5): ResolvedMatch<P
   return results.slice(0, limit);
 }
 
-export function searchMoveEntities(query: string, limit = 5): ResolvedMatch<MoveEntry>[] {
-  if (!query.trim()) {
-    return [];
-  }
-
-  const normalized = normalizeAlias(query);
-  const exact = resolveExactMoveEntity(query);
-  const fuzzyMatches = moveFuse.search(normalized, { limit }).filter((match) => {
-    return (match.score ?? 1) <= 0.3;
-  });
-  const results: ResolvedMatch<MoveEntry>[] = [];
-
-  if (exact) {
-    results.push(exact);
-  }
-
-  for (const fuzzy of fuzzyMatches) {
-    if (results.some((result) => result.entry.id === fuzzy.item.id)) {
-      continue;
-    }
-
-    results.push({
-      entry: fuzzy.item,
-      score: fuzzy.score ?? 0.3,
-      matchType: "fuzzy",
-    });
-  }
-
-  return results.slice(0, limit);
-}
-
 export function resolveExactPokemonEntity(query: string): ResolvedMatch<PokemonEntry> | null {
   if (!query.trim()) {
     return null;
@@ -195,19 +166,6 @@ export function resolveExactPokemonEntity(query: string): ResolvedMatch<PokemonE
   }
 
   const exact = pokemonExactMap.get(normalized);
-  if (!exact) {
-    return null;
-  }
-
-  return { entry: exact, score: 0, matchType: "exact" };
-}
-
-export function resolveExactMoveEntity(query: string): ResolvedMatch<MoveEntry> | null {
-  if (!query.trim()) {
-    return null;
-  }
-
-  const exact = moveExactMap.get(normalizeAlias(query));
   if (!exact) {
     return null;
   }

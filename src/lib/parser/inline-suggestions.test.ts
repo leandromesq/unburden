@@ -41,9 +41,22 @@ describe("inline suggestions", () => {
   });
 
   test("returns ranked canonical move tokens for the resolved attacker", () => {
-    const result = getContextualMoveSuggestions("rillaboom x pelipper");
+    const result = getContextualMoveSuggestions("incineroar x tinkaton");
 
-    expect(result).toContain("!wood-hammer");
-    expect(result).toContain("!grassy-glide");
+    expect(result).toContain("!flare-blitz");
+    expect(result).toContain("!fake-out");
+  });
+
+  test("reuses the base species meta for explicit mega forms", () => {
+    const result = getContextualMoveSuggestions("charizard mega y x tinkaton");
+
+    expect(result).toContain("!heat-wave");
+    expect(result).toContain("!solar-beam");
+  });
+
+  test("formats mega forms with hyphens in autocomplete completions", () => {
+    const result = getAutocompleteState("charizard-mega");
+
+    expect(result.activeSuggestion?.completionText).toMatch(/^charizard-mega-[xy]$/);
   });
 });

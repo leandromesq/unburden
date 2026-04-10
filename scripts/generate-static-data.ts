@@ -10,6 +10,9 @@ type PokemonEntry = {
   aliases: string[];
   types: string[];
   abilities: string[];
+  isMega?: boolean;
+  requiredItem?: string;
+  baseSpeciesId?: string;
   baseStats: {
     hp: number;
     atk: number;
@@ -38,6 +41,28 @@ type LearnsetEntry = {
   moveIds: string[];
 };
 
+type SpeciesSource = {
+  id: string;
+  name: string;
+  baseSpecies: string;
+  baseSpeciesId?: string;
+  types: string[];
+  abilities: Record<string, string | undefined>;
+  isMega?: boolean;
+  requiredItem?: string;
+  baseStats: {
+    hp: number;
+    atk: number;
+    def: number;
+    spa: number;
+    spd: number;
+    spe: number;
+  };
+};
+
+const PIKALYTICS_AI_BASE_URL = "https://www.pikalytics.com/ai/pokedex";
+const DEFAULT_CHAMPIONS_FORMAT = "championspreview";
+
 function normalizeAlias(value: string) {
   return value
     .toLowerCase()
@@ -59,20 +84,142 @@ function aliasVariants(value: string) {
   );
 }
 
+function megaAliasVariants(species: SpeciesSource) {
+  if (!species.isMega) {
+    return [];
+  }
+
+  const suffix = species.name
+    .replace(new RegExp(`^${species.baseSpecies}-?`, "i"), "")
+    .replace(/^mega-?/i, "")
+    .trim();
+  const normalizedSuffix = normalizeAlias(suffix);
+  const suffixTokens = normalizedSuffix ? ` ${normalizedSuffix}` : "";
+
+  return Array.from(
+    new Set(
+      [
+        `mega ${species.baseSpecies}${suffixTokens}`,
+        `${species.baseSpecies} mega${suffixTokens}`,
+      ]
+        .flatMap((alias) => aliasVariants(alias))
+        .filter(Boolean),
+    ),
+  );
+}
+
+async function fetchText(url: string) {
+  const response = await fetch(url, {
+    headers: {
+      Accept: "text/markdown, text/plain;q=0.9, */*;q=0.1",
+      "User-Agent": "omniboost-static-data-generator/1.0",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);
+  }
+
+  return response.text();
+}
+
+function parseIndexSpeciesNames(markdown: string) {
+  const names: string[] = [];
+  const matcher =
+    /^\|\s*\d+\s*\|\s*\*\*(.+?)\*\*\s*\|\s*[\d.]+%\s*\|\s*\[View\]\(.+?\)\s*\|\s*\[AI\]\(.+?\)\s*\|$/gm;
+
+  for (const match of markdown.matchAll(matcher)) {
+    names.push(match[1].trim());
+  }
+
+  return names;
+}
+
+function toSpeciesSource(species: {
+  id: string;
+  name: string;
+  baseSpecies: string;
+  types: readonly string[];
+  abilities: unknown;
+  baseStats: {
+    hp: number;
+    atk: number;
+    def: number;
+    spa: number;
+    spd: number;
+    spe: number;
+  };
+}): SpeciesSource {
+  return {
+    id: species.id,
+    name: species.name,
+    baseSpecies: species.baseSpecies,
+    baseSpeciesId: Dex.species.get(species.baseSpecies).id,
+    types: [...species.types],
+    abilities: Object.fromEntries(
+      Object.entries(species.abilities as Record<string, string | undefined>),
+    ),
+    isMega: "isMega" in species ? Boolean((species as { isMega?: boolean }).isMega) : false,
+    requiredItem: "requiredItems" in species
+      ? ((species as { requiredItems?: string[] }).requiredItems?.[0] ?? undefined)
+      : "requiredItem" in species
+        ? ((species as { requiredItem?: string }).requiredItem ?? undefined)
+        : undefined,
+    baseStats: { ...species.baseStats },
+  };
+}
+
 async function main() {
   const gens = new Generations(Dex);
   const gen = gens.get(9);
   const dataDir = path.join(process.cwd(), "src", "data");
+  const championsIndexMarkdown = await fetchText(
+    `${PIKALYTICS_AI_BASE_URL}/${DEFAULT_CHAMPIONS_FORMAT}`,
+  );
+  const championSpeciesNames = parseIndexSpeciesNames(championsIndexMarkdown);
 
   await mkdir(dataDir, { recursive: true });
 
   const pokemonEntries: PokemonEntry[] = [];
+  const speciesPool = new Map<string, SpeciesSource>();
 
   for (const species of gen.species) {
+    speciesPool.set(species.id, toSpeciesSource(species));
+  }
+
+  for (const species of Dex.species.all()) {
+    if (!species.exists || !species.isMega) {
+      continue;
+    }
+
+    speciesPool.set(species.id, toSpeciesSource(species));
+  }
+
+  for (const speciesName of championSpeciesNames) {
+    const species = Dex.species.get(speciesName);
+
+    if (!species.exists) {
+      continue;
+    }
+
+    speciesPool.set(species.id, toSpeciesSource(species));
+  }
+
+  for (const species of speciesPool.values()) {
     const aliases = new Set<string>();
 
     for (const alias of aliasVariants(species.name)) {
       aliases.add(alias);
+    }
+
+    for (const alias of megaAliasVariants(species)) {
+      aliases.add(alias);
+    }
+
+    if (species.baseSpecies && species.baseSpecies !== species.name && !species.isMega) {
+      for (const alias of aliasVariants(species.baseSpecies)) {
+        aliases.add(alias);
+      }
     }
 
     pokemonEntries.push({
@@ -80,7 +227,12 @@ async function main() {
       name: species.name,
       aliases: Array.from(aliases).sort(),
       types: [...species.types],
-      abilities: Object.values(species.abilities).filter(Boolean),
+      abilities: Object.values(species.abilities).filter(
+        (ability): ability is string => Boolean(ability),
+      ),
+      isMega: species.isMega,
+      requiredItem: species.requiredItem,
+      baseSpeciesId: species.baseSpeciesId,
       baseStats: {
         hp: species.baseStats.hp,
         atk: species.baseStats.atk,
@@ -120,7 +272,11 @@ async function main() {
 
   for (const species of pokemonEntries) {
     const moveIds = new Set<string>();
-    const speciesEntry = gen.species.get(species.name);
+    const learnsetSpeciesName =
+      species.isMega && species.baseSpeciesId
+        ? Dex.species.get(species.baseSpeciesId).name
+        : species.name;
+    const speciesEntry = gen.species.get(learnsetSpeciesName);
 
     if (!speciesEntry) {
       continue;

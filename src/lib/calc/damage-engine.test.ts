@@ -48,6 +48,31 @@ describe("damage engine", () => {
     expect(result.assumptions).toContain("Critical hit");
   });
 
+  test("applies attacker and defender speed stages to speed-based move calculations", () => {
+    const slower = parseCommand(
+      "regieleki !electro-ball >spe-6 x amoonguss <spe+6",
+    ).parsed;
+    const faster = parseCommand(
+      "regieleki !electro-ball >spe+6 x amoonguss <spe-6",
+    ).parsed;
+
+    const [slowerResult] = calculateDamageResults(slower!);
+    const [fasterResult] = calculateDamageResults(faster!);
+
+    expect(fasterResult.maxPercentage).toBeGreaterThan(slowerResult.maxPercentage);
+    expect(fasterResult.assumptions).toContain("Attacker speed stage: +6 Spe");
+    expect(fasterResult.assumptions).toContain("Defender speed stage: -6 Spe");
+  });
+
+  test("does not crash when calc desc fails on a no-damage interaction", () => {
+    const parsed = parseCommand("regieleki !electro-ball x garchomp").parsed;
+
+    expect(() => calculateDamageResults(parsed!)).not.toThrow();
+
+    const [result] = calculateDamageResults(parsed!);
+    expect(result.damageText).toContain("0-0");
+  });
+
   test("auto max bulk prioritizes the relevant defense for the move category", () => {
     const physicalParsed = parseCommand("incineroar !flare-blitz x tinkaton").parsed;
     const specialParsed = parseCommand("flutter mane !moonblast x tinkaton").parsed;
@@ -62,5 +87,21 @@ describe("damage engine", () => {
       evs: { hp: 252, def: 4, spd: 252 },
       nature: "Calm",
     });
+  });
+
+  test("resolves mega evolution from an explicit mega stone item", () => {
+    const parsed = parseCommand("charizard !heat-wave @charizardite-y x tinkaton").parsed;
+    const context = buildCalculationContext(parsed!);
+
+    expect(context?.attacker.name).toBe("Charizard-Mega-Y");
+    expect(context?.attackerAbility).toBe("Drought");
+  });
+
+  test("does not assume mega abilities for a base species without its mega stone", () => {
+    const parsed = parseCommand("charizard !heat-wave x tinkaton").parsed;
+    const context = buildCalculationContext(parsed!);
+
+    expect(context?.attacker.name).toBe("Charizard");
+    expect(context?.attackerAbility).toBe("Blaze");
   });
 });

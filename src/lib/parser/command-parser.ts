@@ -83,6 +83,8 @@ function parseModifierCollections(
 ) {
   let attackerStatMod = 0;
   let defenderStatMod = 0;
+  let attackerSpeedMod = 0;
+  let defenderSpeedMod = 0;
   let attackerNature: string | undefined;
   let defenderNature: string | undefined;
   let attackerInvestment: ParsedCommand["attackerInvestment"] = "auto";
@@ -99,6 +101,8 @@ function parseModifierCollections(
 
     if (definition.kind === "stat_mod") {
       attackerStatMod += definition.statMod ?? 0;
+    } else if (definition.kind === "speed_mod") {
+      attackerSpeedMod += definition.statMod ?? 0;
     } else if (definition.kind === "nature") {
       attackerNature = definition.nature;
     } else if (definition.kind === "investment") {
@@ -116,6 +120,8 @@ function parseModifierCollections(
 
     if (definition.kind === "stat_mod") {
       defenderStatMod += definition.statMod ?? 0;
+    } else if (definition.kind === "speed_mod") {
+      defenderSpeedMod += definition.statMod ?? 0;
     } else if (definition.kind === "nature") {
       defenderNature = definition.nature;
     } else if (definition.kind === "investment") {
@@ -135,6 +141,8 @@ function parseModifierCollections(
   return {
     attackerStatMod: Math.max(-6, Math.min(6, attackerStatMod)),
     defenderStatMod: Math.max(-6, Math.min(6, defenderStatMod)),
+    attackerSpeedMod: Math.max(-6, Math.min(6, attackerSpeedMod)),
+    defenderSpeedMod: Math.max(-6, Math.min(6, defenderSpeedMod)),
     attackerNature,
     defenderNature,
     attackerInvestment,
@@ -188,7 +196,7 @@ function resolveCurrentHpPercent(tokenValue: string | undefined) {
   return Math.max(1, Math.min(100, value));
 }
 
-export interface CommandParseResult {
+interface CommandParseResult {
   parsed: ParsedCommand | null;
   issues: string[];
 }
@@ -301,6 +309,8 @@ export function parseCommand(input: string): CommandParseResult {
       defender: defenderMatch.entry.name,
       attackerStatMod: modifiers.attackerStatMod,
       defenderStatMod: modifiers.defenderStatMod,
+      attackerSpeedMod: modifiers.attackerSpeedMod,
+      defenderSpeedMod: modifiers.defenderSpeedMod,
       attackerCurrentHpPercent,
       defenderCurrentHpPercent,
       isCriticalHit,

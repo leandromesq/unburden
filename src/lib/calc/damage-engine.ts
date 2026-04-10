@@ -2,7 +2,7 @@ import { Field, Move, Pokemon, calculate } from "@smogon/calc";
 
 import { getArchetypeConfigs } from "@/lib/calc/archetypes";
 import { normalizeKoText } from "@/lib/calc/ko-text";
-import { moveById, normalizeId, pokemonById } from "@/lib/data/loaders";
+import { moveById, normalizeId, pokemonById, resolveMegaEvolution } from "@/lib/data/loaders";
 import { inferDefaultAbility } from "@/lib/parser/inference";
 import type { DamageResult, ParsedCommand } from "@/lib/types";
 
@@ -92,6 +92,70 @@ function deriveKoText(damageText: string) {
   }
 
   return normalizeKoText(damageText.slice(separatorIndex + 2).trim());
+}
+
+function formatDamagePercent(damage: number, maxHP: number) {
+  return `${roundPercent((damage / maxHP) * 100)}`;
+}
+
+function buildFallbackContextText(
+  attackerSpeciesName: string,
+  moveName: string,
+  defenderSpeciesName: string,
+) {
+  return `${attackerSpeciesName} ${moveName} vs. ${defenderSpeciesName}`;
+}
+
+function deriveFallbackKoText(
+  result: ReturnType<typeof calculate>,
+  maxDamage: number,
+) {
+  if (maxDamage === 0) {
+    return "No damage";
+  }
+
+  try {
+    return normalizeKoText(result.kochance().text);
+  } catch {
+    return "KO chance unavailable";
+  }
+}
+
+function describeResultSafely(
+  result: ReturnType<typeof calculate>,
+  attackerSpeciesName: string,
+  defenderSpeciesName: string,
+  moveName: string,
+  minDamage: number,
+  maxDamage: number,
+  maxHP: number,
+) {
+  try {
+    const showdownText = result.desc();
+    const { contextText, damageText } = splitShowdownText(showdownText);
+
+    return {
+      showdownText,
+      contextText,
+      damageText,
+      koChanceText: deriveKoText(damageText),
+    };
+  } catch {
+    const koChanceText = deriveFallbackKoText(result, maxDamage);
+    const contextText = buildFallbackContextText(
+      attackerSpeciesName,
+      moveName,
+      defenderSpeciesName,
+    );
+    const damageText = `${minDamage}-${maxDamage} (${formatDamagePercent(minDamage, maxHP)} - ${formatDamagePercent(maxDamage, maxHP)}%) -- ${koChanceText}`;
+
+    return {
+      showdownText: `${contextText}: ${damageText}`,
+      contextText,
+      damageText,
+      koChanceText,
+    };
+  }
 }
 
 function isRelevantAbility(
@@ -209,6 +273,8 @@ function isRelevantAbility(
 
 function describeAssumptions(
   parsed: ParsedCommand,
+  attackerSpeciesName: string,
+  defenderSpeciesName: string,
   attackerAbility: string | undefined,
   defenderAbility: string | undefined,
   moveType: string,
@@ -234,8 +300,28 @@ function describeAssumptions(
     );
   }
 
+  if (parsed.attackerSpeedMod !== 0) {
+    assumptions.push(
+      `Attacker speed stage: ${parsed.attackerSpeedMod > 0 ? "+" : ""}${parsed.attackerSpeedMod} Spe`,
+    );
+  }
+
+  if (parsed.defenderSpeedMod !== 0) {
+    assumptions.push(
+      `Defender speed stage: ${parsed.defenderSpeedMod > 0 ? "+" : ""}${parsed.defenderSpeedMod} Spe`,
+    );
+  }
+
   if (parsed.attackerItem) {
     assumptions.push(`Item: ${parsed.attackerItem}`);
+  }
+
+  if (normalizeId(parsed.attacker) !== normalizeId(attackerSpeciesName)) {
+    assumptions.push(`Mega Evolution: ${attackerSpeciesName}`);
+  }
+
+  if (normalizeId(parsed.defender) !== normalizeId(defenderSpeciesName)) {
+    assumptions.push(`Defender form: ${defenderSpeciesName}`);
   }
 
   if (parsed.attackerCurrentHpPercent !== undefined) {
@@ -292,13 +378,16 @@ function describeAssumptions(
 }
 
 export function buildCalculationContext(parsed: ParsedCommand) {
-  const attacker = pokemonById.get(normalizeId(parsed.attacker));
-  const defender = pokemonById.get(normalizeId(parsed.defender));
+  const parsedAttacker = pokemonById.get(normalizeId(parsed.attacker));
+  const parsedDefender = pokemonById.get(normalizeId(parsed.defender));
   const move = moveById.get(normalizeId(parsed.move));
 
-  if (!attacker || !defender || !move) {
+  if (!parsedAttacker || !parsedDefender || !move) {
     return null;
   }
+
+  const attacker = resolveMegaEvolution(parsedAttacker.id, parsed.attackerItem) ?? parsedAttacker;
+  const defender = parsedDefender;
 
   const isPhysical = move.category === "Physical";
   const attackInvestment =
@@ -357,6 +446,7 @@ export function buildCalculationContext(parsed: ParsedCommand) {
     boosts: {
       atk: move.category === "Physical" ? parsed.attackerStatMod : 0,
       spa: move.category === "Special" ? parsed.attackerStatMod : 0,
+      spe: parsed.attackerSpeedMod,
     },
     moves: [parsed.move],
   };
@@ -382,6 +472,8 @@ export function buildCalculationContext(parsed: ParsedCommand) {
     ),
     assumptions: describeAssumptions(
       parsed,
+      attacker.name,
+      defender.name,
       attackerAbility,
       defenderAbility,
       move.type,
@@ -423,6 +515,7 @@ export function calculateDamageResults(parsed: ParsedCommand): DamageResult[] {
           boosts: {
             def: context.move.category === "Physical" ? parsed.defenderStatMod : 0,
             spd: context.move.category === "Special" ? parsed.defenderStatMod : 0,
+            spe: parsed.defenderSpeedMod,
           },
         }).maxHP(),
         parsed.defenderCurrentHpPercent,
@@ -449,6 +542,7 @@ export function calculateDamageResults(parsed: ParsedCommand): DamageResult[] {
       boosts: {
         def: context.move.category === "Physical" ? parsed.defenderStatMod : 0,
         spd: context.move.category === "Special" ? parsed.defenderStatMod : 0,
+        spe: parsed.defenderSpeedMod,
       },
     });
 
@@ -466,17 +560,24 @@ export function calculateDamageResults(parsed: ParsedCommand): DamageResult[] {
     );
     const [minDamage, maxDamage] = result.range();
     const maxHP = defenderPokemon.maxHP();
-    const showdownText = result.desc();
-    const { contextText, damageText } = splitShowdownText(showdownText);
+    const description = describeResultSafely(
+      result,
+      context.attacker.name,
+      context.defender.name,
+      parsed.move,
+      minDamage,
+      maxDamage,
+      maxHP,
+    );
 
     return {
       archetype: archetype.archetype,
       minPercentage: roundPercent((minDamage / maxHP) * 100),
       maxPercentage: roundPercent((maxDamage / maxHP) * 100),
-      koChanceText: deriveKoText(damageText),
-      showdownText,
-      contextText,
-      damageText,
+      koChanceText: description.koChanceText,
+      showdownText: description.showdownText,
+      contextText: description.contextText,
+      damageText: description.damageText,
       assumptions: context.assumptions,
     };
   });

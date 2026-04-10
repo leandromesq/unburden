@@ -39,6 +39,7 @@ export interface VgcMetaProfile {
   defaultMove: string;
   commonMoves?: string[];
   commonAbilities?: string[];
+  commonItems?: string[];
 }
 
 export interface ParsedCommand {
@@ -47,6 +48,8 @@ export interface ParsedCommand {
   defender: string;
   attackerStatMod: number;
   defenderStatMod: number;
+  attackerSpeedMod: number;
+  defenderSpeedMod: number;
   attackerCurrentHpPercent?: number;
   defenderCurrentHpPercent?: number;
   isCriticalHit: boolean;
@@ -80,6 +83,9 @@ export interface PokemonEntry {
   aliases: string[];
   types: string[];
   abilities: string[];
+  isMega?: boolean;
+  requiredItem?: string;
+  baseSpeciesId?: string;
   baseStats: {
     hp: number;
     atk: number;

@@ -1,13 +1,22 @@
 {
-  "format": "gen9vgc2026",
-  "minWeightedUsage": 0.001,
+  "format": "championspreview",
+  "minUsageFraction": 0.001,
   "commonMoveLimit": 8,
   "commonAbilityLimit": 3,
+  "commonItemLimit": 6,
   "speciesIdOverrides": {
     "landorus": "landorustherian",
     "urshifu": "urshifurapidstrike",
     "ogerpon": "ogerponwellspring",
-    "indeedee": "indeedeef"
+    "indeedee": "indeedeef",
+    "arcanine-hisui": "arcaninehisui",
+    "rotom-wash": "rotomwash",
+    "sinistcha-masterpiece": "sinistchamasterpiece",
+    "meowstic-f": "meowsticf",
+    "ninetales-alola": "ninetalesalola",
+    "maushold-four": "mausholdfour",
+    "palafin-hero": "palafinhero",
+    "kommo-o": "kommoo"
   },
   "profileOverrides": {}
 }

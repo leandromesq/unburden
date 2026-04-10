@@ -19,7 +19,13 @@ export interface ModifierDefinition {
   token: string;
   label: string;
   section: ModifierSection;
-  kind: "stat_mod" | "nature" | "investment" | "side_effect" | "global_effect";
+  kind:
+    | "stat_mod"
+    | "speed_mod"
+    | "nature"
+    | "investment"
+    | "side_effect"
+    | "global_effect";
   statMod?: number;
   nature?: string;
   investment?: "max_atk" | "max_spa" | "max_def" | "max_spd";
@@ -37,6 +43,18 @@ const MODIFIER_ALIASES = new Map<string, string>([
   ["pos-nature", "+nature"],
   ["negative-nature", "-nature"],
   ["neg-nature", "-nature"],
+  ["speed+1", "spe+1"],
+  ["speed+2", "spe+2"],
+  ["speed+3", "spe+3"],
+  ["speed+4", "spe+4"],
+  ["speed+5", "spe+5"],
+  ["speed+6", "spe+6"],
+  ["speed-1", "spe-1"],
+  ["speed-2", "spe-2"],
+  ["speed-3", "spe-3"],
+  ["speed-4", "spe-4"],
+  ["speed-5", "spe-5"],
+  ["speed-6", "spe-6"],
 ]);
 
 function buildStageDefinitions(scope: "attacker" | "defender") {
@@ -61,8 +79,32 @@ function buildStageDefinitions(scope: "attacker" | "defender") {
   return stages;
 }
 
+function buildSpeedStageDefinitions(scope: "attacker" | "defender") {
+  const stages: ModifierDefinition[] = [];
+
+  for (let stage = -6; stage <= 6; stage += 1) {
+    if (stage === 0) {
+      continue;
+    }
+
+    const label = stage > 0 ? `Spe +${stage}` : `Spe ${stage}`;
+    const token = stage > 0 ? `spe+${stage}` : `spe${stage}`;
+    stages.push({
+      scope,
+      token,
+      label,
+      section: "multipliers",
+      kind: "speed_mod",
+      statMod: stage,
+    });
+  }
+
+  return stages;
+}
+
 const ATTACKER_MODIFIERS: ModifierDefinition[] = [
   ...buildStageDefinitions("attacker"),
+  ...buildSpeedStageDefinitions("attacker"),
   {
     scope: "attacker",
     token: "max-atk",
@@ -131,6 +173,7 @@ const ATTACKER_MODIFIERS: ModifierDefinition[] = [
 
 const DEFENDER_MODIFIERS: ModifierDefinition[] = [
   ...buildStageDefinitions("defender"),
+  ...buildSpeedStageDefinitions("defender"),
   {
     scope: "defender",
     token: "max-def",
@@ -294,12 +337,6 @@ const GLOBAL_MODIFIERS: ModifierDefinition[] = [
     kind: "global_effect",
     globalEffect: "gravity",
   },
-];
-
-export const MODIFIER_CATALOG = [
-  ...ATTACKER_MODIFIERS,
-  ...DEFENDER_MODIFIERS,
-  ...GLOBAL_MODIFIERS,
 ];
 
 export const ATTACKER_MODIFIER_MAP = new Map(

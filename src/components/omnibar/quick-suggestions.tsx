@@ -10,6 +10,9 @@ interface QuickSuggestionsProps {
 
 export function QuickSuggestions({ textareaRef }: QuickSuggestionsProps) {
   const suggestionOptions = useOmniStore((state) => state.suggestionOptions);
+  const highlightedSuggestionIndex = useOmniStore(
+    (state) => state.highlightedSuggestionIndex,
+  );
   const applySuggestionText = useOmniStore((state) => state.applySuggestionText);
 
   if (!suggestionOptions.length) {
@@ -23,7 +26,10 @@ export function QuickSuggestions({ textareaRef }: QuickSuggestionsProps) {
           key={`${option.value}-${index}`}
           type="button"
           tabIndex={-1}
-          className="theme-chip rounded-full px-3 py-1.5 text-sm"
+          aria-pressed={highlightedSuggestionIndex === index}
+          className={`rounded-full px-3 py-1.5 text-sm ${
+            highlightedSuggestionIndex === index ? "theme-chip-active" : "theme-chip"
+          }`}
           onClick={() => {
             applySuggestionText(option.applyText);
             requestAnimationFrame(() => {

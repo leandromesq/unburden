@@ -1,6 +1,6 @@
 import type { BulkArchetype, PokemonEntry } from "@/lib/types";
 
-export interface ArchetypeConfig {
+interface ArchetypeConfig {
   archetype: BulkArchetype;
   evs: {
     hp: number;

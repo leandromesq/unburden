@@ -13,9 +13,9 @@ import type {
 
 export const pokemonData = pokemon as PokemonEntry[];
 export const moveData = moves as MoveEntry[];
-export const learnsetData = learnsets as LearnsetEntry[];
-export const vgcMetaProfiles = vgcMeta as VgcMetaProfile[];
-export const formAliasData = formAliases as FormAliasEntry[];
+const learnsetData = learnsets as LearnsetEntry[];
+const vgcMetaProfiles = vgcMeta as VgcMetaProfile[];
+const formAliasData = formAliases as FormAliasEntry[];
 
 export function normalizeId(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "");
@@ -40,9 +40,57 @@ export const vgcMetaByPokemonId = new Map(
 export const formAliasMap = new Map(
   formAliasData.map((entry) => [normalizeAlias(entry.alias), entry.pokemonId]),
 );
+const metaItemPool = Array.from(
+  new Map(
+    vgcMetaProfiles
+      .flatMap((entry) => [entry.defaultItem, ...(entry.commonItems ?? [])])
+      .filter(Boolean)
+      .map((itemName) => [normalizeId(itemName), itemName]),
+  ).entries(),
+);
 export const allowedItemIds = new Set(
-  vgcMetaProfiles.map((entry) => normalizeId(entry.defaultItem)),
+  metaItemPool.map(([itemId]) => itemId),
 );
 export const itemDisplayById = new Map(
-  vgcMetaProfiles.map((entry) => [normalizeId(entry.defaultItem), entry.defaultItem]),
+  metaItemPool,
 );
+
+const megaEvolutionPool = pokemonData
+  .filter(
+    (entry) => entry.isMega && entry.requiredItem && entry.baseSpeciesId,
+  )
+  .map((entry) => [
+    `${entry.baseSpeciesId}:${normalizeId(entry.requiredItem!)}`,
+    entry.id,
+  ] as const);
+
+const megaEvolutionByBaseIdAndItem = new Map(megaEvolutionPool);
+
+export function resolveMegaEvolution(
+  pokemonId: string,
+  itemName: string | undefined,
+) {
+  const pokemon = pokemonById.get(pokemonId);
+
+  if (!pokemon) {
+    return null;
+  }
+
+  if (pokemon.isMega) {
+    return pokemon;
+  }
+
+  if (!itemName) {
+    return null;
+  }
+
+  const megaId = megaEvolutionByBaseIdAndItem.get(
+    `${pokemon.id}:${normalizeId(itemName)}`,
+  );
+
+  if (!megaId) {
+    return null;
+  }
+
+  return pokemonById.get(megaId) ?? null;
+}

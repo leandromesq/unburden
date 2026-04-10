@@ -1,7 +1,6 @@
 import {
   itemDisplayById,
   normalizeAlias,
-  vgcMetaByPokemonId,
 } from "@/lib/data/loaders";
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
 import {
@@ -19,7 +18,6 @@ import {
 import {
   getSuggestedAbilities,
   getSuggestedMoves,
-  inferDefaultAbility,
   inferDefaultItem,
 } from "@/lib/parser/inference";
 import { compactWhitespace, joinTokenValues, type LexToken } from "@/lib/parser/tokenize";
@@ -31,7 +29,13 @@ interface AutocompleteResult {
 }
 
 function formatSpeciesText(name: string) {
-  return normalizeAlias(name);
+  const normalized = normalizeAlias(name);
+
+  if (/-mega/i.test(name)) {
+    return normalized.replace(/\s+/g, "-");
+  }
+
+  return normalized;
 }
 
 function formatMoveToken(moveId: string) {
@@ -535,10 +539,6 @@ export function getInlineSuggestion(input: string) {
   };
 }
 
-export function getQuickSuggestions(input: string) {
-  return getAutocompleteState(input).suggestionOptions;
-}
-
 export function getContextualMoveSuggestions(input: string) {
   const structure = analyzeCommandStructure(input);
   const attacker = structure.attacker.speciesExact ?? resolveExactPokemonEntity(structure.attacker.speciesText);
@@ -548,16 +548,4 @@ export function getContextualMoveSuggestions(input: string) {
   }
 
   return getSuggestedMoves(attacker.entry.id, "", 6).map((move) => formatMoveToken(move.name));
-}
-
-export function getSuggestedDefaultAbility(input: string) {
-  const structure = analyzeCommandStructure(input);
-  const attacker = structure.attacker.speciesExact;
-
-  if (!attacker) {
-    return null;
-  }
-
-  const meta = vgcMetaByPokemonId.get(attacker.entry.id);
-  return meta?.defaultAbility ?? inferDefaultAbility(attacker.entry.id) ?? null;
 }

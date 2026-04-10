@@ -15,8 +15,10 @@ const MAX_TEXTAREA_HEIGHT = 176;
 export function OmniTextarea({ textareaRef, onSubmitReady }: OmniTextareaProps) {
   const input = useOmniStore((state) => state.input);
   const activeSuggestion = useOmniStore((state) => state.activeSuggestion);
+  const suggestionOptions = useOmniStore((state) => state.suggestionOptions);
   const calculationReady = useOmniStore((state) => state.calculationReady);
   const setInput = useOmniStore((state) => state.setInput);
+  const moveSuggestionSelection = useOmniStore((state) => state.moveSuggestionSelection);
   const applySuggestion = useOmniStore((state) => state.applySuggestion);
   const [caretAtEnd, setCaretAtEnd] = useState(true);
   const localRef = useRef<HTMLTextAreaElement>(null);
@@ -54,9 +56,21 @@ export function OmniTextarea({ textareaRef, onSubmitReady }: OmniTextareaProps) 
         className="theme-input relative z-10 block min-h-[88px] w-full resize-none border-0 bg-transparent px-5 py-4 text-left font-mono text-lg leading-8 tracking-[-0.02em] outline-none md:text-xl"
         onChange={(event) => setInput(event.target.value)}
         onKeyDown={(event) => {
+          if (event.key === "ArrowDown" && suggestionOptions.length) {
+            event.preventDefault();
+            moveSuggestionSelection(1);
+            return;
+          }
+
+          if (event.key === "ArrowUp" && suggestionOptions.length) {
+            event.preventDefault();
+            moveSuggestionSelection(-1);
+            return;
+          }
+
           if (event.key === "Tab") {
             event.preventDefault();
-            if (activeSuggestion) {
+            if (activeSuggestion || suggestionOptions.length) {
               applySuggestion();
               requestAnimationFrame(() => {
                 const element = ref.current;
@@ -70,6 +84,7 @@ export function OmniTextarea({ textareaRef, onSubmitReady }: OmniTextareaProps) 
                 setCaretAtEnd(true);
               });
             }
+            return;
           }
 
           if (event.key === "Enter" && !event.shiftKey && calculationReady) {

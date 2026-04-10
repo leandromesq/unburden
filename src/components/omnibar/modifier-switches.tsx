@@ -156,13 +156,15 @@ function HpPercentageControl({
 
 function StageControl({
   title,
-  scope,
+  ariaLabel,
+  summary,
   value,
   disabled,
   onChange,
 }: {
   title: string;
-  scope: "attacker" | "defender";
+  ariaLabel: string;
+  summary: string;
   value: number;
   disabled?: boolean;
   onChange: (value: number) => void;
@@ -191,7 +193,7 @@ function StageControl({
         </button>
         <div className="flex-1">
           <input
-            aria-label={`${scope} stage slider`}
+            aria-label={ariaLabel}
             type="range"
             min={-6}
             max={6}
@@ -226,9 +228,7 @@ function StageControl({
         </button>
       </div>
       <div className="mt-3 flex items-center justify-between gap-3">
-        <div className="theme-text-dim text-sm">
-          {scope === "attacker" ? "Atk / SpA stage" : "Def / SpD stage"}
-        </div>
+        <div className="theme-text-dim text-sm">{summary}</div>
         <button
           type="button"
           tabIndex={-1}
@@ -252,36 +252,51 @@ function SideColumn({
   activeTokens,
   disabled,
   stageValue,
+  speedValue,
   hpPercent,
   statTokens,
   effectTokens,
   abilityTokens,
   onInsert,
   onStageChange,
+  onSpeedChange,
   onHpChange,
 }: {
   title: string;
   activeTokens: string[];
   disabled?: boolean;
   stageValue: number;
+  speedValue: number;
   hpPercent: number | null;
   statTokens: Array<{ token: string; label: string }>;
   effectTokens: Array<{ token: string; label: string }>;
   abilityTokens: Array<{ token: string; label: string }>;
   onInsert: (token: string) => void;
   onStageChange: (value: number) => void;
+  onSpeedChange: (value: number) => void;
   onHpChange: (value: number | null) => void;
 }) {
+  const lowerTitle = title.toLowerCase() as "attacker" | "defender";
+
   return (
     <section className="theme-panel rounded-[28px] p-4">
       <SectionLabel>{title}</SectionLabel>
       <div className="grid gap-3">
         <StageControl
           title="Multipliers"
-          scope={title.toLowerCase() as "attacker" | "defender"}
+          ariaLabel={`${lowerTitle} stage slider`}
+          summary={lowerTitle === "attacker" ? "Atk / SpA stage" : "Def / SpD stage"}
           value={stageValue}
           disabled={disabled}
           onChange={onStageChange}
+        />
+        <StageControl
+          title="Speed"
+          ariaLabel={`${lowerTitle} speed slider`}
+          summary="Spe stage"
+          value={speedValue}
+          disabled={disabled}
+          onChange={onSpeedChange}
         />
         <TokenGroup
           title="Stats"
@@ -327,6 +342,7 @@ export function ModifierSwitches({ textareaRef }: ModifierSwitchesProps) {
   const activeChipTokens = useOmniStore((state) => state.activeChipTokens);
   const insertChip = useOmniStore((state) => state.insertChip);
   const setStatModifier = useOmniStore((state) => state.setStatModifier);
+  const setSpeedModifier = useOmniStore((state) => state.setSpeedModifier);
   const setHpPercentage = useOmniStore((state) => state.setHpPercentage);
   const structure = analyzeCommandStructure(input);
   const attackerResolved = structure.attacker.speciesExact ?? structure.attacker.speciesMatch;
@@ -349,6 +365,16 @@ export function ModifierSwitches({ textareaRef }: ModifierSwitchesProps) {
       }, 0),
     ),
   );
+  const attackerSpeedStage = Math.max(
+    -6,
+    Math.min(
+      6,
+      structure.attacker.modifierTokens.reduce((sum, token) => {
+        const definition = ATTACKER_MODIFIER_MAP.get(token.value);
+        return definition?.kind === "speed_mod" ? sum + (definition.statMod ?? 0) : sum;
+      }, 0),
+    ),
+  );
   const defenderStage = Math.max(
     -6,
     Math.min(
@@ -356,6 +382,16 @@ export function ModifierSwitches({ textareaRef }: ModifierSwitchesProps) {
       structure.defender.modifierTokens.reduce((sum, token) => {
         const definition = DEFENDER_MODIFIER_MAP.get(token.value);
         return definition?.kind === "stat_mod" ? sum + (definition.statMod ?? 0) : sum;
+      }, 0),
+    ),
+  );
+  const defenderSpeedStage = Math.max(
+    -6,
+    Math.min(
+      6,
+      structure.defender.modifierTokens.reduce((sum, token) => {
+        const definition = DEFENDER_MODIFIER_MAP.get(token.value);
+        return definition?.kind === "speed_mod" ? sum + (definition.statMod ?? 0) : sum;
       }, 0),
     ),
   );
@@ -393,6 +429,10 @@ export function ModifierSwitches({ textareaRef }: ModifierSwitchesProps) {
 
   const handleStageChange = (scope: "attacker" | "defender", value: number) => {
     setStatModifier(scope, value);
+    focusTextarea();
+  };
+  const handleSpeedChange = (scope: "attacker" | "defender", value: number) => {
+    setSpeedModifier(scope, value);
     focusTextarea();
   };
   const handleHpChange = (scope: "attacker" | "defender", value: number | null) => {
@@ -441,6 +481,7 @@ export function ModifierSwitches({ textareaRef }: ModifierSwitchesProps) {
           title="Attacker"
           activeTokens={activeChipTokens.attacker}
           stageValue={attackerStage}
+          speedValue={attackerSpeedStage}
           hpPercent={attackerHpPercent}
           statTokens={toGroupTokens(
             "attacker",
@@ -455,6 +496,7 @@ export function ModifierSwitches({ textareaRef }: ModifierSwitchesProps) {
           abilityTokens={attackerAbilityTokens}
           onInsert={(token) => handleInsert("attacker", token)}
           onStageChange={(value) => handleStageChange("attacker", value)}
+          onSpeedChange={(value) => handleSpeedChange("attacker", value)}
           onHpChange={(value) => handleHpChange("attacker", value)}
         />
         <SideColumn
@@ -462,6 +504,7 @@ export function ModifierSwitches({ textareaRef }: ModifierSwitchesProps) {
           activeTokens={activeChipTokens.defender}
           disabled={!defenderReady}
           stageValue={defenderStage}
+          speedValue={defenderSpeedStage}
           hpPercent={defenderHpPercent}
           statTokens={toGroupTokens(
             "defender",
@@ -476,6 +519,7 @@ export function ModifierSwitches({ textareaRef }: ModifierSwitchesProps) {
           abilityTokens={defenderAbilityTokens}
           onInsert={(token) => handleInsert("defender", token)}
           onStageChange={(value) => handleStageChange("defender", value)}
+          onSpeedChange={(value) => handleSpeedChange("defender", value)}
           onHpChange={(value) => handleHpChange("defender", value)}
         />
       </div>

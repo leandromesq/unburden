@@ -18,7 +18,7 @@ import {
   resolvePokemonEntity,
 } from "@/lib/parser/fuse-indexes";
 
-export interface SymbolToken {
+interface SymbolToken {
   raw: string;
   normalized: string;
   kind: "move" | "item" | "ability" | "modifier" | "hp" | "critical" | "unknown";
@@ -27,7 +27,7 @@ export interface SymbolToken {
   source: LexToken;
 }
 
-export interface SegmentStructure {
+interface SegmentStructure {
   side: "attacker" | "defender";
   rawTokens: LexToken[];
   leadingFreeTokens: LexToken[];
@@ -48,7 +48,7 @@ export interface SegmentStructure {
   misplacedTokens: SymbolToken[];
 }
 
-export interface CommandStructure {
+interface CommandStructure {
   lexed: TokenizedCommand;
   separatorText: "x" | "vs" | null;
   attacker: SegmentStructure;

@@ -5,7 +5,7 @@ export interface LexToken {
   end: number;
 }
 
-export function isHpToken(raw: string) {
+function isHpToken(raw: string) {
   return /^%\d{1,3}$/i.test(raw.trim());
 }
 
@@ -85,9 +85,17 @@ export function lexCommandInput(input: string): TokenizedCommand {
     });
   }
 
-  const delimiterIndex = tokens.findIndex(
-    (token) => token.normalized === "x" || token.normalized === "vs",
-  );
+  const delimiterIndex = tokens.findIndex((token, index, collection) => {
+    if (token.normalized === "vs") {
+      return true;
+    }
+
+    if (token.normalized !== "x") {
+      return false;
+    }
+
+    return collection[index - 1]?.normalized !== "mega";
+  });
   const hasDelimiter = delimiterIndex >= 0;
 
   return {

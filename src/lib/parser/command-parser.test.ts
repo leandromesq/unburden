@@ -100,6 +100,17 @@ describe("parseCommand", () => {
     });
   });
 
+  test("parses dedicated speed stage tokens for both sides", () => {
+    const result = parseCommand(
+      "regieleki !electro-ball >spe+4 x amoonguss <spe-2",
+    );
+
+    expect(result.parsed).toMatchObject({
+      attackerSpeedMod: 4,
+      defenderSpeedMod: -2,
+    });
+  });
+
   test("parses attacker and defender hp percentages plus critical hit", () => {
     const result = parseCommand(
       "flutter mane !moonblast %75 * x ogerpon %50",
@@ -109,6 +120,26 @@ describe("parseCommand", () => {
       attackerCurrentHpPercent: 75,
       defenderCurrentHpPercent: 50,
       isCriticalHit: true,
+    });
+  });
+
+  test("parses explicit mega species names as attacker entities", () => {
+    const result = parseCommand("charizard-mega-y !heat-wave x tinkaton");
+
+    expect(result.parsed).toMatchObject({
+      attacker: "Charizard-Mega-Y",
+      move: "Heat Wave",
+      defender: "Tinkaton",
+    });
+  });
+
+  test("does not treat the x in mega x as the attacker-defender separator", () => {
+    const result = parseCommand("charizard mega x !heat-wave x tinkaton");
+
+    expect(result.parsed).toMatchObject({
+      attacker: "Charizard-Mega-X",
+      move: "Heat Wave",
+      defender: "Tinkaton",
     });
   });
 });

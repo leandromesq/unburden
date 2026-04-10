@@ -9,6 +9,21 @@ import {
 import { buildCommonAbilities } from "@/lib/parser/grammar";
 import type { MoveEntry } from "@/lib/types";
 
+const AUTO_GLOBAL_ABILITY_TOKEN_MAP = new Map<string, string>([
+  ["drought", "sun"],
+  ["orichalcumpulse", "sun"],
+  ["desolateland", "sun"],
+  ["drizzle", "rain"],
+  ["primordialsea", "rain"],
+  ["sandstream", "sand"],
+  ["snowwarning", "snow"],
+  ["electricsurge", "electric-terrain"],
+  ["hadronengine", "electric-terrain"],
+  ["grassysurge", "grassy-terrain"],
+  ["psychicsurge", "psychic-terrain"],
+  ["mistysurge", "misty-terrain"],
+]);
+
 function dedupeMoves(moves: Array<MoveEntry | null | undefined>) {
   const seen = new Set<string>();
 
@@ -22,9 +37,30 @@ function dedupeMoves(moves: Array<MoveEntry | null | undefined>) {
   });
 }
 
-export function inferFallbackMoves(pokemonId: string, limit = 12) {
+function resolveLearnsetPokemonId(pokemonId: string) {
+  const pokemon = pokemonById.get(pokemonId);
+  if (!pokemon) {
+    return pokemonId;
+  }
+
+  if (learnsetByPokemonId.has(pokemon.id)) {
+    return pokemon.id;
+  }
+
+  if (pokemon.baseSpeciesId && learnsetByPokemonId.has(pokemon.baseSpeciesId)) {
+    return pokemon.baseSpeciesId;
+  }
+
+  if (pokemon.defaultFormOf && learnsetByPokemonId.has(pokemon.defaultFormOf)) {
+    return pokemon.defaultFormOf;
+  }
+
+  return pokemon.id;
+}
+
+function inferFallbackMoves(pokemonId: string, limit = 12) {
   const attacker = pokemonById.get(pokemonId);
-  const learnset = learnsetByPokemonId.get(pokemonId);
+  const learnset = learnsetByPokemonId.get(resolveLearnsetPokemonId(pokemonId));
 
   if (!attacker || !learnset) {
     return [];
@@ -55,8 +91,11 @@ export function inferFallbackMoves(pokemonId: string, limit = 12) {
     .slice(0, limit);
 }
 
-export function getCommonMoves(pokemonId: string, limit = 12) {
-  const meta = vgcMetaByPokemonId.get(pokemonId);
+function getCommonMoves(pokemonId: string, limit = 12) {
+  const pokemon = pokemonById.get(pokemonId);
+  const meta =
+    vgcMetaByPokemonId.get(pokemonId) ??
+    (pokemon?.baseSpeciesId ? vgcMetaByPokemonId.get(pokemon.baseSpeciesId) : undefined);
   const curatedMoves = (meta?.commonMoves ?? []).map((moveName) =>
     moveById.get(normalizeId(moveName)),
   );
@@ -71,19 +110,44 @@ export function getCommonMoves(pokemonId: string, limit = 12) {
   ]).slice(0, limit);
 }
 
-export function inferDefaultMove(pokemonId: string) {
-  return getCommonMoves(pokemonId, 1)[0] ?? null;
+export function inferDefaultItem(pokemonId: string) {
+  const pokemon = pokemonById.get(pokemonId);
+  return (
+    vgcMetaByPokemonId.get(pokemonId)?.defaultItem ??
+    (pokemon?.baseSpeciesId ? vgcMetaByPokemonId.get(pokemon.baseSpeciesId)?.defaultItem : null) ??
+    pokemon?.requiredItem ??
+    null
+  );
 }
 
-export function inferDefaultItem(pokemonId: string) {
-  return vgcMetaByPokemonId.get(pokemonId)?.defaultItem ?? null;
+export function getAutoGlobalTokenForAbilityName(ability: string | undefined) {
+  if (!ability) {
+    return null;
+  }
+
+  return AUTO_GLOBAL_ABILITY_TOKEN_MAP.get(normalizeId(ability)) ?? null;
 }
 
 export function inferDefaultAbility(pokemonId: string) {
   const pokemon = pokemonById.get(pokemonId);
   const profile = vgcMetaByPokemonId.get(pokemonId);
+  const normalizedAbilities = new Set(
+    (pokemon?.abilities ?? []).map((ability) => normalizeId(ability)),
+  );
+  const profileAbility =
+    profile?.defaultAbility && normalizedAbilities.has(normalizeId(profile.defaultAbility))
+      ? profile.defaultAbility
+      : null;
+  const automaticFieldAbility =
+    pokemon?.abilities.find((ability) => getAutoGlobalTokenForAbilityName(ability)) ?? null;
 
-  return profile?.defaultAbility ?? pokemon?.abilities[0] ?? null;
+  return (
+    profileAbility ??
+    automaticFieldAbility ??
+    pokemon?.abilities[0] ??
+    profile?.defaultAbility ??
+    null
+  );
 }
 
 export function getSuggestedMoves(pokemonId: string, query = "", limit = 8) {
