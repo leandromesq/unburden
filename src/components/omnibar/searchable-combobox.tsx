@@ -189,14 +189,14 @@ export function SearchableCombobox({
               setOpen(false);
             }
           }}
-          className="theme-subpanel theme-input w-full rounded-xl border px-3 py-2"
+          className="theme-control theme-input w-full rounded-xl px-3 py-2"
           placeholder={placeholder}
         />
         {open && filteredOptions.length > 0 ? (
           <div
             id={listboxId}
             role="listbox"
-            className="theme-panel absolute left-0 right-0 top-[calc(100%+0.35rem)] z-20 max-h-64 overflow-y-auto rounded-2xl border py-1 shadow-lg"
+            className="theme-menu absolute left-0 right-0 top-[calc(100%+0.35rem)] z-20 max-h-64 overflow-y-auto rounded-2xl py-1"
             style={{ scrollbarGutter: "stable" }}
           >
             {filteredOptions.map((option, index) => (
@@ -215,8 +215,8 @@ export function SearchableCombobox({
                   selectOption(option);
                 }}
                 onMouseEnter={() => setHighlightedIndex(index)}
-                className={`w-full rounded-none px-3 py-2 text-left text-sm transition-colors ${
-                  index === highlightedIndex ? "theme-chip-active" : "theme-chip"
+                className={`theme-menu-item w-full px-3 py-2.5 text-left text-sm ${
+                  index === highlightedIndex ? "theme-menu-item-active" : ""
                 }`}
               >
                 {option}

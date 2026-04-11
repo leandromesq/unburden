@@ -111,16 +111,6 @@ function getCommonMoves(pokemonId: string, limit = 12) {
   ]).slice(0, limit);
 }
 
-export function inferDefaultItem(pokemonId: string) {
-  const pokemon = pokemonById.get(pokemonId);
-  return (
-    vgcMetaByPokemonId.get(pokemonId)?.defaultItem ??
-    (pokemon?.baseSpeciesId ? vgcMetaByPokemonId.get(pokemon.baseSpeciesId)?.defaultItem : null) ??
-    pokemon?.requiredItem ??
-    null
-  );
-}
-
 export function getSuggestedItems(pokemonId: string, query = "", limit = 6) {
   const pokemon = pokemonById.get(pokemonId);
   const meta =

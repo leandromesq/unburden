@@ -1,7 +1,7 @@
 import { formatStatPointSpread } from "@/lib/calc/stat-calc";
 import type { BulkArchetype, ImportedSet, PokemonEntry, StatSpread } from "@/lib/types";
 
-export interface ArchetypeConfig {
+interface ArchetypeConfig {
   archetype: BulkArchetype;
   label?: string;
   evs: StatSpread;

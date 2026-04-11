@@ -135,6 +135,7 @@ button {
     border: 1px solid var(--line-strong);
     background: var(--surface);
     transition: border-color 160ms ease;
+    box-shadow: var(--shadow-soft);
 }
 
 .theme-composer:focus-within {
@@ -142,11 +143,26 @@ button {
     box-shadow: 0 0 0 3px var(--accent-softer);
 }
 
+.theme-composer-top {
+    background:
+        linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--surface) 88%, transparent),
+            var(--surface)
+        );
+}
+
+.theme-composer-secondary {
+    border-top: 1px solid var(--line);
+    background: color-mix(in srgb, var(--surface-2) 82%, transparent);
+}
+
 /* ── Panels ───────────────────────────────────────────────── */
 
 .theme-panel {
     border: 1px solid var(--line-strong);
     background: var(--surface-2);
+    box-shadow: var(--shadow-soft);
 }
 
 .theme-subpanel {
@@ -181,6 +197,12 @@ button {
 
 .theme-inline-code {
     color: var(--text-muted);
+}
+
+.theme-status {
+    border-top: 1px solid var(--line);
+    color: var(--text-dim);
+    background: color-mix(in srgb, var(--surface-2) 92%, transparent);
 }
 
 /* ── Chips ────────────────────────────────────────────────── */
@@ -219,6 +241,12 @@ button {
     opacity: 0.55;
 }
 
+.theme-pill-muted {
+    border: 1px solid var(--line);
+    background: color-mix(in srgb, var(--surface-3) 92%, transparent);
+    color: var(--text-dim);
+}
+
 /* ── Badge ────────────────────────────────────────────────── */
 
 .theme-badge {
@@ -246,6 +274,54 @@ button {
     color: var(--text-dim);
 }
 
+.theme-control {
+    border: 1px solid var(--line-strong);
+    background: var(--surface-3);
+    color: var(--text);
+    transition:
+        border-color 140ms ease,
+        background 140ms ease,
+        box-shadow 140ms ease;
+}
+
+.theme-control:hover {
+    border-color: var(--accent-border);
+    background: color-mix(in srgb, var(--surface-4) 86%, transparent);
+}
+
+.theme-control:focus,
+.theme-control:focus-within {
+    border-color: var(--accent-border);
+    box-shadow: 0 0 0 3px var(--accent-softer);
+    outline: none;
+}
+
+.theme-menu {
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+    box-shadow: var(--shadow-overlay);
+}
+
+.theme-menu-item {
+    border: 0;
+    background: transparent;
+    color: var(--text-dim);
+    transition:
+        background 120ms ease,
+        color 120ms ease;
+}
+
+.theme-menu-item:hover {
+    background: var(--surface-3);
+    color: var(--text);
+}
+
+.theme-menu-item-active {
+    background: var(--accent-softer);
+    color: var(--text);
+    box-shadow: inset 2px 0 0 var(--accent);
+}
+
 /* ── Theme toggle ─────────────────────────────────────────── */
 
 .theme-toggle {
@@ -270,6 +346,28 @@ button {
 }
 
 .theme-toggle-option-active {
+    border: 1px solid var(--accent-border);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+}
+
+.theme-icon-button {
+    border: 1px solid var(--line-strong);
+    background: var(--surface-3);
+    color: var(--text-dim);
+    transition:
+        border-color 140ms ease,
+        background 140ms ease,
+        color 140ms ease;
+}
+
+.theme-icon-button:hover {
+    border-color: var(--accent-border);
+    background: var(--surface-4);
+    color: var(--text);
+}
+
+.theme-icon-button-active {
     border: 1px solid var(--accent-border);
     background: var(--accent-soft);
     color: var(--accent-strong);

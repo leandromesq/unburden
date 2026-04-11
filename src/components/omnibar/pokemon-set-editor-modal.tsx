@@ -216,7 +216,7 @@ export function PokemonSetEditorModal({
             type="button"
             aria-label="Close"
             onClick={onClose}
-            className="theme-text-dim -mr-1 flex h-8 w-8 items-center justify-center rounded-full text-xl font-light leading-none transition-colors hover:bg-(--surface-3)"
+            className="theme-icon-button -mr-1 flex h-8 w-8 items-center justify-center rounded-full text-xl font-light leading-none"
           >
             ×
           </button>
@@ -302,7 +302,7 @@ export function PokemonSetEditorModal({
                     max={32}
                     value={statPoints[key]}
                     onChange={(event) => updateStatPoint(key, event.currentTarget.value)}
-                    className="theme-input theme-panel w-20 rounded-xl border px-3 py-1.5 text-right font-mono"
+                    className="theme-control theme-input w-20 rounded-xl px-3 py-1.5 text-right font-mono"
                   />
                 </label>
               ))}

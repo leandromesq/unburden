@@ -29,24 +29,28 @@ export function OmniComposer() {
         <div className="order-1 xl:order-2">
           <div className="relative">
             <div className="theme-composer rounded-4xl">
-              <OmniTextarea
-                textareaRef={textareaRef}
-                onSubmitReady={scrollToResults}
-              />
-              <QuickSuggestions textareaRef={textareaRef} />
-              <ModifierSwitches />
-              {issues.length > 0 ? (
-                <div className="theme-divider theme-text-dim border-t px-5 py-3 text-sm">
-                  {issues[0]}
+              <div className="theme-composer-top relative">
+                <div className="pointer-events-auto absolute right-3 top-3 z-30">
+                  <HelpBubble />
                 </div>
-              ) : null}
-            </div>
-            <div className="absolute right-3 top-3 z-10">
-              <HelpBubble />
+                <OmniTextarea
+                  textareaRef={textareaRef}
+                  onSubmitReady={scrollToResults}
+                />
+                <QuickSuggestions textareaRef={textareaRef} />
+                {issues.length > 0 ? (
+                  <div className="theme-status px-5 py-3 text-sm">
+                    {issues[0]}
+                  </div>
+                ) : null}
+              </div>
+              <div className="theme-composer-secondary">
+                <ModifierSwitches />
+              </div>
             </div>
           </div>
           {calculationReady ? (
-            <div ref={resultsRef} className="mt-5">
+            <div ref={resultsRef} className="mt-7">
               <ResultsPanel />
             </div>
           ) : null}

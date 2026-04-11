@@ -80,7 +80,7 @@ function TokenGroup({
   emptyText?: string;
 }) {
   return (
-    <section className="theme-subpanel rounded-2xl p-3">
+    <section className="theme-subpanel-strong rounded-2xl p-3">
       <GroupLabel>{title}</GroupLabel>
       {tokens.length ? (
         <div className="flex flex-wrap gap-2">
@@ -119,7 +119,7 @@ function HpPercentageControl({
   const options = [25, 50, 75];
 
   return (
-    <section className="theme-subpanel rounded-2xl p-3">
+    <section className="theme-subpanel-strong rounded-2xl p-3">
       <GroupLabel>Current HP</GroupLabel>
       <div className="flex flex-wrap gap-2">
         {options.map((percent) => (
@@ -281,6 +281,9 @@ function SideColumn({
     <section className="theme-panel rounded-[28px] p-4">
       <SectionLabel>{title}</SectionLabel>
       <div className="grid gap-3">
+        <div className="theme-text-faint text-[10px] font-semibold uppercase tracking-[0.22em]">
+          Primary Controls
+        </div>
         <StageControl
           title="Multipliers"
           ariaLabel={`${lowerTitle} stage slider`}
@@ -299,35 +302,42 @@ function SideColumn({
           disabled={disabled}
           onChange={onSpeedChange}
         />
-        <TokenGroup
-          title="Stats"
-          tokens={statTokens}
-          activeTokens={activeTokens}
-          disabled={disabled}
-          onInsert={onInsert}
-        />
         <HpPercentageControl
           value={hpPercent}
           disabled={disabled}
           onChange={onHpChange}
         />
-        <TokenGroup
-          title="Move Effects"
-          tokens={effectTokens}
-          activeTokens={activeTokens}
-          disabled={disabled}
-          onInsert={onInsert}
-        />
-        <TokenGroup
-          title="Abilities"
-          tokens={abilityTokens}
-          activeTokens={activeTokens}
-          disabled={disabled}
-          onInsert={onInsert}
-          emptyText={
-            disabled ? "Resolve this side first." : "No ability suggestions."
-          }
-        />
+        <div className="theme-divider mt-1 border-t pt-3">
+          <div className="theme-text-faint mb-3 text-[10px] font-semibold uppercase tracking-[0.22em]">
+            Toggles
+          </div>
+          <div className="grid gap-3">
+            <TokenGroup
+              title="Stats"
+              tokens={statTokens}
+              activeTokens={activeTokens}
+              disabled={disabled}
+              onInsert={onInsert}
+            />
+            <TokenGroup
+              title="Move Effects"
+              tokens={effectTokens}
+              activeTokens={activeTokens}
+              disabled={disabled}
+              onInsert={onInsert}
+            />
+            <TokenGroup
+              title="Abilities"
+              tokens={abilityTokens}
+              activeTokens={activeTokens}
+              disabled={disabled}
+              onInsert={onInsert}
+              emptyText={
+                disabled ? "Resolve this side first." : "No ability suggestions."
+              }
+            />
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -449,7 +459,7 @@ export function ModifierSwitches() {
   };
 
   return (
-    <div className="theme-divider border-t px-4 py-4">
+    <div className="px-5 py-5">
       <section className="theme-panel mb-5 rounded-[28px] p-4">
         <SectionLabel>Global</SectionLabel>
         <div className="grid gap-3 md:grid-cols-3">

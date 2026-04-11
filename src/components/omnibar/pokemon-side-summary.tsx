@@ -226,7 +226,7 @@ function MoveChip({ moveName, isActive, onClick, disabled }: MoveChipProps) {
           ? "theme-chip-active"
           : disabled
             ? "theme-chip-disabled cursor-default"
-            : "theme-chip cursor-pointer"
+            : "theme-pill-muted cursor-pointer"
       }`}
     >
       {moveName}
@@ -529,15 +529,30 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
     return (
       <aside
         data-testid={`${side}-summary`}
-        className="theme-panel rounded-3xl p-4"
+        className="theme-panel rounded-[28px] p-5"
       >
         <div className="theme-text-faint text-xs font-semibold uppercase tracking-[0.24em]">
           {side}
         </div>
 
+        <div className="mt-3 flex items-center gap-3">
+          <div className="theme-subpanel-strong flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl p-2">
+            <div className="theme-text-faint font-mono text-xs uppercase tracking-[0.2em]">
+              —
+            </div>
+          </div>
+          <div className="min-w-0">
+            <div className="text-lg font-medium capitalize">{side}</div>
+            <div className="theme-text-dim mt-1 text-sm">
+              Resolve this Pokémon to show ability, item, move context, and
+              battle stats.
+            </div>
+          </div>
+        </div>
+
         {importedSetList.length > 0 ? (
           <>
-            <div className="theme-text-dim mt-3 mb-2 text-[11px] font-semibold uppercase tracking-[0.22em]">
+            <div className="theme-text-dim mt-4 mb-2 text-[11px] font-semibold uppercase tracking-[0.22em]">
               Saved Sets
             </div>
             <div className="space-y-1.5">
@@ -546,12 +561,12 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
                   <button
                     type="button"
                     onClick={() => handleSelectSet(set.speciesName)}
-                    className="theme-chip w-full rounded-xl px-3 py-2 pr-7 text-left"
+                    className="theme-subpanel w-full rounded-2xl px-3 py-2.5 pr-8 text-left transition-colors"
                   >
                     <div className="text-xs font-medium">{set.speciesName}</div>
-                    {(set.item || (set.moves ?? []).length > 0) && (
+                    {(set.item || set.ability) && (
                       <div className="theme-text-faint mt-0.5 truncate text-[10px]">
-                        {[set.item, (set.moves ?? []).slice(0, 2).join(" / ")]
+                        {[set.item, set.ability]
                           .filter(Boolean)
                           .join(" · ")}
                       </div>
@@ -562,7 +577,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
                     tabIndex={-1}
                     aria-label={`Remove ${set.speciesName}`}
                     onClick={() => handleRemoveSet(set.speciesId)}
-                    className="theme-text-faint absolute right-1.5 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full text-sm opacity-0 transition-opacity group-hover:opacity-100 hover:text-(--accent-strong)"
+                    className="theme-icon-button absolute right-2 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full text-sm opacity-0 transition-opacity group-hover:opacity-100"
                   >
                     ×
                   </button>
@@ -602,10 +617,10 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
   const { importedSet, stageBoosts, itemBoosts } = summary;
 
   return (
-    <aside
-      data-testid={`${side}-summary`}
-      className="theme-panel rounded-3xl p-4"
-    >
+      <aside
+        data-testid={`${side}-summary`}
+        className="theme-panel rounded-[28px] p-5"
+      >
       <div className="flex items-start justify-between gap-3">
         <div className="theme-text-faint text-xs font-semibold uppercase tracking-[0.24em]">
           {summary.title}
@@ -617,7 +632,11 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
             onClick={() => handleSwitchToMegaForm(summary.megaTarget!)}
             aria-label={summary.pokemonId === summary.megaTarget.id ? "Switch to base form" : "Switch to mega form"}
             title={summary.pokemonId === summary.megaTarget.id ? "Base form" : "Mega form"}
-            className="theme-chip flex h-8 w-8 shrink-0 items-center justify-center rounded-full p-0 text-[11px] font-bold uppercase tracking-[0.08em]"
+            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full p-0 text-[11px] font-bold uppercase tracking-[0.08em] ${
+              summary.pokemonId === summary.megaTarget.id
+                ? "theme-icon-button-active"
+                : "theme-icon-button"
+            }`}
           >
             M
           </button>
@@ -626,7 +645,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
 
       {/* Sprite + info row */}
       <div className="mt-3 flex items-center gap-3">
-        <div className="theme-subpanel flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl p-2">
+        <div className="theme-subpanel-strong flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl p-2">
           <PokemonSprite
             key={summary.name}
             sources={summary.spriteSources}
@@ -694,10 +713,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
 
       {/* SP spread (compact, when set is imported) */}
       {importedSet && (
-        <div
-          className="theme-subpanel mt-2 grid grid-cols-6 gap-1 rounded-xl border px-2 py-1.5 font-mono text-[11px] font-semibold"
-          style={{ color: "var(--text-muted)" }}
-        >
+        <div className="mt-3 grid grid-cols-6 gap-1.5">
           {[
             ["HP", importedSet.statPoints.hp],
             ["Atk", importedSet.statPoints.atk],
@@ -706,9 +722,16 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
             ["SpD", importedSet.statPoints.spd],
             ["Spe", importedSet.statPoints.spe],
           ].map(([label, value]) => (
-            <div key={String(label)} className="min-w-0 whitespace-nowrap text-center">
-              <span>{value}</span>{" "}
-              <span className="text-[10px]">{label}</span>
+            <div
+              key={String(label)}
+              className="theme-pill-muted flex min-w-0 flex-col items-center justify-center rounded-xl px-1 py-1.5 text-center font-mono"
+            >
+              <span className="text-[11px] leading-none font-semibold" style={{ color: "var(--text)" }}>
+                {value}
+              </span>
+              <span className="mt-1 text-[9px] leading-none" style={{ color: "var(--text-dim)" }}>
+                {" "}{label}
+              </span>
             </div>
           ))}
         </div>
@@ -778,7 +801,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
                   </span>
                 </button>
                 {switchOpen && (
-                  <div className="theme-panel absolute right-0 bottom-full z-30 mb-1.5 min-w-37 overflow-hidden rounded-2xl p-1 shadow-lg">
+                  <div className="theme-menu absolute right-0 bottom-full z-30 mb-1.5 min-w-40 overflow-hidden rounded-2xl p-1">
                     {otherSets.map((s) => (
                       <button
                         key={s.speciesId}
@@ -788,7 +811,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
                           handleSelectSet(s.speciesName);
                           setSwitchOpen(false);
                         }}
-                        className="theme-chip w-full rounded-xl px-3 py-2 text-left"
+                        className="theme-menu-item w-full rounded-xl px-3 py-2 text-left"
                       >
                         <div className="text-xs font-medium">
                           {s.speciesName}

@@ -106,7 +106,7 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
             type="button"
             aria-label="Close"
             onClick={onClose}
-            className="theme-text-dim -mr-1 flex h-8 w-8 items-center justify-center rounded-full text-xl font-light leading-none transition-colors hover:bg-(--surface-3)"
+            className="theme-icon-button -mr-1 flex h-8 w-8 items-center justify-center rounded-full text-xl font-light leading-none"
           >
             ×
           </button>
@@ -119,7 +119,7 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
           </p>
 
           <textarea
-            className="theme-subpanel theme-input w-full resize-none rounded-2xl border p-3 font-mono text-sm outline-none"
+            className="theme-control theme-input w-full resize-none rounded-2xl p-3 font-mono text-sm outline-none"
             rows={9}
             spellCheck={false}
             placeholder={

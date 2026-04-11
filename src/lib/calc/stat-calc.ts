@@ -19,7 +19,7 @@ export const DEFAULT_IV_SPREAD: StatSpread = {
 };
 
 export const MAX_STAT_POINTS = 66;
-export const MAX_STAT_POINTS_PER_STAT = 32;
+const MAX_STAT_POINTS_PER_STAT = 32;
 
 /** Maps nature name → { stat: multiplier } for boosted/lowered stats only */
 const NATURE_MODIFIERS: Record<string, Partial<Record<keyof Omit<StatSpread, "hp">, number>>> = {
@@ -66,7 +66,7 @@ function calcStat(
   );
 }
 
-export interface ComputedStats {
+interface ComputedStats {
   hp: number;
   atk: number;
   def: number;
@@ -99,7 +99,7 @@ export function computeStats(
  * Returns the stage multiplier for a given stage value (-6 to +6).
  * Positive: (2+stage)/2, Negative: 2/(2-stage)
  */
-export function stageMultiplier(stage: number): number {
+function stageMultiplier(stage: number): number {
   if (stage === 0) return 1;
   if (stage > 0) return (2 + stage) / 2;
   return 2 / (2 - stage);
@@ -111,27 +111,6 @@ export function stageMultiplier(stage: number): number {
 export function applyStage(stat: number, stage: number): number {
   if (stage === 0) return stat;
   return Math.floor(stat * stageMultiplier(stage));
-}
-
-/**
- * Format the EV spread compactly, e.g. "252 SpA / 4 SpD / 252 Spe"
- * Omits stats with 0 EVs.
- */
-export function formatEVSpread(evs: StatSpread): string {
-  const labels: Array<[keyof StatSpread, string]> = [
-    ["hp", "HP"],
-    ["atk", "Atk"],
-    ["def", "Def"],
-    ["spa", "SpA"],
-    ["spd", "SpD"],
-    ["spe", "Spe"],
-  ];
-
-  const parts = labels
-    .filter(([key]) => evs[key] > 0)
-    .map(([key, label]) => `${evs[key]} ${label}`);
-
-  return parts.length > 0 ? parts.join(" / ") : "No EVs";
 }
 
 function spreadKeys(): Array<keyof StatSpread> {

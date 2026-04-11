@@ -20,7 +20,7 @@ export function QuickSuggestions({ textareaRef }: QuickSuggestionsProps) {
   }
 
   return (
-    <div className="flex flex-wrap gap-2 px-4 pb-3">
+    <div className="flex flex-wrap gap-2 px-5 pb-4">
       {suggestionOptions.slice(0, 6).map((option, index) => (
         <button
           key={`${option.value}-${index}`}
@@ -28,7 +28,9 @@ export function QuickSuggestions({ textareaRef }: QuickSuggestionsProps) {
           tabIndex={-1}
           aria-pressed={highlightedSuggestionIndex === index}
           className={`rounded-full px-3 py-1.5 text-sm ${
-            highlightedSuggestionIndex === index ? "theme-chip-active" : "theme-chip"
+            highlightedSuggestionIndex === index
+              ? "theme-chip-active"
+              : "theme-pill-muted"
           }`}
           onClick={() => {
             applySuggestionText(option.applyText);
@@ -44,11 +46,11 @@ export function QuickSuggestions({ textareaRef }: QuickSuggestionsProps) {
             });
           }}
         >
-          <span className="font-mono" style={{ color: "var(--text)" }}>
+          <span className="font-mono text-[13px]" style={{ color: "var(--text)" }}>
             {option.value}
           </span>
           {option.label !== option.value ? (
-            <span className="theme-text-dim ml-2">{option.label}</span>
+            <span className="theme-text-dim ml-2 text-[12px]">{option.label}</span>
           ) : null}
         </button>
       ))}

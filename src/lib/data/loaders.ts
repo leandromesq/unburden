@@ -14,7 +14,7 @@ import type {
   VgcMetaProfile,
 } from "@/lib/types";
 
-export const pokemonData = pokemon as PokemonEntry[];
+const pokemonData = pokemon as PokemonEntry[];
 export const moveData = moves as MoveEntry[];
 
 const regulationRegistry: Record<string, RegulationEntry> = {
@@ -83,18 +83,6 @@ const megaEvolutionPool = pokemonData
   );
 
 const megaEvolutionByBaseIdAndItem = new Map(megaEvolutionPool);
-const megaFormsByBaseId = new Map<string, PokemonEntry[]>();
-
-for (const entry of pokemonData) {
-  if (!entry.isMega || !entry.baseSpeciesId) {
-    continue;
-  }
-
-  const current = megaFormsByBaseId.get(entry.baseSpeciesId) ?? [];
-  current.push(entry);
-  megaFormsByBaseId.set(entry.baseSpeciesId, current);
-}
-
 export function resolveMegaEvolution(
   pokemonId: string,
   itemName: string | undefined,
@@ -123,23 +111,6 @@ export function resolveMegaEvolution(
 
   return pokemonById.get(megaId) ?? null;
 }
-
-export function getMegaFormsForPokemon(pokemonId: string) {
-  const pokemon = pokemonById.get(pokemonId);
-
-  if (!pokemon) {
-    return [] as PokemonEntry[];
-  }
-
-  const baseId = pokemon.isMega ? pokemon.baseSpeciesId : pokemon.id;
-
-  if (!baseId) {
-    return [] as PokemonEntry[];
-  }
-
-  return megaFormsByBaseId.get(baseId) ?? [];
-}
-
 function slugifySpriteCandidate(value: string) {
   return value
     .toLowerCase()

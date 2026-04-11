@@ -2,7 +2,7 @@ import { activeRegulation } from "@/lib/data/loaders";
 
 export function RegulationBadge() {
   return (
-    <div className="flex items-center gap-1.5 rounded-full border border-(--line-strong) bg-transparent px-3 py-1 text-xs">
+    <div className="theme-pill-muted flex items-center gap-1.5 rounded-full px-3 py-1 text-xs">
       <span
         className="inline-block h-1.5 w-1.5 rounded-full"
         style={{ backgroundColor: "var(--accent)" }}

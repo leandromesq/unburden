@@ -6,15 +6,13 @@ export default function Home() {
   return (
     <main className="theme-page relative min-h-screen overflow-hidden">
       <div className="theme-page-grid absolute inset-0 opacity-20" />
-      <div className="absolute right-6 top-6 z-10">
-        <ThemeToggle />
-      </div>
       <section className="relative mx-auto flex min-h-screen max-w-6xl flex-col items-center justify-center px-6 py-16 text-center">
-        <div className="mb-5 flex flex-wrap items-center justify-center gap-2">
+        <div className="mb-5 flex flex-wrap items-center justify-center gap-2 md:gap-3">
           <div className="theme-kicker rounded-full px-4 py-1 text-xs uppercase tracking-[0.35em]">
             VGC Damage Calculator
           </div>
           <RegulationBadge />
+          <ThemeToggle />
         </div>
         <h1 className="max-w-4xl font-sans text-5xl leading-none tracking-[-0.05em] md:text-7xl">
           Omniboost
