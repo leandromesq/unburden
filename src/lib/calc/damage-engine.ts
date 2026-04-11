@@ -1,10 +1,12 @@
 import { Field, Move, Pokemon, calculate } from "@smogon/calc";
 
-import { getArchetypeConfigs } from "@/lib/calc/archetypes";
+import { buildCustomSetArchetypeConfig, getArchetypeConfigs } from "@/lib/calc/archetypes";
+import { DEFAULT_IV_SPREAD, EMPTY_STAT_SPREAD, cloneStatSpread } from "@/lib/calc/stat-calc";
 import { normalizeKoText } from "@/lib/calc/ko-text";
-import { moveById, normalizeId, pokemonById, resolveMegaEvolution } from "@/lib/data/loaders";
+import { moveById, normalizeId, pokemonById } from "@/lib/data/loaders";
 import { inferDefaultAbility } from "@/lib/parser/inference";
-import type { DamageResult, ParsedCommand } from "@/lib/types";
+import { resolveImportedSet } from "@/lib/team/imported-set-utils";
+import type { DamageResult, ImportedSet, ParsedCommand, StatSpread } from "@/lib/types";
 
 function roundPercent(value: number) {
   return Number(value.toFixed(1));
@@ -56,6 +58,22 @@ function getTerrain(parsed: ParsedCommand) {
   }
 
   return undefined;
+}
+
+type ValueSource = "prompt" | "set" | "default" | "archetype";
+
+function buildBaseIvs(importedSet: ImportedSet | null, useTrickRoomZeroSpe: boolean) {
+  const ivs = cloneStatSpread(importedSet?.ivs, DEFAULT_IV_SPREAD);
+
+  if (!importedSet && useTrickRoomZeroSpe) {
+    ivs.spe = 0;
+  }
+
+  return ivs;
+}
+
+function buildBaseEvs(importedSet: ImportedSet | null, fallback: StatSpread) {
+  return cloneStatSpread(importedSet?.evs, fallback);
 }
 
 function buildAbilityFlags(attackerAbility: string | undefined, defenderAbility: string | undefined) {
@@ -275,16 +293,22 @@ function describeAssumptions(
   parsed: ParsedCommand,
   attackerSpeciesName: string,
   defenderSpeciesName: string,
+  attackerItem: string | undefined,
+  defenderItem: string | undefined,
+  attackerItemSource: ValueSource,
+  defenderItemSource: ValueSource,
   attackerAbility: string | undefined,
   defenderAbility: string | undefined,
+  attackerAbilitySource: ValueSource,
+  defenderAbilitySource: ValueSource,
   moveType: string,
   moveCategory: string,
+  attackerSet: ImportedSet | null,
+  defenderSet: ImportedSet | null,
 ) {
   const assumptions: string[] = [];
   const hasWeatherBoost = parsed.globalEffects.includes("sun");
   const hasTerrainBoost = parsed.globalEffects.includes("electric_terrain");
-  const attackerAbilityExplicit = Boolean(parsed.attackerAbility);
-  const defenderAbilityExplicit = Boolean(parsed.defenderAbility);
   const attackerStageStat = moveCategory === "Physical" ? "Atk" : "SpA";
   const defenderStageStat = moveCategory === "Physical" ? "Def" : "SpD";
 
@@ -312,12 +336,24 @@ function describeAssumptions(
     );
   }
 
-  if (parsed.attackerItem) {
-    assumptions.push(`Item: ${parsed.attackerItem}`);
+  if (attackerItem) {
+    assumptions.push(
+      attackerItemSource === "prompt"
+        ? `Item: ${attackerItem}`
+        : attackerItemSource === "set"
+          ? `Set item: ${attackerItem}`
+          : `Assumed item: ${attackerItem}`,
+    );
   }
 
-  if (parsed.defenderItem) {
-    assumptions.push(`Defender item: ${parsed.defenderItem}`);
+  if (defenderItem) {
+    assumptions.push(
+      defenderItemSource === "prompt"
+        ? `Defender item: ${defenderItem}`
+        : defenderItemSource === "set"
+          ? `Defender set item: ${defenderItem}`
+          : `Assumed defender item: ${defenderItem}`,
+    );
   }
 
   if (normalizeId(parsed.attacker) !== normalizeId(attackerSpeciesName)) {
@@ -336,7 +372,15 @@ function describeAssumptions(
     assumptions.push(`Defender HP: ${parsed.defenderCurrentHpPercent}%`);
   }
 
-  if (attackerAbility && (attackerAbilityExplicit || isRelevantAbility(
+  if (attackerSet) {
+    assumptions.push(`Set SPs: ${attackerSet.statPoints.hp}/${attackerSet.statPoints.atk}/${attackerSet.statPoints.def}/${attackerSet.statPoints.spa}/${attackerSet.statPoints.spd}/${attackerSet.statPoints.spe}`);
+  }
+
+  if (defenderSet) {
+    assumptions.push(`Defender SPs: ${defenderSet.statPoints.hp}/${defenderSet.statPoints.atk}/${defenderSet.statPoints.def}/${defenderSet.statPoints.spa}/${defenderSet.statPoints.spd}/${defenderSet.statPoints.spe}`);
+  }
+
+  if (attackerAbility && (attackerAbilitySource !== "default" || isRelevantAbility(
     attackerAbility,
     "attacker",
     moveType,
@@ -345,13 +389,15 @@ function describeAssumptions(
     hasTerrainBoost,
   ))) {
     assumptions.push(
-      attackerAbilityExplicit
+      attackerAbilitySource === "prompt"
         ? `Ability: ${attackerAbility}`
-        : `Assumed ability: ${attackerAbility}`,
+        : attackerAbilitySource === "set"
+          ? `Set ability: ${attackerAbility}`
+          : `Assumed ability: ${attackerAbility}`,
     );
   }
 
-  if (defenderAbility && (defenderAbilityExplicit || isRelevantAbility(
+  if (defenderAbility && (defenderAbilitySource !== "default" || isRelevantAbility(
     defenderAbility,
     "defender",
     moveType,
@@ -360,9 +406,11 @@ function describeAssumptions(
     hasTerrainBoost,
   ))) {
     assumptions.push(
-      defenderAbilityExplicit
+      defenderAbilitySource === "prompt"
         ? `Defender ability: ${defenderAbility}`
-        : `Assumed defender ability: ${defenderAbility}`,
+        : defenderAbilitySource === "set"
+          ? `Defender set ability: ${defenderAbility}`
+          : `Assumed defender ability: ${defenderAbility}`,
     );
   }
 
@@ -381,7 +429,10 @@ function describeAssumptions(
   return assumptions;
 }
 
-export function buildCalculationContext(parsed: ParsedCommand) {
+export function buildCalculationContext(
+  parsed: ParsedCommand,
+  importedSets: Record<string, ImportedSet> = {},
+) {
   const parsedAttacker = pokemonById.get(normalizeId(parsed.attacker));
   const parsedDefender = pokemonById.get(normalizeId(parsed.defender));
   const move = moveById.get(normalizeId(parsed.move));
@@ -390,8 +441,14 @@ export function buildCalculationContext(parsed: ParsedCommand) {
     return null;
   }
 
-  const attacker = resolveMegaEvolution(parsedAttacker.id, parsed.attackerItem) ?? parsedAttacker;
-  const defender = resolveMegaEvolution(parsedDefender.id, parsed.defenderItem) ?? parsedDefender;
+  const attacker = parsedAttacker;
+  const defender = parsedDefender;
+  const parsedAttackerSet = resolveImportedSet(attacker, importedSets);
+  const parsedDefenderSet = resolveImportedSet(defender, importedSets);
+  const attackerItem = parsed.attackerItem ?? parsedAttackerSet?.item;
+  const defenderItem = parsed.defenderItem ?? parsedDefenderSet?.item;
+  const attackerSet = resolveImportedSet(attacker, importedSets);
+  const defenderSet = resolveImportedSet(defender, importedSets);
 
   const isPhysical = move.category === "Physical";
   const attackInvestment =
@@ -402,8 +459,34 @@ export function buildCalculationContext(parsed: ParsedCommand) {
         : isPhysical
           ? "atk"
           : "spa";
-  const attackerAbility = parsed.attackerAbility ?? inferDefaultAbility(attacker.id) ?? undefined;
-  const defenderAbility = parsed.defenderAbility ?? inferDefaultAbility(defender.id) ?? undefined;
+  const attackerItemSource: ValueSource = parsed.attackerItem
+    ? "prompt"
+    : attackerSet?.item
+      ? "set"
+      : "default";
+  const defenderItemSource: ValueSource = parsed.defenderItem
+    ? "prompt"
+    : defenderSet?.item
+      ? "set"
+      : "default";
+  const attackerAbility = parsed.attackerAbility
+    ?? attackerSet?.ability
+    ?? inferDefaultAbility(attacker.id)
+    ?? undefined;
+  const defenderAbility = parsed.defenderAbility
+    ?? defenderSet?.ability
+    ?? inferDefaultAbility(defender.id)
+    ?? undefined;
+  const attackerAbilitySource: ValueSource = parsed.attackerAbility
+    ? "prompt"
+    : attackerSet?.ability
+      ? "set"
+      : "default";
+  const defenderAbilitySource: ValueSource = parsed.defenderAbility
+    ? "prompt"
+    : defenderSet?.ability
+      ? "set"
+      : "default";
   const field = new Field({
     gameType: "Doubles",
     weather: getWeather(parsed),
@@ -427,26 +510,19 @@ export function buildCalculationContext(parsed: ParsedCommand) {
   });
 
   const attackerBaseOptions = {
-    level: 50,
+    level: attackerSet?.level ?? 50,
     ability: attackerAbility,
-    item: parsed.attackerItem,
-    nature: parsed.attackerNature ?? "Hardy",
-    ivs: {
-      hp: 31,
-      atk: 31,
-      def: 31,
-      spa: 31,
-      spd: 31,
-      spe: parsed.globalEffects.includes("trick_room") ? 0 : 31,
-    },
-    evs: {
+    item: attackerItem,
+    nature: parsed.attackerNature ?? attackerSet?.nature ?? "Hardy",
+    ivs: buildBaseIvs(attackerSet, parsed.globalEffects.includes("trick_room")),
+    evs: buildBaseEvs(attackerSet, {
       hp: 4,
       atk: attackInvestment === "atk" ? 252 : 0,
       def: 0,
       spa: attackInvestment === "spa" ? 252 : 0,
       spd: 0,
       spe: 0,
-    },
+    }),
     boosts: {
       atk: move.category === "Physical" ? parsed.attackerStatMod : 0,
       spa: move.category === "Special" ? parsed.attackerStatMod : 0,
@@ -466,57 +542,79 @@ export function buildCalculationContext(parsed: ParsedCommand) {
     move,
     field,
     attackerPokemon,
+    attackerItem,
+    defenderItem,
+    attackerSet,
+    defenderSet,
     attackerAbility,
     defenderAbility,
-    archetypes: getArchetypeConfigs(
-      defender,
-      move.category as "Physical" | "Special",
-      parsed.defenderNature,
-      parsed.defenderInvestment ?? "auto",
-    ),
+    archetypes: defenderSet
+      ? [
+          buildCustomSetArchetypeConfig({
+            ...defenderSet,
+            nature: parsed.defenderNature ?? defenderSet.nature,
+            item: defenderItem,
+            ability: defenderAbility,
+          }),
+        ]
+      : getArchetypeConfigs(
+          defender,
+          move.category as "Physical" | "Special",
+          parsed.defenderNature,
+          parsed.defenderInvestment ?? "auto",
+        ),
     assumptions: describeAssumptions(
       parsed,
       attacker.name,
       defender.name,
+      attackerItem,
+      defenderItem,
+      attackerItemSource,
+      defenderItemSource,
       attackerAbility,
       defenderAbility,
+      attackerAbilitySource,
+      defenderAbilitySource,
       move.type,
       move.category,
+      attackerSet,
+      defenderSet,
     ),
   };
 }
 
-export function calculateDamageResults(parsed: ParsedCommand): DamageResult[] {
-  const context = buildCalculationContext(parsed);
+export function calculateDamageResults(
+  parsed: ParsedCommand,
+  importedSets: Record<string, ImportedSet> = {},
+): DamageResult[] {
+  const context = buildCalculationContext(parsed, importedSets);
 
   if (!context) {
     return [];
   }
 
   return context.archetypes.map((archetype) => {
+    const defenderLevel = context.defenderSet?.level ?? 50;
+    const defenderNature = context.defenderSet
+      ? parsed.defenderNature ?? context.defenderSet.nature
+      : archetype.nature;
+    const defenderIvs = cloneStatSpread(
+      archetype.ivs,
+      context.defenderSet?.ivs ?? DEFAULT_IV_SPREAD,
+    );
+    const defenderEvs = cloneStatSpread(
+      archetype.evs,
+      context.defenderSet?.evs ?? EMPTY_STAT_SPREAD,
+    );
     const defenderPokemon = new Pokemon(9, context.defender.name, {
       curHP: toCurrentHp(
         new Pokemon(9, context.defender.name, {
-          level: 50,
+          level: defenderLevel,
           ability: context.defenderAbility,
-          item: parsed.defenderItem,
-          nature: archetype.nature,
-          ivs: {
-            hp: 31,
-            atk: 31,
-            def: 31,
-            spa: 31,
-            spd: 31,
-            spe: 31,
-          },
-          evs: {
-            hp: archetype.evs.hp,
-            atk: 0,
-            def: archetype.evs.def,
-            spa: 0,
-            spd: archetype.evs.spd,
-            spe: 0,
-          },
+          item: context.defenderItem,
+          nature: defenderNature,
+          ivs: defenderIvs,
+          evs: defenderEvs,
           boosts: {
             def: context.move.category === "Physical" ? parsed.defenderStatMod : 0,
             spd: context.move.category === "Special" ? parsed.defenderStatMod : 0,
@@ -525,26 +623,12 @@ export function calculateDamageResults(parsed: ParsedCommand): DamageResult[] {
         }).maxHP(),
         parsed.defenderCurrentHpPercent,
       ),
-      level: 50,
+      level: defenderLevel,
       ability: context.defenderAbility,
-      item: parsed.defenderItem,
-      nature: archetype.nature,
-      ivs: {
-        hp: 31,
-        atk: 31,
-        def: 31,
-        spa: 31,
-        spd: 31,
-        spe: 31,
-      },
-      evs: {
-        hp: archetype.evs.hp,
-        atk: 0,
-        def: archetype.evs.def,
-        spa: 0,
-        spd: archetype.evs.spd,
-        spe: 0,
-      },
+      item: context.defenderItem,
+      nature: defenderNature,
+      ivs: defenderIvs,
+      evs: defenderEvs,
       boosts: {
         def: context.move.category === "Physical" ? parsed.defenderStatMod : 0,
         spd: context.move.category === "Special" ? parsed.defenderStatMod : 0,
@@ -558,7 +642,7 @@ export function calculateDamageResults(parsed: ParsedCommand): DamageResult[] {
       defenderPokemon,
       new Move(9, parsed.move, {
         ability: context.attackerAbility,
-        item: parsed.attackerItem,
+        item: context.attackerItem,
         isCrit: parsed.isCriticalHit,
         species: context.attacker.name,
       }),

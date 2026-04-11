@@ -62,6 +62,10 @@ type SpeciesSource = {
 
 const PIKALYTICS_AI_BASE_URL = "https://www.pikalytics.com/ai/pokedex";
 const DEFAULT_CHAMPIONS_FORMAT = "championspreview";
+const EXTRA_SPECIES_NAMES = ["Floette-Eternal"];
+const SPECIAL_BASE_SPECIES_IDS = new Map<string, string>([
+  ["floettemega", "floetteeternal"],
+]);
 
 function normalizeAlias(value: string) {
   return value
@@ -108,6 +112,31 @@ function megaAliasVariants(species: SpeciesSource) {
   );
 }
 
+function specialAliasVariants(species: SpeciesSource) {
+  if (species.id === "floetteeternal") {
+    return Array.from(
+      new Set(
+        [
+          "floette eternal",
+          "floette eternal flower",
+          "eternal floette",
+          "eternal flower floette",
+        ].flatMap((alias) => aliasVariants(alias)),
+      ),
+    );
+  }
+
+  return [] as string[];
+}
+
+function shouldAddBaseSpeciesAliases(species: SpeciesSource) {
+  if (species.id === "floetteeternal") {
+    return false;
+  }
+
+  return species.baseSpecies && species.baseSpecies !== species.name && !species.isMega;
+}
+
 async function fetchText(url: string) {
   const response = await fetch(url, {
     headers: {
@@ -150,11 +179,15 @@ function toSpeciesSource(species: {
     spe: number;
   };
 }): SpeciesSource {
+  const defaultBaseSpeciesId = Dex.species.get(species.baseSpecies).id;
+  const baseSpeciesId =
+    SPECIAL_BASE_SPECIES_IDS.get(species.id) ?? defaultBaseSpeciesId;
+
   return {
     id: species.id,
     name: species.name,
     baseSpecies: species.baseSpecies,
-    baseSpeciesId: Dex.species.get(species.baseSpecies).id,
+    baseSpeciesId,
     types: [...species.types],
     abilities: Object.fromEntries(
       Object.entries(species.abilities as Record<string, string | undefined>),
@@ -167,6 +200,34 @@ function toSpeciesSource(species: {
         : undefined,
     baseStats: { ...species.baseStats },
   };
+}
+
+function resolveLearnsetSpecies(
+  gen: ReturnType<Generations["get"]>,
+  species: PokemonEntry,
+) {
+  const visited = new Set<string>();
+  let currentId: string | undefined = species.id;
+
+  while (currentId && !visited.has(currentId)) {
+    visited.add(currentId);
+    const current = Dex.species.get(currentId);
+
+    if (!current.exists) {
+      break;
+    }
+
+    const genSpecies = gen.species.get(current.name);
+    if (genSpecies) {
+      return genSpecies;
+    }
+
+    currentId =
+      SPECIAL_BASE_SPECIES_IDS.get(current.id) ??
+      (current.baseSpecies ? Dex.species.get(current.baseSpecies).id : undefined);
+  }
+
+  return null;
 }
 
 async function main() {
@@ -205,6 +266,16 @@ async function main() {
     speciesPool.set(species.id, toSpeciesSource(species));
   }
 
+  for (const speciesName of EXTRA_SPECIES_NAMES) {
+    const species = Dex.species.get(speciesName);
+
+    if (!species.exists) {
+      continue;
+    }
+
+    speciesPool.set(species.id, toSpeciesSource(species));
+  }
+
   for (const species of speciesPool.values()) {
     const aliases = new Set<string>();
 
@@ -216,10 +287,18 @@ async function main() {
       aliases.add(alias);
     }
 
-    if (species.baseSpecies && species.baseSpecies !== species.name && !species.isMega) {
+    for (const alias of specialAliasVariants(species)) {
+      aliases.add(alias);
+    }
+
+    if (shouldAddBaseSpeciesAliases(species)) {
       for (const alias of aliasVariants(species.baseSpecies)) {
         aliases.add(alias);
       }
+    }
+
+    if (species.id === "floetteeternal") {
+      aliases.delete("floette");
     }
 
     pokemonEntries.push({
@@ -272,11 +351,7 @@ async function main() {
 
   for (const species of pokemonEntries) {
     const moveIds = new Set<string>();
-    const learnsetSpeciesName =
-      species.isMega && species.baseSpeciesId
-        ? Dex.species.get(species.baseSpeciesId).name
-        : species.name;
-    const speciesEntry = gen.species.get(learnsetSpeciesName);
+    const speciesEntry = resolveLearnsetSpecies(gen, species);
 
     if (!speciesEntry) {
       continue;

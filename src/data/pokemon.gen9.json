@@ -7407,6 +7407,39 @@
     }
   },
   {
+    "id": "floetteeternal",
+    "name": "Floette-Eternal",
+    "aliases": [
+      "eternal floette",
+      "eternal flower floette",
+      "eternalfloette",
+      "eternalflowerfloette",
+      "floette eternal",
+      "floette eternal flower",
+      "floette-eternal",
+      "floetteeternal",
+      "floetteeternalflower"
+    ],
+    "types": [
+      "Fairy"
+    ],
+    "abilities": [
+      "Flower Veil",
+      "Symbiosis"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "floette",
+    "baseStats": {
+      "hp": 74,
+      "atk": 65,
+      "def": 67,
+      "spa": 125,
+      "spd": 128,
+      "spe": 92
+    },
+    "defaultFormOf": "floette"
+  },
+  {
     "id": "floettemega",
     "name": "Floette-Mega",
     "aliases": [
@@ -7425,7 +7458,7 @@
     ],
     "isMega": true,
     "requiredItem": "Floettite",
-    "baseSpeciesId": "floette",
+    "baseSpeciesId": "floetteeternal",
     "baseStats": {
       "hp": 74,
       "atk": 85,

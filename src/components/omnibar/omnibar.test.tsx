@@ -1,16 +1,19 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { createRef } from "react";
 
 import { ModifierSwitches } from "@/components/omnibar/modifier-switches";
 import { OmniComposer } from "@/components/omnibar/omni-composer";
 import { OmniTextarea } from "@/components/omnibar/omni-textarea";
+import { SearchableCombobox } from "@/components/omnibar/searchable-combobox";
 import { QuickSuggestions } from "@/components/omnibar/quick-suggestions";
 import { ResultsPanel } from "@/components/omnibar/results-panel";
 import { resetOmniStore, useOmniStore } from "@/store/use-omni-store";
+import { useTeamStore } from "@/store/use-team-store";
 
 describe("omnibar components", () => {
   beforeEach(() => {
     resetOmniStore();
+    useTeamStore.getState().clearSets();
   });
 
   test("Tab applies the active suggestion and keeps focus on the textarea", () => {
@@ -59,6 +62,27 @@ describe("omnibar components", () => {
     fireEvent.click(screen.getByRole("button", { name: /!muddy-water/i }));
 
     expect(useOmniStore.getState().input).toBe("politoed !muddy-water");
+  });
+
+  test("searchable combobox supports arrow-key navigation", () => {
+    const handleChange = jest.fn();
+
+    render(
+      <SearchableCombobox
+        label="Item"
+        value=""
+        options={["Mystic Water", "Sitrus Berry", "Assault Vest"]}
+        onChange={handleChange}
+      />,
+    );
+
+    const combobox = screen.getByRole("combobox", { name: "Item" });
+
+    fireEvent.focus(combobox);
+    fireEvent.keyDown(combobox, { key: "ArrowDown" });
+    fireEvent.keyDown(combobox, { key: "Enter" });
+
+    expect(handleChange).toHaveBeenLastCalledWith("Sitrus Berry");
   });
 
   test("modifier chip toggles its token in the current input", () => {
@@ -238,6 +262,103 @@ describe("omnibar components", () => {
     expect(screen.getByTestId("defender-summary")).toHaveTextContent("Assault Vest");
   });
 
+  test("editing a summary set stores SPs and updates the summary card", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    fireEvent.click(
+      within(screen.getByTestId("attacker-summary")).getByRole("button", {
+        name: "Edit",
+      }),
+    );
+
+    const dialog = screen.getByRole("dialog", { name: /edit politoed set/i });
+    const itemCombobox = within(dialog).getByRole("combobox", { name: "Item" });
+    fireEvent.focus(itemCombobox);
+    fireEvent.change(itemCombobox, { target: { value: "myst" } });
+    fireEvent.keyDown(itemCombobox, { key: "ArrowDown" });
+    fireEvent.keyDown(itemCombobox, { key: "Enter" });
+    fireEvent.change(within(dialog).getByLabelText("HP"), {
+      target: { value: "32" },
+    });
+    fireEvent.change(within(dialog).getByLabelText("SpA"), {
+      target: { value: "13" },
+    });
+    fireEvent.change(within(dialog).getByLabelText("Spe"), {
+      target: { value: "19" },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+
+    expect(useTeamStore.getState().importedSets.politoed.statPoints).toMatchObject({
+      hp: 32,
+      spa: 13,
+      spe: 19,
+    });
+    expect(useTeamStore.getState().importedSets.politoed.item).toBe("Mystic Water");
+    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("32 HP");
+    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("13 SpA");
+  });
+
+  test("editing a summary set can change the pokemon species", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    fireEvent.click(
+      within(screen.getByTestId("attacker-summary")).getByRole("button", {
+        name: "Edit",
+      }),
+    );
+
+    const dialog = screen.getByRole("dialog", { name: /edit politoed set/i });
+    const speciesCombobox = within(dialog).getByRole("combobox", { name: "Pokemon" });
+    fireEvent.focus(speciesCombobox);
+    fireEvent.change(speciesCombobox, { target: { value: "incin" } });
+    fireEvent.keyDown(speciesCombobox, { key: "ArrowDown" });
+    fireEvent.keyDown(speciesCombobox, { key: "Enter" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+
+    expect(useTeamStore.getState().importedSets.incineroar).toBeDefined();
+    expect(useTeamStore.getState().importedSets.politoed).toBeUndefined();
+    expect(useOmniStore.getState().input).toBe("incineroar !muddy-water x incineroar");
+  });
+
+  test("summary exposes a mega switch when the held item is a mega stone", () => {
+    act(() => {
+      useTeamStore.getState().saveSet({
+        speciesId: "charizard",
+        speciesName: "Charizard",
+        level: 50,
+        nature: "Modest",
+        statPoints: { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 },
+        evs: { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 },
+        ivs: { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 },
+        moves: ["Heat Wave"],
+        item: "Charizardite Y",
+        ability: "Blaze",
+      });
+    });
+
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("charizard !heat-wave x tinkaton");
+    });
+
+    fireEvent.click(
+      within(screen.getByTestId("attacker-summary")).getByRole("button", {
+        name: /switch to mega form/i,
+      }),
+    );
+
+    expect(useOmniStore.getState().input).toBe("charizard-mega-y !heat-wave x tinkaton");
+  });
+
   test("does not auto-add weather before the defender side is resolved", () => {
     act(() => {
       useOmniStore.getState().setInput("poli");
@@ -300,7 +421,7 @@ describe("omnibar components", () => {
     expect(useOmniStore.getState().suggestionOptions[0]?.value).toBe("~rain");
   });
 
-  test("surfaces weather for mega-stone setters as an opt-in suggestion", () => {
+  test("does not treat a mega stone alone as a mega weather setter", () => {
     act(() => {
       useOmniStore.getState().setInput("charizard !heat-wave @charizardite-y x tinkaton");
     });
@@ -308,6 +429,14 @@ describe("omnibar components", () => {
     expect(useOmniStore.getState().input).toBe(
       "charizard !heat-wave @charizardite-y x tinkaton",
     );
+    expect(useOmniStore.getState().suggestionOptions[0]?.value).not.toBe("~sun");
+  });
+
+  test("surfaces weather for an explicit mega form as an opt-in suggestion", () => {
+    act(() => {
+      useOmniStore.getState().setInput("charizard-mega-y !heat-wave @charizardite-y x tinkaton");
+    });
+
     expect(useOmniStore.getState().suggestionOptions[0]?.value).toBe("~sun");
   });
 

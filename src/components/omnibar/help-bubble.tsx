@@ -91,7 +91,6 @@ const DEFENDER_MODIFIERS: Array<{ token: string; label: string }> = [
 ];
 
 const TIPS = [
-  'Use "x" or "vs" to split attacker and defender.',
   "Only the attacker takes !move, but both sides can use @item, %HP, and [Ability] based on which segment they are in.",
   "Modifiers can also be toggled via the panel below the input.",
   "Weather and terrain abilities surface the matching ~token as an opt-in suggestion after both sides resolve.",
@@ -167,7 +166,7 @@ export function HelpBubble() {
     <div ref={containerRef} className="relative">
       <button
         type="button"
-        tabIndex={0}
+        tabIndex={-1}
         aria-expanded={open}
         aria-label="Show syntax and hotkey reference"
         onClick={() => setOpen((prev) => !prev)}
@@ -227,6 +226,9 @@ export function HelpBubble() {
                 style={{ color: "var(--text)" }}
               >
                 attacker !move [attacker tokens] x defender [defender tokens] [global tokens]
+              </div>
+              <div className="theme-text-muted mt-2 text-[12px]">
+                Use <span className="font-mono">x</span> or <span className="font-mono">vs</span> to split attacker and defender.
               </div>
             </div>
 

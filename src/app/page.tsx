@@ -26,12 +26,6 @@ export default function Home() {
         <div className="mt-8 w-full">
           <OmniComposer />
         </div>
-        <div className="theme-text-faint mt-5 text-xs">
-          e.g.{" "}
-          <span className="theme-inline-code font-mono text-xs">
-            politoed !muddy-water @mystic-water x incineroar ~rain
-          </span>
-        </div>
       </section>
     </main>
   );

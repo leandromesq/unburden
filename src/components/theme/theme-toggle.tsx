@@ -51,6 +51,7 @@ export function ThemeToggle() {
           <button
             key={option}
             type="button"
+            tabIndex={-1}
             aria-pressed={active}
             className={`theme-toggle-option rounded-full px-4 py-2 text-sm font-medium ${
               active ? "theme-toggle-option-active" : ""

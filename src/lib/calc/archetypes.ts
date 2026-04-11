@@ -1,18 +1,32 @@
-import type { BulkArchetype, PokemonEntry } from "@/lib/types";
+import { formatStatPointSpread } from "@/lib/calc/stat-calc";
+import type { BulkArchetype, ImportedSet, PokemonEntry, StatSpread } from "@/lib/types";
 
-interface ArchetypeConfig {
+export interface ArchetypeConfig {
   archetype: BulkArchetype;
-  evs: {
-    hp: number;
-    def: number;
-    spd: number;
-  };
+  label?: string;
+  evs: StatSpread;
+  ivs?: StatSpread;
   nature: string;
   summary: string;
+  isCustom?: boolean;
 }
 
 function summarize(nature: string, hp: number, def: number, spd: number) {
   return `${nature} | ${hp} HP / ${def} Def / ${spd} SpD`;
+}
+
+export function buildCustomSetArchetypeConfig(
+  importedSet: ImportedSet,
+): ArchetypeConfig {
+  return {
+    archetype: "mid",
+    label: "Custom Set",
+    evs: importedSet.evs,
+    ivs: importedSet.ivs,
+    nature: importedSet.nature,
+    summary: `${importedSet.nature} | ${formatStatPointSpread(importedSet.statPoints)}`,
+    isCustom: true,
+  };
 }
 
 export function getArchetypeConfigs(
@@ -40,26 +54,26 @@ export function getArchetypeConfigs(
   return [
     {
       archetype: "glass",
-      evs: { hp: 4, def: 0, spd: 0 },
+      evs: { hp: 4, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 },
       nature: glassNature,
       summary: summarize(glassNature, 4, 0, 0),
     },
     {
       archetype: "mid",
-      evs: { hp: 252, def: 4, spd: 4 },
+      evs: { hp: 252, atk: 0, def: 4, spa: 0, spd: 4, spe: 0 },
       nature: midNature,
       summary: summarize(midNature, 252, 4, 4),
     },
     prioritizeDefense
       ? {
           archetype: "tank",
-          evs: { hp: 252, def: 252, spd: 4 },
+          evs: { hp: 252, atk: 0, def: 252, spa: 0, spd: 4, spe: 0 },
           nature: tankNature,
           summary: summarize(tankNature, 252, 252, 4),
         }
       : {
           archetype: "tank",
-          evs: { hp: 252, def: 4, spd: 252 },
+          evs: { hp: 252, atk: 0, def: 4, spa: 0, spd: 252, spe: 0 },
           nature: tankNature,
           summary: summarize(tankNature, 252, 4, 252),
         },

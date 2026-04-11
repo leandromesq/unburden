@@ -145,6 +145,16 @@ describe("parseCommand", () => {
     });
   });
 
+  test("resolves Floette Eternal Flower as a distinct species", () => {
+    const result = parseCommand("floette eternal flower !moonblast x incineroar");
+
+    expect(result.parsed).toMatchObject({
+      attacker: "Floette-Eternal",
+      move: "Moonblast",
+      defender: "Incineroar",
+    });
+  });
+
   test("rejects removed legacy side prefixes", () => {
     const result = parseCommand("politoed !muddy-water >+1 x incineroar");
 

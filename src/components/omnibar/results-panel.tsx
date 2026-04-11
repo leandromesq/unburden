@@ -3,8 +3,15 @@
 import { buildCalculationContext } from "@/lib/calc/damage-engine";
 import { koTextTone } from "@/lib/calc/ko-text";
 import { useOmniStore } from "@/store/use-omni-store";
+import { useTeamStore } from "@/store/use-team-store";
 
-function BlockTitle({ archetype }: { archetype: string }) {
+function BlockTitle({
+  archetype,
+  label,
+}: {
+  archetype: string;
+  label?: string;
+}) {
   return (
     <div className="mb-2 flex items-center gap-2">
       <div
@@ -13,11 +20,12 @@ function BlockTitle({ archetype }: { archetype: string }) {
         aria-hidden
       />
       <div className="theme-text-dim text-xs font-semibold uppercase tracking-[0.24em]">
-        {archetype === "glass"
-          ? "Min Bulk"
-          : archetype === "mid"
-            ? "Mid Bulk"
-            : "Max Bulk"}
+        {label ??
+          (archetype === "glass"
+            ? "Min Bulk"
+            : archetype === "mid"
+              ? "Mid Bulk"
+              : "Max Bulk")}
       </div>
     </div>
   );
@@ -26,12 +34,13 @@ function BlockTitle({ archetype }: { archetype: string }) {
 export function ResultsPanel() {
   const results = useOmniStore((state) => state.results);
   const parsed = useOmniStore((state) => state.parsed);
+  const importedSets = useTeamStore((state) => state.importedSets);
 
   if (!parsed || !results.length) {
     return null;
   }
 
-  const context = buildCalculationContext(parsed);
+  const context = buildCalculationContext(parsed, importedSets);
 
   if (!context) {
     return null;
@@ -48,7 +57,10 @@ export function ResultsPanel() {
             className="theme-panel rounded-3xl p-4"
           >
             <div className="mb-3">
-              <BlockTitle archetype={result.archetype} />
+              <BlockTitle
+                archetype={result.archetype}
+                label={archetype.label}
+              />
               <div className="flex items-end justify-between gap-3">
                 <div className="theme-text-dim text-sm">
                   {archetype.summary}

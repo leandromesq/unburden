@@ -1,23 +1,24 @@
 import { buildCalculationContext, calculateDamageResults } from "@/lib/calc/damage-engine";
+import { createImportedSet } from "@/lib/team/imported-set-utils";
 import { parseCommand } from "@/lib/parser/command-parser";
 
 describe("damage engine", () => {
   test("returns three archetype rows for an explicit symbolic command", () => {
-    const parsed = parseCommand("flutter mane !moonblast x ogerpon").parsed;
+    const parsed = parseCommand("politoed !muddy-water x incineroar").parsed;
 
     expect(parsed).not.toBeNull();
     expect(calculateDamageResults(parsed!)).toHaveLength(3);
   });
 
-  test("forces 0 speed IVs when trick room is parsed", () => {
-    const parsed = parseCommand("archaludon !electro-shot ~trick-room x amoonguss").parsed;
+  test("forces 0 speed IVs when trick room is parsed without an explicit set", () => {
+    const parsed = parseCommand("politoed !muddy-water ~trick-room x incineroar").parsed;
     const context = buildCalculationContext(parsed!);
 
     expect(context?.attackerPokemon.ivs.spe).toBe(0);
   });
 
   test("emits compact showdown-like damage text without raw rolls", () => {
-    const parsed = parseCommand("flutter mane !moonblast x ogerpon").parsed;
+    const parsed = parseCommand("politoed !muddy-water x incineroar").parsed;
     const [result] = calculateDamageResults(parsed!);
 
     expect(result.damageText).toContain("%");
@@ -26,8 +27,8 @@ describe("damage engine", () => {
   });
 
   test("applies defender stages to the relevant defensive stat", () => {
-    const neutral = parseCommand("flutter mane !moonblast x ogerpon").parsed;
-    const boosted = parseCommand("flutter mane !moonblast x ogerpon <+6").parsed;
+    const neutral = parseCommand("politoed !muddy-water x incineroar").parsed;
+    const boosted = parseCommand("politoed !muddy-water x incineroar +6").parsed;
 
     const [neutralResult] = calculateDamageResults(neutral!);
     const [boostedResult] = calculateDamageResults(boosted!);
@@ -37,7 +38,7 @@ describe("damage engine", () => {
   });
 
   test("uses current hp percentages and critical hits in the calculation context", () => {
-    const parsed = parseCommand("flutter mane !moonblast %75 * x ogerpon %50").parsed;
+    const parsed = parseCommand("politoed !muddy-water %75 * x incineroar %50").parsed;
     const context = buildCalculationContext(parsed!);
     const [result] = calculateDamageResults(parsed!);
 
@@ -49,23 +50,19 @@ describe("damage engine", () => {
   });
 
   test("applies attacker and defender speed stages to speed-based move calculations", () => {
-    const slower = parseCommand(
-      "regieleki !electro-ball >spe-6 x amoonguss <spe+6",
-    ).parsed;
-    const faster = parseCommand(
-      "regieleki !electro-ball >spe+6 x amoonguss <spe-6",
-    ).parsed;
+    const slower = parseCommand("tinkaton !gyro-ball spe-6 x incineroar spe+6").parsed;
+    const faster = parseCommand("tinkaton !gyro-ball spe+6 x incineroar spe-6").parsed;
 
     const [slowerResult] = calculateDamageResults(slower!);
     const [fasterResult] = calculateDamageResults(faster!);
 
-    expect(fasterResult.maxPercentage).toBeGreaterThan(slowerResult.maxPercentage);
+    expect(slowerResult.maxPercentage).toBeGreaterThan(fasterResult.maxPercentage);
     expect(fasterResult.assumptions).toContain("Attacker speed stage: +6 Spe");
     expect(fasterResult.assumptions).toContain("Defender speed stage: -6 Spe");
   });
 
   test("does not crash when calc desc fails on a no-damage interaction", () => {
-    const parsed = parseCommand("regieleki !electro-ball x garchomp").parsed;
+    const parsed = parseCommand("incineroar !fake-out x mimikyu").parsed;
 
     expect(() => calculateDamageResults(parsed!)).not.toThrow();
 
@@ -75,26 +72,48 @@ describe("damage engine", () => {
 
   test("auto max bulk prioritizes the relevant defense for the move category", () => {
     const physicalParsed = parseCommand("incineroar !flare-blitz x tinkaton").parsed;
-    const specialParsed = parseCommand("flutter mane !moonblast x tinkaton").parsed;
+    const specialParsed = parseCommand("politoed !muddy-water x tinkaton").parsed;
     const physicalContext = buildCalculationContext(physicalParsed!);
     const specialContext = buildCalculationContext(specialParsed!);
 
     expect(physicalContext?.archetypes[2]).toMatchObject({
-      evs: { hp: 252, def: 252, spd: 4 },
+      evs: { hp: 252, atk: 0, def: 252, spa: 0, spd: 4, spe: 0 },
       nature: "Bold",
     });
     expect(specialContext?.archetypes[2]).toMatchObject({
-      evs: { hp: 252, def: 4, spd: 252 },
+      evs: { hp: 252, atk: 0, def: 4, spa: 0, spd: 252, spe: 0 },
       nature: "Calm",
     });
   });
 
-  test("resolves mega evolution from an explicit mega stone item", () => {
+  test("does not resolve mega evolution from a mega stone item alone", () => {
     const parsed = parseCommand("charizard !heat-wave @charizardite-y x tinkaton").parsed;
+    const context = buildCalculationContext(parsed!);
+
+    expect(context?.attacker.name).toBe("Charizard");
+    expect(context?.attackerAbility).toBe("Blaze");
+  });
+
+  test("resolves mega evolution only when the mega form is explicit in the prompt", () => {
+    const parsed = parseCommand("charizard-mega-y !heat-wave @charizardite-y x tinkaton").parsed;
     const context = buildCalculationContext(parsed!);
 
     expect(context?.attacker.name).toBe("Charizard-Mega-Y");
     expect(context?.attackerAbility).toBe("Drought");
+  });
+
+  test("only Floette-Eternal can access Floette-Mega", () => {
+    const regular = parseCommand("floette !moonblast @floettite x incineroar").parsed;
+    const eternalBase = parseCommand("floette eternal flower !moonblast @floettite x incineroar").parsed;
+    const eternalMega = parseCommand("floette-mega !moonblast @floettite x incineroar").parsed;
+
+    const regularContext = buildCalculationContext(regular!);
+    const eternalBaseContext = buildCalculationContext(eternalBase!);
+    const eternalMegaContext = buildCalculationContext(eternalMega!);
+
+    expect(regularContext?.attacker.name).toBe("Floette");
+    expect(eternalBaseContext?.attacker.name).toBe("Floette-Eternal");
+    expect(eternalMegaContext?.attacker.name).toBe("Floette-Mega");
   });
 
   test("does not assume mega abilities for a base species without its mega stone", () => {
@@ -118,5 +137,65 @@ describe("damage engine", () => {
     expect(vestResult.maxPercentage).toBeLessThan(neutralResult.maxPercentage);
     expect(occaResult.assumptions).toContain("Defender item: Occa Berry");
     expect(vestResult.assumptions).toContain("Defender item: Assault Vest");
+  });
+
+  test("uses imported attacker sets in the damage calculation", () => {
+    const parsed = parseCommand("politoed !muddy-water x incineroar").parsed;
+    const importedSets = {
+      politoed: createImportedSet({
+        speciesId: "politoed",
+        speciesName: "Politoed",
+        item: "Mystic Water",
+        ability: "Drizzle",
+        nature: "Modest",
+        statPoints: {
+          hp: 32,
+          atk: 0,
+          def: 1,
+          spa: 13,
+          spd: 1,
+          spe: 19,
+        },
+        moves: ["Muddy Water", "Ice Beam", "Protect", "Helping Hand"],
+      }),
+    };
+
+    const context = buildCalculationContext(parsed!, importedSets);
+    const [result] = calculateDamageResults(parsed!, importedSets);
+
+    expect(context?.attackerPokemon.item).toBe("Mystic Water");
+    expect(context?.attackerPokemon.nature).toBe("Modest");
+    expect(result.assumptions).toContain("Set item: Mystic Water");
+    expect(result.assumptions).toContain("Set ability: Drizzle");
+  });
+
+  test("uses imported defender sets as an explicit custom bulk row", () => {
+    const parsed = parseCommand("politoed !muddy-water x incineroar").parsed;
+    const importedSets = {
+      incineroar: createImportedSet({
+        speciesId: "incineroar",
+        speciesName: "Incineroar",
+        item: "Assault Vest",
+        ability: "Intimidate",
+        nature: "Careful",
+        statPoints: {
+          hp: 32,
+          atk: 0,
+          def: 8,
+          spa: 0,
+          spd: 16,
+          spe: 10,
+        },
+        moves: ["Flare Blitz", "Knock Off", "Parting Shot", "Fake Out"],
+      }),
+    };
+
+    const context = buildCalculationContext(parsed!, importedSets);
+    const results = calculateDamageResults(parsed!, importedSets);
+
+    expect(context?.archetypes).toHaveLength(1);
+    expect(context?.archetypes[0]?.label).toBe("Custom Set");
+    expect(results).toHaveLength(1);
+    expect(results[0].assumptions).toContain("Defender set item: Assault Vest");
   });
 });

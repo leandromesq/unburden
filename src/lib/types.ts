@@ -164,6 +164,7 @@ export interface ImportedSet {
   ability?: string;
   level: number;
   nature: string;
+  statPoints: StatSpread;
   evs: StatSpread;
   ivs: StatSpread;
   moves: string[];

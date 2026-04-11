@@ -3,14 +3,22 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
+  getCanonicalPromptPokemonName,
+  getPokemonSpriteSlugs,
   itemDisplayById,
   moveById,
   normalizeAlias,
   normalizeId,
+  pokemonById,
   resolveMegaEvolution,
 } from "@/lib/data/loaders";
-import { applyStage, computeStats, formatEVSpread } from "@/lib/calc/stat-calc";
+import {
+  EMPTY_STAT_SPREAD,
+  applyStage,
+  computeStats,
+} from "@/lib/calc/stat-calc";
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
+import { joinTokenValues } from "@/lib/parser/tokenize";
 import {
   ATTACKER_MODIFIER_MAP,
   DEFENDER_MODIFIER_MAP,
@@ -18,10 +26,12 @@ import {
 } from "@/lib/parser/grammar";
 import { resolveMoveEntity } from "@/lib/parser/fuse-indexes";
 import { inferDefaultAbility } from "@/lib/parser/inference";
+import { createImportedSet, resolveImportedSet } from "@/lib/team/imported-set-utils";
 import { useOmniStore } from "@/store/use-omni-store";
 import { useTeamStore } from "@/store/use-team-store";
 import { ImportSetModal } from "@/components/omnibar/import-set-modal";
-import type { ImportedSet, PokemonEntry } from "@/lib/types";
+import { PokemonSetEditorModal } from "@/components/omnibar/pokemon-set-editor-modal";
+import type { PokemonEntry } from "@/lib/types";
 
 type SummarySide = "attacker" | "defender";
 
@@ -60,12 +70,20 @@ function resolveAbilityDisplay(
   return inferDefaultAbility(pokemon.id);
 }
 
-function getSpriteSources(pokemonId: string) {
-  return [
-    `https://play.pokemonshowdown.com/sprites/home/${pokemonId}.png`,
-    `https://play.pokemonshowdown.com/sprites/dex/${pokemonId}.png`,
-    `https://play.pokemonshowdown.com/sprites/gen5/${pokemonId}.png`,
-  ];
+function getSpriteSources(pokemon: PokemonEntry) {
+  return Array.from(
+    new Set(
+      getPokemonSpriteSlugs(pokemon)
+        .slice(0, 8)
+        .flatMap((slug) => [
+          `https://play.pokemonshowdown.com/sprites/home/${slug}.png`,
+          `https://play.pokemonshowdown.com/sprites/dex/${slug}.png`,
+          `https://play.pokemonshowdown.com/sprites/gen5/${slug}.png`,
+          `https://img.pokemondb.net/sprites/home/normal/${slug}.png`,
+          `https://img.pokemondb.net/artwork/large/${slug}.jpg`,
+        ]),
+    ),
+  );
 }
 
 function getStageValue(
@@ -84,17 +102,6 @@ function getStageValue(
         return def?.kind === kind ? sum + (def.statMod ?? 0) : sum;
       }, 0),
     ),
-  );
-}
-
-function resolveImportedSet(
-  pokemon: PokemonEntry,
-  importedSets: Record<string, ImportedSet>,
-): ImportedSet | null {
-  return (
-    importedSets[pokemon.id] ??
-    (pokemon.baseSpeciesId ? importedSets[pokemon.baseSpeciesId] : null) ??
-    null
   );
 }
 
@@ -227,13 +234,48 @@ function MoveChip({ moveName, isActive, onClick, disabled }: MoveChipProps) {
   );
 }
 
+function rebuildInputWithSpecies(
+  input: string,
+  side: SummarySide,
+  targetPokemon: PokemonEntry,
+) {
+  const structure = analyzeCommandStructure(input);
+  const attackerTail = structure.attacker.rawTokens
+    .slice(structure.attacker.speciesTokens.length)
+    .map((token) => token.raw)
+    .join(" ")
+    .trim();
+  const defenderTail = structure.defender.rawTokens
+    .slice(structure.defender.speciesTokens.length)
+    .map((token) => token.raw)
+    .join(" ")
+    .trim();
+  const attackerSpecies = side === "attacker"
+    ? getCanonicalPromptPokemonName(targetPokemon)
+    : (structure.attacker.speciesText || joinTokenValues(structure.attacker.rawTokens)).trim();
+  const defenderSpecies = side === "defender"
+    ? getCanonicalPromptPokemonName(targetPokemon)
+    : (structure.defender.speciesText || joinTokenValues(structure.defender.rawTokens)).trim();
+  const attackerText = [attackerSpecies, attackerTail].filter(Boolean).join(" ").trim();
+  const defenderText = [defenderSpecies, defenderTail].filter(Boolean).join(" ").trim();
+
+  if (!structure.lexed.hasDelimiter) {
+    return attackerText;
+  }
+
+  return [attackerText, "x", defenderText].filter(Boolean).join(" ").trim();
+}
+
 export function PokemonSideSummary({ side }: { side: SummarySide }) {
   const input = useOmniStore((state) => state.input);
   const setAttackerMove = useOmniStore((state) => state.setAttackerMove);
   const setInput = useOmniStore((state) => state.setInput);
+  const recompute = useOmniStore((state) => state.recompute);
   const importedSets = useTeamStore((state) => state.importedSets);
   const removeSet = useTeamStore((state) => state.removeSet);
+  const saveSet = useTeamStore((state) => state.saveSet);
   const [importModalOpen, setImportModalOpen] = useState(false);
+  const [editorOpen, setEditorOpen] = useState(false);
   const [switchOpen, setSwitchOpen] = useState(false);
   const switchRef = useRef<HTMLDivElement>(null);
 
@@ -273,22 +315,25 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
     }
   };
 
+  const handleRemoveSet = (speciesId: string) => {
+    removeSet(speciesId);
+    recompute();
+  };
+
+  const handleSwitchToMegaForm = (targetPokemon: PokemonEntry) => {
+    setInput(rebuildInputWithSpecies(input, side, targetPokemon));
+  };
+
   const summary = useMemo(() => {
     const structure = analyzeCommandStructure(input);
 
-    const attackerBase = resolveParsedSpecies(structure.attacker);
-    const attacker = attackerBase
-      ? (resolveMegaEvolution(
-          attackerBase.id,
-          structure.attacker.itemToken?.value,
-        ) ?? attackerBase)
+    const attackerPromptSpecies = resolveParsedSpecies(structure.attacker);
+    const defenderPromptSpecies = resolveParsedSpecies(structure.defender);
+    const attackerSet = attackerPromptSpecies
+      ? resolveImportedSet(attackerPromptSpecies, importedSets)
       : null;
-    const defenderBase = resolveParsedSpecies(structure.defender);
-    const defender = defenderBase
-      ? (resolveMegaEvolution(
-          defenderBase.id,
-          structure.defender.itemToken?.value,
-        ) ?? defenderBase)
+    const defenderSet = defenderPromptSpecies
+      ? resolveImportedSet(defenderPromptSpecies, importedSets)
       : null;
 
     // Stage values
@@ -331,10 +376,16 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
       ? (itemDisplayById.get(normalizeId(structure.defender.itemToken.value)) ??
         structure.defender.itemToken.value)
       : null;
+    const attackerItemName = attackerItemDisplay ?? attackerSet?.item ?? null;
+    const defenderItemName = defenderItemDisplay ?? defenderSet?.item ?? null;
+    const attacker = attackerPromptSpecies;
+    const defender = defenderPromptSpecies;
+    const resolvedAttackerSet = attacker ? resolveImportedSet(attacker, importedSets) : null;
+    const resolvedDefenderSet = defender ? resolveImportedSet(defender, importedSets) : null;
 
     if (side === "attacker") {
       if (!attacker) return null;
-      const importedSet = resolveImportedSet(attacker, importedSets);
+      const importedSet = resolvedAttackerSet;
       const stats = importedSet
         ? computeStats(
             attacker.baseStats,
@@ -349,14 +400,21 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
       const atkStage = moveCategory === "Special" ? 0 : attackerStatStage;
       const spaStage = moveCategory === "Physical" ? 0 : attackerStatStage;
 
-      const attackerItemName = attackerItemDisplay ?? importedSet?.item ?? null;
       const attackerChoiceBoosts = getItemStatBoosts(attackerItemName);
+      const megaTarget = attackerPromptSpecies?.isMega
+        ? (attackerPromptSpecies.baseSpeciesId
+            ? pokemonById.get(attackerPromptSpecies.baseSpeciesId) ?? null
+            : null)
+        : attackerPromptSpecies
+          ? resolveMegaEvolution(attackerPromptSpecies.id, attackerItemName ?? undefined)
+          : null;
 
       return {
         title: "Attacker",
         name: attacker.name,
         pokemonId: attacker.id,
-        spriteSources: getSpriteSources(attacker.id),
+        promptPokemonId: attackerPromptSpecies?.id ?? attacker.id,
+        spriteSources: getSpriteSources(attacker),
         ability: resolveAbilityDisplay(
           attacker,
           structure.attacker.abilityToken?.value,
@@ -364,9 +422,11 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
         move: moveName,
         activeMoveEntry: moveEntry,
         item: attackerItemName,
+        nature: importedSet?.nature ?? "Hardy",
         stats,
         isBaseStats: !importedSet,
         importedSet,
+        megaTarget,
         stageBoosts: {
           hp: 0,
           atk: atkStage,
@@ -381,7 +441,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
 
     // Defender side
     if (!defender) return null;
-    const importedSet = resolveImportedSet(defender, importedSets);
+    const importedSet = resolvedDefenderSet;
     const stats = importedSet
       ? computeStats(
           defender.baseStats,
@@ -395,14 +455,21 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
     const defStage = moveCategory === "Special" ? 0 : defenderStatStage;
     const spdStage = moveCategory === "Physical" ? 0 : defenderStatStage;
 
-    const defenderItemName = defenderItemDisplay ?? importedSet?.item ?? null;
     const defenderChoiceBoosts = getItemStatBoosts(defenderItemName);
+    const megaTarget = defenderPromptSpecies?.isMega
+      ? (defenderPromptSpecies.baseSpeciesId
+          ? pokemonById.get(defenderPromptSpecies.baseSpeciesId) ?? null
+          : null)
+      : defenderPromptSpecies
+        ? resolveMegaEvolution(defenderPromptSpecies.id, defenderItemName ?? undefined)
+        : null;
 
     return {
       title: "Defender",
       name: defender.name,
       pokemonId: defender.id,
-      spriteSources: getSpriteSources(defender.id),
+      promptPokemonId: defenderPromptSpecies?.id ?? defender.id,
+      spriteSources: getSpriteSources(defender),
       ability: resolveAbilityDisplay(
         defender,
         structure.defender.abilityToken?.value,
@@ -410,9 +477,11 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
       move: null,
       activeMoveEntry: null,
       item: defenderItemName,
+      nature: importedSet?.nature ?? "Hardy",
       stats,
       isBaseStats: !importedSet,
       importedSet,
+      megaTarget,
       stageBoosts: {
         hp: 0,
         atk: 0,
@@ -433,6 +502,26 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
       Object.values(importedSets).filter((s) => s.speciesId !== resolvedSetId),
     [importedSets, resolvedSetId],
   );
+  const editorInitialSet = useMemo(() => {
+    if (!summary) {
+      return null;
+    }
+
+    if (summary.importedSet) {
+      return summary.importedSet;
+    }
+
+    return createImportedSet({
+      speciesId: summary.promptPokemonId,
+      speciesName:
+        pokemonById.get(summary.promptPokemonId)?.name ?? summary.name,
+      item: summary.item ?? undefined,
+      ability: summary.ability ?? undefined,
+      nature: summary.nature,
+      statPoints: EMPTY_STAT_SPREAD,
+      moves: summary.move ? [summary.move] : [],
+    });
+  }, [summary]);
 
   if (!summary) {
     const importedSetList = Object.values(importedSets);
@@ -472,7 +561,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
                     type="button"
                     tabIndex={-1}
                     aria-label={`Remove ${set.speciesName}`}
-                    onClick={() => removeSet(set.speciesId)}
+                    onClick={() => handleRemoveSet(set.speciesId)}
                     className="theme-text-faint absolute right-1.5 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full text-sm opacity-0 transition-opacity group-hover:opacity-100 hover:text-(--accent-strong)"
                   >
                     ×
@@ -485,7 +574,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
               onClick={() => setImportModalOpen(true)}
               className="theme-chip mt-2 w-full rounded-2xl py-2 text-xs"
             >
-              Edit Team
+              Import / Edit Team
             </button>
           </>
         ) : (
@@ -517,8 +606,22 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
       data-testid={`${side}-summary`}
       className="theme-panel rounded-3xl p-4"
     >
-      <div className="theme-text-faint text-xs font-semibold uppercase tracking-[0.24em]">
-        {summary.title}
+      <div className="flex items-start justify-between gap-3">
+        <div className="theme-text-faint text-xs font-semibold uppercase tracking-[0.24em]">
+          {summary.title}
+        </div>
+        {summary.megaTarget && (
+          <button
+            type="button"
+            tabIndex={-1}
+            onClick={() => handleSwitchToMegaForm(summary.megaTarget!)}
+            aria-label={summary.pokemonId === summary.megaTarget.id ? "Switch to base form" : "Switch to mega form"}
+            title={summary.pokemonId === summary.megaTarget.id ? "Base form" : "Mega form"}
+            className="theme-chip flex h-8 w-8 shrink-0 items-center justify-center rounded-full p-0 text-[11px] font-bold uppercase tracking-[0.08em]"
+          >
+            M
+          </button>
+        )}
       </div>
 
       {/* Sprite + info row */}
@@ -589,19 +692,25 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
         </div>
       )}
 
-      {/* EV spread (compact, when set is imported) */}
+      {/* SP spread (compact, when set is imported) */}
       {importedSet && (
-        <div className="theme-text-faint mt-2 text-[10px]">
-          {formatEVSpread(
-            importedSet.evs ?? {
-              hp: 0,
-              atk: 0,
-              def: 0,
-              spa: 0,
-              spd: 0,
-              spe: 0,
-            },
-          )}
+        <div
+          className="theme-subpanel mt-2 grid grid-cols-6 gap-1 rounded-xl border px-2 py-1.5 font-mono text-[11px] font-semibold"
+          style={{ color: "var(--text-muted)" }}
+        >
+          {[
+            ["HP", importedSet.statPoints.hp],
+            ["Atk", importedSet.statPoints.atk],
+            ["Def", importedSet.statPoints.def],
+            ["SpA", importedSet.statPoints.spa],
+            ["SpD", importedSet.statPoints.spd],
+            ["Spe", importedSet.statPoints.spe],
+          ].map(([label, value]) => (
+            <div key={String(label)} className="min-w-0 whitespace-nowrap text-center">
+              <span>{value}</span>{" "}
+              <span className="text-[10px]">{label}</span>
+            </div>
+          ))}
         </div>
       )}
 
@@ -659,6 +768,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
               <div className="relative" ref={switchRef}>
                 <button
                   type="button"
+                  tabIndex={-1}
                   onClick={() => setSwitchOpen((o) => !o)}
                   className="theme-chip flex items-center gap-1 rounded-full px-3 py-1 text-xs"
                 >
@@ -673,6 +783,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
                       <button
                         key={s.speciesId}
                         type="button"
+                        tabIndex={-1}
                         onClick={() => {
                           handleSelectSet(s.speciesName);
                           setSwitchOpen(false);
@@ -695,30 +806,75 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
             ) : (
               <div />
             )}
-            {resolvedSetId && (
+            <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => removeSet(resolvedSetId)}
+                tabIndex={-1}
+                onClick={() => setEditorOpen(true)}
                 className="theme-chip rounded-full px-3 py-1 text-xs"
-                style={{ color: "var(--accent-text-mid)" }}
               >
-                Remove
+                Edit
               </button>
-            )}
+              {resolvedSetId && (
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  onClick={() => handleRemoveSet(resolvedSetId)}
+                  className="theme-chip rounded-full px-3 py-1 text-xs"
+                  style={{ color: "var(--accent-text-mid)" }}
+                >
+                  Remove
+                </button>
+              )}
+            </div>
           </div>
         ) : (
-          <button
-            type="button"
-            onClick={() => setImportModalOpen(true)}
-            className="theme-chip w-full rounded-2xl py-2 text-xs"
+          <div
+            className="grid gap-2 sm:grid-cols-2"
           >
-            Import Set
-          </button>
+            <button
+              type="button"
+              tabIndex={-1}
+              onClick={() => setEditorOpen(true)}
+              className="theme-chip w-full rounded-2xl py-2 text-xs"
+            >
+              Edit
+            </button>
+            <button
+              type="button"
+              tabIndex={-1}
+              onClick={() => setImportModalOpen(true)}
+              className="theme-chip w-full rounded-2xl py-2 text-xs"
+            >
+              Import Set
+            </button>
+          </div>
         )}
       </div>
 
       {importModalOpen && (
         <ImportSetModal onClose={() => setImportModalOpen(false)} />
+      )}
+      {editorOpen && editorInitialSet && (
+        <PokemonSetEditorModal
+          initialSet={editorInitialSet}
+          onClose={() => setEditorOpen(false)}
+          onSave={(nextSet) => {
+            const speciesChanged = editorInitialSet.speciesId !== nextSet.speciesId;
+            if (editorInitialSet.speciesId !== nextSet.speciesId) {
+              removeSet(editorInitialSet.speciesId);
+            }
+            saveSet(nextSet);
+            if (speciesChanged) {
+              const targetPokemon = pokemonById.get(nextSet.speciesId);
+              if (targetPokemon) {
+                setInput(rebuildInputWithSpecies(input, side, targetPokemon));
+              }
+            }
+            recompute();
+            setEditorOpen(false);
+          }}
+        />
       )}
     </aside>
   );

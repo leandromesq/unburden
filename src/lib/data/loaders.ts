@@ -83,6 +83,17 @@ const megaEvolutionPool = pokemonData
   );
 
 const megaEvolutionByBaseIdAndItem = new Map(megaEvolutionPool);
+const megaFormsByBaseId = new Map<string, PokemonEntry[]>();
+
+for (const entry of pokemonData) {
+  if (!entry.isMega || !entry.baseSpeciesId) {
+    continue;
+  }
+
+  const current = megaFormsByBaseId.get(entry.baseSpeciesId) ?? [];
+  current.push(entry);
+  megaFormsByBaseId.set(entry.baseSpeciesId, current);
+}
 
 export function resolveMegaEvolution(
   pokemonId: string,
@@ -111,4 +122,63 @@ export function resolveMegaEvolution(
   }
 
   return pokemonById.get(megaId) ?? null;
+}
+
+export function getMegaFormsForPokemon(pokemonId: string) {
+  const pokemon = pokemonById.get(pokemonId);
+
+  if (!pokemon) {
+    return [] as PokemonEntry[];
+  }
+
+  const baseId = pokemon.isMega ? pokemon.baseSpeciesId : pokemon.id;
+
+  if (!baseId) {
+    return [] as PokemonEntry[];
+  }
+
+  return megaFormsByBaseId.get(baseId) ?? [];
+}
+
+function slugifySpriteCandidate(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/['.:]/g, "")
+    .replace(/♀/g, "-f")
+    .replace(/♂/g, "-m")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function expandSpriteSlugVariants(slug: string) {
+  return [
+    slug,
+    slug.replace(/-mega-x$/i, "-megax"),
+    slug.replace(/-mega-y$/i, "-megay"),
+    slug.replace(/-rapid-strike$/i, "-rapidstrike"),
+    slug.replace(/-single-strike$/i, "-singlestrike"),
+    slug.replace(/-paldea-combat$/i, "-paldeacombat"),
+    slug.replace(/-paldea-blaze$/i, "-paldeablaze"),
+    slug.replace(/-paldea-aqua$/i, "-paldeaaqua"),
+    slug.replace(/-blood-moon$/i, "-bloodmoon"),
+    normalizeId(slug),
+  ];
+}
+
+export function getPokemonSpriteSlugs(pokemon: PokemonEntry) {
+  const rawCandidates = [
+    pokemon.name,
+    ...pokemon.aliases,
+    pokemon.id,
+  ].map(slugifySpriteCandidate);
+
+  return Array.from(
+    new Set(
+      rawCandidates.flatMap((candidate) => expandSpriteSlugVariants(candidate)),
+    ),
+  ).filter(Boolean);
+}
+
+export function getCanonicalPromptPokemonName(pokemon: PokemonEntry) {
+  return slugifySpriteCandidate(pokemon.name);
 }

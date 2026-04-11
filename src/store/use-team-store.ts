@@ -1,18 +1,16 @@
 import { create } from "zustand";
 
+import {
+  DEFAULT_IV_SPREAD,
+  EMPTY_STAT_SPREAD,
+  cloneStatSpread,
+  evsToStatPoints,
+  statPointsToCalcEvs,
+} from "@/lib/calc/stat-calc";
+import { normalizeImportedSet } from "@/lib/team/imported-set-utils";
 import type { ImportedSet } from "@/lib/types";
 
 const STORAGE_KEY = "omniboost-team";
-
-const DEFAULT_STAT_SPREAD = { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 };
-const DEFAULT_IV_SPREAD = {
-  hp: 31,
-  atk: 31,
-  def: 31,
-  spa: 31,
-  spd: 31,
-  spe: 31,
-};
 
 function sanitizeSet(raw: unknown): ImportedSet | null {
   if (!raw || typeof raw !== "object") return null;
@@ -21,25 +19,35 @@ function sanitizeSet(raw: unknown): ImportedSet | null {
     return null;
 
   return {
-    speciesId: s.speciesId,
-    speciesName: s.speciesName,
-    nickname: typeof s.nickname === "string" ? s.nickname : undefined,
-    item: typeof s.item === "string" ? s.item : undefined,
-    ability: typeof s.ability === "string" ? s.ability : undefined,
-    level: typeof s.level === "number" ? s.level : 50,
-    nature: typeof s.nature === "string" ? s.nature : "Hardy",
-    evs:
-      s.evs && typeof s.evs === "object"
-        ? { ...DEFAULT_STAT_SPREAD, ...(s.evs as object) }
-        : { ...DEFAULT_STAT_SPREAD },
-    ivs:
-      s.ivs && typeof s.ivs === "object"
-        ? { ...DEFAULT_IV_SPREAD, ...(s.ivs as object) }
-        : { ...DEFAULT_IV_SPREAD },
-    moves: Array.isArray(s.moves)
-      ? s.moves.filter((m): m is string => typeof m === "string")
-      : [],
-    teraType: typeof s.teraType === "string" ? s.teraType : undefined,
+    ...normalizeImportedSet({
+      speciesId: s.speciesId,
+      speciesName: s.speciesName,
+      nickname: typeof s.nickname === "string" ? s.nickname : undefined,
+      item: typeof s.item === "string" ? s.item : undefined,
+      ability: typeof s.ability === "string" ? s.ability : undefined,
+      level: typeof s.level === "number" ? s.level : 50,
+      nature: typeof s.nature === "string" ? s.nature : "Hardy",
+      statPoints:
+        s.statPoints && typeof s.statPoints === "object"
+          ? cloneStatSpread(s.statPoints as object, EMPTY_STAT_SPREAD)
+          : s.evs && typeof s.evs === "object"
+            ? evsToStatPoints(cloneStatSpread(s.evs as object, EMPTY_STAT_SPREAD))
+            : { ...EMPTY_STAT_SPREAD },
+      evs:
+        s.evs && typeof s.evs === "object"
+          ? cloneStatSpread(s.evs as object, EMPTY_STAT_SPREAD)
+          : s.statPoints && typeof s.statPoints === "object"
+            ? statPointsToCalcEvs(cloneStatSpread(s.statPoints as object, EMPTY_STAT_SPREAD))
+            : { ...EMPTY_STAT_SPREAD },
+      ivs:
+        s.ivs && typeof s.ivs === "object"
+          ? cloneStatSpread(s.ivs as object, DEFAULT_IV_SPREAD)
+          : { ...DEFAULT_IV_SPREAD },
+      moves: Array.isArray(s.moves)
+        ? s.moves.filter((m): m is string => typeof m === "string")
+        : [],
+      teraType: typeof s.teraType === "string" ? s.teraType : undefined,
+    }),
   };
 }
 
@@ -86,7 +94,8 @@ export const useTeamStore = create<TeamStore>()((set, get) => ({
   },
 
   saveSet: (imported) => {
-    const next = { ...get().importedSets, [imported.speciesId]: imported };
+    const normalized = normalizeImportedSet(imported);
+    const next = { ...get().importedSets, [normalized.speciesId]: normalized };
     set({ importedSets: next });
     writeStorage(next);
   },
@@ -94,7 +103,8 @@ export const useTeamStore = create<TeamStore>()((set, get) => ({
   saveSets: (sets) => {
     const next = { ...get().importedSets };
     for (const s of sets) {
-      next[s.speciesId] = s;
+      const normalized = normalizeImportedSet(s);
+      next[normalized.speciesId] = normalized;
     }
     set({ importedSets: next });
     writeStorage(next);

@@ -1,9 +1,14 @@
+import {
+  DEFAULT_IV_SPREAD,
+  EMPTY_STAT_SPREAD,
+  cloneStatSpread,
+  evsToStatPoints,
+  statPointsToCalcEvs,
+} from "@/lib/calc/stat-calc";
 import { formAliasMap, normalizeAlias, normalizeId, pokemonById } from "@/lib/data/loaders";
 import { resolvePokemonEntity } from "@/lib/parser/fuse-indexes";
+import { normalizeImportedSet } from "@/lib/team/imported-set-utils";
 import type { ImportedSet, StatSpread } from "@/lib/types";
-
-const DEFAULT_IVS: StatSpread = { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 };
-const DEFAULT_EVS: StatSpread = { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 };
 
 function parseFirstLine(line: string): { nickname?: string; species: string; item?: string } {
   // Try "[Nickname] (Species) @ Item" or "[Nickname] (Species)"
@@ -90,8 +95,9 @@ function parseOneSet(block: string): ImportedSet | null {
     ability: undefined,
     level: 50,
     nature: "Hardy",
-    evs: { ...DEFAULT_EVS },
-    ivs: { ...DEFAULT_IVS },
+    statPoints: { ...EMPTY_STAT_SPREAD },
+    evs: { ...EMPTY_STAT_SPREAD },
+    ivs: { ...DEFAULT_IV_SPREAD },
     moves: [],
     teraType: undefined,
   };
@@ -119,13 +125,21 @@ function parseOneSet(block: string): ImportedSet | null {
 
     if (line.startsWith("EVs:")) {
       const parsed = parseStatLine(line.slice(4).trim());
-      set.evs = { ...DEFAULT_EVS, ...parsed };
+      set.evs = cloneStatSpread(parsed, EMPTY_STAT_SPREAD);
+      set.statPoints = evsToStatPoints(set.evs);
+      continue;
+    }
+
+    if (line.startsWith("SPs:")) {
+      const parsed = parseStatLine(line.slice(4).trim());
+      set.statPoints = cloneStatSpread(parsed, EMPTY_STAT_SPREAD);
+      set.evs = statPointsToCalcEvs(set.statPoints);
       continue;
     }
 
     if (line.startsWith("IVs:")) {
       const parsed = parseStatLine(line.slice(4).trim());
-      set.ivs = { ...DEFAULT_IVS, ...parsed };
+      set.ivs = cloneStatSpread(parsed, DEFAULT_IV_SPREAD);
       continue;
     }
 
@@ -144,7 +158,7 @@ function parseOneSet(block: string): ImportedSet | null {
     }
   }
 
-  return set;
+  return normalizeImportedSet(set);
 }
 
 /**

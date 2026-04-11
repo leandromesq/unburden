@@ -4,7 +4,6 @@ import { calculateDamageResults } from "@/lib/calc/damage-engine";
 import {
   normalizeAlias,
   pokemonById,
-  resolveMegaEvolution,
   vgcMetaByPokemonId,
 } from "@/lib/data/loaders";
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
@@ -34,6 +33,7 @@ import type {
   SuggestionOption,
   SuggestionState,
 } from "@/lib/types";
+import { useTeamStore } from "@/store/use-team-store";
 
 type ChipScope = keyof ActiveChipTokens;
 
@@ -190,38 +190,28 @@ function deriveAutoGlobalState(input: string) {
     };
   }
 
-  const attackerResolved = attacker
-    ? (resolveMegaEvolution(attacker.id, structure.attacker.itemToken?.value) ??
-      attacker)
-    : null;
-  const defenderResolved = defender
-    ? (resolveMegaEvolution(defender.id, structure.defender.itemToken?.value) ??
-      defender)
-    : null;
   const attackerAbility = resolveScopedAbilityName(
-    attackerResolved?.id,
+    attacker?.id,
     structure.attacker.abilityToken?.value,
   );
   const defenderAbility = resolveScopedAbilityName(
-    defenderResolved?.id,
+    defender?.id,
     structure.defender.abilityToken?.value,
   );
-  const attackerFinal = attackerResolved ?? attacker;
-  const defenderFinal = defenderResolved ?? defender;
   const contextKey = [
-    attackerFinal.id,
+    attacker.id,
     normalizeAlias(attackerAbility ?? ""),
-    defenderFinal.id,
+    defender.id,
     normalizeAlias(defenderAbility ?? ""),
   ].join("|");
   const candidates = [
     {
       token: getAutoGlobalTokenForAbilityName(attackerAbility),
-      speed: attackerFinal.baseStats.spe,
+      speed: attacker.baseStats.spe,
     },
     {
       token: getAutoGlobalTokenForAbilityName(defenderAbility),
-      speed: defenderFinal.baseStats.spe,
+      speed: defender.baseStats.spe,
     },
   ]
     .map((candidate) => {
@@ -724,7 +714,10 @@ function computeState(
     activeChipTokens: buildActiveChipTokens(withAutoTokens.input),
     issues: parsedResult.issues,
     results: parsedResult.parsed
-      ? calculateDamageResults(parsedResult.parsed)
+      ? calculateDamageResults(
+          parsedResult.parsed,
+          useTeamStore.getState().importedSets,
+        )
       : [],
   };
 }

@@ -1,5 +1,26 @@
 import type { StatSpread } from "@/lib/types";
 
+export const EMPTY_STAT_SPREAD: StatSpread = {
+  hp: 0,
+  atk: 0,
+  def: 0,
+  spa: 0,
+  spd: 0,
+  spe: 0,
+};
+
+export const DEFAULT_IV_SPREAD: StatSpread = {
+  hp: 31,
+  atk: 31,
+  def: 31,
+  spa: 31,
+  spd: 31,
+  spe: 31,
+};
+
+export const MAX_STAT_POINTS = 66;
+export const MAX_STAT_POINTS_PER_STAT = 32;
+
 /** Maps nature name → { stat: multiplier } for boosted/lowered stats only */
 const NATURE_MODIFIERS: Record<string, Partial<Record<keyof Omit<StatSpread, "hp">, number>>> = {
   Hardy: {}, Docile: {}, Serious: {}, Bashful: {}, Quirky: {},
@@ -111,4 +132,109 @@ export function formatEVSpread(evs: StatSpread): string {
     .map(([key, label]) => `${evs[key]} ${label}`);
 
   return parts.length > 0 ? parts.join(" / ") : "No EVs";
+}
+
+function spreadKeys(): Array<keyof StatSpread> {
+  return ["hp", "atk", "def", "spa", "spd", "spe"];
+}
+
+export function cloneStatSpread(
+  spread: Partial<StatSpread> | undefined,
+  fallback: StatSpread = EMPTY_STAT_SPREAD,
+): StatSpread {
+  return {
+    hp: spread?.hp ?? fallback.hp,
+    atk: spread?.atk ?? fallback.atk,
+    def: spread?.def ?? fallback.def,
+    spa: spread?.spa ?? fallback.spa,
+    spd: spread?.spd ?? fallback.spd,
+    spe: spread?.spe ?? fallback.spe,
+  };
+}
+
+export function sumStatPoints(statPoints: StatSpread): number {
+  return spreadKeys().reduce((total, key) => total + statPoints[key], 0);
+}
+
+export function evsToStatPoints(evs: StatSpread): StatSpread {
+  return {
+    hp: Math.min(MAX_STAT_POINTS_PER_STAT, Math.round(evs.hp / 8)),
+    atk: Math.min(MAX_STAT_POINTS_PER_STAT, Math.round(evs.atk / 8)),
+    def: Math.min(MAX_STAT_POINTS_PER_STAT, Math.round(evs.def / 8)),
+    spa: Math.min(MAX_STAT_POINTS_PER_STAT, Math.round(evs.spa / 8)),
+    spd: Math.min(MAX_STAT_POINTS_PER_STAT, Math.round(evs.spd / 8)),
+    spe: Math.min(MAX_STAT_POINTS_PER_STAT, Math.round(evs.spe / 8)),
+  };
+}
+
+export function statPointsToCalcEvs(statPoints: StatSpread): StatSpread {
+  return {
+    hp: Math.min(252, statPoints.hp * 8),
+    atk: Math.min(252, statPoints.atk * 8),
+    def: Math.min(252, statPoints.def * 8),
+    spa: Math.min(252, statPoints.spa * 8),
+    spd: Math.min(252, statPoints.spd * 8),
+    spe: Math.min(252, statPoints.spe * 8),
+  };
+}
+
+export function clampStatPoints(statPoints: StatSpread): StatSpread {
+  const next = cloneStatSpread(statPoints);
+
+  for (const key of spreadKeys()) {
+    next[key] = Math.max(
+      0,
+      Math.min(MAX_STAT_POINTS_PER_STAT, Math.round(next[key])),
+    );
+  }
+
+  let overflow = sumStatPoints(next) - MAX_STAT_POINTS;
+
+  if (overflow <= 0) {
+    return next;
+  }
+
+  const removalOrder: Array<keyof StatSpread> = [
+    "spe",
+    "spd",
+    "spa",
+    "def",
+    "atk",
+    "hp",
+  ];
+
+  while (overflow > 0) {
+    let changed = false;
+
+    for (const key of removalOrder) {
+      if (next[key] > 0 && overflow > 0) {
+        next[key] -= 1;
+        overflow -= 1;
+        changed = true;
+      }
+    }
+
+    if (!changed) {
+      break;
+    }
+  }
+
+  return next;
+}
+
+export function formatStatPointSpread(statPoints: StatSpread): string {
+  const labels: Array<[keyof StatSpread, string]> = [
+    ["hp", "HP"],
+    ["atk", "Atk"],
+    ["def", "Def"],
+    ["spa", "SpA"],
+    ["spd", "SpD"],
+    ["spe", "Spe"],
+  ];
+
+  const parts = labels
+    .filter(([key]) => statPoints[key] > 0)
+    .map(([key, label]) => `${statPoints[key]} ${label}`);
+
+  return parts.length > 0 ? parts.join(" / ") : "0 SPs";
 }

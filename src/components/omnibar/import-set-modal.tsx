@@ -2,7 +2,9 @@
 
 import { useState, useCallback } from "react";
 
+import { formatStatPointSpread } from "@/lib/calc/stat-calc";
 import { parseShowdownSets } from "@/lib/parser/showdown-import";
+import { useOmniStore } from "@/store/use-omni-store";
 import { useTeamStore } from "@/store/use-team-store";
 import type { ImportedSet } from "@/lib/types";
 
@@ -11,20 +13,7 @@ interface ImportSetModalProps {
 }
 
 function SetPreviewCard({ set }: { set: ImportedSet }) {
-  const evParts =
-    (
-      [
-        ["hp", "HP"],
-        ["atk", "Atk"],
-        ["def", "Def"],
-        ["spa", "SpA"],
-        ["spd", "SpD"],
-        ["spe", "Spe"],
-      ] as const
-    )
-      .filter(([key]) => set.evs[key] > 0)
-      .map(([key, label]) => `${set.evs[key]} ${label}`)
-      .join(" / ") || "No EVs";
+  const statPointText = formatStatPointSpread(set.statPoints);
 
   return (
     <li className="theme-subpanel rounded-xl p-3">
@@ -48,7 +37,7 @@ function SetPreviewCard({ set }: { set: ImportedSet }) {
         {set.nature} · Lv. {set.level}
         {set.teraType ? ` · Tera: ${set.teraType}` : ""}
       </div>
-      <div className="theme-text-dim mt-0.5 text-xs">{evParts}</div>
+      <div className="theme-text-dim mt-0.5 text-xs">{statPointText}</div>
       {set.moves.length > 0 && (
         <div className="theme-text-faint mt-1 text-xs">
           {set.moves.join(" / ")}
@@ -63,6 +52,7 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
   const [parsed, setParsed] = useState<ImportedSet[]>([]);
   const [parseError, setParseError] = useState<string | null>(null);
   const saveSets = useTeamStore((state) => state.saveSets);
+  const recompute = useOmniStore((state) => state.recompute);
 
   const handleParse = useCallback(() => {
     const trimmed = text.trim();
@@ -83,9 +73,10 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
   const handleSave = useCallback(() => {
     if (parsed.length > 0) {
       saveSets(parsed);
+      recompute();
       onClose();
     }
-  }, [parsed, saveSets, onClose]);
+  }, [parsed, saveSets, recompute, onClose]);
 
   const handleBackdropClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -123,8 +114,8 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
 
         <div className="max-h-[70vh] overflow-y-auto px-6 pb-6 scrollbar-none">
           <p className="theme-text-dim mb-3 text-sm">
-            Paste a Showdown export below. Full teams (up to 6 sets separated by
-            blank lines) are supported.
+            Paste a Showdown export below. Full teams are supported, and EV
+            spreads are converted to Champions SPs automatically.
           </p>
 
           <textarea
@@ -132,7 +123,7 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
             rows={9}
             spellCheck={false}
             placeholder={
-              "Flutter Mane @ Choice Specs\nAbility: Protosynthesis\nLevel: 50\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\nIVs: 0 Atk\n- Moonblast\n- Shadow Ball\n- Calm Mind\n- Protect"
+              "Politoed @ Mystic Water\nAbility: Drizzle\nLevel: 50\nEVs: 252 HP / 100 SpA / 4 SpD / 148 Spe\nModest Nature\nIVs: 0 Atk\n- Muddy Water\n- Ice Beam\n- Protect\n- Helping Hand"
             }
             value={text}
             onChange={(e) => {

@@ -193,6 +193,7 @@ function StageControl({
           <input
             aria-label={ariaLabel}
             type="range"
+            tabIndex={-1}
             min={-6}
             max={6}
             step={1}
