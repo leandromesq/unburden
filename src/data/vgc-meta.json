@@ -143,6 +143,28 @@
     ]
   },
   {
+    "pokemonId": "charizardmegay",
+    "defaultItem": "Charizardite Y",
+    "defaultAbility": "Drought",
+    "defaultMove": "Heat Wave",
+    "commonMoves": [
+      "Heat Wave",
+      "Protect",
+      "Solar Beam",
+      "Weather Ball",
+      "Tailwind",
+      "Overheat",
+      "Air Slash",
+      "Fire Pledge"
+    ],
+    "commonAbilities": [
+      "Drought"
+    ],
+    "commonItems": [
+      "Charizardite Y"
+    ]
+  },
+  {
     "pokemonId": "clefable",
     "defaultItem": "Sitrus Berry",
     "defaultAbility": "Cute Charm",
@@ -225,6 +247,28 @@
       "Focus Sash",
       "Life Orb",
       "Leftovers"
+    ]
+  },
+  {
+    "pokemonId": "delphoxmega",
+    "defaultItem": "Delphoxite",
+    "defaultAbility": "Levitate",
+    "defaultMove": "Heat Wave",
+    "commonMoves": [
+      "Heat Wave",
+      "Protect",
+      "Psychic",
+      "Nasty Plot",
+      "Dazzling Gleam",
+      "Flamethrower",
+      "Expanding Force",
+      "Calm Mind"
+    ],
+    "commonAbilities": [
+      "Levitate"
+    ],
+    "commonItems": [
+      "Delphoxite"
     ]
   },
   {
@@ -314,6 +358,28 @@
     ]
   },
   {
+    "pokemonId": "dragonitemega",
+    "defaultItem": "Dragoninite",
+    "defaultAbility": "Multiscale",
+    "defaultMove": "Scale Shot",
+    "commonMoves": [
+      "Scale Shot",
+      "Protect",
+      "Hurricane",
+      "Tailwind",
+      "Draco Meteor",
+      "Extreme Speed",
+      "Dragon Pulse",
+      "Thunder"
+    ],
+    "commonAbilities": [
+      "Multiscale"
+    ],
+    "commonItems": [
+      "Dragoninite"
+    ]
+  },
+  {
     "pokemonId": "excadrill",
     "defaultItem": "Focus Sash",
     "defaultAbility": "Mold Breaker",
@@ -398,6 +464,28 @@
     ]
   },
   {
+    "pokemonId": "froslassmega",
+    "defaultItem": "Froslassite",
+    "defaultAbility": "Snow Warning",
+    "defaultMove": "Blizzard",
+    "commonMoves": [
+      "Blizzard",
+      "Protect",
+      "Aurora Veil",
+      "Shadow Ball",
+      "Icy Wind",
+      "Thunderbolt",
+      "Nasty Plot",
+      "Will-O-Wisp"
+    ],
+    "commonAbilities": [
+      "Snow Warning"
+    ],
+    "commonItems": [
+      "Froslassite"
+    ]
+  },
+  {
     "pokemonId": "garchomp",
     "defaultItem": "Life Orb",
     "defaultAbility": "Rough Skin",
@@ -455,6 +543,28 @@
     ]
   },
   {
+    "pokemonId": "gardevoirmega",
+    "defaultItem": "Gardevoirite",
+    "defaultAbility": "Pixilate",
+    "defaultMove": "Psychic",
+    "commonMoves": [
+      "Psychic",
+      "Hyper Voice",
+      "Protect",
+      "Trick Room",
+      "Moonblast",
+      "Calm Mind",
+      "Dazzling Gleam",
+      "Psyshock"
+    ],
+    "commonAbilities": [
+      "Pixilate"
+    ],
+    "commonItems": [
+      "Gardevoirite"
+    ]
+  },
+  {
     "pokemonId": "gengar",
     "defaultItem": "Gengarite",
     "defaultAbility": "Cursed Body",
@@ -479,6 +589,28 @@
       "Life Orb",
       "Leftovers",
       "Assault Vest"
+    ]
+  },
+  {
+    "pokemonId": "gengarmega",
+    "defaultItem": "Gengarite",
+    "defaultAbility": "Shadow Tag",
+    "defaultMove": "Sludge Bomb",
+    "commonMoves": [
+      "Sludge Bomb",
+      "Protect",
+      "Shadow Ball",
+      "Perish Song",
+      "Disable",
+      "Icy Wind",
+      "Substitute",
+      "Will-O-Wisp"
+    ],
+    "commonAbilities": [
+      "Shadow Tag"
+    ],
+    "commonItems": [
+      "Gengarite"
     ]
   },
   {
@@ -568,6 +700,28 @@
     ]
   },
   {
+    "pokemonId": "gyaradosmega",
+    "defaultItem": "Gyaradosite",
+    "defaultAbility": "Mold Breaker",
+    "defaultMove": "Earthquake",
+    "commonMoves": [
+      "Earthquake",
+      "Waterfall",
+      "Thunder Wave",
+      "Protect",
+      "Dragon Dance",
+      "Crunch",
+      "Taunt",
+      "Helping Hand"
+    ],
+    "commonAbilities": [
+      "Mold Breaker"
+    ],
+    "commonItems": [
+      "Gyaradosite"
+    ]
+  },
+  {
     "pokemonId": "incineroar",
     "defaultItem": "Sitrus Berry",
     "defaultAbility": "Intimidate",
@@ -621,6 +775,28 @@
       "Leftovers",
       "Eject Button",
       "Clear Amulet"
+    ]
+  },
+  {
+    "pokemonId": "kangaskhanmega",
+    "defaultItem": "Kangaskhanite",
+    "defaultAbility": "Parental Bond",
+    "defaultMove": "Double-Edge",
+    "commonMoves": [
+      "Double-Edge",
+      "Fake Out",
+      "Sucker Punch",
+      "Protect",
+      "Low Kick",
+      "Body Slam",
+      "Bite",
+      "Crunch"
+    ],
+    "commonAbilities": [
+      "Parental Bond"
+    ],
+    "commonItems": [
+      "Kangaskhanite"
     ]
   },
   {
@@ -764,6 +940,28 @@
     ]
   },
   {
+    "pokemonId": "meganiummega",
+    "defaultItem": "Meganiumite",
+    "defaultAbility": "Mega Sol",
+    "defaultMove": "Solar Beam",
+    "commonMoves": [
+      "Solar Beam",
+      "Protect",
+      "Weather Ball",
+      "Dazzling Gleam",
+      "Synthesis",
+      "Earth Power",
+      "Leech Seed",
+      "Giga Drain"
+    ],
+    "commonAbilities": [
+      "Mega Sol"
+    ],
+    "commonItems": [
+      "Meganiumite"
+    ]
+  },
+  {
     "pokemonId": "meowscarada",
     "defaultItem": "Focus Sash",
     "defaultAbility": "Protean",
@@ -844,6 +1042,28 @@
       "Life Orb",
       "Weakness Policy",
       "Assault Vest"
+    ]
+  },
+  {
+    "pokemonId": "metagrossmega",
+    "defaultItem": "Metagrossite",
+    "defaultAbility": "Tough Claws",
+    "defaultMove": "Meteor Mash",
+    "commonMoves": [
+      "Meteor Mash",
+      "Heavy Slam",
+      "Protect",
+      "Psychic Fangs",
+      "Stomping Tantrum",
+      "Bullet Punch",
+      "Ice Punch",
+      "Body Press"
+    ],
+    "commonAbilities": [
+      "Tough Claws"
+    ],
+    "commonItems": [
+      "Metagrossite"
     ]
   },
   {
@@ -1047,6 +1267,28 @@
     ]
   },
   {
+    "pokemonId": "raichumegay",
+    "defaultItem": "Raichunite Y",
+    "defaultAbility": "Surge Surfer",
+    "defaultMove": "Thunderbolt",
+    "commonMoves": [
+      "Thunderbolt",
+      "Fake Out",
+      "Volt Switch",
+      "Nuzzle",
+      "Protect",
+      "Thunder",
+      "Volt Tackle",
+      "Encore"
+    ],
+    "commonAbilities": [
+      "Surge Surfer"
+    ],
+    "commonItems": [
+      "Raichunite Y"
+    ]
+  },
+  {
     "pokemonId": "rotomwash",
     "defaultItem": "Sitrus Berry",
     "defaultAbility": "Levitate",
@@ -1099,6 +1341,28 @@
       "Eject Pack",
       "Leftovers",
       "Sitrus Berry"
+    ]
+  },
+  {
+    "pokemonId": "salamencemega",
+    "defaultItem": "Salamencite",
+    "defaultAbility": "Aerilate",
+    "defaultMove": "Draco Meteor",
+    "commonMoves": [
+      "Draco Meteor",
+      "Hyper Voice",
+      "Protect",
+      "Tailwind",
+      "Double-Edge",
+      "Dragon Claw",
+      "Dragon Dance",
+      "Flamethrower"
+    ],
+    "commonAbilities": [
+      "Aerilate"
+    ],
+    "commonItems": [
+      "Salamencite"
     ]
   },
   {
@@ -1329,6 +1593,28 @@
       "Chople Berry",
       "Weakness Policy",
       "Life Orb"
+    ]
+  },
+  {
+    "pokemonId": "tyranitarmega",
+    "defaultItem": "Tyranitarite",
+    "defaultAbility": "Sand Stream",
+    "defaultMove": "Earthquake",
+    "commonMoves": [
+      "Earthquake",
+      "Rock Slide",
+      "Protect",
+      "Knock Off",
+      "Low Kick",
+      "Crunch",
+      "Ice Punch",
+      "Dragon Dance"
+    ],
+    "commonAbilities": [
+      "Sand Stream"
+    ],
+    "commonItems": [
+      "Tyranitarite"
     ]
   },
   {

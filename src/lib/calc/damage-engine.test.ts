@@ -49,6 +49,35 @@ describe("damage engine", () => {
     expect(result.assumptions).toContain("Critical hit");
   });
 
+  test("applies burn to physical attacker damage", () => {
+    const neutral = parseCommand("incineroar !flare-blitz x tinkaton").parsed;
+    const burned = parseCommand("incineroar !flare-blitz burn x tinkaton").parsed;
+
+    const [neutralResult] = calculateDamageResults(neutral!);
+    const [burnedResult] = calculateDamageResults(burned!);
+
+    expect(burnedResult.maxPercentage).toBeLessThan(neutralResult.maxPercentage);
+    expect(burnedResult.assumptions).toContain("Attacker status: Burn");
+  });
+
+  test("uses the averaged default hit count for variable multi-hit moves", () => {
+    const parsed = parseCommand("maushold !population-bomb x incineroar").parsed;
+    const [result] = calculateDamageResults(parsed!);
+
+    expect(result.assumptions).toContain("Assumed hits: 10");
+  });
+
+  test("respects explicit multi-hit counts in the prompt", () => {
+    const defaultParsed = parseCommand("maushold !population-bomb x incineroar").parsed;
+    const explicitParsed = parseCommand("maushold !population-bomb(2) x incineroar").parsed;
+
+    const [defaultResult] = calculateDamageResults(defaultParsed!);
+    const [explicitResult] = calculateDamageResults(explicitParsed!);
+
+    expect(explicitResult.maxPercentage).toBeLessThan(defaultResult.maxPercentage);
+    expect(explicitResult.assumptions).toContain("Hits: 2");
+  });
+
   test("applies attacker and defender speed stages to speed-based move calculations", () => {
     const slower = parseCommand("tinkaton !gyro-ball spe-6 x incineroar spe+6").parsed;
     const faster = parseCommand("tinkaton !gyro-ball spe+6 x incineroar spe-6").parsed;

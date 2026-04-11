@@ -135,6 +135,28 @@ describe("parseCommand", () => {
     });
   });
 
+  test("parses attacker and defender status conditions by segment", () => {
+    const result = parseCommand(
+      "incineroar !flare-blitz burn x tinkaton paralysis",
+    );
+
+    expect(result.parsed).toMatchObject({
+      attackerStatus: "brn",
+      defenderStatus: "par",
+    });
+  });
+
+  test("parses explicit multi-hit counts on attacker moves", () => {
+    const result = parseCommand("maushold !population-bomb(4) x incineroar");
+
+    expect(result.parsed).toMatchObject({
+      attacker: "Maushold",
+      move: "Population Bomb",
+      moveHitCount: 4,
+      defender: "Incineroar",
+    });
+  });
+
   test("parses explicit mega species names as attacker entities", () => {
     const result = parseCommand("charizard-mega-y !heat-wave x tinkaton");
 

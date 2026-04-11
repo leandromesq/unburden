@@ -55,6 +55,31 @@
     "defaultFormOf": "abomasnow"
   },
   {
+    "id": "absol",
+    "name": "Absol",
+    "aliases": [
+      "absol"
+    ],
+    "types": [
+      "Dark"
+    ],
+    "abilities": [
+      "Pressure",
+      "Super Luck",
+      "Justified"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "absol",
+    "baseStats": {
+      "hp": 65,
+      "atk": 130,
+      "def": 60,
+      "spa": 75,
+      "spd": 60,
+      "spe": 75
+    }
+  },
+  {
     "id": "absolmega",
     "name": "Absol-Mega",
     "aliases": [
@@ -108,6 +133,32 @@
     }
   },
   {
+    "id": "aerodactyl",
+    "name": "Aerodactyl",
+    "aliases": [
+      "aerodactyl"
+    ],
+    "types": [
+      "Rock",
+      "Flying"
+    ],
+    "abilities": [
+      "Rock Head",
+      "Pressure",
+      "Unnerve"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "aerodactyl",
+    "baseStats": {
+      "hp": 80,
+      "atk": 105,
+      "def": 65,
+      "spa": 60,
+      "spd": 75,
+      "spe": 130
+    }
+  },
+  {
     "id": "aerodactylmega",
     "name": "Aerodactyl-Mega",
     "aliases": [
@@ -136,6 +187,32 @@
       "spe": 150
     },
     "defaultFormOf": "aerodactyl"
+  },
+  {
+    "id": "aggron",
+    "name": "Aggron",
+    "aliases": [
+      "aggron"
+    ],
+    "types": [
+      "Steel",
+      "Rock"
+    ],
+    "abilities": [
+      "Sturdy",
+      "Rock Head",
+      "Heavy Metal"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "aggron",
+    "baseStats": {
+      "hp": 70,
+      "atk": 110,
+      "def": 180,
+      "spa": 60,
+      "spd": 60,
+      "spe": 50
+    }
   },
   {
     "id": "aggronmega",
@@ -189,6 +266,31 @@
       "spa": 40,
       "spd": 55,
       "spe": 85
+    }
+  },
+  {
+    "id": "alakazam",
+    "name": "Alakazam",
+    "aliases": [
+      "alakazam"
+    ],
+    "types": [
+      "Psychic"
+    ],
+    "abilities": [
+      "Synchronize",
+      "Inner Focus",
+      "Magic Guard"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "alakazam",
+    "baseStats": {
+      "hp": 55,
+      "atk": 50,
+      "def": 45,
+      "spa": 135,
+      "spd": 95,
+      "spe": 120
     }
   },
   {
@@ -1315,6 +1417,31 @@
     "defaultFormOf": "articuno"
   },
   {
+    "id": "audino",
+    "name": "Audino",
+    "aliases": [
+      "audino"
+    ],
+    "types": [
+      "Normal"
+    ],
+    "abilities": [
+      "Healer",
+      "Regenerator",
+      "Klutz"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "audino",
+    "baseStats": {
+      "hp": 103,
+      "atk": 60,
+      "def": 86,
+      "spa": 60,
+      "spd": 86,
+      "spe": 50
+    }
+  },
+  {
     "id": "audinomega",
     "name": "Audino-Mega",
     "aliases": [
@@ -1926,6 +2053,31 @@
       "spa": 70,
       "spd": 80,
       "spe": 50
+    }
+  },
+  {
+    "id": "beedrill",
+    "name": "Beedrill",
+    "aliases": [
+      "beedrill"
+    ],
+    "types": [
+      "Bug",
+      "Poison"
+    ],
+    "abilities": [
+      "Swarm",
+      "Sniper"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "beedrill",
+    "baseStats": {
+      "hp": 65,
+      "atk": 90,
+      "def": 40,
+      "spa": 45,
+      "spd": 80,
+      "spe": 75
     }
   },
   {
@@ -3051,8 +3203,6 @@
       "Fire"
     ],
     "abilities": [
-      "Flash Fire",
-      "Flame Body",
       "Infiltrator"
     ],
     "isMega": true,
@@ -3715,9 +3865,7 @@
       "Flying"
     ],
     "abilities": [
-      "Cute Charm",
-      "Magic Guard",
-      "Unaware"
+      "Magic Bounce"
     ],
     "isMega": true,
     "requiredItem": "Clefablite",
@@ -4197,9 +4345,7 @@
       "Ice"
     ],
     "abilities": [
-      "Hyper Cutter",
-      "Iron Fist",
-      "Anger Point"
+      "Iron Fist"
     ],
     "isMega": true,
     "requiredItem": "Crabominite",
@@ -5622,7 +5768,6 @@
       "Flying"
     ],
     "abilities": [
-      "Inner Focus",
       "Multiscale"
     ],
     "isMega": true,
@@ -5665,6 +5810,32 @@
     }
   },
   {
+    "id": "drampa",
+    "name": "Drampa",
+    "aliases": [
+      "drampa"
+    ],
+    "types": [
+      "Normal",
+      "Dragon"
+    ],
+    "abilities": [
+      "Berserk",
+      "Sap Sipper",
+      "Cloud Nine"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "drampa",
+    "baseStats": {
+      "hp": 78,
+      "atk": 60,
+      "def": 85,
+      "spa": 135,
+      "spd": 91,
+      "spe": 36
+    }
+  },
+  {
     "id": "drampamega",
     "name": "Drampa-Mega",
     "aliases": [
@@ -5679,9 +5850,7 @@
       "Dragon"
     ],
     "abilities": [
-      "Berserk",
-      "Sap Sipper",
-      "Cloud Nine"
+      "Berserk"
     ],
     "isMega": true,
     "requiredItem": "Drampanite",
@@ -6523,8 +6692,7 @@
       "Fighting"
     ],
     "abilities": [
-      "Blaze",
-      "Reckless"
+      "Mold Breaker"
     ],
     "isMega": true,
     "requiredItem": "Emboarite",
@@ -6780,9 +6948,7 @@
       "Steel"
     ],
     "abilities": [
-      "Sand Rush",
-      "Sand Force",
-      "Mold Breaker"
+      "Piercing Drill"
     ],
     "isMega": true,
     "requiredItem": "Excadrite",
@@ -7044,8 +7210,7 @@
       "Dragon"
     ],
     "abilities": [
-      "Torrent",
-      "Sheer Force"
+      "Dragonize"
     ],
     "isMega": true,
     "requiredItem": "Feraligite",
@@ -7453,8 +7618,7 @@
       "Fairy"
     ],
     "abilities": [
-      "Flower Veil",
-      "Symbiosis"
+      "Fairy Aura"
     ],
     "isMega": true,
     "requiredItem": "Floettite",
@@ -7778,8 +7942,7 @@
       "Ghost"
     ],
     "abilities": [
-      "Snow Cloak",
-      "Cursed Body"
+      "Snow Warning"
     ],
     "isMega": true,
     "requiredItem": "Froslassite",
@@ -8642,8 +8805,7 @@
       "Poison"
     ],
     "abilities": [
-      "Toxic Debris",
-      "Corrosion"
+      "Adaptability"
     ],
     "isMega": true,
     "requiredItem": "Glimmoranite",
@@ -8911,9 +9073,7 @@
       "Ghost"
     ],
     "abilities": [
-      "Iron Fist",
-      "Klutz",
-      "No Guard"
+      "Unseen Fist"
     ],
     "isMega": true,
     "requiredItem": "Golurkite",
@@ -10000,9 +10160,7 @@
       "Flying"
     ],
     "abilities": [
-      "Limber",
-      "Unburden",
-      "Mold Breaker"
+      "No Guard"
     ],
     "isMega": true,
     "requiredItem": "Hawluchanite",
@@ -12460,6 +12618,31 @@
     }
   },
   {
+    "id": "lopunny",
+    "name": "Lopunny",
+    "aliases": [
+      "lopunny"
+    ],
+    "types": [
+      "Normal"
+    ],
+    "abilities": [
+      "Cute Charm",
+      "Klutz",
+      "Limber"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "lopunny",
+    "baseStats": {
+      "hp": 65,
+      "atk": 76,
+      "def": 84,
+      "spa": 54,
+      "spd": 96,
+      "spe": 105
+    }
+  },
+  {
     "id": "lopunnymega",
     "name": "Lopunny-Mega",
     "aliases": [
@@ -13316,6 +13499,31 @@
     }
   },
   {
+    "id": "manectric",
+    "name": "Manectric",
+    "aliases": [
+      "manectric"
+    ],
+    "types": [
+      "Electric"
+    ],
+    "abilities": [
+      "Static",
+      "Lightning Rod",
+      "Minus"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "manectric",
+    "baseStats": {
+      "hp": 70,
+      "atk": 75,
+      "def": 60,
+      "spa": 105,
+      "spd": 60,
+      "spe": 105
+    }
+  },
+  {
     "id": "manectricmega",
     "name": "Manectric-Mega",
     "aliases": [
@@ -13723,8 +13931,7 @@
       "Fairy"
     ],
     "abilities": [
-      "Overgrow",
-      "Leaf Guard"
+      "Mega Sol"
     ],
     "isMega": true,
     "requiredItem": "Meganiumite",
@@ -16301,6 +16508,32 @@
     }
   },
   {
+    "id": "pidgeot",
+    "name": "Pidgeot",
+    "aliases": [
+      "pidgeot"
+    ],
+    "types": [
+      "Normal",
+      "Flying"
+    ],
+    "abilities": [
+      "Keen Eye",
+      "Tangled Feet",
+      "Big Pecks"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "pidgeot",
+    "baseStats": {
+      "hp": 83,
+      "atk": 80,
+      "def": 75,
+      "spa": 70,
+      "spd": 70,
+      "spe": 101
+    }
+  },
+  {
     "id": "pidgeotmega",
     "name": "Pidgeot-Mega",
     "aliases": [
@@ -16701,6 +16934,31 @@
       "spa": 35,
       "spd": 35,
       "spe": 15
+    }
+  },
+  {
+    "id": "pinsir",
+    "name": "Pinsir",
+    "aliases": [
+      "pinsir"
+    ],
+    "types": [
+      "Bug"
+    ],
+    "abilities": [
+      "Hyper Cutter",
+      "Mold Breaker",
+      "Moxie"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "pinsir",
+    "baseStats": {
+      "hp": 65,
+      "atk": 125,
+      "def": 100,
+      "spa": 55,
+      "spd": 70,
+      "spe": 85
     }
   },
   {
@@ -19249,9 +19507,7 @@
       "Fire"
     ],
     "abilities": [
-      "Chlorophyll",
-      "Insomnia",
-      "Moody"
+      "Spicy Spray"
     ],
     "isMega": true,
     "requiredItem": "Scovillainite",
@@ -19597,6 +19853,31 @@
       "spa": 40,
       "spd": 60,
       "spe": 42
+    }
+  },
+  {
+    "id": "sharpedo",
+    "name": "Sharpedo",
+    "aliases": [
+      "sharpedo"
+    ],
+    "types": [
+      "Water",
+      "Dark"
+    ],
+    "abilities": [
+      "Rough Skin",
+      "Speed Boost"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "sharpedo",
+    "baseStats": {
+      "hp": 70,
+      "atk": 120,
+      "def": 40,
+      "spa": 95,
+      "spd": 40,
+      "spe": 95
     }
   },
   {
@@ -20078,9 +20359,7 @@
       "Flying"
     ],
     "abilities": [
-      "Keen Eye",
-      "Sturdy",
-      "Weak Armor"
+      "Stalwart"
     ],
     "isMega": true,
     "requiredItem": "Skarmorite",
@@ -21391,6 +21670,32 @@
     }
   },
   {
+    "id": "starmie",
+    "name": "Starmie",
+    "aliases": [
+      "starmie"
+    ],
+    "types": [
+      "Water",
+      "Psychic"
+    ],
+    "abilities": [
+      "Illuminate",
+      "Natural Cure",
+      "Analytic"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "starmie",
+    "baseStats": {
+      "hp": 60,
+      "atk": 75,
+      "def": 85,
+      "spa": 100,
+      "spd": 85,
+      "spe": 115
+    }
+  },
+  {
     "id": "starmiemega",
     "name": "Starmie-Mega",
     "aliases": [
@@ -21405,9 +21710,7 @@
       "Psychic"
     ],
     "abilities": [
-      "Illuminate",
-      "Natural Cure",
-      "Analytic"
+      "Huge Power"
     ],
     "isMega": true,
     "requiredItem": "Starminite",
@@ -21421,6 +21724,32 @@
       "spe": 120
     },
     "defaultFormOf": "starmie"
+  },
+  {
+    "id": "steelix",
+    "name": "Steelix",
+    "aliases": [
+      "steelix"
+    ],
+    "types": [
+      "Steel",
+      "Ground"
+    ],
+    "abilities": [
+      "Rock Head",
+      "Sturdy",
+      "Sheer Force"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "steelix",
+    "baseStats": {
+      "hp": 75,
+      "atk": 85,
+      "def": 200,
+      "spa": 55,
+      "spd": 65,
+      "spe": 30
+    }
   },
   {
     "id": "steelixmega",
@@ -23722,8 +24051,7 @@
       "Poison"
     ],
     "abilities": [
-      "Chlorophyll",
-      "Gluttony"
+      "Innards Out"
     ],
     "isMega": true,
     "requiredItem": "Victreebelite",

@@ -1,4 +1,4 @@
-import { Field, Move, Pokemon, calculate } from "@smogon/calc";
+import { Field, Generations, Move, Pokemon, calculate } from "@smogon/calc";
 
 import { buildCustomSetArchetypeConfig, getArchetypeConfigs } from "@/lib/calc/archetypes";
 import { DEFAULT_IV_SPREAD, EMPTY_STAT_SPREAD, cloneStatSpread } from "@/lib/calc/stat-calc";
@@ -6,7 +6,15 @@ import { normalizeKoText } from "@/lib/calc/ko-text";
 import { moveById, normalizeId, pokemonById } from "@/lib/data/loaders";
 import { inferDefaultAbility } from "@/lib/parser/inference";
 import { resolveImportedSet } from "@/lib/team/imported-set-utils";
-import type { DamageResult, ImportedSet, ParsedCommand, StatSpread } from "@/lib/types";
+import type {
+  DamageResult,
+  ImportedSet,
+  ParsedCommand,
+  PokemonStatus,
+  StatSpread,
+} from "@/lib/types";
+
+const GEN_9 = Generations.get(9);
 
 function roundPercent(value: number) {
   return Number(value.toFixed(1));
@@ -58,6 +66,52 @@ function getTerrain(parsed: ParsedCommand) {
   }
 
   return undefined;
+}
+
+function formatStatusLabel(status: PokemonStatus) {
+  switch (status) {
+    case "brn":
+      return "Burn";
+    case "par":
+      return "Paralysis";
+    case "psn":
+      return "Poison";
+    case "slp":
+      return "Sleep";
+    case "frz":
+      return "Freeze";
+  }
+}
+
+function getMoveHitMetadata(moveName: string) {
+  const moveId = normalizeId(moveName) as Parameters<typeof GEN_9.moves.get>[0];
+  const moveData = GEN_9.moves.get(moveId);
+
+  if (!moveData?.multihit) {
+    return {
+      hitCount: undefined,
+      isVariable: false,
+    };
+  }
+
+  if (Array.isArray(moveData.multihit)) {
+    return {
+      hitCount: Math.round((moveData.multihit[0] + moveData.multihit[1]) / 2),
+      isVariable: true,
+    };
+  }
+
+  if (moveData.id === "populationbomb") {
+    return {
+      hitCount: 10,
+      isVariable: true,
+    };
+  }
+
+  return {
+    hitCount: moveData.multihit,
+    isVariable: false,
+  };
 }
 
 type ValueSource = "prompt" | "set" | "default" | "archetype";
@@ -305,6 +359,8 @@ function describeAssumptions(
   moveCategory: string,
   attackerSet: ImportedSet | null,
   defenderSet: ImportedSet | null,
+  resolvedMoveHitCount: number | undefined,
+  isVariableHitMove: boolean,
 ) {
   const assumptions: string[] = [];
   const hasWeatherBoost = parsed.globalEffects.includes("sun");
@@ -372,6 +428,14 @@ function describeAssumptions(
     assumptions.push(`Defender HP: ${parsed.defenderCurrentHpPercent}%`);
   }
 
+  if (parsed.attackerStatus) {
+    assumptions.push(`Attacker status: ${formatStatusLabel(parsed.attackerStatus)}`);
+  }
+
+  if (parsed.defenderStatus) {
+    assumptions.push(`Defender status: ${formatStatusLabel(parsed.defenderStatus)}`);
+  }
+
   if (attackerSet) {
     assumptions.push(`Set SPs: ${attackerSet.statPoints.hp}/${attackerSet.statPoints.atk}/${attackerSet.statPoints.def}/${attackerSet.statPoints.spa}/${attackerSet.statPoints.spd}/${attackerSet.statPoints.spe}`);
   }
@@ -420,6 +484,14 @@ function describeAssumptions(
 
   if (parsed.isDoubleTarget) {
     assumptions.push("Spread move: 0.75x doubles modifier");
+  }
+
+  if (parsed.moveHitCount && resolvedMoveHitCount && resolvedMoveHitCount > 1) {
+    assumptions.push(
+      `Hits: ${resolvedMoveHitCount}`,
+    );
+  } else if (isVariableHitMove && resolvedMoveHitCount && resolvedMoveHitCount > 1) {
+    assumptions.push(`Assumed hits: ${resolvedMoveHitCount}`);
   }
 
   if (parsed.isCriticalHit) {
@@ -477,6 +549,8 @@ export function buildCalculationContext(
     ?? defenderSet?.ability
     ?? inferDefaultAbility(defender.id)
     ?? undefined;
+  const moveHitMetadata = getMoveHitMetadata(parsed.move);
+  const moveHitCount = parsed.moveHitCount ?? moveHitMetadata.hitCount;
   const attackerAbilitySource: ValueSource = parsed.attackerAbility
     ? "prompt"
     : attackerSet?.ability
@@ -513,9 +587,9 @@ export function buildCalculationContext(
     level: attackerSet?.level ?? 50,
     ability: attackerAbility,
     item: attackerItem,
-    nature: parsed.attackerNature ?? attackerSet?.nature ?? "Hardy",
-    ivs: buildBaseIvs(attackerSet, parsed.globalEffects.includes("trick_room")),
-    evs: buildBaseEvs(attackerSet, {
+      nature: parsed.attackerNature ?? attackerSet?.nature ?? "Hardy",
+      ivs: buildBaseIvs(attackerSet, parsed.globalEffects.includes("trick_room")),
+      evs: buildBaseEvs(attackerSet, {
       hp: 4,
       atk: attackInvestment === "atk" ? 252 : 0,
       def: 0,
@@ -523,13 +597,14 @@ export function buildCalculationContext(
       spd: 0,
       spe: 0,
     }),
-    boosts: {
-      atk: move.category === "Physical" ? parsed.attackerStatMod : 0,
-      spa: move.category === "Special" ? parsed.attackerStatMod : 0,
-      spe: parsed.attackerSpeedMod,
-    },
-    moves: [parsed.move],
-  };
+      boosts: {
+        atk: move.category === "Physical" ? parsed.attackerStatMod : 0,
+        spa: move.category === "Special" ? parsed.attackerStatMod : 0,
+        spe: parsed.attackerSpeedMod,
+      },
+      status: parsed.attackerStatus,
+      moves: [parsed.move],
+    };
   const attackerPreview = new Pokemon(9, attacker.name, attackerBaseOptions);
   const attackerPokemon = new Pokemon(9, attacker.name, {
     ...attackerBaseOptions,
@@ -579,7 +654,10 @@ export function buildCalculationContext(
       move.category,
       attackerSet,
       defenderSet,
+      moveHitCount,
+      moveHitMetadata.isVariable,
     ),
+    moveHitCount,
   };
 }
 
@@ -620,6 +698,7 @@ export function calculateDamageResults(
             spd: context.move.category === "Special" ? parsed.defenderStatMod : 0,
             spe: parsed.defenderSpeedMod,
           },
+          status: parsed.defenderStatus,
         }).maxHP(),
         parsed.defenderCurrentHpPercent,
       ),
@@ -634,6 +713,7 @@ export function calculateDamageResults(
         spd: context.move.category === "Special" ? parsed.defenderStatMod : 0,
         spe: parsed.defenderSpeedMod,
       },
+      status: parsed.defenderStatus,
     });
 
     const result = calculate(
@@ -642,6 +722,7 @@ export function calculateDamageResults(
       defenderPokemon,
       new Move(9, parsed.move, {
         ability: context.attackerAbility,
+        hits: context.moveHitCount,
         item: context.attackerItem,
         isCrit: parsed.isCriticalHit,
         species: context.attacker.name,

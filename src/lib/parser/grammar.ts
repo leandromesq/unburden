@@ -1,6 +1,7 @@
 import type {
   ActiveChipTokens,
   GlobalEffect,
+  PokemonStatus,
   SideEffect,
   VgcMetaProfile,
 } from "@/lib/types";
@@ -10,6 +11,7 @@ export type ModifierSection =
   | "multipliers"
   | "stats"
   | "move_effects"
+  | "status"
   | "weather"
   | "terrain"
   | "field_effects";
@@ -24,11 +26,13 @@ export interface ModifierDefinition {
     | "speed_mod"
     | "nature"
     | "investment"
+    | "status"
     | "side_effect"
     | "global_effect";
   statMod?: number;
   nature?: string;
   investment?: "max_atk" | "max_spa" | "max_def" | "max_spd";
+  status?: PokemonStatus;
   sideEffect?: SideEffect;
   globalEffect?: GlobalEffect;
 }
@@ -55,7 +59,57 @@ const MODIFIER_ALIASES = new Map<string, string>([
   ["speed-4", "spe-4"],
   ["speed-5", "spe-5"],
   ["speed-6", "spe-6"],
+  ["brn", "burn"],
+  ["par", "paralysis"],
+  ["psn", "poison"],
+  ["slp", "sleep"],
+  ["frz", "freeze"],
 ]);
+
+function buildStatusDefinitions(scope: "attacker" | "defender") {
+  return [
+    {
+      scope,
+      token: "burn",
+      label: "Burn",
+      section: "status",
+      kind: "status",
+      status: "brn",
+    },
+    {
+      scope,
+      token: "paralysis",
+      label: "Paralysis",
+      section: "status",
+      kind: "status",
+      status: "par",
+    },
+    {
+      scope,
+      token: "poison",
+      label: "Poison",
+      section: "status",
+      kind: "status",
+      status: "psn",
+    },
+    {
+      scope,
+      token: "sleep",
+      label: "Sleep",
+      section: "status",
+      kind: "status",
+      status: "slp",
+    },
+    {
+      scope,
+      token: "freeze",
+      label: "Freeze",
+      section: "status",
+      kind: "status",
+      status: "frz",
+    },
+  ] satisfies ModifierDefinition[];
+}
 
 function buildStageDefinitions(scope: "attacker" | "defender") {
   const stages: ModifierDefinition[] = [];
@@ -105,6 +159,7 @@ function buildSpeedStageDefinitions(scope: "attacker" | "defender") {
 const ATTACKER_MODIFIERS: ModifierDefinition[] = [
   ...buildStageDefinitions("attacker"),
   ...buildSpeedStageDefinitions("attacker"),
+  ...buildStatusDefinitions("attacker"),
   {
     scope: "attacker",
     token: "max-atk",
@@ -174,6 +229,7 @@ const ATTACKER_MODIFIERS: ModifierDefinition[] = [
 const DEFENDER_MODIFIERS: ModifierDefinition[] = [
   ...buildStageDefinitions("defender"),
   ...buildSpeedStageDefinitions("defender"),
+  ...buildStatusDefinitions("defender"),
   {
     scope: "defender",
     token: "max-def",

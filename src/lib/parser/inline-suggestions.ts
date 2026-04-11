@@ -53,6 +53,17 @@ function formatMoveToken(moveId: string) {
   return `!${slugifySymbolValue(moveId)}`;
 }
 
+function splitMoveFragment(raw: string) {
+  const value = raw.toLowerCase().startsWith("m:") ? raw.slice(2) : raw.slice(1);
+  const hitSuffixMatch = value.match(/\(\d*\)?$/);
+  const hitSuffix = hitSuffixMatch?.[0] ?? "";
+
+  return {
+    moveFragment: hitSuffix ? value.slice(0, -hitSuffix.length) : value,
+    hitSuffix,
+  };
+}
+
 function formatItemToken(itemName: string) {
   return `@${slugifySymbolValue(itemName)}`;
 }
@@ -278,9 +289,10 @@ function getSlotSuggestions(input: string, cursorIndex = input.length): Autocomp
     );
 
     if ((raw.toLowerCase().startsWith("m:") || raw.startsWith("!")) && attackerResolved) {
-      const query = raw.toLowerCase().startsWith("m:") ? raw.slice(2) : raw.slice(1);
+      const { moveFragment, hitSuffix } = splitMoveFragment(raw);
+      const query = moveFragment;
       const options = getSuggestedMoves(attackerResolved.entry.id, query, 8).map((move) => {
-        const token = formatMoveToken(move.name);
+        const token = `${formatMoveToken(move.name)}${hitSuffix}`;
         return {
           type: "move",
           value: token,

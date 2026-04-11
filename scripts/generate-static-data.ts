@@ -3,6 +3,7 @@ import path from "node:path";
 
 import { Generations } from "@pkmn/data";
 import { Dex } from "@pkmn/dex";
+import regulationMA from "../src/data/regulations/regulation-m-a.json";
 
 type PokemonEntry = {
   id: string;
@@ -62,6 +63,8 @@ type SpeciesSource = {
 
 const PIKALYTICS_AI_BASE_URL = "https://www.pikalytics.com/ai/pokedex";
 const DEFAULT_CHAMPIONS_FORMAT = "championspreview";
+const SEREBII_CHAMPIONS_MEGA_ABILITIES_URL =
+  "https://www.serebii.net/pokemonchampions/megaabilities.shtml";
 const EXTRA_SPECIES_NAMES = ["Floette-Eternal"];
 const SPECIAL_BASE_SPECIES_IDS = new Map<string, string>([
   ["floettemega", "floetteeternal"],
@@ -75,9 +78,13 @@ function normalizeAlias(value: string) {
     .trim();
 }
 
+function compactAlias(value: string) {
+  return normalizeAlias(value).replace(/\s+/g, "");
+}
+
 function aliasVariants(value: string) {
   const normalized = normalizeAlias(value);
-  const compact = normalized.replace(/\s+/g, "");
+  const compact = compactAlias(value);
 
   return Array.from(
     new Set(
@@ -135,6 +142,58 @@ function shouldAddBaseSpeciesAliases(species: SpeciesSource) {
   }
 
   return species.baseSpecies && species.baseSpecies !== species.name && !species.isMega;
+}
+
+function buildSpeciesIdIndex(speciesPool: Iterable<SpeciesSource>) {
+  const index = new Map<string, string>();
+
+  for (const species of speciesPool) {
+    const aliases = new Set<string>();
+
+    for (const alias of aliasVariants(species.name)) {
+      aliases.add(alias);
+    }
+
+    for (const alias of megaAliasVariants(species)) {
+      aliases.add(alias);
+    }
+
+    for (const alias of specialAliasVariants(species)) {
+      aliases.add(alias);
+    }
+
+    if (shouldAddBaseSpeciesAliases(species)) {
+      for (const alias of aliasVariants(species.baseSpecies)) {
+        aliases.add(alias);
+      }
+    }
+
+    aliases.add(species.id);
+
+    for (const alias of aliases) {
+      const normalized = compactAlias(alias);
+
+      if (!normalized || index.has(normalized)) {
+        continue;
+      }
+
+      index.set(normalized, species.id);
+    }
+  }
+
+  return index;
+}
+
+function parseChampionsMegaAbilities(markdownOrHtml: string) {
+  const megaAbilities = new Map<string, string>();
+  const matcher =
+    /<a href="\/pokedex-champions\/[^"]+\/">(Mega [^<]+)<\/a>[\s\S]*?<a href="\/abilitydex\/[^"]+\.shtml">([^<]+)<\/a>/g;
+
+  for (const match of markdownOrHtml.matchAll(matcher)) {
+    megaAbilities.set(match[1].trim(), match[2].trim());
+  }
+
+  return megaAbilities;
 }
 
 async function fetchText(url: string) {
@@ -237,6 +296,9 @@ async function main() {
   const championsIndexMarkdown = await fetchText(
     `${PIKALYTICS_AI_BASE_URL}/${DEFAULT_CHAMPIONS_FORMAT}`,
   );
+  const championsMegaAbilitiesHtml = await fetchText(
+    SEREBII_CHAMPIONS_MEGA_ABILITIES_URL,
+  );
   const championSpeciesNames = parseIndexSpeciesNames(championsIndexMarkdown);
 
   await mkdir(dataDir, { recursive: true });
@@ -274,6 +336,39 @@ async function main() {
     }
 
     speciesPool.set(species.id, toSpeciesSource(species));
+  }
+
+  for (const pokemonId of regulationMA.allowedPokemonIds) {
+    const species = Dex.species.get(pokemonId);
+
+    if (!species.exists) {
+      continue;
+    }
+
+    speciesPool.set(species.id, toSpeciesSource(species));
+  }
+
+  const speciesIdIndex = buildSpeciesIdIndex(speciesPool.values());
+  const championsMegaAbilities = parseChampionsMegaAbilities(
+    championsMegaAbilitiesHtml,
+  );
+
+  for (const [displayName, abilityName] of championsMegaAbilities) {
+    const speciesId = speciesIdIndex.get(compactAlias(displayName));
+
+    if (!speciesId) {
+      continue;
+    }
+
+    const species = speciesPool.get(speciesId);
+
+    if (!species?.isMega) {
+      continue;
+    }
+
+    species.abilities = {
+      0: abilityName,
+    };
   }
 
   for (const species of speciesPool.values()) {

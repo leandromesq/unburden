@@ -24,6 +24,8 @@ interface SymbolToken {
   kind: "move" | "item" | "ability" | "modifier" | "hp" | "critical" | "unknown";
   scope?: "attacker" | "defender" | "global";
   value: string;
+  hits?: number;
+  hitCountInvalid?: boolean;
   source: LexToken;
 }
 
@@ -64,6 +66,33 @@ function isExplicitToken(token: LexToken) {
   return /^(m:|!|@|~|\*|%|\[)/i.test(token.normalized);
 }
 
+function parseMoveSymbol(raw: string) {
+  const body = raw.startsWith("!") ? raw.slice(1) : raw.slice(2);
+  const match = body.match(/^(.*?)(?:\((\d{1,2})\))?$/);
+
+  if (!match) {
+    return null;
+  }
+
+  const [, moveBody, hitCountText] = match;
+  const value = slugifySymbolValue(moveBody);
+
+  if (!value) {
+    return null;
+  }
+
+  const parsedHitCount = hitCountText ? Number(hitCountText) : undefined;
+  const hitCountInvalid =
+    parsedHitCount !== undefined &&
+    (!Number.isInteger(parsedHitCount) || parsedHitCount < 1 || parsedHitCount > 10);
+
+  return {
+    value,
+    hits: hitCountInvalid ? undefined : parsedHitCount,
+    hitCountInvalid,
+  };
+}
+
 function parseExplicitSymbolToken(
   token: LexToken,
   side: "attacker" | "defender",
@@ -81,13 +110,19 @@ function parseExplicitSymbolToken(
   }
 
   if (token.normalized.startsWith("m:") || token.normalized.startsWith("!")) {
+    const parsedMove = parseMoveSymbol(token.raw);
+
+    if (!parsedMove) {
+      return null;
+    }
+
     return {
       raw: token.raw,
       normalized: token.normalized,
       kind: "move",
-      value: slugifySymbolValue(
-        token.normalized.startsWith("m:") ? token.raw.slice(2) : token.raw.slice(1),
-      ),
+      value: parsedMove.value,
+      hits: parsedMove.hits,
+      hitCountInvalid: parsedMove.hitCountInvalid,
       source: token,
     };
   }

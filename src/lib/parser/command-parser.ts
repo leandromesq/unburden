@@ -87,6 +87,8 @@ function parseModifierCollections(
   let defenderSpeedMod = 0;
   let attackerNature: string | undefined;
   let defenderNature: string | undefined;
+  let attackerStatus: ParsedCommand["attackerStatus"];
+  let defenderStatus: ParsedCommand["defenderStatus"];
   let attackerInvestment: ParsedCommand["attackerInvestment"] = "auto";
   let defenderInvestment: ParsedCommand["defenderInvestment"] = "auto";
   const attackerSideEffects = new Set<ParsedCommand["attackerSideEffects"][number]>();
@@ -105,6 +107,8 @@ function parseModifierCollections(
       attackerSpeedMod += definition.statMod ?? 0;
     } else if (definition.kind === "nature") {
       attackerNature = definition.nature;
+    } else if (definition.kind === "status") {
+      attackerStatus = definition.status;
     } else if (definition.kind === "investment") {
       attackerInvestment = definition.investment as ParsedCommand["attackerInvestment"];
     } else if (definition.kind === "side_effect" && definition.sideEffect) {
@@ -124,6 +128,8 @@ function parseModifierCollections(
       defenderSpeedMod += definition.statMod ?? 0;
     } else if (definition.kind === "nature") {
       defenderNature = definition.nature;
+    } else if (definition.kind === "status") {
+      defenderStatus = definition.status;
     } else if (definition.kind === "investment") {
       defenderInvestment = definition.investment as ParsedCommand["defenderInvestment"];
     } else if (definition.kind === "side_effect" && definition.sideEffect) {
@@ -145,6 +151,8 @@ function parseModifierCollections(
     defenderSpeedMod: Math.max(-6, Math.min(6, defenderSpeedMod)),
     attackerNature,
     defenderNature,
+    attackerStatus,
+    defenderStatus,
     attackerInvestment,
     defenderInvestment,
     attackerSideEffects: Array.from(attackerSideEffects),
@@ -249,6 +257,10 @@ export function parseCommand(input: string): CommandParseResult {
     issues.push("Could not resolve attacker move.");
   }
 
+  if (moveToken?.hitCountInvalid) {
+    issues.push("Move hit count must be between 1 and 10.");
+  }
+
   if (structure.defender.leadingRemainderTokens.length) {
     issues.push(
       "Unrecognized defender token. Use segment-scoped tokens like @item, %75, [Ability], +nature, reflect, or ~rain.",
@@ -294,7 +306,7 @@ export function parseCommand(input: string): CommandParseResult {
     issues.push("Legacy prefixes >, <, a:, d:, and g: are no longer supported.");
   }
 
-  if (!attackerMatch || !defenderMatch || !move || legacyTokens.length) {
+  if (!attackerMatch || !defenderMatch || !move || legacyTokens.length || moveToken?.hitCountInvalid) {
     return { parsed: null, issues: unique(issues) };
   }
 
@@ -333,12 +345,15 @@ export function parseCommand(input: string): CommandParseResult {
       attacker: attackerMatch.entry.name,
       move: move.name,
       defender: defenderMatch.entry.name,
+      moveHitCount: moveToken?.hits,
       attackerStatMod: modifiers.attackerStatMod,
       defenderStatMod: modifiers.defenderStatMod,
       attackerSpeedMod: modifiers.attackerSpeedMod,
       defenderSpeedMod: modifiers.defenderSpeedMod,
       attackerCurrentHpPercent,
       defenderCurrentHpPercent,
+      attackerStatus: modifiers.attackerStatus,
+      defenderStatus: modifiers.defenderStatus,
       isCriticalHit,
       attackerNature,
       attackerAbility,

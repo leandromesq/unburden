@@ -7,6 +7,7 @@ export interface RegulationEntry {
 }
 
 export type BulkArchetype = "glass" | "mid" | "tank";
+export type PokemonStatus = "brn" | "par" | "psn" | "slp" | "frz";
 
 export type GlobalEffect =
   | "rain"
@@ -54,12 +55,15 @@ export interface ParsedCommand {
   attacker: string;
   move: string;
   defender: string;
+  moveHitCount?: number;
   attackerStatMod: number;
   defenderStatMod: number;
   attackerSpeedMod: number;
   defenderSpeedMod: number;
   attackerCurrentHpPercent?: number;
   defenderCurrentHpPercent?: number;
+  attackerStatus?: PokemonStatus;
+  defenderStatus?: PokemonStatus;
   isCriticalHit: boolean;
   globalEffects: GlobalEffect[];
   attackerSideEffects: SideEffect[];
