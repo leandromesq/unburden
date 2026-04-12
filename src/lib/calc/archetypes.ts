@@ -1,4 +1,4 @@
-import { formatStatPointSpread } from "@/lib/calc/stat-calc";
+import { evsToStatPoints, formatStatPointSpread } from "@/lib/calc/stat-calc";
 import type { BulkArchetype, ImportedSet, PokemonEntry, StatSpread } from "@/lib/types";
 
 interface ArchetypeConfig {
@@ -12,7 +12,16 @@ interface ArchetypeConfig {
 }
 
 function summarize(nature: string, hp: number, def: number, spd: number) {
-  return `${nature} | ${hp} HP / ${def} Def / ${spd} SpD`;
+  return `${nature} | ${formatStatPointSpread(
+    evsToStatPoints({
+      hp,
+      atk: 0,
+      def,
+      spa: 0,
+      spd,
+      spe: 0,
+    }),
+  )}`;
 }
 
 export function buildCustomSetArchetypeConfig(

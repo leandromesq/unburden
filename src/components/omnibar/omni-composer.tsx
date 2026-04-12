@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { ModifierSwitches } from "@/components/omnibar/modifier-switches";
 import { OmniTextarea } from "@/components/omnibar/omni-textarea";
@@ -13,12 +13,45 @@ import { useOmniStore } from "@/store/use-omni-store";
 export function OmniComposer() {
   const issues = useOmniStore((state) => state.issues);
   const calculationReady = useOmniStore((state) => state.calculationReady);
+  const input = useOmniStore((state) => state.input);
+  const setInput = useOmniStore((state) => state.setInput);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
+  const hasHydratedUrlPromptRef = useRef(false);
 
   const scrollToResults = () => {
     resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  useEffect(() => {
+    if (hasHydratedUrlPromptRef.current || typeof window === "undefined") {
+      return;
+    }
+
+    hasHydratedUrlPromptRef.current = true;
+
+    const url = new URL(window.location.href);
+    const prompt = url.searchParams.get("prompt");
+
+    if (prompt && !input.trim()) {
+      setInput(prompt);
+    }
+  }, [input, setInput]);
+
+  useEffect(() => {
+    if (!calculationReady || typeof window === "undefined" || !window.location.hash) {
+      return;
+    }
+
+    const target = document.getElementById(window.location.hash.slice(1));
+    if (!target) {
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [calculationReady]);
 
   return (
     <section className="mx-auto w-full max-w-7xl text-left">

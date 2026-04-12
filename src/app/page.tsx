@@ -18,7 +18,7 @@ export default function Home() {
           Omniboost
         </h1>
         <p className="theme-text-muted mt-4 max-w-2xl text-base leading-7 md:text-lg">
-          Type a matchup like a chat prompt. Accept suggestions with arrow keys
+          Type a matchup like a chat prompt. Accept suggestions using Arrow Keys
           and Tab. Compare Min, Mid, and Max bulk instantly.
         </p>
         <div className="mt-8 w-full">

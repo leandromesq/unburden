@@ -146,6 +146,10 @@ export function evsToStatPoints(evs: StatSpread): StatSpread {
   };
 }
 
+export function evToStatPointsValue(ev: number): number {
+  return Math.min(MAX_STAT_POINTS_PER_STAT, Math.round(ev / 8));
+}
+
 export function statPointsToCalcEvs(statPoints: StatSpread): StatSpread {
   return {
     hp: Math.min(252, statPoints.hp * 8),

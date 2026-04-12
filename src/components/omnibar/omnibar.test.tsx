@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { createRef } from "react";
 
 import { ModifierSwitches } from "@/components/omnibar/modifier-switches";
@@ -14,6 +14,7 @@ describe("omnibar components", () => {
   beforeEach(() => {
     resetOmniStore();
     useTeamStore.getState().clearSets();
+    window.history.replaceState({}, "", "/");
   });
 
   test("Tab applies the active suggestion and keeps focus on the textarea", () => {
@@ -202,6 +203,49 @@ describe("omnibar components", () => {
     expect(screen.getByTestId("results-panel")).toBeInTheDocument();
   });
 
+  test("results panel shows SP-style spreads instead of EV-style spreads", () => {
+    render(<ResultsPanel />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    const resultsPanel = screen.getByTestId("results-panel");
+
+    expect(resultsPanel).toHaveTextContent("Hardy | 1 HP");
+    expect(resultsPanel).toHaveTextContent("32 SpA");
+    expect(resultsPanel).not.toHaveTextContent("252 HP");
+    expect(resultsPanel).not.toHaveTextContent("252 SpA");
+  });
+
+  test("copy button copies a share URL with the current prompt", async () => {
+    const writeText = jest.fn().mockResolvedValue(undefined);
+
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+
+    window.history.replaceState({}, "", "/");
+
+    render(<ResultsPanel />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getAllByRole("button", { name: /copy share url/i })[0]);
+    });
+
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringContaining(
+        "prompt=politoed+%21muddy-water+x+incineroar",
+      ),
+    );
+    expect(writeText).toHaveBeenCalledWith(expect.stringContaining("#result-glass"));
+  });
+
   test("Tab applies the highlighted suggestion even without inline ghost text", () => {
     const textareaRef = createRef<HTMLTextAreaElement>();
 
@@ -236,6 +280,22 @@ describe("omnibar components", () => {
     fireEvent.keyDown(screen.getByTestId("omni-textarea"), { key: "Enter" });
 
     expect(scrollIntoView).toHaveBeenCalled();
+  });
+
+  test("hydrates the prompt from the shared URL", async () => {
+    window.history.replaceState(
+      {},
+      "",
+      "/?prompt=politoed%20!muddy-water%20x%20incineroar",
+    );
+
+    render(<OmniComposer />);
+
+    await waitFor(() => {
+      expect(useOmniStore.getState().input).toBe(
+        "politoed !muddy-water x incineroar",
+      );
+    });
   });
 
   test("renders attacker and defender summaries next to the composer", () => {

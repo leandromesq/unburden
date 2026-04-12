@@ -1,7 +1,12 @@
 import { Field, Generations, Move, Pokemon, calculate } from "@smogon/calc";
 
 import { buildCustomSetArchetypeConfig, getArchetypeConfigs } from "@/lib/calc/archetypes";
-import { DEFAULT_IV_SPREAD, EMPTY_STAT_SPREAD, cloneStatSpread } from "@/lib/calc/stat-calc";
+import {
+  DEFAULT_IV_SPREAD,
+  EMPTY_STAT_SPREAD,
+  cloneStatSpread,
+  evToStatPointsValue,
+} from "@/lib/calc/stat-calc";
 import { normalizeKoText } from "@/lib/calc/ko-text";
 import { moveById, normalizeId, pokemonById } from "@/lib/data/loaders";
 import { inferDefaultAbility } from "@/lib/parser/inference";
@@ -157,6 +162,16 @@ function splitShowdownText(text: string) {
   };
 }
 
+function convertShowdownContextToStatPoints(contextText: string) {
+  return contextText.replace(
+    /(\d+)([+-]?)\s+(HP|Atk|Def|SpA|SpD|Spe)\b/g,
+    (_match, evValue, natureModifier, statLabel) => {
+      const statPoints = evToStatPointsValue(Number(evValue));
+      return `${statPoints}${natureModifier} ${statLabel}`;
+    },
+  );
+}
+
 function deriveKoText(damageText: string) {
   const separatorIndex = damageText.indexOf("--");
   if (separatorIndex === -1) {
@@ -205,10 +220,11 @@ function describeResultSafely(
   try {
     const showdownText = result.desc();
     const { contextText, damageText } = splitShowdownText(showdownText);
+    const spContextText = convertShowdownContextToStatPoints(contextText);
 
     return {
-      showdownText,
-      contextText,
+      showdownText: `${spContextText}: ${damageText}`,
+      contextText: spContextText,
       damageText,
       koChanceText: deriveKoText(damageText),
     };
@@ -219,11 +235,12 @@ function describeResultSafely(
       moveName,
       defenderSpeciesName,
     );
+    const spContextText = convertShowdownContextToStatPoints(contextText);
     const damageText = `${minDamage}-${maxDamage} (${formatDamagePercent(minDamage, maxHP)} - ${formatDamagePercent(maxDamage, maxHP)}%) -- ${koChanceText}`;
 
     return {
-      showdownText: `${contextText}: ${damageText}`,
-      contextText,
+      showdownText: `${spContextText}: ${damageText}`,
+      contextText: spContextText,
       damageText,
       koChanceText,
     };
