@@ -1,4 +1,21 @@
 import { parseCommand } from "@/lib/parser/command-parser";
+import type { ImportedSet } from "@/lib/types";
+
+const referencedSets: Record<string, ImportedSet> = {
+  politoed: {
+    speciesId: "politoed",
+    speciesName: "Politoed",
+    nickname: "rain-toed",
+    item: "Mystic Water",
+    ability: "Drizzle",
+    level: 50,
+    nature: "Modest",
+    statPoints: { hp: 32, atk: 0, def: 1, spa: 13, spd: 1, spe: 19 },
+    evs: { hp: 252, atk: 0, def: 8, spa: 104, spd: 8, spe: 152 },
+    ivs: { hp: 31, atk: 0, def: 31, spa: 31, spd: 31, spe: 31 },
+    moves: ["Muddy Water", "Ice Beam", "Protect", "Helping Hand"],
+  },
+};
 
 describe("parseCommand", () => {
   test("parses an explicit symbolic command", () => {
@@ -63,12 +80,24 @@ describe("parseCommand", () => {
 
   test("parses attacker and defender items by segment position", () => {
     const result = parseCommand(
-      "charizard !heat-wave @life-orb x tinkaton @assault-vest",
+      "politoed !muddy-water @mystic-water x incineroar @leftovers",
     );
 
     expect(result.parsed).toMatchObject({
-      attackerItem: "Life Orb",
-      defenderItem: "Assault Vest",
+      attackerItem: "Mystic Water",
+      defenderItem: "Leftovers",
+    });
+    expect(result.issues).toHaveLength(0);
+  });
+
+  test("accepts legal Champions items even when they are not top-meta defaults", () => {
+    const result = parseCommand(
+      "garchomp !stomping-tantrum @soft-sand x tinkaton @occa-berry",
+    );
+
+    expect(result.parsed).toMatchObject({
+      attackerItem: "Soft Sand",
+      defenderItem: "Occa Berry",
     });
     expect(result.issues).toHaveLength(0);
   });
@@ -88,6 +117,13 @@ describe("parseCommand", () => {
 
     expect(result.parsed).toBeNull();
     expect(result.issues).toContain("Could not resolve attacker.");
+  });
+
+  test("does not resolve incomplete defender prompts", () => {
+    const result = parseCommand("aegislash !poltergeist x ");
+
+    expect(result.parsed).toBeNull();
+    expect(result.issues).toContain("Could not resolve defender.");
   });
 
   test("accepts legacy nature aliases and normalizes them", () => {
@@ -135,6 +171,48 @@ describe("parseCommand", () => {
     });
   });
 
+  test("parses explicit SP spreads by segment", () => {
+    const result = parseCommand(
+      "politoed !muddy-water sp:32/0/1/13/1/19 x incineroar sp:32/0/12/0/22/0",
+    );
+
+    expect(result.parsed).toMatchObject({
+      attackerStatPoints: { hp: 32, atk: 0, def: 1, spa: 13, spd: 1, spe: 19 },
+      defenderStatPoints: { hp: 32, atk: 0, def: 12, spa: 0, spd: 22, spe: 0 },
+    });
+    expect(result.issues).toHaveLength(0);
+  });
+
+  test("only applies saved sets when referenced with #set", () => {
+    const plain = parseCommand(
+      "politoed !muddy-water x incineroar",
+      referencedSets,
+    );
+    const referenced = parseCommand(
+      "#rain-toed x incineroar",
+      referencedSets,
+    );
+
+    expect(plain.parsed).toMatchObject({
+      attacker: "Politoed",
+      attackerSetReferenceId: undefined,
+    });
+    expect(referenced.parsed).toMatchObject({
+      attacker: "Politoed",
+      attackerSetReferenceId: "politoed",
+      move: "Muddy Water",
+    });
+  });
+
+  test("rejects malformed SP spreads", () => {
+    const result = parseCommand("politoed !muddy-water sp:32/0/1 x incineroar");
+
+    expect(result.parsed).toBeNull();
+    expect(result.issues).toContain(
+      "SP spreads must use sp:hp/atk/def/spa/spd/spe with six values, max 32 each and 66 total.",
+    );
+  });
+
   test("parses attacker and defender status conditions by segment", () => {
     const result = parseCommand(
       "incineroar !flare-blitz burn x tinkaton paralysis",
@@ -177,6 +255,17 @@ describe("parseCommand", () => {
     });
   });
 
+  test("supports explicit Aegislash blade and shield forms as calc overrides", () => {
+    const result = parseCommand("aegislash blade !poltergeist x aegislash shield");
+
+    expect(result.parsed).toMatchObject({
+      attacker: "Aegislash",
+      defender: "Aegislash",
+      attackerCalcFormId: "aegislashblade",
+      defenderCalcFormId: "aegislashshield",
+    });
+  });
+
   test("rejects removed legacy side prefixes", () => {
     const result = parseCommand("politoed !muddy-water >+1 x incineroar");
 
@@ -194,5 +283,22 @@ describe("parseCommand", () => {
       move: "Heat Wave",
       defender: "Tinkaton",
     });
+  });
+
+  test("resolves saved set references by nickname and uses the saved move when omitted", () => {
+    const result = parseCommand("#rain-toed x incineroar", referencedSets);
+
+    expect(result.parsed).toMatchObject({
+      attacker: "Politoed",
+      defender: "Incineroar",
+      move: "Muddy Water",
+    });
+  });
+
+  test("reports unknown saved set references", () => {
+    const result = parseCommand("#missing-set x incineroar", referencedSets);
+
+    expect(result.parsed).toBeNull();
+    expect(result.issues).toContain("Unknown saved set reference: #missing-set");
   });
 });

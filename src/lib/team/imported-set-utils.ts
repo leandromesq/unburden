@@ -6,18 +6,7 @@ import {
   evsToStatPoints,
   statPointsToCalcEvs,
 } from "@/lib/calc/stat-calc";
-import type { ImportedSet, PokemonEntry, StatSpread } from "@/lib/types";
-
-export function resolveImportedSet(
-  pokemon: PokemonEntry,
-  importedSets: Record<string, ImportedSet>,
-): ImportedSet | null {
-  return (
-    importedSets[pokemon.id] ??
-    (pokemon.baseSpeciesId ? importedSets[pokemon.baseSpeciesId] : null) ??
-    null
-  );
-}
+import type { ImportedSet, StatSpread } from "@/lib/types";
 
 export function normalizeImportedSet(set: ImportedSet): ImportedSet {
   const statPoints = clampStatPoints(

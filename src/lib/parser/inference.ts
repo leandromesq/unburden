@@ -1,4 +1,5 @@
 import {
+  allowedItemIds,
   itemDisplayById,
   learnsetByPokemonId,
   moveById,
@@ -121,7 +122,20 @@ export function getSuggestedItems(pokemonId: string, query = "", limit = 6) {
     meta?.defaultItem,
     ...(meta?.commonItems ?? []),
     pokemon?.requiredItem,
-  ].filter((itemName): itemName is string => Boolean(itemName));
+  ]
+    .map((itemName) => {
+      if (!itemName) {
+        return null;
+      }
+
+      const normalized = normalizeId(itemName);
+      if (!allowedItemIds.has(normalized)) {
+        return null;
+      }
+
+      return itemDisplayById.get(normalized) ?? itemName;
+    })
+    .filter((itemName): itemName is string => Boolean(itemName));
   const globalMatches = Array.from(itemDisplayById.values()).filter((itemName) => {
     if (!normalizedQuery) {
       return false;
@@ -199,6 +213,25 @@ export function inferDefaultAbility(pokemonId: string) {
     automaticFieldAbility ??
     pokemon?.abilities[0] ??
     profile?.defaultAbility ??
+    null
+  );
+}
+
+export function inferDefaultItem(pokemonId: string) {
+  const pokemon = pokemonById.get(pokemonId);
+  const profile =
+    vgcMetaByPokemonId.get(pokemonId) ??
+    (pokemon?.baseSpeciesId ? vgcMetaByPokemonId.get(pokemon.baseSpeciesId) : undefined);
+  const legalProfileItem = profile?.defaultItem
+    ? itemDisplayById.get(normalizeId(profile.defaultItem))
+    : null;
+  const legalRequiredItem = pokemon?.requiredItem
+    ? itemDisplayById.get(normalizeId(pokemon.requiredItem))
+    : null;
+
+  return (
+    legalProfileItem ??
+    legalRequiredItem ??
     null
   );
 }

@@ -1,13 +1,12 @@
 import { parseShowdownSets } from "@/lib/parser/showdown-import";
 
 describe("showdown import", () => {
-  test("converts imported EVs to Champions SPs while preserving calc EVs", () => {
+  test("treats imported EV lines as Champions SPs and derives calc EVs from them", () => {
     const [set] = parseShowdownSets(`Politoed @ Mystic Water
 Ability: Drizzle
 Level: 50
-EVs: 252 HP / 8 Def / 100 SpA / 4 SpD / 148 Spe
+EVs: 32 HP / 1 Def / 13 SpA / 1 SpD / 19 Spe
 Modest Nature
-IVs: 0 Atk
 - Muddy Water
 - Ice Beam
 - Protect
@@ -25,9 +24,9 @@ IVs: 0 Atk
       hp: 252,
       atk: 0,
       def: 8,
-      spa: 100,
-      spd: 4,
-      spe: 148,
+      spa: 104,
+      spd: 8,
+      spe: 152,
     });
   });
 

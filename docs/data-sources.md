@@ -10,6 +10,7 @@ flowchart TD
     PKMN["@pkmn/dex + @pkmn/data"]
     PIKA["Pikalytics Champions AI pages"]
     SEREBII_MEGA["Serebii Champions mega abilities"]
+    SEREBII_ITEMS["Serebii Champions legal items"]
     SEREBII_REG["Serebii Regulation M-A roster<br/>(manual reference)"]
     SPRITES["Pokemon Showdown / PokemonDB image CDNs"]
   end
@@ -30,6 +31,7 @@ flowchart TD
     POKEMON["src/data/pokemon.gen9.json"]
     MOVES["src/data/moves.gen9.json"]
     LEARNSETS["src/data/learnsets.gen9.json"]
+    ITEMS["src/data/champions-items.json"]
     META["src/data/vgc-meta.json"]
   end
 
@@ -47,6 +49,7 @@ flowchart TD
   PIKA --> GEN_STATIC
   PIKA --> GEN_META
   SEREBII_MEGA --> GEN_STATIC
+  SEREBII_ITEMS --> GEN_STATIC
   REG --> GEN_STATIC
   REG --> LOADERS
   ACTIVE --> LOADERS
@@ -56,10 +59,12 @@ flowchart TD
   POKEMON --> LOADERS
   MOVES --> LOADERS
   LEARNSETS --> LOADERS
+  ITEMS --> LOADERS
   META --> LOADERS
   GEN_STATIC --> POKEMON
   GEN_STATIC --> MOVES
   GEN_STATIC --> LEARNSETS
+  GEN_STATIC --> ITEMS
   GEN_META --> META
   LOADERS --> PARSER
   LOADERS --> CALC
@@ -73,6 +78,7 @@ flowchart TD
 - Canonical species, moves, and learnsets come from `@pkmn/dex` and `@pkmn/data`.
 - Competitive Champions meta defaults come from Pikalytics snapshots, then get normalized into `src/data/vgc-meta.json`.
 - Champions mega ability gaps are patched from Serebii during generation.
+- Legal Champions items come from Serebii and are snapshotted into `src/data/champions-items.json`.
 - Regulation legality is controlled locally in `src/data/regulations/regulation-m-a.json`.
 - Runtime gameplay logic does not fetch live meta data. It reads committed JSON snapshots through `src/lib/data/loaders.ts`.
 - Runtime network requests are only used for Pokemon images in the summary UI.
@@ -139,7 +145,26 @@ Outputs affected:
 Why it exists:
 - some Champions mega abilities were not complete in other accessible sources
 
-### 4. Serebii Champions Regulation M-A roster
+### 4. Serebii Champions legal items
+
+Source:
+- `https://www.serebii.net/pokemonchampions/items.shtml`
+
+Purpose:
+- authoritative legal held-item pool for Pokemon Champions
+- excludes the `Miscellaneous Items` section
+
+Used in:
+- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\omniboost\scripts\generate-static-data.ts)
+
+Outputs affected:
+- [src/data/champions-items.json](C:\Users\leand\Documents\GitHub\omniboost\src\data\champions-items.json)
+- indirectly constrains [src/data/vgc-meta.json](C:\Users\leand\Documents\GitHub\omniboost\src\data\vgc-meta.json) to legal item defaults/common items
+
+Why it exists:
+- meta-derived item pools were incomplete and could miss legal items like type boosters and resist berries
+
+### 5. Serebii Champions Regulation M-A roster
 
 Source:
 - `https://www.serebii.net/pokemonchampions/recruit/regularrosterm-a.shtml`
@@ -154,7 +179,7 @@ Used in:
 Why it exists:
 - legal-but-low-usage species can be missing from pure meta-driven pipelines, so legality is maintained locally
 
-### 5. Runtime image CDNs
+### 6. Runtime image CDNs
 
 Sources:
 - `https://play.pokemonshowdown.com/sprites/home/...`
@@ -174,7 +199,7 @@ Why it exists:
 
 ## Local Config And Snapshot Files
 
-### 6. `src/data/regulations/active.json`
+### 7. `src/data/regulations/active.json`
 
 Purpose:
 - selects the active regulation used by the app
@@ -186,7 +211,7 @@ Effects:
 - controls which regulation entry becomes active at runtime
 - affects the regulation badge and legal Pokemon filtering
 
-### 7. `src/data/regulations/regulation-m-a.json`
+### 8. `src/data/regulations/regulation-m-a.json`
 
 Purpose:
 - authoritative local legality list for Regulation M-A
@@ -199,7 +224,7 @@ Effects:
 - builds `legalPokemonData` at runtime
 - forces all legal M-A species into the generated dataset, even if they are outside the top meta slice
 
-### 8. `src/data/form-aliases.json`
+### 9. `src/data/form-aliases.json`
 
 Purpose:
 - explicit alias and form resolution
@@ -210,7 +235,7 @@ Used in:
 - [src/lib/parser/showdown-import.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\parser\showdown-import.ts)
 - [scripts/generate-vgc-meta.ts](C:\Users\leand\Documents\GitHub\omniboost\scripts\generate-vgc-meta.ts)
 
-### 9. `src/data/vgc-meta.overrides.json`
+### 10. `src/data/vgc-meta.overrides.json`
 
 Purpose:
 - local overrides for generated competitive profiles
@@ -225,7 +250,7 @@ Effects:
 
 These are the repo’s runtime gameplay data source of truth.
 
-### 10. `src/data/pokemon.gen9.json`
+### 11. `src/data/pokemon.gen9.json`
 
 Purpose:
 - resolved Pokemon entries used by the runtime app
@@ -243,7 +268,7 @@ Consumed by:
 - [src/components/omnibar/pokemon-set-editor-modal.tsx](C:\Users\leand\Documents\GitHub\omniboost\src\components\omnibar\pokemon-set-editor-modal.tsx)
 - [src/components/omnibar/pokemon-side-summary.tsx](C:\Users\leand\Documents\GitHub\omniboost\src\components\omnibar\pokemon-side-summary.tsx)
 
-### 11. `src/data/moves.gen9.json`
+### 12. `src/data/moves.gen9.json`
 
 Purpose:
 - resolved move entries used by runtime parsing and damage calculation
@@ -258,7 +283,7 @@ Consumed by:
 - [src/components/omnibar/pokemon-set-editor-modal.tsx](C:\Users\leand\Documents\GitHub\omniboost\src\components\omnibar\pokemon-set-editor-modal.tsx)
 - [src/components/omnibar/pokemon-side-summary.tsx](C:\Users\leand\Documents\GitHub\omniboost\src\components\omnibar\pokemon-side-summary.tsx)
 
-### 12. `src/data/learnsets.gen9.json`
+### 13. `src/data/learnsets.gen9.json`
 
 Purpose:
 - legal move pools for fallback inference and set editing
@@ -270,7 +295,21 @@ Consumed by:
 - [src/lib/parser/inference.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\parser\inference.ts)
 - [src/components/omnibar/pokemon-set-editor-modal.tsx](C:\Users\leand\Documents\GitHub\omniboost\src\components\omnibar\pokemon-set-editor-modal.tsx)
 
-### 13. `src/data/vgc-meta.json`
+### 14. `src/data/champions-items.json`
+
+Purpose:
+- legal held-item snapshot for Pokemon Champions
+
+Loaded in:
+- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\data\loaders.ts)
+
+Consumed by:
+- [src/lib/parser/command-parser.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\parser\command-parser.ts)
+- [src/lib/parser/inference.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\parser\inference.ts)
+- [src/components/omnibar/pokemon-set-editor-modal.tsx](C:\Users\leand\Documents\GitHub\omniboost\src\components\omnibar\pokemon-set-editor-modal.tsx)
+- [src/components/omnibar/pokemon-side-summary.tsx](C:\Users\leand\Documents\GitHub\omniboost\src\components\omnibar\pokemon-side-summary.tsx)
+
+### 15. `src/data/vgc-meta.json`
 
 Purpose:
 - normalized competitive defaults and suggestion pools for the active Champions meta
@@ -286,7 +325,7 @@ Consumed by:
 
 ## Runtime Loader Layer
 
-### 14. `src/lib/data/loaders.ts`
+### 16. `src/lib/data/loaders.ts`
 
 This is the runtime aggregation point for local data.
 
@@ -294,6 +333,7 @@ It loads:
 - `pokemon.gen9.json`
 - `moves.gen9.json`
 - `learnsets.gen9.json`
+- `champions-items.json`
 - `vgc-meta.json`
 - `form-aliases.json`
 - `active.json`

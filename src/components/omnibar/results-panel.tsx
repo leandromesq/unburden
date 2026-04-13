@@ -4,6 +4,8 @@ import { useState } from "react";
 
 import { buildCalculationContext } from "@/lib/calc/damage-engine";
 import { koTextTone } from "@/lib/calc/ko-text";
+import { serializeShareState } from "@/lib/share/serialize-share-state";
+import { resolveReferencedImportedSet } from "@/lib/team/set-references";
 import { useOmniStore } from "@/store/use-omni-store";
 import { useTeamStore } from "@/store/use-team-store";
 
@@ -68,6 +70,45 @@ function CopyIcon({ copied }: { copied: boolean }) {
   );
 }
 
+function LinkIcon() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 16 16"
+      className="h-3.5 w-3.5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M6.25 9.75l3.5-3.5" />
+      <path d="M5.1 6.9l-1.15 1.15a2.12 2.12 0 1 0 3 3l1.15-1.15" />
+      <path d="M10.9 9.1l1.15-1.15a2.12 2.12 0 1 0-3-3L7.9 6.1" />
+    </svg>
+  );
+}
+
+function TextIcon() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 16 16"
+      className="h-3.5 w-3.5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 4.5h10" />
+      <path d="M5.5 4.5v7" />
+      <path d="M10.5 4.5v7" />
+      <path d="M4 11.5h8" />
+    </svg>
+  );
+}
+
 function fallbackCopyText(text: string) {
   const textarea = document.createElement("textarea");
   textarea.value = text;
@@ -84,28 +125,64 @@ export function ResultsPanel() {
   const input = useOmniStore((state) => state.input);
   const results = useOmniStore((state) => state.results);
   const parsed = useOmniStore((state) => state.parsed);
+  const strictMode = useOmniStore((state) => state.strictMode);
   const importedSets = useTeamStore((state) => state.importedSets);
-  const [copiedArchetype, setCopiedArchetype] = useState<string | null>(null);
+  const [copiedAction, setCopiedAction] = useState<string | null>(null);
 
   if (!parsed || !results.length) {
     return null;
   }
 
-  const context = buildCalculationContext(parsed, importedSets);
+  const context = buildCalculationContext(parsed, importedSets, { strictMode });
 
   if (!context) {
     return null;
   }
 
-  const handleCopy = async (archetype: string) => {
+  const setCopied = (actionKey: string) => {
+    setCopiedAction(actionKey);
+    window.setTimeout(() => {
+      setCopiedAction((current) => (current === actionKey ? null : current));
+    }, 1600);
+  };
+
+  const buildShareUrl = (archetype: string) => {
     if (typeof window === "undefined" || !input.trim()) {
-      return;
+      return null;
     }
 
     const url = new URL(window.location.href);
     url.searchParams.set("prompt", input);
+    const relevantSets = [
+      resolveReferencedImportedSet(parsed.attackerSetReferenceId, importedSets),
+      resolveReferencedImportedSet(parsed.defenderSetReferenceId, importedSets),
+    ]
+      .filter((set): set is NonNullable<ReturnType<typeof resolveReferencedImportedSet>> => Boolean(set))
+      .filter(
+        (set, index, collection) =>
+          collection.findIndex((candidate) => candidate.speciesId === set.speciesId) === index,
+      );
+    const serializedState = serializeShareState(relevantSets);
+
+    if (serializedState) {
+      url.searchParams.set("state", serializedState);
+    } else {
+      url.searchParams.delete("state");
+    }
+    if (strictMode) {
+      url.searchParams.set("strict", "1");
+    } else {
+      url.searchParams.delete("strict");
+    }
     url.hash = `result-${archetype}`;
-    const shareUrl = url.toString();
+    return url.toString();
+  };
+
+  const handleCopyUrl = async (archetype: string) => {
+    const shareUrl = buildShareUrl(archetype);
+    if (!shareUrl) {
+      return;
+    }
 
     try {
       if (navigator.clipboard?.writeText) {
@@ -117,10 +194,21 @@ export function ResultsPanel() {
       fallbackCopyText(shareUrl);
     }
 
-    setCopiedArchetype(archetype);
-    window.setTimeout(() => {
-      setCopiedArchetype((current) => (current === archetype ? null : current));
-    }, 1600);
+    setCopied(`url:${archetype}`);
+  };
+
+  const handleCopyText = async (archetype: string, showdownText: string) => {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(showdownText);
+      } else {
+        fallbackCopyText(showdownText);
+      }
+    } catch {
+      fallbackCopyText(showdownText);
+    }
+
+    setCopied(`text:${archetype}`);
   };
 
   return (
@@ -183,18 +271,54 @@ export function ResultsPanel() {
               ) : (
                 <div className="flex-1" />
               )}
-              <button
-                type="button"
-                tabIndex={-1}
-                onClick={() => void handleCopy(result.archetype)}
-                className={`theme-icon-button ml-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
-                  copiedArchetype === result.archetype ? "theme-icon-button-active" : ""
-                }`}
-                aria-label={`Copy share URL for ${resultLabel}`}
-                title={copiedArchetype === result.archetype ? "Copied" : "Copy share URL"}
-              >
-                <CopyIcon copied={copiedArchetype === result.archetype} />
-              </button>
+              <div className="ml-auto flex shrink-0 items-center gap-1.5">
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  onClick={() =>
+                    void handleCopyText(result.archetype, result.showdownText)
+                  }
+                  className={`theme-icon-button flex h-8 w-8 items-center justify-center rounded-full ${
+                    copiedAction === `text:${result.archetype}`
+                      ? "theme-icon-button-active"
+                      : ""
+                  }`}
+                  aria-label={`Copy result text for ${resultLabel}`}
+                  title={
+                    copiedAction === `text:${result.archetype}`
+                      ? "Copied text"
+                      : "Copy result text"
+                  }
+                >
+                  {copiedAction === `text:${result.archetype}` ? (
+                    <CopyIcon copied />
+                  ) : (
+                    <TextIcon />
+                  )}
+                </button>
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  onClick={() => void handleCopyUrl(result.archetype)}
+                  className={`theme-icon-button flex h-8 w-8 items-center justify-center rounded-full ${
+                    copiedAction === `url:${result.archetype}`
+                      ? "theme-icon-button-active"
+                      : ""
+                  }`}
+                  aria-label={`Copy share URL for ${resultLabel}`}
+                  title={
+                    copiedAction === `url:${result.archetype}`
+                      ? "Copied URL"
+                      : "Copy share URL"
+                  }
+                >
+                  {copiedAction === `url:${result.archetype}` ? (
+                    <CopyIcon copied />
+                  ) : (
+                    <LinkIcon />
+                  )}
+                </button>
+              </div>
             </div>
           </article>
         );

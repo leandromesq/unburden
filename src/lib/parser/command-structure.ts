@@ -4,6 +4,7 @@ import {
   joinTokenValues,
   lexCommandInput,
   parseHpToken,
+  parseStatPointsToken,
 } from "@/lib/parser/tokenize";
 import {
   ATTACKER_MODIFIER_MAP,
@@ -17,15 +18,25 @@ import {
   resolveExactPokemonEntity,
   resolvePokemonEntity,
 } from "@/lib/parser/fuse-indexes";
+import type { StatSpread } from "@/lib/types";
 
 interface SymbolToken {
   raw: string;
   normalized: string;
-  kind: "move" | "item" | "ability" | "modifier" | "hp" | "critical" | "unknown";
+  kind:
+    | "move"
+    | "item"
+    | "ability"
+    | "modifier"
+    | "hp"
+    | "critical"
+    | "stat_points"
+    | "unknown";
   scope?: "attacker" | "defender" | "global";
   value: string;
   hits?: number;
   hitCountInvalid?: boolean;
+  spread?: StatSpread;
   source: LexToken;
 }
 
@@ -47,6 +58,8 @@ interface SegmentStructure {
   moveToken?: SymbolToken;
   itemToken?: SymbolToken;
   abilityToken?: SymbolToken;
+  statPointToken?: SymbolToken;
+  unknownExplicitTokens: LexToken[];
   misplacedTokens: SymbolToken[];
 }
 
@@ -63,7 +76,7 @@ function isLegacyScopedSymbol(token: string) {
 }
 
 function isExplicitToken(token: LexToken) {
-  return /^(m:|!|@|~|\*|%|\[)/i.test(token.normalized);
+  return /^(m:|!|@|~|\*|%|\[|sp:)/i.test(token.normalized);
 }
 
 function parseMoveSymbol(raw: string) {
@@ -158,6 +171,19 @@ function parseExplicitSymbolToken(
     };
   }
 
+  const statPoints = parseStatPointsToken(token.raw);
+  if (statPoints) {
+    return {
+      raw: token.raw,
+      normalized: token.normalized,
+      kind: "stat_points",
+      scope: side,
+      value: token.raw,
+      spread: statPoints,
+      source: token,
+    };
+  }
+
   if (token.normalized.startsWith("~")) {
     return {
       raw: token.raw,
@@ -246,6 +272,9 @@ function analyzeSegment(tokens: LexToken[], side: "attacker" | "defender"): Segm
   const explicitSymbolTokens = explicitSlice
     .map((token) => parseExplicitSymbolToken(token, side))
     .filter((token): token is SymbolToken => Boolean(token));
+  const unknownExplicitTokens = explicitSlice.filter(
+    (token) => isExplicitToken(token) && !parseExplicitSymbolToken(token, side),
+  );
   const moveToken = side === "attacker"
     ? explicitSymbolTokens.find((token) => token.kind === "move")
     : undefined;
@@ -284,6 +313,9 @@ function analyzeSegment(tokens: LexToken[], side: "attacker" | "defender"): Segm
   const itemToken = symbolTokens.filter((token) => token.kind === "item").at(-1);
   const abilityToken = symbolTokens.filter(
     (token) => token.kind === "ability" && token.scope === side,
+  ).at(-1);
+  const statPointToken = symbolTokens.filter(
+    (token) => token.kind === "stat_points" && token.scope === side,
   ).at(-1);
   const hpToken = symbolTokens.filter((token) => token.kind === "hp").at(-1);
   const criticalToken = symbolTokens.filter((token) => token.kind === "critical").at(-1);
@@ -343,6 +375,8 @@ function analyzeSegment(tokens: LexToken[], side: "attacker" | "defender"): Segm
     moveToken,
     itemToken,
     abilityToken,
+    statPointToken,
+    unknownExplicitTokens,
     misplacedTokens,
   };
 }

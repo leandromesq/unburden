@@ -1,5 +1,7 @@
 import {
   normalizeAlias,
+  normalizeId,
+  pokemonById,
 } from "@/lib/data/loaders";
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
 import {
@@ -20,7 +22,8 @@ import {
   getSuggestedMoves,
 } from "@/lib/parser/inference";
 import { compactWhitespace, joinTokenValues, type LexToken } from "@/lib/parser/tokenize";
-import type { SuggestionOption, SuggestionState } from "@/lib/types";
+import { resolveSetReferenceToken, searchSetReferences } from "@/lib/team/set-references";
+import type { ImportedSet, SuggestionOption, SuggestionState } from "@/lib/types";
 
 interface AutocompleteResult {
   activeSuggestion: SuggestionState | null;
@@ -125,10 +128,13 @@ function isLegacyScopedTokenFragment(raw: string) {
 function buildAttackerSideTokens(
   structure: ReturnType<typeof analyzeCommandStructure>,
   moveToken?: string,
+  attackerReferenceToken?: string | null,
 ) {
-  const attackerSpecies = structure.attacker.speciesExact
-    ? formatSpeciesText(structure.attacker.speciesExact.entry.name)
-    : structure.attacker.speciesMatch
+  const attackerSpecies = attackerReferenceToken
+    ? attackerReferenceToken
+    : structure.attacker.speciesExact
+      ? formatSpeciesText(structure.attacker.speciesExact.entry.name)
+      : structure.attacker.speciesMatch
       ? formatSpeciesText(structure.attacker.speciesMatch.entry.name)
       : joinTokenValues(structure.attacker.leadingFreeTokens);
   const explicitTokens = structure.attacker.symbolTokens
@@ -251,7 +257,11 @@ function getItemOptions(
   });
 }
 
-function getSlotSuggestions(input: string, cursorIndex = input.length): AutocompleteResult {
+function getSlotSuggestions(
+  input: string,
+  cursorIndex = input.length,
+  importedSets: Record<string, ImportedSet> = {},
+): AutocompleteResult {
   const fullStructure = analyzeCommandStructure(input);
   const structure = cursorIndex === input.length
     ? fullStructure
@@ -259,9 +269,33 @@ function getSlotSuggestions(input: string, cursorIndex = input.length): Autocomp
   const lastToken = structure.lexed.tokens.at(-1);
   const activeToken = getActiveToken(fullStructure.lexed.tokens, cursorIndex) ?? lastToken ?? null;
   const trailingWhitespace = structure.lexed.trailingWhitespace;
+  const attackerReferenceSet = resolveSetReferenceToken(
+    structure.attacker.leadingFreeTokens[0]?.raw,
+    importedSets,
+  );
+  const defenderReferenceSet = resolveSetReferenceToken(
+    structure.defender.leadingFreeTokens[0]?.raw,
+    importedSets,
+  );
+  const attackerReferencePokemon = attackerReferenceSet
+    ? pokemonById.get(normalizeId(attackerReferenceSet.speciesId)) ?? null
+    : null;
+  const defenderReferencePokemon = defenderReferenceSet
+    ? pokemonById.get(normalizeId(defenderReferenceSet.speciesId)) ?? null
+    : null;
   const attackerExact = structure.attacker.speciesExact;
-  const attackerResolved = attackerExact ?? structure.attacker.speciesMatch;
-  const defenderExact = structure.defender.speciesExact;
+  const attackerReferenceToken =
+    attackerReferenceSet && structure.attacker.leadingFreeTokens.length >= 1
+      ? structure.attacker.leadingFreeTokens[0]?.raw ?? null
+      : null;
+  const attackerResolved = attackerReferencePokemon
+    ? { entry: attackerReferencePokemon }
+    : attackerExact ?? structure.attacker.speciesMatch;
+  const attackerSpeciesLocked = Boolean(attackerReferencePokemon || attackerExact);
+  const defenderExact = defenderReferencePokemon
+    ? { entry: defenderReferencePokemon }
+    : structure.defender.speciesExact;
+  const defenderSpeciesLocked = Boolean(defenderReferencePokemon || structure.defender.speciesExact);
 
   if (!trailingWhitespace && activeToken) {
     const raw = input.slice(activeToken.start, cursorIndex) || activeToken.raw;
@@ -441,8 +475,44 @@ function getSlotSuggestions(input: string, cursorIndex = input.length): Autocomp
     }
   }
 
-  if (!attackerExact) {
+  if (!attackerSpeciesLocked) {
     const query = joinTokenValues(structure.attacker.leadingFreeTokens);
+    if (query.startsWith("#")) {
+      const matches = searchSetReferences(query, importedSets, 6);
+      const options = matches.map(({ set, canonicalToken }) => ({
+        type: "set" as const,
+        value: canonicalToken,
+        label: set.nickname
+          ? `${set.nickname} · ${set.speciesName}`
+          : set.speciesName,
+        applyText:
+          cursorIndex === input.length || !activeToken
+            ? compactWhitespace([
+                canonicalToken,
+                ...structure.attacker.rawTokens
+                  .slice(structure.attacker.leadingFreeTokens.length)
+                  .map((token) => token.raw),
+              ].join(" "))
+            : replaceRange(
+                input,
+                fullStructure.attacker.rawTokens[0]?.start ?? 0,
+                activeToken.end,
+                canonicalToken,
+              ),
+      }));
+      const active = options[0]
+        ? buildActiveSuggestion(
+            "attacker_pokemon",
+            query,
+            options[0].value,
+            options[0].applyText,
+            input,
+          )
+        : null;
+
+      return { activeSuggestion: active, suggestionOptions: options };
+    }
+
     const matches = searchPokemonEntities(query, 6);
     const options = matches.map((match) => {
       const speciesText = formatSpeciesText(match.entry.name);
@@ -481,7 +551,7 @@ function getSlotSuggestions(input: string, cursorIndex = input.length): Autocomp
     return { activeSuggestion: active, suggestionOptions: options };
   }
 
-  if (!structure.attacker.moveToken && attackerResolved) {
+  if (!structure.attacker.moveToken && attackerSpeciesLocked && attackerResolved) {
     const query = joinTokenValues(structure.attacker.leadingRemainderTokens);
     const options = getSuggestedMoves(attackerResolved.entry.id, query, 8).map((move) => {
       const token = formatMoveToken(move.name);
@@ -493,7 +563,7 @@ function getSlotSuggestions(input: string, cursorIndex = input.length): Autocomp
           cursorIndex === input.length || !activeToken
             ? buildFullText(
                 structure,
-                buildAttackerSideTokens(structure, token),
+                buildAttackerSideTokens(structure, token, attackerReferenceToken),
                 structure.lexed.hasDelimiter
                   ? structure.defender.rawTokens.map((token) => token.raw)
                   : undefined,
@@ -545,8 +615,51 @@ function getSlotSuggestions(input: string, cursorIndex = input.length): Autocomp
     };
   }
 
-  if (!defenderExact) {
+  if (!defenderSpeciesLocked) {
     const query = joinTokenValues(structure.defender.leadingFreeTokens);
+    if (query.startsWith("#")) {
+      const attackerTokens = structure.attacker.rawTokens.map((token) => token.raw);
+      const matches = searchSetReferences(query, importedSets, 6);
+      const options = matches.map(({ set, canonicalToken }) => ({
+        type: "set" as const,
+        value: canonicalToken,
+        label: set.nickname
+          ? `${set.nickname} · ${set.speciesName}`
+          : set.speciesName,
+        applyText:
+          cursorIndex === input.length || !activeToken
+            ? buildFullText(
+                structure,
+                attackerTokens,
+                [
+                  canonicalToken,
+                  ...structure.defender.rawTokens
+                    .slice(structure.defender.leadingFreeTokens.length)
+                    .map((token) => token.raw),
+                ].filter(Boolean),
+                true,
+              )
+            : replaceRange(
+                input,
+                fullStructure.defender.rawTokens[0]?.start ??
+                  (fullStructure.attacker.rawTokens.at(-1)?.end ?? 0),
+                activeToken.end,
+                canonicalToken,
+              ),
+      }));
+      const active = options[0]
+        ? buildActiveSuggestion(
+            "defender_pokemon",
+            query,
+            options[0].value,
+            options[0].applyText,
+            input,
+          )
+        : null;
+
+      return { activeSuggestion: active, suggestionOptions: options };
+    }
+
     const matches = searchPokemonEntities(query, 6);
     const attackerTokens = structure.attacker.rawTokens.map((token) => token.raw);
     const options = matches.map((match) => {
@@ -591,6 +704,13 @@ function getSlotSuggestions(input: string, cursorIndex = input.length): Autocomp
     return { activeSuggestion: active, suggestionOptions: options };
   }
 
+  if (!defenderExact) {
+    return {
+      activeSuggestion: null,
+      suggestionOptions: [],
+    };
+  }
+
   const attackerTokens = structure.attacker.rawTokens.map((token) => token.raw);
   const defenderTokens = structure.defender.rawTokens.map((token) => token.raw);
   const baseInput = buildFullText(structure, attackerTokens, defenderTokens, true);
@@ -607,23 +727,50 @@ function getSlotSuggestions(input: string, cursorIndex = input.length): Autocomp
   };
 }
 
-export function getAutocompleteState(input: string, cursorIndex = input.length): AutocompleteResult {
-  return getSlotSuggestions(input, cursorIndex);
+export function getAutocompleteState(
+  input: string,
+  cursorIndex = input.length,
+  importedSets: Record<string, ImportedSet> = {},
+): AutocompleteResult {
+  return getSlotSuggestions(input, cursorIndex, importedSets);
 }
 
-export function getInlineSuggestion(input: string, cursorIndex?: number) {
-  const { activeSuggestion } = getSlotSuggestions(input, cursorIndex ?? input.length);
+export function getInlineSuggestion(
+  input: string,
+  cursorIndex?: number,
+  importedSets: Record<string, ImportedSet> = {},
+) {
+  const { activeSuggestion } = getSlotSuggestions(
+    input,
+    cursorIndex ?? input.length,
+    importedSets,
+  );
   return {
     ghostText: activeSuggestion?.ghostText ?? "",
     completionText: activeSuggestion?.completionText ?? null,
   };
 }
 
-export function getContextualMoveSuggestions(input: string) {
+export function getContextualMoveSuggestions(
+  input: string,
+  importedSets: Record<string, ImportedSet> = {},
+) {
   const structure = analyzeCommandStructure(input);
-  const attacker = structure.attacker.speciesExact ?? resolveExactPokemonEntity(structure.attacker.speciesText);
+  const attackerReferenceSet = resolveSetReferenceToken(
+    structure.attacker.leadingFreeTokens[0]?.raw,
+    importedSets,
+  );
+  const attacker =
+    (attackerReferenceSet
+      ? {
+          entry:
+            pokemonById.get(normalizeId(attackerReferenceSet.speciesId)) ?? null,
+        }
+      : null) ??
+    structure.attacker.speciesExact ??
+    resolveExactPokemonEntity(structure.attacker.speciesText);
 
-  if (!attacker) {
+  if (!attacker || !attacker.entry) {
     return [];
   }
 

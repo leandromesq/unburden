@@ -1,3 +1,4 @@
+import championsItems from "@/data/champions-items.json";
 import formAliases from "@/data/form-aliases.json";
 import learnsets from "@/data/learnsets.gen9.json";
 import moves from "@/data/moves.gen9.json";
@@ -7,6 +8,7 @@ import activeRegulationConfig from "@/data/regulations/active.json";
 import regulationMA from "@/data/regulations/regulation-m-a.json";
 import type {
   FormAliasEntry,
+  ItemEntry,
   LearnsetEntry,
   MoveEntry,
   PokemonEntry,
@@ -35,6 +37,7 @@ export const legalPokemonData: PokemonEntry[] = pokemonData.filter((entry) =>
 const learnsetData = learnsets as LearnsetEntry[];
 const vgcMetaProfiles = vgcMeta as VgcMetaProfile[];
 const formAliasData = formAliases as FormAliasEntry[];
+const itemData = championsItems as ItemEntry[];
 
 export function normalizeId(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "");
@@ -61,16 +64,10 @@ export const vgcMetaByPokemonId = new Map(
 export const formAliasMap = new Map(
   formAliasData.map((entry) => [normalizeAlias(entry.alias), entry.pokemonId]),
 );
-const metaItemPool = Array.from(
-  new Map(
-    vgcMetaProfiles
-      .flatMap((entry) => [entry.defaultItem, ...(entry.commonItems ?? [])])
-      .filter(Boolean)
-      .map((itemName) => [normalizeId(itemName), itemName]),
-  ).entries(),
+export const allowedItemIds = new Set(itemData.map((entry) => entry.id));
+export const itemDisplayById = new Map(
+  itemData.map((entry) => [entry.id, entry.name]),
 );
-export const allowedItemIds = new Set(metaItemPool.map(([itemId]) => itemId));
-export const itemDisplayById = new Map(metaItemPool);
 
 const megaEvolutionPool = pokemonData
   .filter((entry) => entry.isMega && entry.requiredItem && entry.baseSpeciesId)

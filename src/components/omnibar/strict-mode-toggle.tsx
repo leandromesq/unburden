@@ -1,0 +1,40 @@
+"use client";
+
+import { useOmniStore } from "@/store/use-omni-store";
+
+export function StrictModeToggle() {
+  const strictMode = useOmniStore((state) => state.strictMode);
+  const setStrictMode = useOmniStore((state) => state.setStrictMode);
+
+  return (
+    <div
+      className="theme-toggle inline-flex shrink-0 rounded-full p-0.5"
+      aria-label="Calculation mode"
+    >
+      {(
+        [
+          { label: "Fast", value: false },
+          { label: "Strict", value: true },
+        ] as const
+      ).map((option) => {
+        const active = strictMode === option.value;
+
+        return (
+          <button
+            key={option.label}
+            type="button"
+            tabIndex={-1}
+            aria-pressed={active}
+            aria-label={`${option.label} calculation mode`}
+            className={`theme-toggle-option rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] ${
+              active ? "theme-toggle-option-active" : ""
+            }`}
+            onClick={() => setStrictMode(option.value)}
+          >
+            {option.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}

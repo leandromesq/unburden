@@ -3,6 +3,23 @@ import {
   getContextualMoveSuggestions,
   getInlineSuggestion,
 } from "@/lib/parser/inline-suggestions";
+import type { ImportedSet } from "@/lib/types";
+
+const referencedSets: Record<string, ImportedSet> = {
+  politoed: {
+    speciesId: "politoed",
+    speciesName: "Politoed",
+    nickname: "rain-toed",
+    item: "Mystic Water",
+    ability: "Drizzle",
+    level: 50,
+    nature: "Modest",
+    statPoints: { hp: 32, atk: 0, def: 1, spa: 13, spd: 1, spe: 19 },
+    evs: { hp: 252, atk: 0, def: 8, spa: 104, spd: 8, spe: 152 },
+    ivs: { hp: 31, atk: 0, def: 31, spa: 31, spd: 31, spe: 31 },
+    moves: ["Muddy Water", "Ice Beam", "Protect", "Helping Hand"],
+  },
+};
 
 describe("inline suggestions", () => {
   test("suggests attacker pokemon completion while typing", () => {
@@ -67,5 +84,19 @@ describe("inline suggestions", () => {
 
     expect(result.activeSuggestion?.completionText).toContain("incineroar");
     expect(result.suggestionOptions[0]?.label).toBe("Incineroar");
+  });
+
+  test("suggests saved set references while typing #", () => {
+    const result = getAutocompleteState("#rai", 4, referencedSets);
+
+    expect(result.suggestionOptions[0]?.value).toBe("#raintoed");
+    expect(result.suggestionOptions[0]?.label).toContain("rain-toed");
+  });
+
+  test("uses saved set references as resolved attacker context for move suggestions", () => {
+    const result = getAutocompleteState("#raintoed mud", "#raintoed mud".length, referencedSets);
+
+    expect(result.suggestionOptions[0]?.value).toBe("!muddy-water");
+    expect(result.activeSuggestion?.completionText).toBe("#raintoed !muddy-water");
   });
 });

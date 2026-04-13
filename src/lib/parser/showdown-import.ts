@@ -2,7 +2,6 @@ import {
   DEFAULT_IV_SPREAD,
   EMPTY_STAT_SPREAD,
   cloneStatSpread,
-  evsToStatPoints,
   statPointsToCalcEvs,
 } from "@/lib/calc/stat-calc";
 import { formAliasMap, normalizeAlias, normalizeId, pokemonById } from "@/lib/data/loaders";
@@ -125,8 +124,8 @@ function parseOneSet(block: string): ImportedSet | null {
 
     if (line.startsWith("EVs:")) {
       const parsed = parseStatLine(line.slice(4).trim());
-      set.evs = cloneStatSpread(parsed, EMPTY_STAT_SPREAD);
-      set.statPoints = evsToStatPoints(set.evs);
+      set.statPoints = cloneStatSpread(parsed, EMPTY_STAT_SPREAD);
+      set.evs = statPointsToCalcEvs(set.statPoints);
       continue;
     }
 

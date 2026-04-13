@@ -42,6 +42,11 @@ type LearnsetEntry = {
   moveIds: string[];
 };
 
+type ItemEntry = {
+  id: string;
+  name: string;
+};
+
 type SpeciesSource = {
   id: string;
   name: string;
@@ -65,6 +70,8 @@ const PIKALYTICS_AI_BASE_URL = "https://www.pikalytics.com/ai/pokedex";
 const DEFAULT_CHAMPIONS_FORMAT = "championspreview";
 const SEREBII_CHAMPIONS_MEGA_ABILITIES_URL =
   "https://www.serebii.net/pokemonchampions/megaabilities.shtml";
+const SEREBII_CHAMPIONS_ITEMS_URL =
+  "https://www.serebii.net/pokemonchampions/items.shtml";
 const EXTRA_SPECIES_NAMES = ["Floette-Eternal"];
 const SPECIAL_BASE_SPECIES_IDS = new Map<string, string>([
   ["floettemega", "floetteeternal"],
@@ -196,6 +203,39 @@ function parseChampionsMegaAbilities(markdownOrHtml: string) {
   return megaAbilities;
 }
 
+function decodeHtmlEntities(value: string) {
+  return value
+    .replace(/&amp;/g, "&")
+    .replace(/&#39;|&apos;|&rsquo;/g, "'")
+    .replace(/&eacute;/g, "é")
+    .replace(/&nbsp;/g, " ")
+    .trim();
+}
+
+function parseChampionsItems(html: string) {
+  const legalSection = html.split(/<u>\s*Miscellaneous Items\s*<\/u>/i)[0] ?? html;
+  const items = new Map<string, string>();
+  const matcher =
+    /<td class="fooinfo"><a href="\/itemdex\/([a-z0-9-]+)\.shtml">([^<]+)<\/a><\/td>/gi;
+
+  for (const match of legalSection.matchAll(matcher)) {
+    const name = decodeHtmlEntities(match[2] ?? "");
+    if (!name) {
+      continue;
+    }
+
+    items.set(normalizeAlias(name).replace(/\s+/g, ""), name);
+  }
+
+  if (items.size === 0) {
+    throw new Error("Failed to parse Champions legal items from Serebii.");
+  }
+
+  return Array.from(items.entries())
+    .map(([id, name]) => ({ id, name }) satisfies ItemEntry)
+    .sort((left, right) => left.name.localeCompare(right.name));
+}
+
 async function fetchText(url: string) {
   const response = await fetch(url, {
     headers: {
@@ -299,7 +339,9 @@ async function main() {
   const championsMegaAbilitiesHtml = await fetchText(
     SEREBII_CHAMPIONS_MEGA_ABILITIES_URL,
   );
+  const championsItemsHtml = await fetchText(SEREBII_CHAMPIONS_ITEMS_URL);
   const championSpeciesNames = parseIndexSpeciesNames(championsIndexMarkdown);
+  const itemEntries = parseChampionsItems(championsItemsHtml);
 
   await mkdir(dataDir, { recursive: true });
 
@@ -478,6 +520,7 @@ async function main() {
   await writeJson("pokemon.gen9.json", pokemonEntries);
   await writeJson("moves.gen9.json", moveEntries);
   await writeJson("learnsets.gen9.json", learnsetEntries);
+  await writeJson("champions-items.json", itemEntries);
 }
 
 void main();

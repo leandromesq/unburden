@@ -1,3 +1,5 @@
+import type { StatSpread } from "@/lib/types";
+
 export interface LexToken {
   raw: string;
   normalized: string;
@@ -20,6 +22,49 @@ export function parseHpToken(raw: string) {
   }
 
   return Math.max(1, Math.min(100, value));
+}
+
+function parseCompactSpreadToken(
+  raw: string,
+  prefix: "sp",
+  maxValue: number,
+  maxTotal?: number,
+): StatSpread | null {
+  const match = raw
+    .trim()
+    .match(new RegExp(`^${prefix}:(\\d{1,2})\\/(\\d{1,2})\\/(\\d{1,2})\\/(\\d{1,2})\\/(\\d{1,2})\\/(\\d{1,2})$`, "i"));
+
+  if (!match) {
+    return null;
+  }
+
+  const [, hp, atk, def, spa, spd, spe] = match;
+  const spread = {
+    hp: Number(hp),
+    atk: Number(atk),
+    def: Number(def),
+    spa: Number(spa),
+    spd: Number(spd),
+    spe: Number(spe),
+  };
+
+  const values = Object.values(spread);
+  if (values.some((value) => !Number.isInteger(value) || value < 0 || value > maxValue)) {
+    return null;
+  }
+
+  if (maxTotal !== undefined) {
+    const total = values.reduce((sum, value) => sum + value, 0);
+    if (total > maxTotal) {
+      return null;
+    }
+  }
+
+  return spread;
+}
+
+export function parseStatPointsToken(raw: string) {
+  return parseCompactSpreadToken(raw, "sp", 32, 66);
 }
 
 export interface TokenizedCommand {

@@ -43,8 +43,10 @@ politoed !muddy-water @mystic-water x incineroar ~rain
 Common tokens:
 
 - `!move`
+- `#set-name` to reference a saved/shared set by nickname or species id
 - `@item`
 - `%75` for current HP in that segment
+- `sp:32/0/1/13/1/19` for an explicit Champions SP spread in that segment
 - `[Ability Name]`
 - `~rain`, `~sun`, `~grassy-terrain`, `~trick-room`
 - `*` for critical hit
@@ -67,6 +69,7 @@ Full grammar reference:
 - Regulation-aware legal species filtering
 - Pokemon summary cards with sprite, stats, item, ability, move, and set editing
 - SP-aware set editor for Pokemon Champions
+- Shareable calc URLs that can restore prompt + relevant custom sets
 - Competitive meta-driven autocomplete data
 
 ## Current Data Model

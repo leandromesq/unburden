@@ -55,7 +55,13 @@ export interface ParsedCommand {
   attacker: string;
   move: string;
   defender: string;
+  attackerSetReferenceId?: string;
+  defenderSetReferenceId?: string;
+  attackerCalcFormId?: string;
+  defenderCalcFormId?: string;
   moveHitCount?: number;
+  attackerStatPoints?: StatSpread;
+  defenderStatPoints?: StatSpread;
   attackerStatMod: number;
   defenderStatMod: number;
   attackerSpeedMod: number;
@@ -127,6 +133,11 @@ export interface LearnsetEntry {
   moveIds: string[];
 }
 
+export interface ItemEntry {
+  id: string;
+  name: string;
+}
+
 export interface FormAliasEntry {
   alias: string;
   pokemonId: string;
@@ -139,7 +150,14 @@ export interface SuggestionState {
 }
 
 export interface SuggestionOption {
-  type: "pokemon" | "move" | "ability" | "modifier" | "separator" | "item";
+  type:
+    | "pokemon"
+    | "move"
+    | "ability"
+    | "modifier"
+    | "separator"
+    | "item"
+    | "set";
   value: string;
   label: string;
   applyText: string;
@@ -173,4 +191,9 @@ export interface ImportedSet {
   ivs: StatSpread;
   moves: string[];
   teraType?: string;
+}
+
+export interface ShareState {
+  v: 1;
+  sets: ImportedSet[];
 }

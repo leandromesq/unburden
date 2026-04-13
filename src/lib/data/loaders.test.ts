@@ -1,4 +1,8 @@
-import { legalPokemonData, pokemonById } from "@/lib/data/loaders";
+import {
+  itemDisplayById,
+  legalPokemonData,
+  pokemonById,
+} from "@/lib/data/loaders";
 
 describe("champions species data", () => {
   test("uses updated Champions mega abilities for newer megas", () => {
@@ -20,5 +24,11 @@ describe("champions species data", () => {
     expect(pokemonById.get("alakazam")?.name).toBe("Alakazam");
     expect(legalIds.has("aggron")).toBe(true);
     expect(legalIds.has("alakazam")).toBe(true);
+  });
+
+  test("includes the full legal Champions item pool instead of only meta items", () => {
+    expect(itemDisplayById.get("softsand")).toBe("Soft Sand");
+    expect(itemDisplayById.get("occaberry")).toBe("Occa Berry");
+    expect(itemDisplayById.has("potion")).toBe(false);
   });
 });

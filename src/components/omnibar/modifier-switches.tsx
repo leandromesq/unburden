@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
 import {
@@ -157,7 +157,7 @@ function StageControl({
   ariaLabel,
   summary,
   value,
-  disabled,
+  disabled = false,
   onChange,
 }: {
   title: string;
@@ -167,6 +167,10 @@ function StageControl({
   disabled?: boolean;
   onChange: (value: number) => void;
 }) {
+  const decrementDisabled = disabled || value <= -6;
+  const incrementDisabled = disabled || value >= 6;
+  const resetDisabled = disabled || value === 0;
+
   return (
     <section className="theme-subpanel rounded-2xl p-3">
       <div className="mb-2 flex items-center justify-between gap-3">
@@ -179,9 +183,9 @@ function StageControl({
         <button
           type="button"
           tabIndex={-1}
-          disabled={disabled || value <= -6}
+          disabled={decrementDisabled}
           className={`h-9 w-9 rounded-full ${
-            disabled || value <= -6
+            decrementDisabled
               ? "theme-chip-disabled cursor-not-allowed"
               : "theme-chip"
           }`}
@@ -215,9 +219,9 @@ function StageControl({
         <button
           type="button"
           tabIndex={-1}
-          disabled={disabled || value >= 6}
+          disabled={incrementDisabled}
           className={`h-9 w-9 rounded-full ${
-            disabled || value >= 6
+            incrementDisabled
               ? "theme-chip-disabled cursor-not-allowed"
               : "theme-chip"
           }`}
@@ -231,9 +235,9 @@ function StageControl({
         <button
           type="button"
           tabIndex={-1}
-          disabled={disabled || value === 0}
+          disabled={resetDisabled}
           className={`rounded-full px-3 py-1.5 text-xs ${
-            disabled || value === 0
+            resetDisabled
               ? "theme-chip-disabled cursor-not-allowed"
               : "theme-chip"
           }`}
@@ -249,7 +253,7 @@ function StageControl({
 function SideColumn({
   title,
   activeTokens,
-  disabled,
+  disabled = false,
   stageValue,
   speedValue,
   hpPercent,
@@ -320,7 +324,7 @@ function SideColumn({
               onInsert={onInsert}
             />
             <TokenGroup
-              title="Move Effects"
+              title="Battle Effects"
               tokens={effectTokens}
               activeTokens={activeTokens}
               disabled={disabled}
@@ -333,7 +337,9 @@ function SideColumn({
               disabled={disabled}
               onInsert={onInsert}
               emptyText={
-                disabled ? "Resolve this side first." : "No ability suggestions."
+                disabled
+                  ? "Resolve this side first."
+                  : "No ability suggestions."
               }
             />
           </div>
@@ -357,14 +363,20 @@ export function ModifierSwitches() {
   const setStatModifier = useOmniStore((state) => state.setStatModifier);
   const setSpeedModifier = useOmniStore((state) => state.setSpeedModifier);
   const setHpPercentage = useOmniStore((state) => state.setHpPercentage);
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
   const structure = analyzeCommandStructure(input);
   const attackerResolved =
     structure.attacker.speciesExact ?? structure.attacker.speciesMatch;
   const defenderResolved =
     structure.defender.speciesExact ?? structure.defender.speciesMatch;
-  const defenderReady = Boolean(
-    structure.lexed.hasDelimiter && defenderResolved,
-  );
+  const defenderReady = hasMounted
+    ? Boolean(structure.lexed.hasDelimiter && defenderResolved)
+    : true;
   const attackerHpPercent = structure.attacker.hpToken
     ? Number(structure.attacker.hpToken.value)
     : null;

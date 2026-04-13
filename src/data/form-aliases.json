@@ -1,5 +1,29 @@
 [
   {
+    "alias": "aegislash blade",
+    "pokemonId": "aegislash"
+  },
+  {
+    "alias": "aegislash shield",
+    "pokemonId": "aegislash"
+  },
+  {
+    "alias": "aegislash sword",
+    "pokemonId": "aegislash"
+  },
+  {
+    "alias": "aegislash-blade",
+    "pokemonId": "aegislash"
+  },
+  {
+    "alias": "aegislash-shield",
+    "pokemonId": "aegislash"
+  },
+  {
+    "alias": "aegislash-sword",
+    "pokemonId": "aegislash"
+  },
+  {
     "alias": "bloodmoon",
     "pokemonId": "ursalunabloodmoon"
   },

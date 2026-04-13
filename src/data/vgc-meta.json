@@ -19,16 +19,13 @@
     ],
     "commonItems": [
       "Leftovers",
-      "Life Orb",
-      "Weakness Policy",
-      "Air Balloon",
-      "Clear Amulet",
-      "Rocky Helmet"
+      "Sitrus Berry",
+      "Spell Tag"
     ]
   },
   {
     "pokemonId": "arcaninehisui",
-    "defaultItem": "Clear Amulet",
+    "defaultItem": "Sitrus Berry",
     "defaultAbility": "Intimidate",
     "defaultMove": "Flare Blitz",
     "commonMoves": [
@@ -47,17 +44,15 @@
       "Rock Head"
     ],
     "commonItems": [
-      "Clear Amulet",
-      "Life Orb",
-      "Rocky Helmet",
       "Sitrus Berry",
-      "Air Balloon",
-      "Focus Sash"
+      "Focus Sash",
+      "Choice Scarf",
+      "Chople Berry"
     ]
   },
   {
     "pokemonId": "archaludon",
-    "defaultItem": "Power Herb",
+    "defaultItem": "Leftovers",
     "defaultAbility": "Stamina",
     "defaultMove": "Draco Meteor",
     "commonMoves": [
@@ -76,17 +71,14 @@
       "Stalwart"
     ],
     "commonItems": [
-      "Power Herb",
-      "Assault Vest",
       "Leftovers",
-      "Rocky Helmet",
       "Sitrus Berry",
-      "Life Orb"
+      "Choice Scarf"
     ]
   },
   {
     "pokemonId": "basculegion",
-    "defaultItem": "Life Orb",
+    "defaultItem": "Focus Sash",
     "defaultAbility": "Mold Breaker",
     "defaultMove": "Wave Crash",
     "commonMoves": [
@@ -105,12 +97,11 @@
       "Adaptability"
     ],
     "commonItems": [
-      "Life Orb",
-      "Rocky Helmet",
-      "Clear Amulet",
       "Focus Sash",
       "Choice Scarf",
-      "Choice Band"
+      "Leftovers",
+      "Lum Berry",
+      "Sitrus Berry"
     ]
   },
   {
@@ -135,11 +126,7 @@
     ],
     "commonItems": [
       "Charizardite Y",
-      "Charizardite X",
-      "Life Orb",
-      "Rocky Helmet",
-      "Toxic Orb",
-      "Choice Specs"
+      "Charizardite X"
     ]
   },
   {
@@ -188,9 +175,8 @@
       "Sitrus Berry",
       "Leftovers",
       "Clefablite",
-      "Eject Button",
-      "Aguav Berry",
-      "Toxic Orb"
+      "Choice Scarf",
+      "Babiri Berry"
     ]
   },
   {
@@ -216,10 +202,7 @@
     "commonItems": [
       "Leftovers",
       "Sitrus Berry",
-      "Rocky Helmet",
-      "Aguav Berry",
-      "Maranga Berry",
-      "Figy Berry"
+      "Choice Scarf"
     ]
   },
   {
@@ -245,7 +228,6 @@
     "commonItems": [
       "Delphoxite",
       "Focus Sash",
-      "Life Orb",
       "Leftovers"
     ]
   },
@@ -294,15 +276,15 @@
     "commonItems": [
       "Leftovers",
       "Rindo Berry",
-      "Clear Amulet",
-      "Rocky Helmet",
-      "Life Orb",
-      "Sitrus Berry"
+      "Sitrus Berry",
+      "Chesto Berry",
+      "Lum Berry",
+      "Choice Scarf"
     ]
   },
   {
     "pokemonId": "dragapult",
-    "defaultItem": "Life Orb",
+    "defaultItem": "Focus Sash",
     "defaultAbility": "Clear Body",
     "defaultMove": "Phantom Force",
     "commonMoves": [
@@ -321,12 +303,9 @@
       "Infiltrator"
     ],
     "commonItems": [
-      "Life Orb",
-      "Choice Band",
-      "Rocky Helmet",
       "Focus Sash",
-      "Power Herb",
-      "Choice Specs"
+      "Choice Scarf",
+      "Lum Berry"
     ]
   },
   {
@@ -350,11 +329,9 @@
     ],
     "commonItems": [
       "Dragoninite",
-      "Loaded Dice",
-      "Life Orb",
-      "Rocky Helmet",
       "Leftovers",
-      "Weakness Policy"
+      "Sitrus Berry",
+      "Lum Berry"
     ]
   },
   {
@@ -402,15 +379,13 @@
     "commonItems": [
       "Focus Sash",
       "Excadrite",
-      "Life Orb",
-      "Rocky Helmet",
-      "Clear Amulet",
-      "Air Balloon"
+      "Choice Scarf",
+      "Leftovers"
     ]
   },
   {
     "pokemonId": "farigiraf",
-    "defaultItem": "Throat Spray",
+    "defaultItem": "Sitrus Berry",
     "defaultAbility": "Sap Sipper",
     "defaultMove": "Hyper Voice",
     "commonMoves": [
@@ -429,12 +404,11 @@
       "Armor Tail"
     ],
     "commonItems": [
-      "Throat Spray",
       "Sitrus Berry",
       "Leftovers",
       "Mental Herb",
       "Colbur Berry",
-      "Rocky Helmet"
+      "Choice Scarf"
     ]
   },
   {
@@ -459,7 +433,6 @@
     ],
     "commonItems": [
       "Froslassite",
-      "Life Orb",
       "Focus Sash"
     ]
   },
@@ -487,7 +460,7 @@
   },
   {
     "pokemonId": "garchomp",
-    "defaultItem": "Life Orb",
+    "defaultItem": "Garchompite",
     "defaultAbility": "Rough Skin",
     "defaultMove": "Earthquake",
     "commonMoves": [
@@ -505,12 +478,32 @@
       "Sand Veil"
     ],
     "commonItems": [
-      "Life Orb",
-      "Clear Amulet",
       "Garchompite",
-      "Rocky Helmet",
       "Choice Scarf",
-      "Leftovers"
+      "Leftovers",
+      "Focus Sash"
+    ]
+  },
+  {
+    "pokemonId": "garchompmega",
+    "defaultItem": "Garchompite",
+    "defaultAbility": "Sand Force",
+    "defaultMove": "Earthquake",
+    "commonMoves": [
+      "Earthquake",
+      "Protect",
+      "Dragon Claw",
+      "Rock Slide",
+      "Stomping Tantrum",
+      "Swords Dance",
+      "Scale Shot",
+      "Breaking Swipe"
+    ],
+    "commonAbilities": [
+      "Sand Force"
+    ],
+    "commonItems": [
+      "Garchompite"
     ]
   },
   {
@@ -535,11 +528,11 @@
     ],
     "commonItems": [
       "Gardevoirite",
-      "Life Orb",
       "Sitrus Berry",
       "Focus Sash",
       "Choice Scarf",
-      "Leftovers"
+      "Leftovers",
+      "Mental Herb"
     ]
   },
   {
@@ -585,10 +578,8 @@
     "commonItems": [
       "Gengarite",
       "Focus Sash",
-      "Air Balloon",
-      "Life Orb",
       "Leftovers",
-      "Assault Vest"
+      "Choice Scarf"
     ]
   },
   {
@@ -615,7 +606,7 @@
   },
   {
     "pokemonId": "glimmora",
-    "defaultItem": "Power Herb",
+    "defaultItem": "Glimmoranite",
     "defaultAbility": "Toxic Debris",
     "defaultMove": "Meteor Beam",
     "commonMoves": [
@@ -634,17 +625,36 @@
       "Hospitality"
     ],
     "commonItems": [
-      "Power Herb",
       "Glimmoranite",
       "Focus Sash",
-      "Air Balloon",
-      "Rocky Helmet",
-      "Life Orb"
+      "Choice Scarf"
+    ]
+  },
+  {
+    "pokemonId": "glimmoramega",
+    "defaultItem": "Glimmoranite",
+    "defaultAbility": "Adaptability",
+    "defaultMove": "Meteor Beam",
+    "commonMoves": [
+      "Meteor Beam",
+      "Spiky Shield",
+      "Earth Power",
+      "Sludge Bomb",
+      "Power Gem",
+      "Mortal Spin",
+      "Sludge Wave",
+      "Protect"
+    ],
+    "commonAbilities": [
+      "Adaptability"
+    ],
+    "commonItems": [
+      "Glimmoranite"
     ]
   },
   {
     "pokemonId": "grimmsnarl",
-    "defaultItem": "Rocky Helmet",
+    "defaultItem": "Sitrus Berry",
     "defaultAbility": "Frisk",
     "defaultMove": "Foul Play",
     "commonMoves": [
@@ -663,12 +673,9 @@
       "Pickpocket"
     ],
     "commonItems": [
-      "Rocky Helmet",
       "Sitrus Berry",
       "Leftovers",
-      "Light Clay",
-      "Eject Button",
-      "Weakness Policy"
+      "Choice Scarf"
     ]
   },
   {
@@ -694,9 +701,8 @@
       "Gyaradosite",
       "Sitrus Berry",
       "Leftovers",
-      "Rocky Helmet",
-      "Clear Amulet",
-      "Life Orb"
+      "Wacan Berry",
+      "White Herb"
     ]
   },
   {
@@ -742,11 +748,9 @@
     ],
     "commonItems": [
       "Sitrus Berry",
-      "Rocky Helmet",
-      "Figy Berry",
       "Leftovers",
       "Shuca Berry",
-      "Assault Vest"
+      "Chople Berry"
     ]
   },
   {
@@ -771,10 +775,7 @@
     ],
     "commonItems": [
       "Kangaskhanite",
-      "Rocky Helmet",
-      "Leftovers",
-      "Eject Button",
-      "Clear Amulet"
+      "Leftovers"
     ]
   },
   {
@@ -801,7 +802,7 @@
   },
   {
     "pokemonId": "kingambit",
-    "defaultItem": "Life Orb",
+    "defaultItem": "Chople Berry",
     "defaultAbility": "Defiant",
     "defaultMove": "Sucker Punch",
     "commonMoves": [
@@ -820,17 +821,17 @@
       "Supreme Overlord"
     ],
     "commonItems": [
-      "Life Orb",
-      "Rocky Helmet",
       "Chople Berry",
-      "Air Balloon",
       "Black Glasses",
-      "Leftovers"
+      "Leftovers",
+      "Focus Sash",
+      "Sitrus Berry",
+      "Shuca Berry"
     ]
   },
   {
     "pokemonId": "kommoo",
-    "defaultItem": "Throat Spray",
+    "defaultItem": "Leftovers",
     "defaultAbility": "Soundproof",
     "defaultMove": "Clanging Scales",
     "commonMoves": [
@@ -849,12 +850,11 @@
       "Overcoat"
     ],
     "commonItems": [
-      "Throat Spray",
       "Leftovers",
-      "Life Orb",
       "Sitrus Berry",
       "Choice Scarf",
-      "Cell Battery"
+      "Focus Sash",
+      "Roseli Berry"
     ]
   },
   {
@@ -880,10 +880,9 @@
     "commonItems": [
       "Sitrus Berry",
       "Focus Sash",
-      "Rocky Helmet",
       "Chople Berry",
-      "Wide Lens",
-      "Leftovers"
+      "Leftovers",
+      "Mental Herb"
     ]
   },
   {
@@ -910,9 +909,8 @@
       "Sitrus Berry",
       "Focus Sash",
       "Chople Berry",
-      "Rocky Helmet",
       "Leftovers",
-      "Eject Button"
+      "Mental Herb"
     ]
   },
   {
@@ -982,11 +980,8 @@
     ],
     "commonItems": [
       "Focus Sash",
-      "Life Orb",
-      "Rocky Helmet",
       "Choice Scarf",
-      "Leftovers",
-      "Air Balloon"
+      "Leftovers"
     ]
   },
   {
@@ -1011,14 +1006,12 @@
     ],
     "commonItems": [
       "Meowsticite",
-      "Choice Scarf",
-      "Rocky Helmet",
-      "Life Orb"
+      "Choice Scarf"
     ]
   },
   {
     "pokemonId": "metagross",
-    "defaultItem": "Metagrossite",
+    "defaultItem": "Leftovers",
     "defaultAbility": "Clear Body",
     "defaultMove": "Meteor Mash",
     "commonMoves": [
@@ -1036,34 +1029,8 @@
       "Light Metal"
     ],
     "commonItems": [
-      "Metagrossite",
-      "Rocky Helmet",
       "Leftovers",
-      "Life Orb",
-      "Weakness Policy",
-      "Assault Vest"
-    ]
-  },
-  {
-    "pokemonId": "metagrossmega",
-    "defaultItem": "Metagrossite",
-    "defaultAbility": "Tough Claws",
-    "defaultMove": "Meteor Mash",
-    "commonMoves": [
-      "Meteor Mash",
-      "Heavy Slam",
-      "Protect",
-      "Psychic Fangs",
-      "Stomping Tantrum",
-      "Bullet Punch",
-      "Ice Punch",
-      "Body Press"
-    ],
-    "commonAbilities": [
-      "Tough Claws"
-    ],
-    "commonItems": [
-      "Metagrossite"
+      "Sitrus Berry"
     ]
   },
   {
@@ -1089,10 +1056,7 @@
     "commonItems": [
       "Leftovers",
       "Sitrus Berry",
-      "Life Orb",
-      "Flame Orb",
-      "Adrenaline Orb",
-      "Wiki Berry"
+      "Choice Scarf"
     ]
   },
   {
@@ -1116,16 +1080,16 @@
     ],
     "commonItems": [
       "Focus Sash",
-      "Life Orb",
       "Leftovers",
-      "Eject Pack",
-      "Air Balloon",
-      "Sitrus Berry"
+      "Sitrus Berry",
+      "Mental Herb",
+      "White Herb",
+      "Choice Scarf"
     ]
   },
   {
     "pokemonId": "palafinhero",
-    "defaultItem": "Rocky Helmet",
+    "defaultItem": "Leftovers",
     "defaultAbility": "Zero to Hero",
     "defaultMove": "Wave Crash",
     "commonMoves": [
@@ -1143,12 +1107,10 @@
       "Hospitality"
     ],
     "commonItems": [
-      "Rocky Helmet",
-      "Life Orb",
-      "Clear Amulet",
       "Leftovers",
       "Mystic Water",
-      "Eject Pack"
+      "Sitrus Berry",
+      "Focus Sash"
     ]
   },
   {
@@ -1174,10 +1136,8 @@
     "commonItems": [
       "Focus Sash",
       "Sitrus Berry",
-      "Life Orb",
       "Leftovers",
-      "Rocky Helmet",
-      "Damp Rock"
+      "Choice Scarf"
     ]
   },
   {
@@ -1203,15 +1163,12 @@
     "commonItems": [
       "Leftovers",
       "Sitrus Berry",
-      "Eject Button",
-      "Life Orb",
-      "Petaya Berry",
-      "Wiki Berry"
+      "Focus Sash"
     ]
   },
   {
     "pokemonId": "primarina",
-    "defaultItem": "Throat Spray",
+    "defaultItem": "Leftovers",
     "defaultAbility": "Torrent",
     "defaultMove": "Moonblast",
     "commonMoves": [
@@ -1230,17 +1187,14 @@
       "Hospitality"
     ],
     "commonItems": [
-      "Throat Spray",
-      "Life Orb",
       "Leftovers",
       "Sitrus Berry",
-      "Choice Specs",
-      "Safety Goggles"
+      "Focus Sash"
     ]
   },
   {
     "pokemonId": "raichu",
-    "defaultItem": "Raichunite Y",
+    "defaultItem": "Focus Sash",
     "defaultAbility": "Lightning Rod",
     "defaultMove": "Thunderbolt",
     "commonMoves": [
@@ -1258,34 +1212,9 @@
       "Static"
     ],
     "commonItems": [
-      "Raichunite Y",
-      "Raichunite X",
       "Focus Sash",
-      "Air Balloon",
-      "Rocky Helmet",
-      "Sitrus Berry"
-    ]
-  },
-  {
-    "pokemonId": "raichumegay",
-    "defaultItem": "Raichunite Y",
-    "defaultAbility": "Surge Surfer",
-    "defaultMove": "Thunderbolt",
-    "commonMoves": [
-      "Thunderbolt",
-      "Fake Out",
-      "Volt Switch",
-      "Nuzzle",
-      "Protect",
-      "Thunder",
-      "Volt Tackle",
-      "Encore"
-    ],
-    "commonAbilities": [
-      "Surge Surfer"
-    ],
-    "commonItems": [
-      "Raichunite Y"
+      "Sitrus Berry",
+      "Choice Scarf"
     ]
   },
   {
@@ -1309,15 +1238,13 @@
     "commonItems": [
       "Sitrus Berry",
       "Leftovers",
-      "Life Orb",
-      "Aguav Berry",
-      "Assault Vest",
-      "Wiki Berry"
+      "Focus Sash",
+      "Choice Scarf"
     ]
   },
   {
     "pokemonId": "salamence",
-    "defaultItem": "Salamencite",
+    "defaultItem": "Leftovers",
     "defaultAbility": "Intimidate",
     "defaultMove": "Draco Meteor",
     "commonMoves": [
@@ -1335,34 +1262,8 @@
       "Moxie"
     ],
     "commonItems": [
-      "Salamencite",
-      "Life Orb",
-      "Rocky Helmet",
-      "Eject Pack",
       "Leftovers",
       "Sitrus Berry"
-    ]
-  },
-  {
-    "pokemonId": "salamencemega",
-    "defaultItem": "Salamencite",
-    "defaultAbility": "Aerilate",
-    "defaultMove": "Draco Meteor",
-    "commonMoves": [
-      "Draco Meteor",
-      "Hyper Voice",
-      "Protect",
-      "Tailwind",
-      "Double-Edge",
-      "Dragon Claw",
-      "Dragon Dance",
-      "Flamethrower"
-    ],
-    "commonAbilities": [
-      "Aerilate"
-    ],
-    "commonItems": [
-      "Salamencite"
     ]
   },
   {
@@ -1388,10 +1289,10 @@
     "commonItems": [
       "Sitrus Berry",
       "Leftovers",
-      "Eject Button",
-      "Rocky Helmet",
       "Occa Berry",
-      "Focus Sash"
+      "Focus Sash",
+      "Mental Herb",
+      "Choice Scarf"
     ]
   },
   {
@@ -1417,10 +1318,10 @@
     "commonItems": [
       "Sitrus Berry",
       "Leftovers",
-      "Eject Button",
-      "Rocky Helmet",
       "Mental Herb",
-      "Life Orb"
+      "Focus Sash",
+      "Choice Scarf",
+      "Occa Berry"
     ]
   },
   {
@@ -1445,16 +1346,13 @@
     ],
     "commonItems": [
       "White Herb",
-      "Psychic Seed",
       "Focus Sash",
-      "Rocky Helmet",
-      "Normal Gem",
-      "Air Balloon"
+      "Sitrus Berry"
     ]
   },
   {
     "pokemonId": "sylveon",
-    "defaultItem": "Throat Spray",
+    "defaultItem": "Leftovers",
     "defaultAbility": "Cute Charm",
     "defaultMove": "Moonblast",
     "commonMoves": [
@@ -1473,17 +1371,13 @@
       "Hospitality"
     ],
     "commonItems": [
-      "Throat Spray",
       "Leftovers",
-      "Life Orb",
-      "Choice Specs",
-      "Fairy Feather",
-      "Pixie Plate"
+      "Fairy Feather"
     ]
   },
   {
     "pokemonId": "talonflame",
-    "defaultItem": "Life Orb",
+    "defaultItem": "Focus Sash",
     "defaultAbility": "Flame Body",
     "defaultMove": "Brave Bird",
     "commonMoves": [
@@ -1502,17 +1396,15 @@
       "Hospitality"
     ],
     "commonItems": [
-      "Life Orb",
       "Focus Sash",
-      "Rocky Helmet",
       "Sitrus Berry",
-      "Covert Cloak",
-      "Leftovers"
+      "Leftovers",
+      "Sharp Beak"
     ]
   },
   {
     "pokemonId": "tatsugiri",
-    "defaultItem": "Toxic Orb",
+    "defaultItem": "Focus Sash",
     "defaultAbility": "Storm Drain",
     "defaultMove": "Draco Meteor",
     "commonMoves": [
@@ -1530,17 +1422,15 @@
       "Commander"
     ],
     "commonItems": [
-      "Toxic Orb",
       "Focus Sash",
-      "Life Orb",
       "Choice Scarf",
-      "Adrenaline Orb",
-      "Leftovers"
+      "Leftovers",
+      "Sitrus Berry"
     ]
   },
   {
     "pokemonId": "torkoal",
-    "defaultItem": "Eject Pack",
+    "defaultItem": "Sitrus Berry",
     "defaultAbility": "Drought",
     "defaultMove": "Eruption",
     "commonMoves": [
@@ -1559,12 +1449,10 @@
       "Shell Armor"
     ],
     "commonItems": [
-      "Eject Pack",
       "Sitrus Berry",
       "Leftovers",
-      "Eject Button",
       "Charcoal",
-      "Weakness Policy"
+      "Focus Sash"
     ]
   },
   {
@@ -1588,11 +1476,9 @@
     ],
     "commonItems": [
       "Tyranitarite",
-      "Clear Amulet",
-      "Rocky Helmet",
       "Chople Berry",
-      "Weakness Policy",
-      "Life Orb"
+      "Leftovers",
+      "Focus Sash"
     ]
   },
   {
@@ -1639,10 +1525,8 @@
     ],
     "commonItems": [
       "Focus Sash",
-      "Life Orb",
       "Venusaurite",
       "Leftovers",
-      "Black Sludge",
       "Sitrus Berry"
     ]
   },
@@ -1668,10 +1552,7 @@
     "commonItems": [
       "Sitrus Berry",
       "Leftovers",
-      "Life Orb",
-      "Focus Sash",
-      "Eject Button",
-      "Air Balloon"
+      "Focus Sash"
     ]
   },
   {
@@ -1696,11 +1577,10 @@
     ],
     "commonItems": [
       "Focus Sash",
-      "Covert Cloak",
       "Mental Herb",
       "Leftovers",
-      "Choice Specs",
-      "Sitrus Berry"
+      "Sitrus Berry",
+      "Choice Scarf"
     ]
   }
 ]

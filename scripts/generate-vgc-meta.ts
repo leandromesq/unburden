@@ -26,6 +26,11 @@ type FormAliasEntry = {
   pokemonId: string;
 };
 
+type ItemEntry = {
+  id: string;
+  name: string;
+};
+
 type VgcMetaProfile = {
   pokemonId: string;
   defaultItem: string;
@@ -98,6 +103,17 @@ function compactAlias(value: string) {
 
 function dedupeStrings(values: Array<string | null | undefined>) {
   return Array.from(new Set(values.filter(Boolean) as string[]));
+}
+
+function canonicalizeLegalItemName(
+  itemName: string | null | undefined,
+  legalItemById: Map<string, string>,
+) {
+  if (!itemName) {
+    return null;
+  }
+
+  return legalItemById.get(normalizeId(itemName)) ?? null;
 }
 
 function escapeRegex(value: string) {
@@ -273,17 +289,24 @@ function resolveDefaultItem(
   rankedItems: UsageEntry[],
   previousProfile: VgcMetaProfile | undefined,
   commonItemLimit: number,
+  legalItemById: Map<string, string>,
 ) {
-  const commonItems = dedupeStrings([
-    ...rankedItems
-      .map((entry) => entry.name.trim())
-      .filter((itemName) => normalizeId(itemName) !== "nothing"),
+  const legalRankedItems = rankedItems
+    .map((entry) => canonicalizeLegalItemName(entry.name.trim(), legalItemById))
+    .filter((itemName): itemName is string => Boolean(itemName));
+  const previousItems = [
     ...(previousProfile?.commonItems ?? []),
     previousProfile?.defaultItem,
+  ]
+    .map((itemName) => canonicalizeLegalItemName(itemName, legalItemById))
+    .filter((itemName): itemName is string => Boolean(itemName));
+  const commonItems = dedupeStrings([
+    ...legalRankedItems,
+    ...previousItems,
   ]).slice(0, commonItemLimit);
 
   return {
-    defaultItem: commonItems[0] ?? previousProfile?.defaultItem ?? null,
+    defaultItem: commonItems[0] ?? null,
     commonItems,
   };
 }
@@ -520,10 +543,11 @@ async function main() {
     args.get("--top-items") ?? overrides.commonItemLimit ?? DEFAULT_COMMON_ITEM_LIMIT,
   );
 
-  const [pokemonData, moveData, formAliasData, previousMeta] = await Promise.all([
+  const [pokemonData, moveData, formAliasData, legalItemData, previousMeta] = await Promise.all([
     readJson<PokemonEntry[]>(path.join(dataDir, "pokemon.gen9.json")),
     readJson<MoveEntry[]>(path.join(dataDir, "moves.gen9.json")),
     readJson<FormAliasEntry[]>(path.join(dataDir, "form-aliases.json")),
+    readJson<ItemEntry[]>(path.join(dataDir, "champions-items.json")),
     maybeReadJson<VgcMetaProfile[]>(outputPath),
   ]);
 
@@ -531,6 +555,7 @@ async function main() {
     (previousMeta ?? []).map((profile) => [profile.pokemonId, profile]),
   );
   const pokemonById = new Map(pokemonData.map((entry) => [entry.id, entry]));
+  const legalItemById = new Map(legalItemData.map((entry) => [entry.id, entry.name]));
   const pokemonIdIndex = buildPokemonIdIndex(
     pokemonData,
     formAliasData,
@@ -589,6 +614,7 @@ async function main() {
           commonItemsSection,
           previousProfile,
           commonItemLimit,
+          legalItemById,
         );
         const { defaultAbility, commonAbilities } = resolveDefaultAbility(
           commonAbilitiesSection,

@@ -70,6 +70,7 @@ export function PokemonSetEditorModal({
   onSave,
 }: PokemonSetEditorModalProps) {
   const [speciesName, setSpeciesName] = useState(initialSet.speciesName);
+  const [nickname, setNickname] = useState(initialSet.nickname ?? "");
   const [item, setItem] = useState(initialSet.item ?? "");
   const [ability, setAbility] = useState(initialSet.ability ?? "");
   const [nature, setNature] = useState(initialSet.nature);
@@ -173,7 +174,7 @@ export function PokemonSetEditorModal({
     const nextSet = createImportedSet({
       speciesId: pokemon.id,
       speciesName: pokemon.name,
-      nickname: initialSet.nickname,
+      nickname: nickname.trim() || undefined,
       item: item.trim() || undefined,
       ability: ability.trim() || undefined,
       level: initialSet.level,
@@ -234,6 +235,19 @@ export function PokemonSetEditorModal({
               placeholder="Politoed"
               onChange={setSpeciesName}
             />
+
+            <label className="block">
+              <span className="theme-text-dim mb-1.5 block text-sm">
+                Set Name
+              </span>
+              <input
+                type="text"
+                value={nickname}
+                onChange={(event) => setNickname(event.currentTarget.value)}
+                placeholder="rain-toed"
+                className="theme-control theme-input w-full rounded-2xl px-3 py-2.5"
+              />
+            </label>
 
             <div className="grid gap-3 sm:grid-cols-2">
               <SearchableCombobox

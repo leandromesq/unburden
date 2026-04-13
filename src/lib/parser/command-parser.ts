@@ -4,6 +4,7 @@ import {
   moveById,
   normalizeAlias,
   normalizeId,
+  pokemonById,
   vgcMetaByPokemonId,
 } from "@/lib/data/loaders";
 import { analyzeCommandStructure, isKnownModifierToken } from "@/lib/parser/command-structure";
@@ -18,7 +19,8 @@ import {
   buildCommonAbilities,
 } from "@/lib/parser/grammar";
 import { resolveMoveEntity } from "@/lib/parser/fuse-indexes";
-import type { ParsedCommand, PokemonEntry } from "@/lib/types";
+import { resolveSetReferenceToken } from "@/lib/team/set-references";
+import type { ImportedSet, ParsedCommand, PokemonEntry } from "@/lib/types";
 
 function unique<T>(values: T[]) {
   return Array.from(new Set(values));
@@ -204,6 +206,24 @@ function resolveCurrentHpPercent(tokenValue: string | undefined) {
   return Math.max(1, Math.min(100, value));
 }
 
+function resolveAegislashCalcFormId(speciesText: string) {
+  const normalizedSpeciesText = normalizeAlias(speciesText);
+
+  if (!normalizedSpeciesText.includes("aegislash")) {
+    return undefined;
+  }
+
+  if (/\b(?:blade|sword)\b/.test(normalizedSpeciesText)) {
+    return "aegislashblade";
+  }
+
+  if (/\bshield\b/.test(normalizedSpeciesText)) {
+    return "aegislashshield";
+  }
+
+  return undefined;
+}
+
 interface CommandParseResult {
   parsed: ParsedCommand | null;
   issues: string[];
@@ -213,13 +233,37 @@ function isLegacyScopedToken(token: string) {
   return /^(?:[adg]:|>|<)/i.test(token);
 }
 
-export function parseCommand(input: string): CommandParseResult {
+export function parseCommand(
+  input: string,
+  importedSets: Record<string, ImportedSet> = {},
+): CommandParseResult {
   const structure = analyzeCommandStructure(input);
   const issues: string[] = [];
+  const attackerReferenceSet = resolveSetReferenceToken(
+    structure.attacker.leadingFreeTokens[0]?.raw,
+    importedSets,
+  );
+  const defenderReferenceSet = resolveSetReferenceToken(
+    structure.defender.leadingFreeTokens[0]?.raw,
+    importedSets,
+  );
   const attackerMatch = resolveParsedSpecies(structure.attacker);
   const defenderMatch = resolveParsedSpecies(structure.defender);
+  const attackerEntry =
+    (attackerReferenceSet
+      ? pokemonById.get(normalizeId(attackerReferenceSet.speciesId))
+      : null) ?? attackerMatch?.entry ?? null;
+  const defenderEntry =
+    (defenderReferenceSet
+      ? pokemonById.get(normalizeId(defenderReferenceSet.speciesId))
+      : null) ?? defenderMatch?.entry ?? null;
   const moveToken = structure.attacker.moveToken;
-  const move = moveToken ? resolveMoveName(moveToken.value) : null;
+  const referencedMove = !moveToken ? attackerReferenceSet?.moves[0] : undefined;
+  const move = moveToken
+    ? resolveMoveName(moveToken.value)
+    : referencedMove
+      ? resolveMoveName(referencedMove)
+      : null;
   const attackerItem = resolveItemDisplay(structure.attacker.itemToken?.value);
   const defenderItem = resolveItemDisplay(structure.defender.itemToken?.value);
 
@@ -227,23 +271,39 @@ export function parseCommand(input: string): CommandParseResult {
     issues.push("Use x to split attacker and defender.");
   }
 
-  if (!attackerMatch) {
+  if (structure.attacker.leadingFreeTokens[0]?.raw.startsWith("#") && !attackerReferenceSet) {
+    issues.push(`Unknown saved set reference: ${structure.attacker.leadingFreeTokens[0]?.raw}`);
+  }
+
+  if (structure.defender.leadingFreeTokens[0]?.raw.startsWith("#") && !defenderReferenceSet) {
+    issues.push(`Unknown saved set reference: ${structure.defender.leadingFreeTokens[0]?.raw}`);
+  }
+
+  if (attackerReferenceSet && structure.attacker.leadingFreeTokens.length > 1) {
+    issues.push("Saved set references must occupy the attacker pokemon slot alone.");
+  }
+
+  if (defenderReferenceSet && structure.defender.leadingFreeTokens.length > 1) {
+    issues.push("Saved set references must occupy the defender pokemon slot alone.");
+  }
+
+  if (!attackerEntry) {
     issues.push("Could not resolve attacker.");
   }
 
-  if (structure.lexed.hasDelimiter && !defenderMatch) {
+  if (structure.lexed.hasDelimiter && !defenderEntry) {
     issues.push("Could not resolve defender.");
   }
 
   if (structure.attacker.postExplicitFreeTokens.length) {
     issues.push(
-      "Attacker tokens after !move must use known segment-scoped forms like @item, %75, [Ability], +1, +nature, or helping-hand.",
+      "Attacker tokens after !move must use known segment-scoped forms like @item, %75, sp:32/0/0/0/0/0, [Ability], +1, +nature, or helping-hand.",
     );
   }
 
   if (structure.defender.postExplicitFreeTokens.length) {
     issues.push(
-      "Defender tokens must use known segment-scoped forms like @item, %75, [Ability], +1, +nature, or reflect.",
+      "Defender tokens must use known segment-scoped forms like @item, %75, sp:32/0/0/0/0/0, [Ability], +1, +nature, or reflect.",
     );
   }
 
@@ -251,9 +311,9 @@ export function parseCommand(input: string): CommandParseResult {
     issues.push("Use !<move> for the attacker move.");
   }
 
-  if (!moveToken) {
+  if (!moveToken && !referencedMove) {
     issues.push("Add an explicit attacker move with !<move>.");
-  } else if (!move) {
+  } else if ((moveToken || referencedMove) && !move) {
     issues.push("Could not resolve attacker move.");
   }
 
@@ -263,7 +323,18 @@ export function parseCommand(input: string): CommandParseResult {
 
   if (structure.defender.leadingRemainderTokens.length) {
     issues.push(
-      "Unrecognized defender token. Use segment-scoped tokens like @item, %75, [Ability], +nature, reflect, or ~rain.",
+      "Unrecognized defender token. Use segment-scoped tokens like @item, %75, sp:32/0/0/0/0/0, [Ability], +nature, reflect, or ~rain.",
+    );
+  }
+
+  const invalidExplicitTokens = [
+    ...structure.attacker.unknownExplicitTokens,
+    ...structure.defender.unknownExplicitTokens,
+  ];
+
+  if (invalidExplicitTokens.some((token) => token.normalized.startsWith("sp:"))) {
+    issues.push(
+      "SP spreads must use sp:hp/atk/def/spa/spd/spe with six values, max 32 each and 66 total.",
     );
   }
 
@@ -306,16 +377,23 @@ export function parseCommand(input: string): CommandParseResult {
     issues.push("Legacy prefixes >, <, a:, d:, and g: are no longer supported.");
   }
 
-  if (!attackerMatch || !defenderMatch || !move || legacyTokens.length || moveToken?.hitCountInvalid) {
+  if (
+    !attackerEntry ||
+    !defenderEntry ||
+    !move ||
+    legacyTokens.length ||
+    moveToken?.hitCountInvalid ||
+    invalidExplicitTokens.length
+  ) {
     return { parsed: null, issues: unique(issues) };
   }
 
   const attackerAbility = resolveAbilityName(
-    attackerMatch.entry,
+    attackerEntry,
     structure.attacker.abilityToken?.value,
   );
   const defenderAbility = resolveAbilityName(
-    defenderMatch.entry,
+    defenderEntry,
     structure.defender.abilityToken?.value,
   );
   const attackerCurrentHpPercent = resolveCurrentHpPercent(structure.attacker.hpToken?.value);
@@ -342,10 +420,16 @@ export function parseCommand(input: string): CommandParseResult {
 
   return {
     parsed: {
-      attacker: attackerMatch.entry.name,
+      attacker: attackerEntry.name,
       move: move.name,
-      defender: defenderMatch.entry.name,
+      defender: defenderEntry.name,
+      attackerSetReferenceId: attackerReferenceSet?.speciesId,
+      defenderSetReferenceId: defenderReferenceSet?.speciesId,
+      attackerCalcFormId: resolveAegislashCalcFormId(structure.attacker.speciesText),
+      defenderCalcFormId: resolveAegislashCalcFormId(structure.defender.speciesText),
       moveHitCount: moveToken?.hits,
+      attackerStatPoints: structure.attacker.statPointToken?.spread,
+      defenderStatPoints: structure.defender.statPointToken?.spread,
       attackerStatMod: modifiers.attackerStatMod,
       defenderStatMod: modifiers.defenderStatMod,
       attackerSpeedMod: modifiers.attackerSpeedMod,

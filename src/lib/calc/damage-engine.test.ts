@@ -1,4 +1,8 @@
-import { buildCalculationContext, calculateDamageResults } from "@/lib/calc/damage-engine";
+import {
+  buildCalculationContext,
+  calculateDamageResults,
+  getCalculationIssues,
+} from "@/lib/calc/damage-engine";
 import { createImportedSet } from "@/lib/team/imported-set-utils";
 import { parseCommand } from "@/lib/parser/command-parser";
 
@@ -10,11 +14,11 @@ describe("damage engine", () => {
     expect(calculateDamageResults(parsed!)).toHaveLength(3);
   });
 
-  test("forces 0 speed IVs when trick room is parsed without an explicit set", () => {
+  test("always assumes max IVs even under trick room", () => {
     const parsed = parseCommand("politoed !muddy-water ~trick-room x incineroar").parsed;
     const context = buildCalculationContext(parsed!);
 
-    expect(context?.attackerPokemon.ivs.spe).toBe(0);
+    expect(context?.attackerPokemon.ivs.spe).toBe(31);
   });
 
   test("emits compact showdown-like damage text without raw rolls", () => {
@@ -88,6 +92,9 @@ describe("damage engine", () => {
     expect(slowerResult.maxPercentage).toBeGreaterThan(fasterResult.maxPercentage);
     expect(fasterResult.assumptions).toContain("Attacker speed stage: +6 Spe");
     expect(fasterResult.assumptions).toContain("Defender speed stage: -6 Spe");
+    expect(fasterResult.assumptions.some((assumption) => assumption.startsWith("Attacker Spe: "))).toBe(true);
+    expect(fasterResult.assumptions.some((assumption) => assumption.startsWith("Defender Spe: "))).toBe(true);
+    expect(fasterResult.assumptions.some((assumption) => assumption.startsWith("Speed ratio: "))).toBe(true);
   });
 
   test("does not crash when calc desc fails on a no-damage interaction", () => {
@@ -97,6 +104,58 @@ describe("damage engine", () => {
 
     const [result] = calculateDamageResults(parsed!);
     expect(result.damageText).toContain("0-0");
+  });
+
+  test("maps Aegislash to a calc-supported form instead of crashing", () => {
+    const parsed = parseCommand("aegislash !poltergeist x incineroar").parsed;
+
+    expect(parsed).not.toBeNull();
+    expect(() => calculateDamageResults(parsed!)).not.toThrow();
+    expect(calculateDamageResults(parsed!)).toHaveLength(3);
+  });
+
+  test("defaults Aegislash to Blade as attacker and Shield as defender", () => {
+    const attackerParsed = parseCommand("aegislash !poltergeist x incineroar").parsed;
+    const defenderParsed = parseCommand("incineroar !flare-blitz x aegislash").parsed;
+    const attackerContext = buildCalculationContext(attackerParsed!);
+    const defenderContext = buildCalculationContext(defenderParsed!);
+
+    expect(attackerContext?.attackerCalcSpeciesName).toBe("Aegislash-Blade");
+    expect(defenderContext?.defenderCalcSpeciesName).toBe("Aegislash-Shield");
+  });
+
+  test("respects explicitly stated Aegislash forms", () => {
+    const parsed = parseCommand("aegislash shield !shadow-ball x aegislash blade").parsed;
+    const context = buildCalculationContext(parsed!);
+
+    expect(context?.attackerCalcSpeciesName).toBe("Aegislash-Shield");
+    expect(context?.defenderCalcSpeciesName).toBe("Aegislash-Blade");
+  });
+
+  test("assumes a defender item for Poltergeist when none is explicit", () => {
+    const parsed = parseCommand("aegislash !poltergeist x incineroar").parsed;
+    const [result] = calculateDamageResults(parsed!);
+
+    expect(result.damageText).not.toContain("0-0");
+    expect(result.assumptions.some((assumption) => assumption.startsWith("Assumed defender item:"))).toBe(true);
+  });
+
+  test("strict mode blocks calculations that rely on inferred abilities", () => {
+    const parsed = parseCommand("politoed !muddy-water x incineroar").parsed;
+
+    expect(getCalculationIssues(parsed!, {}, { strictMode: true })).toContain(
+      "Strict mode: add an explicit attacker ability or use a set with an ability.",
+    );
+    expect(calculateDamageResults(parsed!, {}, { strictMode: true })).toHaveLength(0);
+  });
+
+  test("strict mode allows calculations when abilities are explicit", () => {
+    const parsed = parseCommand(
+      "politoed !muddy-water [Drizzle] x incineroar [Intimidate]",
+    ).parsed;
+
+    expect(getCalculationIssues(parsed!, {}, { strictMode: true })).toHaveLength(0);
+    expect(calculateDamageResults(parsed!, {}, { strictMode: true })).toHaveLength(3);
   });
 
   test("auto max bulk prioritizes the relevant defense for the move category", () => {
@@ -156,20 +215,18 @@ describe("damage engine", () => {
   test("applies defender items that mitigate or bulk special damage", () => {
     const neutral = parseCommand("charizard !heat-wave x tinkaton").parsed;
     const occa = parseCommand("charizard !heat-wave x tinkaton @occa-berry").parsed;
-    const vest = parseCommand("charizard !heat-wave x tinkaton @assault-vest").parsed;
+    const leftovers = parseCommand("charizard !heat-wave x tinkaton @leftovers").parsed;
 
     const [neutralResult] = calculateDamageResults(neutral!);
     const [occaResult] = calculateDamageResults(occa!);
-    const [vestResult] = calculateDamageResults(vest!);
+    const [leftoversResult] = calculateDamageResults(leftovers!);
 
     expect(occaResult.maxPercentage).toBeLessThan(neutralResult.maxPercentage);
-    expect(vestResult.maxPercentage).toBeLessThan(neutralResult.maxPercentage);
+    expect(leftoversResult.assumptions).toContain("Defender item: Leftovers");
     expect(occaResult.assumptions).toContain("Defender item: Occa Berry");
-    expect(vestResult.assumptions).toContain("Defender item: Assault Vest");
   });
 
-  test("uses imported attacker sets in the damage calculation", () => {
-    const parsed = parseCommand("politoed !muddy-water x incineroar").parsed;
+  test("uses referenced attacker sets in the damage calculation", () => {
     const importedSets = {
       politoed: createImportedSet({
         speciesId: "politoed",
@@ -188,6 +245,7 @@ describe("damage engine", () => {
         moves: ["Muddy Water", "Ice Beam", "Protect", "Helping Hand"],
       }),
     };
+    const parsed = parseCommand("#politoed x incineroar", importedSets).parsed;
 
     const context = buildCalculationContext(parsed!, importedSets);
     const [result] = calculateDamageResults(parsed!, importedSets);
@@ -198,13 +256,38 @@ describe("damage engine", () => {
     expect(result.assumptions).toContain("Set ability: Drizzle");
   });
 
-  test("uses imported defender sets as an explicit custom bulk row", () => {
-    const parsed = parseCommand("politoed !muddy-water x incineroar").parsed;
+  test("uses prompt SP overrides in the damage calculation", () => {
+    const lower = parseCommand(
+      "politoed !muddy-water sp:0/0/0/0/0/0 x incineroar",
+    ).parsed;
+    const higher = parseCommand(
+      "politoed !muddy-water sp:32/0/1/32/1/0 x incineroar",
+    ).parsed;
+
+    const [lowerResult] = calculateDamageResults(lower!);
+    const [higherResult] = calculateDamageResults(higher!);
+
+    expect(higherResult.maxPercentage).toBeGreaterThan(lowerResult.maxPercentage);
+  });
+
+  test("uses prompt defender SPs as a single custom set row", () => {
+    const parsed = parseCommand(
+      "politoed !muddy-water x incineroar sp:32/0/12/0/22/0",
+    ).parsed;
+    const context = buildCalculationContext(parsed!);
+    const results = calculateDamageResults(parsed!);
+
+    expect(context?.archetypes).toHaveLength(1);
+    expect(context?.archetypes[0]?.label).toBe("Custom Set");
+    expect(results).toHaveLength(1);
+  });
+
+  test("uses referenced defender sets as an explicit custom bulk row", () => {
     const importedSets = {
       incineroar: createImportedSet({
         speciesId: "incineroar",
         speciesName: "Incineroar",
-        item: "Assault Vest",
+        item: "Leftovers",
         ability: "Intimidate",
         nature: "Careful",
         statPoints: {
@@ -218,6 +301,7 @@ describe("damage engine", () => {
         moves: ["Flare Blitz", "Knock Off", "Parting Shot", "Fake Out"],
       }),
     };
+    const parsed = parseCommand("politoed !muddy-water x #incineroar", importedSets).parsed;
 
     const context = buildCalculationContext(parsed!, importedSets);
     const results = calculateDamageResults(parsed!, importedSets);
@@ -225,6 +309,6 @@ describe("damage engine", () => {
     expect(context?.archetypes).toHaveLength(1);
     expect(context?.archetypes[0]?.label).toBe("Custom Set");
     expect(results).toHaveLength(1);
-    expect(results[0].assumptions).toContain("Defender set item: Assault Vest");
+    expect(results[0].assumptions).toContain("Defender set item: Leftovers");
   });
 });

@@ -78,47 +78,116 @@ function writeStorage(sets: Record<string, ImportedSet>): void {
 }
 
 interface TeamStore {
+  localSets: Record<string, ImportedSet>;
+  sharedSets: Record<string, ImportedSet>;
   importedSets: Record<string, ImportedSet>;
   hydrate: () => void;
+  setSharedSets: (sets: ImportedSet[]) => void;
+  clearSharedSets: () => void;
   saveSet: (set: ImportedSet) => void;
   saveSets: (sets: ImportedSet[]) => void;
   removeSet: (speciesId: string) => void;
   clearSets: () => void;
 }
 
+function mergeImportedSets(
+  localSets: Record<string, ImportedSet>,
+  sharedSets: Record<string, ImportedSet>,
+) {
+  return {
+    ...localSets,
+    ...sharedSets,
+  };
+}
+
+function toSetMap(sets: ImportedSet[]) {
+  const next: Record<string, ImportedSet> = {};
+
+  for (const set of sets) {
+    const normalized = normalizeImportedSet(set);
+    next[normalized.speciesId] = normalized;
+  }
+
+  return next;
+}
+
 export const useTeamStore = create<TeamStore>()((set, get) => ({
+  localSets: {},
+  sharedSets: {},
   importedSets: {},
 
   hydrate: () => {
-    set({ importedSets: readStorage() });
+    const localSets = readStorage();
+    set((state) => ({
+      localSets,
+      importedSets: mergeImportedSets(localSets, state.sharedSets),
+    }));
+  },
+
+  setSharedSets: (sets) => {
+    const sharedSets = toSetMap(sets);
+    set((state) => ({
+      sharedSets,
+      importedSets: mergeImportedSets(state.localSets, sharedSets),
+    }));
+  },
+
+  clearSharedSets: () => {
+    set((state) => ({
+      sharedSets: {},
+      importedSets: mergeImportedSets(state.localSets, {}),
+    }));
   },
 
   saveSet: (imported) => {
     const normalized = normalizeImportedSet(imported);
-    const next = { ...get().importedSets, [normalized.speciesId]: normalized };
-    set({ importedSets: next });
-    writeStorage(next);
+    const nextLocalSets = {
+      ...get().localSets,
+      [normalized.speciesId]: normalized,
+    };
+    const nextSharedSets = { ...get().sharedSets };
+    delete nextSharedSets[normalized.speciesId];
+    set({
+      localSets: nextLocalSets,
+      sharedSets: nextSharedSets,
+      importedSets: mergeImportedSets(nextLocalSets, nextSharedSets),
+    });
+    writeStorage(nextLocalSets);
   },
 
   saveSets: (sets) => {
-    const next = { ...get().importedSets };
+    const nextLocalSets = { ...get().localSets };
+    const nextSharedSets = { ...get().sharedSets };
+
     for (const s of sets) {
       const normalized = normalizeImportedSet(s);
-      next[normalized.speciesId] = normalized;
+      nextLocalSets[normalized.speciesId] = normalized;
+      delete nextSharedSets[normalized.speciesId];
     }
-    set({ importedSets: next });
-    writeStorage(next);
+
+    set({
+      localSets: nextLocalSets,
+      sharedSets: nextSharedSets,
+      importedSets: mergeImportedSets(nextLocalSets, nextSharedSets),
+    });
+    writeStorage(nextLocalSets);
   },
 
   removeSet: (speciesId) => {
-    const next = { ...get().importedSets };
-    delete next[speciesId];
-    set({ importedSets: next });
-    writeStorage(next);
+    const nextLocalSets = { ...get().localSets };
+    const nextSharedSets = { ...get().sharedSets };
+    delete nextLocalSets[speciesId];
+    delete nextSharedSets[speciesId];
+    set({
+      localSets: nextLocalSets,
+      sharedSets: nextSharedSets,
+      importedSets: mergeImportedSets(nextLocalSets, nextSharedSets),
+    });
+    writeStorage(nextLocalSets);
   },
 
   clearSets: () => {
-    set({ importedSets: {} });
+    set({ localSets: {}, sharedSets: {}, importedSets: {} });
     writeStorage({});
   },
 }));

@@ -8,13 +8,17 @@ import { PokemonSideSummary } from "@/components/omnibar/pokemon-side-summary";
 import { QuickSuggestions } from "@/components/omnibar/quick-suggestions";
 import { ResultsPanel } from "@/components/omnibar/results-panel";
 import { HelpBubble } from "@/components/omnibar/help-bubble";
+import { StrictModeToggle } from "@/components/omnibar/strict-mode-toggle";
+import { parseShareState } from "@/lib/share/parse-share-state";
 import { useOmniStore } from "@/store/use-omni-store";
+import { useTeamStore } from "@/store/use-team-store";
 
 export function OmniComposer() {
   const issues = useOmniStore((state) => state.issues);
   const calculationReady = useOmniStore((state) => state.calculationReady);
   const input = useOmniStore((state) => state.input);
   const setInput = useOmniStore((state) => state.setInput);
+  const setStrictMode = useOmniStore((state) => state.setStrictMode);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
   const hasHydratedUrlPromptRef = useRef(false);
@@ -30,16 +34,31 @@ export function OmniComposer() {
 
     hasHydratedUrlPromptRef.current = true;
 
+    const teamStore = useTeamStore.getState();
+    teamStore.hydrate();
+
     const url = new URL(window.location.href);
     const prompt = url.searchParams.get("prompt");
+    const sharedSets = parseShareState(url.searchParams.get("state"));
+    setStrictMode(url.searchParams.get("strict") === "1");
+
+    if (sharedSets.length) {
+      teamStore.setSharedSets(sharedSets);
+    } else {
+      teamStore.clearSharedSets();
+    }
 
     if (prompt && !input.trim()) {
       setInput(prompt);
     }
-  }, [input, setInput]);
+  }, [input, setInput, setStrictMode]);
 
   useEffect(() => {
-    if (!calculationReady || typeof window === "undefined" || !window.location.hash) {
+    if (
+      !calculationReady ||
+      typeof window === "undefined" ||
+      !window.location.hash
+    ) {
       return;
     }
 
@@ -60,12 +79,13 @@ export function OmniComposer() {
           <PokemonSideSummary side="attacker" />
         </div>
         <div className="order-1 xl:order-2">
+          <div className="mb-2 flex items-center justify-end gap-1.5">
+            <StrictModeToggle />
+            <HelpBubble />
+          </div>
           <div className="relative">
             <div className="theme-composer rounded-4xl">
               <div className="theme-composer-top relative">
-                <div className="pointer-events-auto absolute right-3 top-3 z-30">
-                  <HelpBubble />
-                </div>
                 <OmniTextarea
                   textareaRef={textareaRef}
                   onSubmitReady={scrollToResults}

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { calculateDamageResults } from "@/lib/calc/damage-engine";
+import { calculateDamageResults, getCalculationIssues } from "@/lib/calc/damage-engine";
 import {
   normalizeAlias,
   pokemonById,
@@ -26,9 +26,11 @@ import {
 } from "@/lib/parser/inference";
 import { getAutocompleteState } from "@/lib/parser/inline-suggestions";
 import { compactWhitespace, joinTokenValues } from "@/lib/parser/tokenize";
+import { resolveSetReferenceToken } from "@/lib/team/set-references";
 import type {
   ActiveChipTokens,
   DamageResult,
+  ImportedSet,
   ParsedCommand,
   SuggestionOption,
   SuggestionState,
@@ -40,6 +42,7 @@ type ChipScope = keyof ActiveChipTokens;
 interface OmniStore {
   input: string;
   cursorIndex: number;
+  strictMode: boolean;
   parsed: ParsedCommand | null;
   activeSuggestion: SuggestionState | null;
   suggestionOptions: SuggestionOption[];
@@ -63,6 +66,7 @@ interface OmniStore {
     scope: "attacker" | "defender",
     value: number | null,
   ) => void;
+  setStrictMode: (strictMode: boolean) => void;
   recompute: () => void;
   setAttackerMove: (moveName: string) => void;
 }
@@ -70,6 +74,7 @@ interface OmniStore {
 const initialState = {
   input: "",
   cursorIndex: 0,
+  strictMode: false,
   parsed: null as ParsedCommand | null,
   activeSuggestion: null as SuggestionState | null,
   suggestionOptions: [] as SuggestionOption[],
@@ -83,6 +88,21 @@ const initialState = {
   issues: [] as string[],
 };
 
+let scheduledComputeFrame: number | null = null;
+let scheduledComputeVersion = 0;
+
+function cancelScheduledCompute() {
+  if (
+    scheduledComputeFrame !== null &&
+    typeof window !== "undefined" &&
+    typeof window.cancelAnimationFrame === "function"
+  ) {
+    window.cancelAnimationFrame(scheduledComputeFrame);
+  }
+
+  scheduledComputeFrame = null;
+}
+
 type AutoFieldCategory = "weather" | "terrain";
 
 function isLegacyScopedToken(raw: string) {
@@ -91,7 +111,17 @@ function isLegacyScopedToken(raw: string) {
 
 function resolveParsedSpecies(
   segment: ReturnType<typeof analyzeCommandStructure>["attacker"],
+  importedSets: Record<string, ImportedSet>,
 ) {
+  const referenceSet = resolveSetReferenceToken(
+    segment.leadingFreeTokens[0]?.raw,
+    importedSets,
+  );
+
+  if (referenceSet && segment.leadingFreeTokens.length === 1) {
+    return pokemonById.get(referenceSet.speciesId) ?? null;
+  }
+
   if (segment.speciesExact) {
     return segment.speciesExact.entry;
   }
@@ -167,8 +197,9 @@ function getGlobalTokenCategory(token: string): AutoFieldCategory | null {
 
 function deriveAutoGlobalState(input: string) {
   const structure = analyzeCommandStructure(input);
-  const attacker = resolveParsedSpecies(structure.attacker);
-  const defender = resolveParsedSpecies(structure.defender);
+  const importedSets = useTeamStore.getState().importedSets;
+  const attacker = resolveParsedSpecies(structure.attacker, importedSets);
+  const defender = resolveParsedSpecies(structure.defender, importedSets);
 
   if (!structure.lexed.hasDelimiter || !attacker || !defender) {
     return {
@@ -177,7 +208,7 @@ function deriveAutoGlobalState(input: string) {
     };
   }
 
-  const parsed = parseCommand(input).parsed;
+  const parsed = parseCommand(input, importedSets).parsed;
 
   if (
     !parsed ||
@@ -683,17 +714,27 @@ function computeState(
   previousContextKey: string | null = null,
   previousDismissedContextKey: string | null = null,
   cursorIndex = input.length,
+  strictMode = false,
 ) {
   const normalizedInput = input.replace(/\s+$/g, (match) => match);
+  const importedSets = useTeamStore.getState().importedSets;
   const withAutoTokens = applyAutoGlobalTokens(
     normalizedInput,
     previousAutoTokens,
     previousContextKey,
     previousDismissedContextKey,
   );
-  const parsedResult = parseCommand(withAutoTokens.input);
+  const parsedResult = parseCommand(withAutoTokens.input, importedSets);
+  const calculationIssues = parsedResult.parsed
+    ? getCalculationIssues(parsedResult.parsed, importedSets, { strictMode })
+    : [];
+  const issues = Array.from(new Set([...parsedResult.issues, ...calculationIssues]));
   const nextCursorIndex = Math.min(cursorIndex, withAutoTokens.input.length);
-  const autocomplete = getAutocompleteState(withAutoTokens.input, nextCursorIndex);
+  const autocomplete = getAutocompleteState(
+    withAutoTokens.input,
+    nextCursorIndex,
+    importedSets,
+  );
   const suggestionOptions = prioritizeRecommendedGlobals(
     withAutoTokens.input,
     autocomplete.suggestionOptions,
@@ -703,20 +744,22 @@ function computeState(
   return {
     input: withAutoTokens.input,
     cursorIndex: nextCursorIndex,
+    strictMode,
     parsed: parsedResult.parsed,
     activeSuggestion: autocomplete.activeSuggestion,
     suggestionOptions,
     highlightedSuggestionIndex: suggestionOptions.length ? 0 : -1,
-    calculationReady: Boolean(parsedResult.parsed),
+    calculationReady: Boolean(parsedResult.parsed) && calculationIssues.length === 0,
     autoAppliedGlobalTokens: withAutoTokens.autoAppliedGlobalTokens,
     autoGlobalContextKey: withAutoTokens.autoGlobalContextKey,
     dismissedAutoGlobalContextKey: withAutoTokens.dismissedAutoGlobalContextKey,
     activeChipTokens: buildActiveChipTokens(withAutoTokens.input),
-    issues: parsedResult.issues,
-    results: parsedResult.parsed
+    issues,
+    results: parsedResult.parsed && calculationIssues.length === 0
       ? calculateDamageResults(
           parsedResult.parsed,
-          useTeamStore.getState().importedSets,
+          importedSets,
+          { strictMode },
         )
       : [],
   };
@@ -724,26 +767,97 @@ function computeState(
 
 export const useOmniStore = create<OmniStore>((set, get) => ({
   ...initialState,
-  setInput: (input, cursorIndex) =>
-    set(
-      computeState(
-        input,
-        get().autoAppliedGlobalTokens,
-        get().autoGlobalContextKey,
-        get().dismissedAutoGlobalContextKey,
-        cursorIndex ?? input.length,
-      ),
-    ),
-  setCursorIndex: (cursorIndex) =>
-    set(
-      computeState(
-        get().input,
-        get().autoAppliedGlobalTokens,
-        get().autoGlobalContextKey,
-        get().dismissedAutoGlobalContextKey,
-        cursorIndex,
-      ),
-    ),
+  setInput: (input, cursorIndex) => {
+    const nextCursorIndex = cursorIndex ?? input.length;
+
+    set({
+      input,
+      cursorIndex: nextCursorIndex,
+    });
+
+    if (
+      typeof window === "undefined" ||
+      process.env.NODE_ENV === "test" ||
+      typeof window.requestAnimationFrame !== "function"
+    ) {
+      set(
+        computeState(
+          input,
+          get().autoAppliedGlobalTokens,
+          get().autoGlobalContextKey,
+          get().dismissedAutoGlobalContextKey,
+          nextCursorIndex,
+          get().strictMode,
+        ),
+      );
+      return;
+    }
+
+    const version = ++scheduledComputeVersion;
+    cancelScheduledCompute();
+    scheduledComputeFrame = window.requestAnimationFrame(() => {
+      scheduledComputeFrame = null;
+
+      if (version !== scheduledComputeVersion) {
+        return;
+      }
+
+      const state = get();
+      set(
+        computeState(
+          state.input,
+          state.autoAppliedGlobalTokens,
+          state.autoGlobalContextKey,
+          state.dismissedAutoGlobalContextKey,
+          state.cursorIndex,
+          state.strictMode,
+        ),
+      );
+    });
+  },
+  setCursorIndex: (cursorIndex) => {
+    set({ cursorIndex });
+
+    if (
+      typeof window === "undefined" ||
+      process.env.NODE_ENV === "test" ||
+      typeof window.requestAnimationFrame !== "function"
+    ) {
+      set(
+        computeState(
+          get().input,
+          get().autoAppliedGlobalTokens,
+          get().autoGlobalContextKey,
+          get().dismissedAutoGlobalContextKey,
+          cursorIndex,
+          get().strictMode,
+        ),
+      );
+      return;
+    }
+
+    const version = ++scheduledComputeVersion;
+    cancelScheduledCompute();
+    scheduledComputeFrame = window.requestAnimationFrame(() => {
+      scheduledComputeFrame = null;
+
+      if (version !== scheduledComputeVersion) {
+        return;
+      }
+
+      const state = get();
+      set(
+        computeState(
+          state.input,
+          state.autoAppliedGlobalTokens,
+          state.autoGlobalContextKey,
+          state.dismissedAutoGlobalContextKey,
+          state.cursorIndex,
+          state.strictMode,
+        ),
+      );
+    });
+  },
   moveSuggestionSelection: (delta) => {
     const options = get().suggestionOptions;
     if (!options.length) {
@@ -757,6 +871,7 @@ export const useOmniStore = create<OmniStore>((set, get) => ({
     set({ highlightedSuggestionIndex: nextIndex });
   },
   applySuggestion: () => {
+    cancelScheduledCompute();
     const options = get().suggestionOptions;
     const highlightedIndex = get().highlightedSuggestionIndex;
     const highlightedOption =
@@ -771,6 +886,8 @@ export const useOmniStore = create<OmniStore>((set, get) => ({
           get().autoAppliedGlobalTokens,
           get().autoGlobalContextKey,
           get().dismissedAutoGlobalContextKey,
+          undefined,
+          get().strictMode,
         ),
       );
       return;
@@ -787,68 +904,107 @@ export const useOmniStore = create<OmniStore>((set, get) => ({
         get().autoAppliedGlobalTokens,
         get().autoGlobalContextKey,
         get().dismissedAutoGlobalContextKey,
+        undefined,
+        get().strictMode,
       ),
     );
   },
   applySuggestionText: (nextInput) =>
-    set(
-      computeState(
-        nextInput,
-        get().autoAppliedGlobalTokens,
-        get().autoGlobalContextKey,
-        get().dismissedAutoGlobalContextKey,
-      ),
-    ),
+    {
+      cancelScheduledCompute();
+      set(
+        computeState(
+          nextInput,
+          get().autoAppliedGlobalTokens,
+          get().autoGlobalContextKey,
+          get().dismissedAutoGlobalContextKey,
+          undefined,
+          get().strictMode,
+        ),
+      );
+    },
   insertChip: (scope, token) => {
+    cancelScheduledCompute();
     set(
       computeState(
         insertChipToken(get().input, scope, token),
         get().autoAppliedGlobalTokens,
         get().autoGlobalContextKey,
         get().dismissedAutoGlobalContextKey,
+        undefined,
+        get().strictMode,
       ),
     );
   },
   setStatModifier: (scope, value) => {
+    cancelScheduledCompute();
     set(
       computeState(
         setStatModifierToken(get().input, scope, value),
         get().autoAppliedGlobalTokens,
         get().autoGlobalContextKey,
         get().dismissedAutoGlobalContextKey,
+        undefined,
+        get().strictMode,
       ),
     );
   },
   setSpeedModifier: (scope, value) => {
+    cancelScheduledCompute();
     set(
       computeState(
         setSpeedModifierToken(get().input, scope, value),
         get().autoAppliedGlobalTokens,
         get().autoGlobalContextKey,
         get().dismissedAutoGlobalContextKey,
+        undefined,
+        get().strictMode,
       ),
     );
   },
   setHpPercentage: (scope, value) => {
+    cancelScheduledCompute();
     set(
       computeState(
         setHpPercentageToken(get().input, scope, value),
         get().autoAppliedGlobalTokens,
         get().autoGlobalContextKey,
         get().dismissedAutoGlobalContextKey,
+        undefined,
+        get().strictMode,
       ),
     );
   },
+  setStrictMode: (strictMode) =>
+    {
+      cancelScheduledCompute();
+      set(
+        computeState(
+          get().input,
+          get().autoAppliedGlobalTokens,
+          get().autoGlobalContextKey,
+          get().dismissedAutoGlobalContextKey,
+          get().cursorIndex,
+          strictMode,
+        ),
+      );
+    },
   recompute: () =>
-    set(
-      computeState(
-        get().input,
-        get().autoAppliedGlobalTokens,
-        get().autoGlobalContextKey,
-        get().dismissedAutoGlobalContextKey,
-      ),
-    ),
+    {
+      cancelScheduledCompute();
+      set(
+        computeState(
+          get().input,
+          get().autoAppliedGlobalTokens,
+          get().autoGlobalContextKey,
+          get().dismissedAutoGlobalContextKey,
+          undefined,
+          get().strictMode,
+        ),
+      );
+    },
   setAttackerMove: (moveName) => {
+    cancelScheduledCompute();
     const currentInput = compactWhitespace(get().input);
     const structure = analyzeCommandStructure(currentInput);
 
@@ -880,11 +1036,14 @@ export const useOmniStore = create<OmniStore>((set, get) => ({
         get().autoAppliedGlobalTokens,
         get().autoGlobalContextKey,
         get().dismissedAutoGlobalContextKey,
+        undefined,
+        get().strictMode,
       ),
     );
   },
 }));
 
 export function resetOmniStore() {
+  cancelScheduledCompute();
   useOmniStore.setState(initialState);
 }

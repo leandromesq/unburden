@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { StatSpread } from "@/lib/types";
 
 import {
   getCanonicalPromptPokemonName,
@@ -13,9 +14,11 @@ import {
   resolveMegaEvolution,
 } from "@/lib/data/loaders";
 import {
+  DEFAULT_IV_SPREAD,
   EMPTY_STAT_SPREAD,
   applyStage,
   computeStats,
+  statPointsToCalcEvs,
 } from "@/lib/calc/stat-calc";
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
 import { joinTokenValues } from "@/lib/parser/tokenize";
@@ -26,18 +29,42 @@ import {
 } from "@/lib/parser/grammar";
 import { resolveMoveEntity } from "@/lib/parser/fuse-indexes";
 import { inferDefaultAbility } from "@/lib/parser/inference";
-import { createImportedSet, resolveImportedSet } from "@/lib/team/imported-set-utils";
+import { createImportedSet } from "@/lib/team/imported-set-utils";
+import {
+  getCanonicalSetReferenceToken,
+  resolveReferencedImportedSet,
+  resolveSetReferenceToken,
+} from "@/lib/team/set-references";
 import { useOmniStore } from "@/store/use-omni-store";
 import { useTeamStore } from "@/store/use-team-store";
 import { ImportSetModal } from "@/components/omnibar/import-set-modal";
 import { PokemonSetEditorModal } from "@/components/omnibar/pokemon-set-editor-modal";
-import type { PokemonEntry } from "@/lib/types";
+import type { ImportedSet, PokemonEntry, StatSpread } from "@/lib/types";
 
 type SummarySide = "attacker" | "defender";
+type StatKey = keyof StatSpread;
+const STAT_LABELS: Array<[StatKey, string]> = [
+  ["hp", "HP"],
+  ["atk", "Atk"],
+  ["def", "Def"],
+  ["spa", "SpA"],
+  ["spd", "SpD"],
+  ["spe", "Spe"],
+];
 
 function resolveParsedSpecies(
   segment: ReturnType<typeof analyzeCommandStructure>["attacker"],
+  importedSets: Record<string, ImportedSet>,
 ): PokemonEntry | null {
+  const referenceSet = resolveSetReferenceToken(
+    segment.leadingFreeTokens[0]?.raw,
+    importedSets,
+  );
+
+  if (referenceSet && segment.leadingFreeTokens.length === 1) {
+    return pokemonById.get(normalizeId(referenceSet.speciesId)) ?? null;
+  }
+
   if (segment.speciesExact) {
     return segment.speciesExact.entry;
   }
@@ -123,6 +150,23 @@ function getItemStatBoosts(
   if (id === "choicescarf") return { atk: 1, def: 1, spa: 1, spd: 1, spe: 1.5 };
   if (id === "assaultvest") return { atk: 1, def: 1, spa: 1, spd: 1.5, spe: 1 };
   return { atk: 1, def: 1, spa: 1, spd: 1, spe: 1 };
+}
+
+function buildEffectiveSetPreview(
+  importedSet: ImportedSet | null,
+  statPoints: StatSpread | undefined,
+  nature: string | undefined,
+) {
+  const effectiveStatPoints =
+    statPoints ?? importedSet?.statPoints ?? EMPTY_STAT_SPREAD;
+  const effectiveNature = nature ?? importedSet?.nature ?? "Hardy";
+
+  return {
+    statPoints: effectiveStatPoints,
+    evs: statPointsToCalcEvs(effectiveStatPoints),
+    ivs: { ...DEFAULT_IV_SPREAD },
+    nature: effectiveNature,
+  };
 }
 
 function PokemonSprite({ sources, name }: { sources: string[]; name: string }) {
@@ -240,6 +284,7 @@ function rebuildInputWithSpecies(
   targetPokemon: PokemonEntry,
 ) {
   const structure = analyzeCommandStructure(input);
+  const globalTokens = structure.globalTokens.map((token) => token.raw);
   const attackerTail = structure.attacker.rawTokens
     .slice(structure.attacker.speciesTokens.length)
     .map((token) => token.raw)
@@ -250,24 +295,101 @@ function rebuildInputWithSpecies(
     .map((token) => token.raw)
     .join(" ")
     .trim();
-  const attackerSpecies = side === "attacker"
-    ? getCanonicalPromptPokemonName(targetPokemon)
-    : (structure.attacker.speciesText || joinTokenValues(structure.attacker.rawTokens)).trim();
-  const defenderSpecies = side === "defender"
-    ? getCanonicalPromptPokemonName(targetPokemon)
-    : (structure.defender.speciesText || joinTokenValues(structure.defender.rawTokens)).trim();
-  const attackerText = [attackerSpecies, attackerTail].filter(Boolean).join(" ").trim();
-  const defenderText = [defenderSpecies, defenderTail].filter(Boolean).join(" ").trim();
+  const attackerSpecies =
+    side === "attacker"
+      ? getCanonicalPromptPokemonName(targetPokemon)
+      : (
+          structure.attacker.speciesText ||
+          joinTokenValues(structure.attacker.rawTokens)
+        ).trim();
+  const defenderSpecies =
+    side === "defender"
+      ? getCanonicalPromptPokemonName(targetPokemon)
+      : (
+          structure.defender.speciesText ||
+          joinTokenValues(structure.defender.rawTokens)
+        ).trim();
+  const attackerText = [attackerSpecies, attackerTail]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+  const defenderText = [defenderSpecies, defenderTail]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
 
   if (!structure.lexed.hasDelimiter) {
     return attackerText;
   }
 
-  return [attackerText, "x", defenderText].filter(Boolean).join(" ").trim();
+  return [attackerText, "x", defenderText, ...globalTokens]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+}
+
+function buildStatPointsToken(statPoints: StatSpread) {
+  return `sp:${statPoints.hp}/${statPoints.atk}/${statPoints.def}/${statPoints.spa}/${statPoints.spd}/${statPoints.spe}`;
+}
+
+function rebuildInputWithStatPoints(
+  input: string,
+  side: SummarySide,
+  nextStatPoints: StatSpread,
+  persistExplicitToken: boolean,
+) {
+  const structure = analyzeCommandStructure(input);
+  const nextToken = buildStatPointsToken(nextStatPoints);
+  const shouldIncludeToken =
+    persistExplicitToken ||
+    Object.values(nextStatPoints).some((value) => value > 0);
+
+  const rewriteSegmentTokens = (
+    tokens: ReturnType<typeof analyzeCommandStructure>["attacker"]["rawTokens"],
+  ) => {
+    const nextTokens = tokens
+      .filter((token) => !token.normalized.startsWith("sp:"))
+      .map((token) => token.raw);
+
+    if (!shouldIncludeToken) {
+      return nextTokens;
+    }
+
+    const firstGlobalTokenIndex = nextTokens.findIndex((token) =>
+      token.toLowerCase().startsWith("~"),
+    );
+
+    if (firstGlobalTokenIndex === -1) {
+      nextTokens.push(nextToken);
+    } else {
+      nextTokens.splice(firstGlobalTokenIndex, 0, nextToken);
+    }
+
+    return nextTokens;
+  };
+
+  const attackerTokens =
+    side === "attacker"
+      ? rewriteSegmentTokens(structure.attacker.rawTokens)
+      : structure.attacker.rawTokens.map((token) => token.raw);
+  const defenderTokens =
+    side === "defender"
+      ? rewriteSegmentTokens(structure.defender.rawTokens)
+      : structure.defender.rawTokens.map((token) => token.raw);
+
+  if (!structure.lexed.hasDelimiter) {
+    return attackerTokens.join(" ").trim();
+  }
+
+  return [attackerTokens.join(" ").trim(), "x", defenderTokens.join(" ").trim()]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
 }
 
 export function PokemonSideSummary({ side }: { side: SummarySide }) {
   const input = useOmniStore((state) => state.input);
+  const parsedCommand = useOmniStore((state) => state.parsed);
   const setAttackerMove = useOmniStore((state) => state.setAttackerMove);
   const setInput = useOmniStore((state) => state.setInput);
   const recompute = useOmniStore((state) => state.recompute);
@@ -277,11 +399,13 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [editorOpen, setEditorOpen] = useState(false);
   const [switchOpen, setSwitchOpen] = useState(false);
+  const [editingStat, setEditingStat] = useState<StatKey | null>(null);
+  const [editingStatValue, setEditingStatValue] = useState("");
+  const [pendingStatPoints, setPendingStatPoints] = useState<StatSpread | null>(
+    null,
+  );
   const switchRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    useTeamStore.getState().hydrate();
-  }, []);
+  const statInputRef = useRef<HTMLInputElement>(null);
 
   // Close the switch dropdown when clicking outside it
   useEffect(() => {
@@ -295,22 +419,42 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
     return () => document.removeEventListener("mousedown", handler);
   }, [switchOpen]);
 
-  const handleSelectSet = (speciesName: string) => {
+  useEffect(() => {
+    if (!editingStat) {
+      return;
+    }
+
+    statInputRef.current?.focus();
+    statInputRef.current?.select();
+  }, [editingStat]);
+
+  const handleSelectSet = (nextSet: ImportedSet) => {
     const structure = analyzeCommandStructure(input);
+    const globalTokens = structure.globalTokens.map((token) => token.raw);
+    const referenceToken = getCanonicalSetReferenceToken(nextSet);
     if (side === "attacker") {
       const defenderPart = structure.lexed.hasDelimiter
-        ? " x " + structure.defender.rawTokens.map((t) => t.raw).join(" ")
+        ? " x " +
+          [
+            ...structure.defender.rawTokens.map((t) => t.raw),
+            ...globalTokens,
+          ].join(" ")
         : "";
-      setInput((speciesName + defenderPart).trim());
+      setInput((referenceToken + defenderPart).trim());
     } else {
       const attackerPart = structure.attacker.rawTokens
         .map((t) => t.raw)
         .join(" ")
         .trim();
       if (attackerPart) {
-        setInput((attackerPart + " x " + speciesName).trim());
+        setInput(
+          [attackerPart, "x", referenceToken, ...globalTokens]
+            .filter(Boolean)
+            .join(" ")
+            .trim(),
+        );
       } else {
-        setInput(speciesName);
+        setInput(referenceToken);
       }
     }
   };
@@ -327,14 +471,37 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
   const summary = useMemo(() => {
     const structure = analyzeCommandStructure(input);
 
-    const attackerPromptSpecies = resolveParsedSpecies(structure.attacker);
-    const defenderPromptSpecies = resolveParsedSpecies(structure.defender);
-    const attackerSet = attackerPromptSpecies
-      ? resolveImportedSet(attackerPromptSpecies, importedSets)
-      : null;
-    const defenderSet = defenderPromptSpecies
-      ? resolveImportedSet(defenderPromptSpecies, importedSets)
-      : null;
+    const attackerPromptSpecies = resolveParsedSpecies(
+      structure.attacker,
+      importedSets,
+    );
+    const defenderPromptSpecies = resolveParsedSpecies(
+      structure.defender,
+      importedSets,
+    );
+    const attackerReferenceSet = resolveSetReferenceToken(
+      structure.attacker.leadingFreeTokens[0]?.raw,
+      importedSets,
+    );
+    const defenderReferenceSet = resolveSetReferenceToken(
+      structure.defender.leadingFreeTokens[0]?.raw,
+      importedSets,
+    );
+    const attackerImportedSet =
+      resolveReferencedImportedSet(
+        parsedCommand?.attackerSetReferenceId,
+        importedSets,
+      ) ?? attackerReferenceSet;
+    const defenderImportedSet =
+      resolveReferencedImportedSet(
+        parsedCommand?.defenderSetReferenceId,
+        importedSets,
+      ) ?? defenderReferenceSet;
+    const promptStatPoints =
+      side === "attacker"
+        ? parsedCommand?.attackerStatPoints
+        : parsedCommand?.defenderStatPoints;
+    const effectivePromptStatPoints = pendingStatPoints ?? promptStatPoints;
 
     // Stage values
     const attackerStatStage = getStageValue(
@@ -376,23 +543,37 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
       ? (itemDisplayById.get(normalizeId(structure.defender.itemToken.value)) ??
         structure.defender.itemToken.value)
       : null;
-    const attackerItemName = attackerItemDisplay ?? attackerSet?.item ?? null;
-    const defenderItemName = defenderItemDisplay ?? defenderSet?.item ?? null;
+    const attackerItemName =
+      parsedCommand?.attackerItem ??
+      attackerItemDisplay ??
+      attackerImportedSet?.item ??
+      null;
+    const defenderItemName =
+      parsedCommand?.defenderItem ??
+      defenderItemDisplay ??
+      defenderImportedSet?.item ??
+      null;
     const attacker = attackerPromptSpecies;
     const defender = defenderPromptSpecies;
-    const resolvedAttackerSet = attacker ? resolveImportedSet(attacker, importedSets) : null;
-    const resolvedDefenderSet = defender ? resolveImportedSet(defender, importedSets) : null;
+    const resolvedAttackerSet = attackerImportedSet;
+    const resolvedDefenderSet = defenderImportedSet;
 
     if (side === "attacker") {
       if (!attacker) return null;
       const importedSet = resolvedAttackerSet;
-      const stats = importedSet
+      const effectiveSet = buildEffectiveSetPreview(
+        importedSet,
+        effectivePromptStatPoints,
+        parsedCommand?.attackerNature,
+      );
+      const hasCustomStats = Boolean(importedSet || effectivePromptStatPoints);
+      const stats = hasCustomStats
         ? computeStats(
             attacker.baseStats,
-            importedSet.evs,
-            importedSet.ivs,
-            importedSet.nature,
-            importedSet.level,
+            effectiveSet.evs,
+            effectiveSet.ivs,
+            effectiveSet.nature,
+            importedSet?.level ?? 50,
           )
         : attacker.baseStats;
 
@@ -402,11 +583,14 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
 
       const attackerChoiceBoosts = getItemStatBoosts(attackerItemName);
       const megaTarget = attackerPromptSpecies?.isMega
-        ? (attackerPromptSpecies.baseSpeciesId
-            ? pokemonById.get(attackerPromptSpecies.baseSpeciesId) ?? null
-            : null)
+        ? attackerPromptSpecies.baseSpeciesId
+          ? (pokemonById.get(attackerPromptSpecies.baseSpeciesId) ?? null)
+          : null
         : attackerPromptSpecies
-          ? resolveMegaEvolution(attackerPromptSpecies.id, attackerItemName ?? undefined)
+          ? resolveMegaEvolution(
+              attackerPromptSpecies.id,
+              attackerItemName ?? undefined,
+            )
           : null;
 
       return {
@@ -417,15 +601,18 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
         spriteSources: getSpriteSources(attacker),
         ability: resolveAbilityDisplay(
           attacker,
-          structure.attacker.abilityToken?.value,
+          parsedCommand?.attackerAbility ??
+            structure.attacker.abilityToken?.value,
         ),
-        move: moveName,
+        move: parsedCommand?.move ?? moveName,
         activeMoveEntry: moveEntry,
         item: attackerItemName,
-        nature: importedSet?.nature ?? "Hardy",
+        nature: effectiveSet.nature,
         stats,
-        isBaseStats: !importedSet,
+        isBaseStats: !hasCustomStats,
         importedSet,
+        promptStatPoints: effectivePromptStatPoints,
+        effectiveStatPoints: effectiveSet.statPoints,
         megaTarget,
         stageBoosts: {
           hp: 0,
@@ -442,13 +629,19 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
     // Defender side
     if (!defender) return null;
     const importedSet = resolvedDefenderSet;
-    const stats = importedSet
+    const effectiveSet = buildEffectiveSetPreview(
+      importedSet,
+      effectivePromptStatPoints,
+      parsedCommand?.defenderNature,
+    );
+    const hasCustomStats = Boolean(importedSet || effectivePromptStatPoints);
+    const stats = hasCustomStats
       ? computeStats(
           defender.baseStats,
-          importedSet.evs,
-          importedSet.ivs,
-          importedSet.nature,
-          importedSet.level,
+          effectiveSet.evs,
+          effectiveSet.ivs,
+          effectiveSet.nature,
+          importedSet?.level ?? 50,
         )
       : defender.baseStats;
 
@@ -457,11 +650,14 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
 
     const defenderChoiceBoosts = getItemStatBoosts(defenderItemName);
     const megaTarget = defenderPromptSpecies?.isMega
-      ? (defenderPromptSpecies.baseSpeciesId
-          ? pokemonById.get(defenderPromptSpecies.baseSpeciesId) ?? null
-          : null)
+      ? defenderPromptSpecies.baseSpeciesId
+        ? (pokemonById.get(defenderPromptSpecies.baseSpeciesId) ?? null)
+        : null
       : defenderPromptSpecies
-        ? resolveMegaEvolution(defenderPromptSpecies.id, defenderItemName ?? undefined)
+        ? resolveMegaEvolution(
+            defenderPromptSpecies.id,
+            defenderItemName ?? undefined,
+          )
         : null;
 
     return {
@@ -472,15 +668,18 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
       spriteSources: getSpriteSources(defender),
       ability: resolveAbilityDisplay(
         defender,
-        structure.defender.abilityToken?.value,
+        parsedCommand?.defenderAbility ??
+          structure.defender.abilityToken?.value,
       ),
       move: null,
       activeMoveEntry: null,
       item: defenderItemName,
-      nature: importedSet?.nature ?? "Hardy",
+      nature: effectiveSet.nature,
       stats,
-      isBaseStats: !importedSet,
+      isBaseStats: !hasCustomStats,
       importedSet,
+      promptStatPoints: effectivePromptStatPoints,
+      effectiveStatPoints: effectiveSet.statPoints,
       megaTarget,
       stageBoosts: {
         hp: 0,
@@ -492,7 +691,81 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
       },
       itemBoosts: defenderChoiceBoosts,
     };
-  }, [input, side, importedSets]);
+  }, [input, side, importedSets, parsedCommand, pendingStatPoints]);
+
+  useEffect(() => {
+    if (!pendingStatPoints) {
+      return;
+    }
+
+    const parsedStatPoints =
+      side === "attacker"
+        ? parsedCommand?.attackerStatPoints
+        : parsedCommand?.defenderStatPoints;
+
+    if (
+      parsedStatPoints &&
+      STAT_LABELS.every(
+        ([key]) => parsedStatPoints[key] === pendingStatPoints[key],
+      )
+    ) {
+      setPendingStatPoints(null);
+    }
+  }, [parsedCommand, pendingStatPoints, side]);
+
+  const handleStartInlineStatEdit = (stat: StatKey) => {
+    if (!summary) {
+      return;
+    }
+
+    setEditingStat(stat);
+    setEditingStatValue(String(summary.effectiveStatPoints[stat]));
+  };
+
+  const handleCancelInlineStatEdit = () => {
+    setEditingStat(null);
+    setEditingStatValue("");
+  };
+
+  const handleCommitInlineStatEdit = () => {
+    if (!summary || !editingStat) {
+      return;
+    }
+
+    const currentStatPoints =
+      pendingStatPoints ??
+      summary.promptStatPoints ??
+      summary.effectiveStatPoints;
+    const parsedValue = Number(editingStatValue);
+    const sanitizedValue = Number.isFinite(parsedValue)
+      ? Math.max(0, Math.min(32, Math.round(parsedValue)))
+      : currentStatPoints[editingStat];
+    const remainingTotal = STAT_LABELS.reduce(
+      (total, [key]) =>
+        total + (key === editingStat ? 0 : currentStatPoints[key]),
+      0,
+    );
+    const cappedValue = Math.max(
+      0,
+      Math.min(sanitizedValue, 66 - remainingTotal),
+    );
+    const nextStatPoints: StatSpread = {
+      ...currentStatPoints,
+      [editingStat]: cappedValue,
+    };
+    const nextInput = rebuildInputWithStatPoints(
+      input,
+      side,
+      nextStatPoints,
+      Boolean(
+        summary.importedSet || summary.promptStatPoints || pendingStatPoints,
+      ),
+    );
+
+    setPendingStatPoints(nextStatPoints);
+    setInput(nextInput);
+    handleCancelInlineStatEdit();
+  };
 
   const resolvedSetId = summary?.importedSet?.speciesId ?? null;
 
@@ -507,19 +780,20 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
       return null;
     }
 
-    if (summary.importedSet) {
-      return summary.importedSet;
-    }
-
     return createImportedSet({
       speciesId: summary.promptPokemonId,
       speciesName:
         pokemonById.get(summary.promptPokemonId)?.name ?? summary.name,
+      nickname: summary.importedSet?.nickname,
       item: summary.item ?? undefined,
       ability: summary.ability ?? undefined,
       nature: summary.nature,
-      statPoints: EMPTY_STAT_SPREAD,
-      moves: summary.move ? [summary.move] : [],
+      statPoints: summary.effectiveStatPoints,
+      moves: summary.importedSet?.moves.length
+        ? summary.importedSet.moves
+        : summary.move
+          ? [summary.move]
+          : [],
     });
   }, [summary]);
 
@@ -560,15 +834,20 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
                 <div key={set.speciesId} className="group relative">
                   <button
                     type="button"
-                    onClick={() => handleSelectSet(set.speciesName)}
+                    onClick={() => handleSelectSet(set)}
                     className="theme-subpanel w-full rounded-2xl px-3 py-2.5 pr-8 text-left transition-colors"
                   >
-                    <div className="text-xs font-medium">{set.speciesName}</div>
+                    <div className="text-xs font-medium">
+                      {set.nickname ?? set.speciesName}
+                    </div>
+                    {set.nickname ? (
+                      <div className="theme-text-faint mt-0.5 truncate text-[10px]">
+                        {set.speciesName}
+                      </div>
+                    ) : null}
                     {(set.item || set.ability) && (
                       <div className="theme-text-faint mt-0.5 truncate text-[10px]">
-                        {[set.item, set.ability]
-                          .filter(Boolean)
-                          .join(" · ")}
+                        {[set.item, set.ability].filter(Boolean).join(" · ")}
                       </div>
                     )}
                   </button>
@@ -617,10 +896,10 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
   const { importedSet, stageBoosts, itemBoosts } = summary;
 
   return (
-      <aside
-        data-testid={`${side}-summary`}
-        className="theme-panel rounded-[28px] p-5"
-      >
+    <aside
+      data-testid={`${side}-summary`}
+      className="theme-panel rounded-[28px] p-5"
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="theme-text-faint text-xs font-semibold uppercase tracking-[0.24em]">
           {summary.title}
@@ -630,8 +909,16 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
             type="button"
             tabIndex={-1}
             onClick={() => handleSwitchToMegaForm(summary.megaTarget!)}
-            aria-label={summary.pokemonId === summary.megaTarget.id ? "Switch to base form" : "Switch to mega form"}
-            title={summary.pokemonId === summary.megaTarget.id ? "Base form" : "Mega form"}
+            aria-label={
+              summary.pokemonId === summary.megaTarget.id
+                ? "Switch to base form"
+                : "Switch to mega form"
+            }
+            title={
+              summary.pokemonId === summary.megaTarget.id
+                ? "Base form"
+                : "Mega form"
+            }
             className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full p-0 text-[11px] font-bold uppercase tracking-[0.08em] ${
               summary.pokemonId === summary.megaTarget.id
                 ? "theme-icon-button-active"
@@ -711,37 +998,92 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
         </div>
       )}
 
-      {/* SP spread (compact, when set is imported) */}
-      {importedSet && (
-        <div className="mt-3 grid grid-cols-6 gap-1.5">
-          {[
-            ["HP", importedSet.statPoints.hp],
-            ["Atk", importedSet.statPoints.atk],
-            ["Def", importedSet.statPoints.def],
-            ["SpA", importedSet.statPoints.spa],
-            ["SpD", importedSet.statPoints.spd],
-            ["Spe", importedSet.statPoints.spe],
-          ].map(([label, value]) => (
-            <div
-              key={String(label)}
-              className="theme-pill-muted flex min-w-0 flex-col items-center justify-center rounded-xl px-1 py-1.5 text-center font-mono"
-            >
-              <span className="text-[11px] leading-none font-semibold" style={{ color: "var(--text)" }}>
-                {value}
-              </span>
-              <span className="mt-1 text-[9px] leading-none" style={{ color: "var(--text-dim)" }}>
-                {" "}{label}
-              </span>
-            </div>
-          ))}
+      {/* SP spread */}
+      <div className="mt-3">
+        <div className="theme-text-faint mb-1.5 text-[10px] font-semibold uppercase tracking-[0.18em]">
+          SP Spread
         </div>
-      )}
+        <div className="grid grid-cols-6 gap-1.5">
+          {STAT_LABELS.map(([statKey, label]) => {
+            const value = summary.effectiveStatPoints[statKey];
+            const isEditing = editingStat === statKey;
+
+            return isEditing ? (
+              <div
+                key={statKey}
+                className="theme-pill-muted flex min-h-[44px] min-w-0 flex-col items-center justify-center rounded-xl px-1.5 py-1.5 text-center font-mono"
+              >
+                <div className="flex h-[11px] w-[3ch] items-center justify-center">
+                  <input
+                    ref={statInputRef}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={2}
+                    tabIndex={-1}
+                    aria-label={`${label} SP`}
+                    value={editingStatValue}
+                    onChange={(event) =>
+                      setEditingStatValue(event.currentTarget.value)
+                    }
+                    onBlur={handleCommitInlineStatEdit}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === "Tab") {
+                        event.preventDefault();
+                        handleCommitInlineStatEdit();
+                      }
+
+                      if (event.key === "Escape") {
+                        event.preventDefault();
+                        handleCancelInlineStatEdit();
+                      }
+                    }}
+                    className="h-[11px] w-[3ch] min-w-0 bg-transparent text-center text-[11px] leading-none font-semibold outline-none appearance-none"
+                    style={{ color: "var(--text)" }}
+                  />
+                </div>
+                <span
+                  className="mt-1 text-[9px] leading-none"
+                  style={{ color: "var(--text-dim)" }}
+                >
+                  {label}
+                </span>
+              </div>
+            ) : (
+              <button
+                key={statKey}
+                type="button"
+                tabIndex={-1}
+                aria-label={`Edit ${label} SP`}
+                onClick={() => handleStartInlineStatEdit(statKey)}
+                className="theme-pill-muted flex min-h-[44px] min-w-0 flex-col items-center justify-center rounded-xl px-1.5 py-1.5 text-center font-mono"
+              >
+                <div className="flex h-[11px] w-[3ch] items-center justify-center">
+                  <span
+                    className="text-[11px] leading-none font-semibold"
+                    style={{ color: "var(--text)" }}
+                  >
+                    {value}
+                  </span>
+                </div>
+                <span
+                  className="mt-1 text-[9px] leading-none"
+                  style={{ color: "var(--text-dim)" }}
+                >
+                  {label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
       {/* Stats grid */}
       <div className="theme-divider mt-4 border-t pt-3">
         <div className="mb-2">
           <span className="theme-text-faint text-[10px] font-semibold uppercase tracking-[0.18em]">
-            {importedSet ? `Stats · Lv. ${importedSet.level}` : "Base Stats"}
+            {importedSet || summary.promptStatPoints
+              ? `Stats · Lv. ${importedSet?.level ?? 50}`
+              : "Base Stats"}
           </span>
         </div>
         <div className="grid grid-cols-3 gap-x-2 gap-y-2.5">
@@ -808,17 +1150,22 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
                         type="button"
                         tabIndex={-1}
                         onClick={() => {
-                          handleSelectSet(s.speciesName);
+                          handleSelectSet(s);
                           setSwitchOpen(false);
                         }}
                         className="theme-menu-item w-full rounded-xl px-3 py-2 text-left"
                       >
                         <div className="text-xs font-medium">
-                          {s.speciesName}
+                          {s.nickname ?? s.speciesName}
                         </div>
-                        {s.item && (
+                        {s.nickname ? (
                           <div className="theme-text-faint mt-0.5 text-[10px]">
-                            {s.item}
+                            {s.speciesName}
+                          </div>
+                        ) : null}
+                        {(s.item || s.ability) && (
+                          <div className="theme-text-faint mt-0.5 text-[10px]">
+                            {[s.item, s.ability].filter(Boolean).join(" · ")}
                           </div>
                         )}
                       </button>
@@ -852,9 +1199,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
             </div>
           </div>
         ) : (
-          <div
-            className="grid gap-2 sm:grid-cols-2"
-          >
+          <div className="grid gap-2 sm:grid-cols-2">
             <button
               type="button"
               tabIndex={-1}
@@ -883,7 +1228,8 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
           initialSet={editorInitialSet}
           onClose={() => setEditorOpen(false)}
           onSave={(nextSet) => {
-            const speciesChanged = editorInitialSet.speciesId !== nextSet.speciesId;
+            const speciesChanged =
+              editorInitialSet.speciesId !== nextSet.speciesId;
             if (editorInitialSet.speciesId !== nextSet.speciesId) {
               removeSet(editorInitialSet.speciesId);
             }

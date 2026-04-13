@@ -7,6 +7,7 @@ import { OmniTextarea } from "@/components/omnibar/omni-textarea";
 import { SearchableCombobox } from "@/components/omnibar/searchable-combobox";
 import { QuickSuggestions } from "@/components/omnibar/quick-suggestions";
 import { ResultsPanel } from "@/components/omnibar/results-panel";
+import { parseShareState } from "@/lib/share/parse-share-state";
 import { resetOmniStore, useOmniStore } from "@/store/use-omni-store";
 import { useTeamStore } from "@/store/use-team-store";
 
@@ -203,11 +204,24 @@ describe("omnibar components", () => {
     expect(screen.getByTestId("results-panel")).toBeInTheDocument();
   });
 
+  test("strict mode blocks calculations that rely on inferred abilities", () => {
+    render(<ResultsPanel />);
+
+    act(() => {
+      useOmniStore.getState().setStrictMode(true);
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    expect(useOmniStore.getState().calculationReady).toBe(false);
+    expect(useOmniStore.getState().issues[0]).toContain("Strict mode:");
+    expect(screen.queryByTestId("results-panel")).not.toBeInTheDocument();
+  });
+
   test("results panel shows SP-style spreads instead of EV-style spreads", () => {
     render(<ResultsPanel />);
 
     act(() => {
-      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+      useOmniStore.getState().setInput("#politoed !muddy-water x incineroar");
     });
 
     const resultsPanel = screen.getByTestId("results-panel");
@@ -244,6 +258,102 @@ describe("omnibar components", () => {
       ),
     );
     expect(writeText).toHaveBeenCalledWith(expect.stringContaining("#result-glass"));
+  });
+
+  test("copy button includes relevant custom set state in the share URL", async () => {
+    const writeText = jest.fn().mockResolvedValue(undefined);
+
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+
+    act(() => {
+      useTeamStore.getState().saveSet({
+        speciesId: "politoed",
+        speciesName: "Politoed",
+        item: "Mystic Water",
+        ability: "Drizzle",
+        level: 50,
+        nature: "Modest",
+        statPoints: { hp: 32, atk: 0, def: 1, spa: 13, spd: 1, spe: 19 },
+        evs: { hp: 252, atk: 0, def: 8, spa: 104, spd: 8, spe: 152 },
+        ivs: { hp: 31, atk: 0, def: 31, spa: 31, spd: 31, spe: 31 },
+        moves: ["Muddy Water", "Ice Beam", "Protect", "Helping Hand"],
+      });
+    });
+
+    render(<ResultsPanel />);
+
+    act(() => {
+      useOmniStore.getState().setInput("#politoed !muddy-water x incineroar");
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getAllByRole("button", { name: /copy share url/i })[0]);
+    });
+
+    const sharedUrl = writeText.mock.calls[0][0] as string;
+    const parsedUrl = new URL(sharedUrl);
+    const sets = parseShareState(parsedUrl.searchParams.get("state"));
+
+    expect(sets).toHaveLength(1);
+    expect(sets[0]).toMatchObject({
+      speciesId: "politoed",
+      item: "Mystic Water",
+      nature: "Modest",
+      statPoints: { hp: 32, atk: 0, def: 1, spa: 13, spd: 1, spe: 19 },
+    });
+  });
+
+  test("copy share url preserves strict mode", async () => {
+    const writeText = jest.fn().mockResolvedValue(undefined);
+
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+
+    render(<ResultsPanel />);
+
+    act(() => {
+      useOmniStore.getState().setStrictMode(true);
+      useOmniStore
+        .getState()
+        .setInput("politoed !muddy-water [Drizzle] x incineroar [Intimidate]");
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getAllByRole("button", { name: /copy share url/i })[0]);
+    });
+
+    expect(writeText).toHaveBeenCalledWith(expect.stringContaining("strict=1"));
+  });
+
+  test("copy result text button copies the showdown-style result text", async () => {
+    const writeText = jest.fn().mockResolvedValue(undefined);
+
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+
+    render(<ResultsPanel />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getAllByRole("button", { name: /copy result text/i })[0]);
+    });
+
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringContaining("Politoed"),
+    );
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringContaining("--"),
+    );
   });
 
   test("Tab applies the highlighted suggestion even without inline ghost text", () => {
@@ -298,6 +408,60 @@ describe("omnibar components", () => {
     });
   });
 
+  test("hydrates strict mode from the shared URL", async () => {
+    window.history.replaceState(
+      {},
+      "",
+      "/?prompt=politoed%20!muddy-water%20%5BDrizzle%5D%20x%20incineroar%20%5BIntimidate%5D&strict=1",
+    );
+
+    render(<OmniComposer />);
+
+    await waitFor(() => {
+      expect(useOmniStore.getState().strictMode).toBe(true);
+    });
+  });
+
+  test("hydrates shared custom sets from the URL state", async () => {
+    const encodedState = btoa(
+      JSON.stringify({
+        v: 1,
+        sets: [
+          {
+            speciesId: "politoed",
+            speciesName: "Politoed",
+            item: "Mystic Water",
+            ability: "Drizzle",
+            level: 50,
+            nature: "Modest",
+            statPoints: { hp: 32, atk: 0, def: 1, spa: 13, spd: 1, spe: 19 },
+            evs: { hp: 252, atk: 0, def: 8, spa: 104, spd: 8, spe: 152 },
+            ivs: { hp: 31, atk: 0, def: 31, spa: 31, spd: 31, spe: 31 },
+            moves: ["Muddy Water", "Ice Beam", "Protect", "Helping Hand"],
+          },
+        ],
+      }),
+    )
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/g, "");
+
+    window.history.replaceState(
+      {},
+      "",
+      `/?prompt=politoed%20!muddy-water%20x%20incineroar&state=${encodedState}`,
+    );
+
+    render(<OmniComposer />);
+
+    await waitFor(() => {
+      expect(useTeamStore.getState().importedSets.politoed).toMatchObject({
+        item: "Mystic Water",
+        nature: "Modest",
+      });
+    });
+  });
+
   test("renders attacker and defender summaries next to the composer", () => {
     render(<OmniComposer />);
 
@@ -310,16 +474,44 @@ describe("omnibar components", () => {
     expect(screen.getByTestId("defender-summary")).toHaveTextContent("Incineroar");
   });
 
+  test("saved set cards insert canonical #set references into the prompt", () => {
+    act(() => {
+      useTeamStore.getState().saveSet({
+        speciesId: "politoed",
+        speciesName: "Politoed",
+        nickname: "rain-toed",
+        item: "Mystic Water",
+        ability: "Drizzle",
+        level: 50,
+        nature: "Modest",
+        statPoints: { hp: 32, atk: 0, def: 1, spa: 13, spd: 1, spe: 19 },
+        evs: { hp: 252, atk: 0, def: 8, spa: 104, spd: 8, spe: 152 },
+        ivs: { hp: 31, atk: 0, def: 31, spa: 31, spd: 31, spe: 31 },
+        moves: ["Muddy Water", "Ice Beam", "Protect", "Helping Hand"],
+      });
+    });
+
+    render(<OmniComposer />);
+
+    fireEvent.click(
+      within(screen.getByTestId("attacker-summary")).getByRole("button", {
+        name: /rain-toed/i,
+      }),
+    );
+
+    expect(useOmniStore.getState().input).toBe("#raintoed");
+  });
+
   test("renders an explicit defender item in the defender summary", () => {
     render(<OmniComposer />);
 
     act(() => {
       useOmniStore
         .getState()
-        .setInput("charizard !heat-wave x tinkaton @assault-vest");
+        .setInput("charizard !heat-wave x tinkaton @occa-berry");
     });
 
-    expect(screen.getByTestId("defender-summary")).toHaveTextContent("Assault Vest");
+    expect(screen.getByTestId("defender-summary")).toHaveTextContent("Occa Berry");
   });
 
   test("editing a summary set stores SPs and updates the summary card", () => {
@@ -358,8 +550,41 @@ describe("omnibar components", () => {
       spe: 19,
     });
     expect(useTeamStore.getState().importedSets.politoed.item).toBe("Mystic Water");
-    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("32 HP");
-    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("13 SpA");
+
+    act(() => {
+      useOmniStore.getState().setInput("#politoed !muddy-water x incineroar");
+    });
+
+    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("32");
+    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("HP");
+    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("13");
+    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("SpA");
+  });
+
+  test("editing an SP bubble inline writes a prompt sp: override", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    fireEvent.click(
+      within(screen.getByTestId("attacker-summary")).getByRole("button", {
+        name: "Edit HP SP",
+      }),
+    );
+
+    const hpInput = within(screen.getByTestId("attacker-summary")).getByRole("textbox", {
+      name: "HP SP",
+    });
+    fireEvent.change(hpInput, { target: { value: "32" } });
+    fireEvent.keyDown(hpInput, { key: "Enter" });
+
+    expect(useOmniStore.getState().input).toBe(
+      "politoed !muddy-water sp:32/0/0/0/0/0 x incineroar",
+    );
+    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("32");
+    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("HP");
   });
 
   test("editing a summary set can change the pokemon species", () => {
@@ -407,7 +632,7 @@ describe("omnibar components", () => {
     render(<OmniComposer />);
 
     act(() => {
-      useOmniStore.getState().setInput("charizard !heat-wave x tinkaton");
+      useOmniStore.getState().setInput("#charizard !heat-wave x tinkaton");
     });
 
     fireEvent.click(

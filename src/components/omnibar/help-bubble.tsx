@@ -27,9 +27,14 @@ const SYNTAX_ROWS: SyntaxRow[] = [
     example: "!muddy-water",
   },
   {
+    token: "#set",
+    description: "Saved set reference for the current segment",
+    example: "#raintoed  #avincin",
+  },
+  {
     token: "@item",
     description: "Held item for the current segment",
-    example: "@mystic-water  @assault-vest",
+    example: "@mystic-water  @occa-berry",
   },
   {
     token: "segment token",
@@ -50,6 +55,11 @@ const SYNTAX_ROWS: SyntaxRow[] = [
     token: "%N",
     description: "Current HP percentage (1–100)",
     example: "%75  %50",
+  },
+  {
+    token: "sp:...",
+    description: "Six-value Champions SP spread for the current segment",
+    example: "sp:32/0/1/13/1/19",
   },
   {
     token: "*",
@@ -92,9 +102,13 @@ const DEFENDER_MODIFIERS: Array<{ token: string; label: string }> = [
 
 const TIPS = [
   "Only the attacker takes !move, but both sides can use @item, %HP, and [Ability] based on which segment they are in.",
+  "Use #set-name to reference a saved or shared set by nickname or species id. Explicit prompt tokens still override the referenced set.",
   "Modifiers can also be toggled via the panel below the input.",
   "Weather and terrain abilities surface the matching ~token as an opt-in suggestion after both sides resolve.",
   "Use the side sliders for stage control, including dedicated Speed stages for Electro Ball and Gyro Ball.",
+  "Use sp:hp/atk/def/spa/spd/spe to override summary and calc spreads directly from the prompt.",
+  "Fast mode allows competitive defaults. Strict mode blocks inferred abilities and other hidden assumptions.",
+  "Speed-sensitive moves now surface effective Spe values and the speed ratio directly in the result assumptions.",
   "Autocomplete works on Pokémon names, moves, and modifier tokens.",
 ];
 

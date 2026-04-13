@@ -4,13 +4,16 @@ import { buildCustomSetArchetypeConfig, getArchetypeConfigs } from "@/lib/calc/a
 import {
   DEFAULT_IV_SPREAD,
   EMPTY_STAT_SPREAD,
+  applyStage,
   cloneStatSpread,
+  computeStats,
   evToStatPointsValue,
+  statPointsToCalcEvs,
 } from "@/lib/calc/stat-calc";
 import { normalizeKoText } from "@/lib/calc/ko-text";
 import { moveById, normalizeId, pokemonById } from "@/lib/data/loaders";
-import { inferDefaultAbility } from "@/lib/parser/inference";
-import { resolveImportedSet } from "@/lib/team/imported-set-utils";
+import { inferDefaultAbility, inferDefaultItem } from "@/lib/parser/inference";
+import { resolveReferencedImportedSet } from "@/lib/team/set-references";
 import type {
   DamageResult,
   ImportedSet,
@@ -119,20 +122,322 @@ function getMoveHitMetadata(moveName: string) {
   };
 }
 
-type ValueSource = "prompt" | "set" | "default" | "archetype";
+function resolveCalcSpeciesName(pokemon: {
+  id: string;
+  name: string;
+  baseSpeciesId?: string;
+}, side: "attacker" | "defender", explicitFormId?: string) {
+  const defaultAegislashFormId =
+    pokemon.id === "aegislash"
+      ? side === "attacker"
+        ? "aegislashblade"
+        : "aegislashshield"
+      : undefined;
+  const candidateIds = [
+    explicitFormId,
+    defaultAegislashFormId,
+    normalizeId(pokemon.name),
+    pokemon.id,
+    pokemon.baseSpeciesId,
+  ].filter((candidate): candidate is string => Boolean(candidate));
 
-function buildBaseIvs(importedSet: ImportedSet | null, useTrickRoomZeroSpe: boolean) {
-  const ivs = cloneStatSpread(importedSet?.ivs, DEFAULT_IV_SPREAD);
+  for (const candidateId of candidateIds) {
+    const species = GEN_9.species.get(candidateId as Parameters<typeof GEN_9.species.get>[0]);
 
-  if (!importedSet && useTrickRoomZeroSpe) {
-    ivs.spe = 0;
+    if (species) {
+      return species.name;
+    }
   }
 
-  return ivs;
+  return null;
+}
+
+function createCalcPokemon(
+  pokemon: {
+    id: string;
+    name: string;
+    baseSpeciesId?: string;
+  },
+  side: "attacker" | "defender",
+  options: ConstructorParameters<typeof Pokemon>[2],
+  explicitFormId?: string,
+) {
+  const calcSpeciesName = resolveCalcSpeciesName(pokemon, side, explicitFormId);
+
+  if (!calcSpeciesName) {
+    return null;
+  }
+
+  try {
+    return {
+      calcSpeciesName,
+      pokemon: new Pokemon(9, calcSpeciesName, options),
+    };
+  } catch {
+    return null;
+  }
+}
+
+type ValueSource = "prompt" | "set" | "default" | "archetype";
+interface CalculationOptions {
+  strictMode?: boolean;
+}
+
+function buildBaseIvs() {
+  return { ...DEFAULT_IV_SPREAD };
 }
 
 function buildBaseEvs(importedSet: ImportedSet | null, fallback: StatSpread) {
   return cloneStatSpread(importedSet?.evs, fallback);
+}
+
+function buildPromptStatPointSet(
+  speciesId: string,
+  speciesName: string,
+  baseSet: ImportedSet | null,
+  statPoints: StatSpread | undefined,
+  item: string | undefined,
+  ability: string | undefined,
+  nature: string | undefined,
+): ImportedSet | null {
+  if (!statPoints && !baseSet) {
+    return null;
+  }
+
+  const resolvedStatPoints = cloneStatSpread(
+    statPoints,
+    baseSet?.statPoints ?? EMPTY_STAT_SPREAD,
+  );
+
+  return {
+    speciesId,
+    speciesName,
+    nickname: baseSet?.nickname,
+    item,
+    ability,
+    level: baseSet?.level ?? 50,
+    nature: nature ?? baseSet?.nature ?? "Hardy",
+    statPoints: resolvedStatPoints,
+    evs: statPointsToCalcEvs(resolvedStatPoints),
+    ivs: { ...DEFAULT_IV_SPREAD },
+    moves: baseSet?.moves ?? [],
+    teraType: baseSet?.teraType,
+  };
+}
+
+function getResolvedAttackerAbility(
+  parsed: ParsedCommand,
+  attackerSet: ImportedSet | null,
+  attackerId: string,
+  strictMode: boolean,
+) {
+  return (
+    parsed.attackerAbility ??
+    attackerSet?.ability ??
+    (strictMode ? undefined : inferDefaultAbility(attackerId) ?? undefined)
+  );
+}
+
+function getResolvedDefenderAbility(
+  parsed: ParsedCommand,
+  defenderSet: ImportedSet | null,
+  defenderId: string,
+  strictMode: boolean,
+) {
+  return (
+    parsed.defenderAbility ??
+    defenderSet?.ability ??
+    (strictMode ? undefined : inferDefaultAbility(defenderId) ?? undefined)
+  );
+}
+
+function getResolvedDefenderItem(
+  parsed: ParsedCommand,
+  defenderSet: ImportedSet | null,
+  defenderId: string,
+  requiresTargetItem: boolean,
+  strictMode: boolean,
+) {
+  return (
+    parsed.defenderItem ??
+    defenderSet?.item ??
+    (strictMode
+      ? undefined
+      : requiresTargetItem
+        ? inferDefaultItem(defenderId) ?? "Leftovers"
+        : undefined)
+  );
+}
+
+function getResolvedMoveHitCount(parsed: ParsedCommand) {
+  const moveHitMetadata = getMoveHitMetadata(parsed.move);
+
+  return {
+    moveHitMetadata,
+    moveHitCount: parsed.moveHitCount ?? moveHitMetadata.hitCount,
+  };
+}
+
+function getSpeedRelevantAbilityMultiplier(
+  ability: string | undefined,
+  weather: ReturnType<typeof getWeather>,
+  terrain: ReturnType<typeof getTerrain>,
+  status: PokemonStatus | undefined,
+) {
+  const normalizedAbility = normalizeId(ability ?? "");
+  const hasStatus = Boolean(status);
+
+  if (normalizedAbility === "quickfeet" && hasStatus) {
+    return 1.5;
+  }
+
+  if (normalizedAbility === "swiftswim" && weather === "Rain") {
+    return 2;
+  }
+
+  if (normalizedAbility === "chlorophyll" && weather === "Sun") {
+    return 2;
+  }
+
+  if (normalizedAbility === "sandrush" && weather === "Sand") {
+    return 2;
+  }
+
+  if (normalizedAbility === "slushrush" && weather === "Snow") {
+    return 2;
+  }
+
+  if (normalizedAbility === "surgesurfer" && terrain === "Electric") {
+    return 2;
+  }
+
+  return 1;
+}
+
+function getSpeedRelevantItemMultiplier(item: string | undefined) {
+  const normalizedItem = normalizeId(item ?? "");
+
+  if (normalizedItem === "choicescarf") {
+    return 1.5;
+  }
+
+  if (
+    new Set([
+      "ironball",
+      "machobrace",
+      "poweranklet",
+      "powerband",
+      "powerbelt",
+      "powerbracer",
+      "powerlens",
+      "powerweight",
+    ]).has(normalizedItem)
+  ) {
+    return 0.5;
+  }
+
+  return 1;
+}
+
+function buildEffectiveSpeed(
+  pokemon: { baseStats: { hp: number; atk: number; def: number; spa: number; spd: number; spe: number } },
+  options: {
+    evs: StatSpread;
+    ivs: StatSpread;
+    nature: string;
+    level: number;
+    speedStage: number;
+    status: PokemonStatus | undefined;
+    hasTailwind: boolean;
+    ability: string | undefined;
+    item: string | undefined;
+    weather: ReturnType<typeof getWeather>;
+    terrain: ReturnType<typeof getTerrain>;
+  },
+) {
+  const stats = computeStats(pokemon.baseStats, options.evs, options.ivs, options.nature, options.level);
+  let effectiveSpeed = applyStage(stats.spe, options.speedStage);
+  const quickFeetActive =
+    normalizeId(options.ability ?? "") === "quickfeet" && Boolean(options.status);
+
+  if (options.status === "par" && !quickFeetActive) {
+    effectiveSpeed = Math.floor(effectiveSpeed * 0.5);
+  }
+
+  effectiveSpeed = Math.floor(
+    effectiveSpeed *
+      getSpeedRelevantAbilityMultiplier(
+        options.ability,
+        options.weather,
+        options.terrain,
+        options.status,
+      ),
+  );
+  effectiveSpeed = Math.floor(
+    effectiveSpeed * getSpeedRelevantItemMultiplier(options.item),
+  );
+
+  if (options.hasTailwind) {
+    effectiveSpeed *= 2;
+  }
+
+  return {
+    rawSpeed: stats.spe,
+    effectiveSpeed,
+  };
+}
+
+function shouldDescribeSpeedContext(
+  parsed: ParsedCommand,
+  moveName: string,
+  attackerAbility: string | undefined,
+  defenderAbility: string | undefined,
+  attackerItem: string | undefined,
+  defenderItem: string | undefined,
+) {
+  const moveId = normalizeId(moveName);
+
+  if (moveId === "electroball" || moveId === "gyroball") {
+    return true;
+  }
+
+  if (
+    parsed.attackerSpeedMod !== 0 ||
+    parsed.defenderSpeedMod !== 0 ||
+    parsed.attackerStatus === "par" ||
+    parsed.defenderStatus === "par" ||
+    parsed.attackerSideEffects.includes("tailwind") ||
+    parsed.defenderSideEffects.includes("tailwind")
+  ) {
+    return true;
+  }
+
+  const relevantAbilities = new Set([
+    "chlorophyll",
+    "quickfeet",
+    "sandrush",
+    "slushrush",
+    "surgesurfer",
+    "swiftswim",
+  ]);
+  const relevantItems = new Set([
+    "choicescarf",
+    "ironball",
+    "machobrace",
+    "poweranklet",
+    "powerband",
+    "powerbelt",
+    "powerbracer",
+    "powerlens",
+    "powerweight",
+  ]);
+
+  return (
+    relevantAbilities.has(normalizeId(attackerAbility ?? "")) ||
+    relevantAbilities.has(normalizeId(defenderAbility ?? "")) ||
+    relevantItems.has(normalizeId(attackerItem ?? "")) ||
+    relevantItems.has(normalizeId(defenderItem ?? ""))
+  );
 }
 
 function buildAbilityFlags(attackerAbility: string | undefined, defenderAbility: string | undefined) {
@@ -378,6 +683,11 @@ function describeAssumptions(
   defenderSet: ImportedSet | null,
   resolvedMoveHitCount: number | undefined,
   isVariableHitMove: boolean,
+  speedContext?: {
+    attackerSpeed: number;
+    defenderSpeed: number;
+    ratio?: number;
+  },
 ) {
   const assumptions: string[] = [];
   const hasWeatherBoost = parsed.globalEffects.includes("sun");
@@ -495,10 +805,6 @@ function describeAssumptions(
     );
   }
 
-  if (parsed.globalEffects.includes("trick_room")) {
-    assumptions.push("Trick Room: attacker uses 0 Spe IV");
-  }
-
   if (parsed.isDoubleTarget) {
     assumptions.push("Spread move: 0.75x doubles modifier");
   }
@@ -515,13 +821,73 @@ function describeAssumptions(
     assumptions.push("Critical hit");
   }
 
+  if (speedContext) {
+    assumptions.push(`Attacker Spe: ${speedContext.attackerSpeed}`);
+    assumptions.push(`Defender Spe: ${speedContext.defenderSpeed}`);
+
+    if (speedContext.ratio !== undefined) {
+      assumptions.push(`Speed ratio: ${speedContext.ratio.toFixed(2)}x`);
+    }
+  }
+
   return assumptions;
+}
+
+export function getCalculationIssues(
+  parsed: ParsedCommand,
+  importedSets: Record<string, ImportedSet> = {},
+  options: CalculationOptions = {},
+) {
+  if (!options.strictMode) {
+    return [];
+  }
+
+  const parsedAttacker = pokemonById.get(normalizeId(parsed.attacker));
+  const parsedDefender = pokemonById.get(normalizeId(parsed.defender));
+  const move = moveById.get(normalizeId(parsed.move));
+
+  if (!parsedAttacker || !parsedDefender || !move) {
+    return [];
+  }
+
+  const parsedAttackerSet = resolveReferencedImportedSet(
+    parsed.attackerSetReferenceId,
+    importedSets,
+  );
+  const parsedDefenderSet = resolveReferencedImportedSet(
+    parsed.defenderSetReferenceId,
+    importedSets,
+  );
+  const issues: string[] = [];
+
+  if (!parsed.attackerAbility && !parsedAttackerSet?.ability) {
+    issues.push("Strict mode: add an explicit attacker ability or use a set with an ability.");
+  }
+
+  if (!parsed.defenderAbility && !parsedDefenderSet?.ability) {
+    issues.push("Strict mode: add an explicit defender ability or use a set with an ability.");
+  }
+
+  if (
+    normalizeId(move.name) === "poltergeist" &&
+    !parsed.defenderItem &&
+    !parsedDefenderSet?.item
+  ) {
+    issues.push("Strict mode: Poltergeist requires an explicit defender item or a set with an item.");
+  }
+
+  return issues;
 }
 
 export function buildCalculationContext(
   parsed: ParsedCommand,
   importedSets: Record<string, ImportedSet> = {},
+  options: CalculationOptions = {},
 ) {
+  if (getCalculationIssues(parsed, importedSets, options).length) {
+    return null;
+  }
+
   const parsedAttacker = pokemonById.get(normalizeId(parsed.attacker));
   const parsedDefender = pokemonById.get(normalizeId(parsed.defender));
   const move = moveById.get(normalizeId(parsed.move));
@@ -532,12 +898,41 @@ export function buildCalculationContext(
 
   const attacker = parsedAttacker;
   const defender = parsedDefender;
-  const parsedAttackerSet = resolveImportedSet(attacker, importedSets);
-  const parsedDefenderSet = resolveImportedSet(defender, importedSets);
+  const parsedAttackerSet = resolveReferencedImportedSet(
+    parsed.attackerSetReferenceId,
+    importedSets,
+  );
+  const parsedDefenderSet = resolveReferencedImportedSet(
+    parsed.defenderSetReferenceId,
+    importedSets,
+  );
+  const requiresTargetItem = normalizeId(move.name) === "poltergeist";
   const attackerItem = parsed.attackerItem ?? parsedAttackerSet?.item;
-  const defenderItem = parsed.defenderItem ?? parsedDefenderSet?.item;
-  const attackerSet = resolveImportedSet(attacker, importedSets);
-  const defenderSet = resolveImportedSet(defender, importedSets);
+  const defenderItem = getResolvedDefenderItem(
+    parsed,
+    parsedDefenderSet,
+    defender.id,
+    requiresTargetItem,
+    Boolean(options.strictMode),
+  );
+  const attackerSet = buildPromptStatPointSet(
+    attacker.id,
+    attacker.name,
+    parsedAttackerSet,
+    parsed.attackerStatPoints,
+    attackerItem,
+    parsed.attackerAbility ?? parsedAttackerSet?.ability,
+    parsed.attackerNature ?? parsedAttackerSet?.nature,
+  );
+  const defenderSet = buildPromptStatPointSet(
+    defender.id,
+    defender.name,
+    parsedDefenderSet,
+    parsed.defenderStatPoints,
+    defenderItem,
+    parsed.defenderAbility ?? parsedDefenderSet?.ability,
+    parsed.defenderNature ?? parsedDefenderSet?.nature,
+  );
 
   const isPhysical = move.category === "Physical";
   const attackInvestment =
@@ -558,16 +953,19 @@ export function buildCalculationContext(
     : defenderSet?.item
       ? "set"
       : "default";
-  const attackerAbility = parsed.attackerAbility
-    ?? attackerSet?.ability
-    ?? inferDefaultAbility(attacker.id)
-    ?? undefined;
-  const defenderAbility = parsed.defenderAbility
-    ?? defenderSet?.ability
-    ?? inferDefaultAbility(defender.id)
-    ?? undefined;
-  const moveHitMetadata = getMoveHitMetadata(parsed.move);
-  const moveHitCount = parsed.moveHitCount ?? moveHitMetadata.hitCount;
+  const attackerAbility = getResolvedAttackerAbility(
+    parsed,
+    attackerSet,
+    attacker.id,
+    Boolean(options.strictMode),
+  );
+  const defenderAbility = getResolvedDefenderAbility(
+    parsed,
+    defenderSet,
+    defender.id,
+    Boolean(options.strictMode),
+  );
+  const { moveHitMetadata, moveHitCount } = getResolvedMoveHitCount(parsed);
   const attackerAbilitySource: ValueSource = parsed.attackerAbility
     ? "prompt"
     : attackerSet?.ability
@@ -604,36 +1002,113 @@ export function buildCalculationContext(
     level: attackerSet?.level ?? 50,
     ability: attackerAbility,
     item: attackerItem,
-      nature: parsed.attackerNature ?? attackerSet?.nature ?? "Hardy",
-      ivs: buildBaseIvs(attackerSet, parsed.globalEffects.includes("trick_room")),
-      evs: buildBaseEvs(attackerSet, {
-      hp: 4,
-      atk: attackInvestment === "atk" ? 252 : 0,
-      def: 0,
-      spa: attackInvestment === "spa" ? 252 : 0,
-      spd: 0,
-      spe: 0,
-    }),
-      boosts: {
-        atk: move.category === "Physical" ? parsed.attackerStatMod : 0,
-        spa: move.category === "Special" ? parsed.attackerStatMod : 0,
-        spe: parsed.attackerSpeedMod,
-      },
-      status: parsed.attackerStatus,
-      moves: [parsed.move],
-    };
-  const attackerPreview = new Pokemon(9, attacker.name, attackerBaseOptions);
-  const attackerPokemon = new Pokemon(9, attacker.name, {
+    nature: parsed.attackerNature ?? attackerSet?.nature ?? "Hardy",
+    ivs: buildBaseIvs(),
+    evs: parsed.attackerStatPoints
+      ? statPointsToCalcEvs(parsed.attackerStatPoints)
+      : buildBaseEvs(attackerSet, {
+          hp: 4,
+          atk: attackInvestment === "atk" ? 252 : 0,
+          def: 0,
+          spa: attackInvestment === "spa" ? 252 : 0,
+          spd: 0,
+          spe: 0,
+        }),
+    boosts: {
+      atk: move.category === "Physical" ? parsed.attackerStatMod : 0,
+      spa: move.category === "Special" ? parsed.attackerStatMod : 0,
+      spe: parsed.attackerSpeedMod,
+    },
+    status: parsed.attackerStatus,
+    moves: [parsed.move],
+  };
+  const attackerPreviewResult = createCalcPokemon(
+    attacker,
+    "attacker",
+    attackerBaseOptions,
+    parsed.attackerCalcFormId,
+  );
+
+  if (!attackerPreviewResult) {
+    return null;
+  }
+
+  const attackerPokemonResult = createCalcPokemon(attacker, "attacker", {
     ...attackerBaseOptions,
-    curHP: toCurrentHp(attackerPreview.maxHP(), parsed.attackerCurrentHpPercent),
+    curHP: toCurrentHp(
+      attackerPreviewResult.pokemon.maxHP(),
+      parsed.attackerCurrentHpPercent,
+    ),
+  }, parsed.attackerCalcFormId);
+
+  if (!attackerPokemonResult) {
+    return null;
+  }
+
+  const defenderSpeedNature = defenderSet
+    ? parsed.defenderNature ?? defenderSet.nature
+    : parsed.defenderNature ?? "Hardy";
+  const defenderSpeedIvs = buildBaseIvs();
+  const defenderSpeedEvs = parsed.defenderStatPoints
+    ? statPointsToCalcEvs(parsed.defenderStatPoints)
+    : buildBaseEvs(defenderSet, EMPTY_STAT_SPREAD);
+  const attackerSpeedContext = buildEffectiveSpeed(attacker, {
+    evs: attackerBaseOptions.evs,
+    ivs: attackerBaseOptions.ivs,
+    nature: attackerBaseOptions.nature,
+    level: attackerBaseOptions.level,
+    speedStage: parsed.attackerSpeedMod,
+    status: parsed.attackerStatus,
+    hasTailwind: parsed.attackerSideEffects.includes("tailwind"),
+    ability: attackerAbility,
+    item: attackerItem,
+    weather: getWeather(parsed),
+    terrain: getTerrain(parsed),
   });
+  const defenderSpeedContext = buildEffectiveSpeed(defender, {
+    evs: defenderSpeedEvs,
+    ivs: defenderSpeedIvs,
+    nature: defenderSpeedNature,
+    level: defenderSet?.level ?? 50,
+    speedStage: parsed.defenderSpeedMod,
+    status: parsed.defenderStatus,
+    hasTailwind: parsed.defenderSideEffects.includes("tailwind"),
+    ability: defenderAbility,
+    item: defenderItem,
+    weather: getWeather(parsed),
+    terrain: getTerrain(parsed),
+  });
+  const shouldIncludeSpeedContext = shouldDescribeSpeedContext(
+    parsed,
+    move.name,
+    attackerAbility,
+    defenderAbility,
+    attackerItem,
+    defenderItem,
+  );
+  const speedRatio =
+    normalizeId(move.name) === "electroball"
+      ? attackerSpeedContext.effectiveSpeed > 0 && defenderSpeedContext.effectiveSpeed > 0
+        ? attackerSpeedContext.effectiveSpeed / defenderSpeedContext.effectiveSpeed
+        : undefined
+      : normalizeId(move.name) === "gyroball"
+        ? attackerSpeedContext.effectiveSpeed > 0 && defenderSpeedContext.effectiveSpeed > 0
+          ? defenderSpeedContext.effectiveSpeed / attackerSpeedContext.effectiveSpeed
+          : undefined
+        : undefined;
 
   return {
     attacker,
     defender,
     move,
     field,
-    attackerPokemon,
+    attackerPokemon: attackerPokemonResult.pokemon,
+    attackerCalcSpeciesName: attackerPokemonResult.calcSpeciesName,
+    defenderCalcSpeciesName: resolveCalcSpeciesName(
+      defender,
+      "defender",
+      parsed.defenderCalcFormId,
+    ),
     attackerItem,
     defenderItem,
     attackerSet,
@@ -673,6 +1148,13 @@ export function buildCalculationContext(
       defenderSet,
       moveHitCount,
       moveHitMetadata.isVariable,
+      shouldIncludeSpeedContext
+        ? {
+            attackerSpeed: attackerSpeedContext.effectiveSpeed,
+            defenderSpeed: defenderSpeedContext.effectiveSpeed,
+            ratio: speedRatio,
+          }
+        : undefined,
     ),
     moveHitCount,
   };
@@ -681,8 +1163,9 @@ export function buildCalculationContext(
 export function calculateDamageResults(
   parsed: ParsedCommand,
   importedSets: Record<string, ImportedSet> = {},
+  options: CalculationOptions = {},
 ): DamageResult[] {
-  const context = buildCalculationContext(parsed, importedSets);
+  const context = buildCalculationContext(parsed, importedSets, options);
 
   if (!context) {
     return [];
@@ -693,32 +1176,12 @@ export function calculateDamageResults(
     const defenderNature = context.defenderSet
       ? parsed.defenderNature ?? context.defenderSet.nature
       : archetype.nature;
-    const defenderIvs = cloneStatSpread(
-      archetype.ivs,
-      context.defenderSet?.ivs ?? DEFAULT_IV_SPREAD,
-    );
+    const defenderIvs = cloneStatSpread(archetype.ivs, DEFAULT_IV_SPREAD);
     const defenderEvs = cloneStatSpread(
       archetype.evs,
       context.defenderSet?.evs ?? EMPTY_STAT_SPREAD,
     );
-    const defenderPokemon = new Pokemon(9, context.defender.name, {
-      curHP: toCurrentHp(
-        new Pokemon(9, context.defender.name, {
-          level: defenderLevel,
-          ability: context.defenderAbility,
-          item: context.defenderItem,
-          nature: defenderNature,
-          ivs: defenderIvs,
-          evs: defenderEvs,
-          boosts: {
-            def: context.move.category === "Physical" ? parsed.defenderStatMod : 0,
-            spd: context.move.category === "Special" ? parsed.defenderStatMod : 0,
-            spe: parsed.defenderSpeedMod,
-          },
-          status: parsed.defenderStatus,
-        }).maxHP(),
-        parsed.defenderCurrentHpPercent,
-      ),
+    const defenderBaseOptions = {
       level: defenderLevel,
       ability: context.defenderAbility,
       item: context.defenderItem,
@@ -731,7 +1194,31 @@ export function calculateDamageResults(
         spe: parsed.defenderSpeedMod,
       },
       status: parsed.defenderStatus,
-    });
+    };
+    const defenderPreviewResult = createCalcPokemon(
+      context.defender,
+      "defender",
+      defenderBaseOptions,
+      parsed.defenderCalcFormId,
+    );
+
+    if (!defenderPreviewResult || !context.defenderCalcSpeciesName) {
+      return null;
+    }
+
+    const defenderPokemonResult = createCalcPokemon(context.defender, "defender", {
+      ...defenderBaseOptions,
+      curHP: toCurrentHp(
+        defenderPreviewResult.pokemon.maxHP(),
+        parsed.defenderCurrentHpPercent,
+      ),
+    }, parsed.defenderCalcFormId);
+
+    if (!defenderPokemonResult) {
+      return null;
+    }
+
+    const defenderPokemon = defenderPokemonResult.pokemon;
 
     const result = calculate(
       9,
@@ -742,7 +1229,7 @@ export function calculateDamageResults(
         hits: context.moveHitCount,
         item: context.attackerItem,
         isCrit: parsed.isCriticalHit,
-        species: context.attacker.name,
+        species: context.attackerCalcSpeciesName,
       }),
       context.field,
     );
@@ -768,5 +1255,5 @@ export function calculateDamageResults(
       damageText: description.damageText,
       assumptions: context.assumptions,
     };
-  });
+  }).filter((result): result is DamageResult => result !== null);
 }

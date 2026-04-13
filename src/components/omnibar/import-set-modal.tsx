@@ -115,7 +115,7 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
         <div className="max-h-[70vh] overflow-y-auto px-6 pb-6 scrollbar-none">
           <p className="theme-text-dim mb-3 text-sm">
             Paste a Showdown export below. Full teams are supported, and EV
-            spreads are converted to Champions SPs automatically.
+            spreads are read as Champions SPs automatically.
           </p>
 
           <textarea
@@ -123,7 +123,7 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
             rows={9}
             spellCheck={false}
             placeholder={
-              "Politoed @ Mystic Water\nAbility: Drizzle\nLevel: 50\nEVs: 252 HP / 100 SpA / 4 SpD / 148 Spe\nModest Nature\nIVs: 0 Atk\n- Muddy Water\n- Ice Beam\n- Protect\n- Helping Hand"
+              "Politoed @ Mystic Water\nAbility: Drizzle\nLevel: 50\nEVs: 32 HP / 1 Def / 13 SpA / 1 SpD / 19 Spe\nModest Nature\n- Muddy Water\n- Ice Beam\n- Protect\n- Helping Hand"
             }
             value={text}
             onChange={(e) => {

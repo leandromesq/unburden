@@ -123,6 +123,28 @@ Regras:
 - o move é obrigatório para o cálculo
 - o move usa slug com hífens
 
+### 2.5. Referência a set salvo
+
+Sintaxe:
+
+```txt
+#nome-do-set
+```
+
+Exemplos:
+
+```txt
+#raintoed
+#avincin
+```
+
+Regras:
+
+- `#set` pode ser usado no slot de Pokémon do atacante ou do defensor
+- ele resolve um set salvo ou compartilhado pelo apelido (`nickname`) ou pelo `speciesId`
+- quando um `#set` é resolvido, o sistema usa a espécie e os dados do set salvo
+- tokens explícitos no prompt continuam tendo prioridade sobre o que veio do set referenciado
+
 ### 3. Item
 
 Sintaxe:
@@ -186,7 +208,28 @@ Regras:
 - a ability vale para o segmento onde ela foi escrita
 - ao digitar `[` na UI, o sistema fecha automaticamente para `[]` e coloca o cursor no meio
 
-### 6. Efeitos globais
+### 6. Spread de SPs
+
+Sintaxe:
+
+```txt
+sp:hp/atk/def/spa/spd/spe
+```
+
+Exemplo:
+
+```txt
+sp:32/0/1/13/1/19
+```
+
+Regras:
+
+- sempre exige 6 valores
+- cada stat vai de `0` a `32`
+- o total não pode passar de `66`
+- o token vale para o segmento onde ele foi escrito
+
+### 7. Efeitos globais
 
 Sintaxe:
 
@@ -210,7 +253,7 @@ Regras:
 - weather e terrain vindos de abilities como `Drizzle`, `Drought` ou `Grassy Surge` não são mais inseridos automaticamente no prompt
 - em vez disso, o sistema oferece o `~token` correspondente como sugestão opt-in
 
-### 7. Crítico
+### 8. Crítico
 
 Sintaxe:
 
@@ -577,6 +620,7 @@ pokemon !move x pokemon
 Tokens principais:
 
 ```txt
+#set
 !move
 @item
 %75
