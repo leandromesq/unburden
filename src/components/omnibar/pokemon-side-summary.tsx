@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { StatSpread } from "@/lib/types";
 
 import {
   getCanonicalPromptPokemonName,
@@ -501,7 +500,14 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
       side === "attacker"
         ? parsedCommand?.attackerStatPoints
         : parsedCommand?.defenderStatPoints;
-    const effectivePromptStatPoints = pendingStatPoints ?? promptStatPoints;
+    const effectivePromptStatPoints =
+      promptStatPoints &&
+      pendingStatPoints &&
+      STAT_LABELS.every(
+        ([key]) => promptStatPoints[key] === pendingStatPoints[key],
+      )
+        ? promptStatPoints
+        : (pendingStatPoints ?? promptStatPoints);
 
     // Stage values
     const attackerStatStage = getStageValue(
@@ -692,26 +698,6 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
       itemBoosts: defenderChoiceBoosts,
     };
   }, [input, side, importedSets, parsedCommand, pendingStatPoints]);
-
-  useEffect(() => {
-    if (!pendingStatPoints) {
-      return;
-    }
-
-    const parsedStatPoints =
-      side === "attacker"
-        ? parsedCommand?.attackerStatPoints
-        : parsedCommand?.defenderStatPoints;
-
-    if (
-      parsedStatPoints &&
-      STAT_LABELS.every(
-        ([key]) => parsedStatPoints[key] === pendingStatPoints[key],
-      )
-    ) {
-      setPendingStatPoints(null);
-    }
-  }, [parsedCommand, pendingStatPoints, side]);
 
   const handleStartInlineStatEdit = (stat: StatKey) => {
     if (!summary) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { type ReactNode, useSyncExternalStore } from "react";
 
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
 import {
@@ -363,18 +363,18 @@ export function ModifierSwitches() {
   const setStatModifier = useOmniStore((state) => state.setStatModifier);
   const setSpeedModifier = useOmniStore((state) => state.setSpeedModifier);
   const setHpPercentage = useOmniStore((state) => state.setHpPercentage);
-  const [hasMounted, setHasMounted] = useState(false);
-
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
+  const hasHydrated = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   const structure = analyzeCommandStructure(input);
   const attackerResolved =
     structure.attacker.speciesExact ?? structure.attacker.speciesMatch;
   const defenderResolved =
     structure.defender.speciesExact ?? structure.defender.speciesMatch;
-  const defenderReady = hasMounted
+  const defenderReady = hasHydrated
     ? Boolean(structure.lexed.hasDelimiter && defenderResolved)
     : true;
   const attackerHpPercent = structure.attacker.hpToken
