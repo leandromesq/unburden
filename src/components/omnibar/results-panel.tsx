@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 import { buildCalculationContext } from "@/lib/calc/damage-engine";
 import { koTextTone } from "@/lib/calc/ko-text";
@@ -122,26 +123,48 @@ function fallbackCopyText(text: string) {
 }
 
 export function ResultsPanel() {
-  const input = useOmniStore((state) => state.input);
-  const results = useOmniStore((state) => state.results);
-  const parsed = useOmniStore((state) => state.parsed);
-  const strictMode = useOmniStore((state) => state.strictMode);
+  const { input, results, parsed, strictMode } = useOmniStore(
+    useShallow((state) => ({
+      input: state.input,
+      results: state.results,
+      parsed: state.parsed,
+      strictMode: state.strictMode,
+    })),
+  );
   const importedSets = useTeamStore((state) => state.importedSets);
   const [copiedAction, setCopiedAction] = useState<string | null>(null);
+  const copiedTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copiedTimeoutRef.current !== null) {
+        window.clearTimeout(copiedTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const context = useMemo(
+    () =>
+      parsed
+        ? buildCalculationContext(parsed, importedSets, { strictMode })
+        : null,
+    [parsed, importedSets, strictMode],
+  );
 
   if (!parsed || !results.length) {
     return null;
   }
-
-  const context = buildCalculationContext(parsed, importedSets, { strictMode });
 
   if (!context) {
     return null;
   }
 
   const setCopied = (actionKey: string) => {
+    if (copiedTimeoutRef.current !== null) {
+      window.clearTimeout(copiedTimeoutRef.current);
+    }
     setCopiedAction(actionKey);
-    window.setTimeout(() => {
+    copiedTimeoutRef.current = window.setTimeout(() => {
       setCopiedAction((current) => (current === actionKey ? null : current));
     }, 1600);
   };
@@ -157,10 +180,18 @@ export function ResultsPanel() {
       resolveReferencedImportedSet(parsed.attackerSetReferenceId, importedSets),
       resolveReferencedImportedSet(parsed.defenderSetReferenceId, importedSets),
     ]
-      .filter((set): set is NonNullable<ReturnType<typeof resolveReferencedImportedSet>> => Boolean(set))
+      .filter(
+        (
+          set,
+        ): set is NonNullable<
+          ReturnType<typeof resolveReferencedImportedSet>
+        > => Boolean(set),
+      )
       .filter(
         (set, index, collection) =>
-          collection.findIndex((candidate) => candidate.speciesId === set.speciesId) === index,
+          collection.findIndex(
+            (candidate) => candidate.speciesId === set.speciesId,
+          ) === index,
       );
     const serializedState = serializeShareState(relevantSets);
 
@@ -212,7 +243,14 @@ export function ResultsPanel() {
   };
 
   return (
-    <div className="space-y-2.5" data-testid="results-panel">
+    <div
+      className="space-y-2.5"
+      data-testid="results-panel"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      aria-label="Calculation results"
+    >
       {results.map((result, index) => {
         const archetype = context.archetypes[index];
         const resultLabel =
@@ -274,7 +312,6 @@ export function ResultsPanel() {
               <div className="ml-auto flex shrink-0 items-center gap-1.5">
                 <button
                   type="button"
-                  tabIndex={-1}
                   onClick={() =>
                     void handleCopyText(result.archetype, result.showdownText)
                   }
@@ -298,7 +335,6 @@ export function ResultsPanel() {
                 </button>
                 <button
                   type="button"
-                  tabIndex={-1}
                   onClick={() => void handleCopyUrl(result.archetype)}
                   className={`theme-icon-button flex h-8 w-8 items-center justify-center rounded-full ${
                     copiedAction === `url:${result.archetype}`

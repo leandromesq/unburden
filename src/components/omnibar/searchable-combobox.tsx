@@ -1,6 +1,14 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import {
+  useDeferredValue,
+  useEffect,
+  useEffectEvent,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { normalizeAlias } from "@/lib/data/loaders";
 
@@ -57,6 +65,12 @@ export function SearchableCombobox({
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
   const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const deferredQuery = useDeferredValue(query);
+  const handlePointerDown = useEffectEvent((event: MouseEvent) => {
+    if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
+      setOpen(false);
+    }
+  });
 
   useEffect(() => {
     setQuery(value);
@@ -67,19 +81,13 @@ export function SearchableCombobox({
       return;
     }
 
-    const handlePointerDown = (event: MouseEvent) => {
-      if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    };
-
     document.addEventListener("mousedown", handlePointerDown);
     return () => document.removeEventListener("mousedown", handlePointerDown);
   }, [open]);
 
   const filteredOptions = useMemo(
-    () => rankOptions(options, query),
-    [options, query],
+    () => rankOptions(options, deferredQuery),
+    [deferredQuery, options],
   );
 
   useEffect(() => {
@@ -154,8 +162,8 @@ export function SearchableCombobox({
                 return;
               }
               if (filteredOptions.length > 0) {
-                setHighlightedIndex((current) =>
-                  (current + 1) % filteredOptions.length,
+                setHighlightedIndex(
+                  (current) => (current + 1) % filteredOptions.length,
                 );
               }
               return;
@@ -178,7 +186,11 @@ export function SearchableCombobox({
               return;
             }
 
-            if (event.key === "Enter" && open && filteredOptions[highlightedIndex]) {
+            if (
+              event.key === "Enter" &&
+              open &&
+              filteredOptions[highlightedIndex]
+            ) {
               event.preventDefault();
               selectOption(filteredOptions[highlightedIndex]);
               return;
@@ -204,7 +216,6 @@ export function SearchableCombobox({
                 key={option}
                 id={`${optionIdBase}-${index}`}
                 type="button"
-                tabIndex={-1}
                 role="option"
                 aria-selected={index === highlightedIndex}
                 ref={(node) => {

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 import { ModifierSwitches } from "@/components/omnibar/modifier-switches";
 import { OmniTextarea } from "@/components/omnibar/omni-textarea";
@@ -14,14 +15,21 @@ import { useOmniStore } from "@/store/use-omni-store";
 import { useTeamStore } from "@/store/use-team-store";
 
 export function OmniComposer() {
-  const issues = useOmniStore((state) => state.issues);
-  const calculationReady = useOmniStore((state) => state.calculationReady);
-  const input = useOmniStore((state) => state.input);
-  const setInput = useOmniStore((state) => state.setInput);
-  const setStrictMode = useOmniStore((state) => state.setStrictMode);
+  const { issues, calculationReady, input, setInput, setStrictMode } =
+    useOmniStore(
+      useShallow((state) => ({
+        issues: state.issues,
+        calculationReady: state.calculationReady,
+        input: state.input,
+        setInput: state.setInput,
+        setStrictMode: state.setStrictMode,
+      })),
+    );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
   const hasHydratedUrlPromptRef = useRef(false);
+  const issuesStatusId = useId();
+  const resultsStatusId = useId();
 
   const scrollToResults = () => {
     resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -74,7 +82,7 @@ export function OmniComposer() {
 
   return (
     <section className="mx-auto w-full max-w-7xl text-left">
-      <div className="grid gap-4 xl:grid-cols-[280px_minmax(0,1fr)_280px] xl:items-start">
+      <div className="grid gap-4 xl:grid-cols-[310px_minmax(0,1fr)_310px] xl:items-start">
         <div className="order-2 xl:order-1">
           <PokemonSideSummary side="attacker" />
         </div>
@@ -91,19 +99,36 @@ export function OmniComposer() {
                   onSubmitReady={scrollToResults}
                 />
                 <QuickSuggestions textareaRef={textareaRef} />
-                {issues.length > 0 ? (
-                  <div className="theme-status px-5 py-3 text-sm">
-                    {issues[0]}
-                  </div>
-                ) : null}
+                <div
+                  id={issuesStatusId}
+                  className="theme-status px-5 py-3 text-sm"
+                  role="status"
+                  aria-live="polite"
+                  aria-atomic="true"
+                >
+                  {issues.length > 0 ? issues[0] : "No issues."}
+                </div>
               </div>
               <div className="theme-composer-secondary">
                 <ModifierSwitches />
               </div>
             </div>
           </div>
+          <div
+            id={resultsStatusId}
+            className="sr-only"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {calculationReady ? "Results updated." : "Results not ready yet."}
+          </div>
           {calculationReady ? (
-            <div ref={resultsRef} className="mt-7">
+            <div
+              ref={resultsRef}
+              className="mt-7"
+              aria-describedby={resultsStatusId}
+            >
               <ResultsPanel />
             </div>
           ) : null}

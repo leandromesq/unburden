@@ -1,6 +1,14 @@
 "use client";
 
-import { useLayoutEffect, useMemo, useRef, useState, type RefObject } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
+import { useShallow } from "zustand/react/shallow";
 
 import { GhostSuggestion } from "@/components/omnibar/ghost-suggestion";
 import { useOmniStore } from "@/store/use-omni-store";
@@ -12,19 +20,67 @@ interface OmniTextareaProps {
 
 const MAX_TEXTAREA_HEIGHT = 176;
 
-export function OmniTextarea({ textareaRef, onSubmitReady }: OmniTextareaProps) {
-  const input = useOmniStore((state) => state.input);
-  const activeSuggestion = useOmniStore((state) => state.activeSuggestion);
-  const suggestionOptions = useOmniStore((state) => state.suggestionOptions);
-  const calculationReady = useOmniStore((state) => state.calculationReady);
-  const setInput = useOmniStore((state) => state.setInput);
-  const setCursorIndex = useOmniStore((state) => state.setCursorIndex);
-  const moveSuggestionSelection = useOmniStore((state) => state.moveSuggestionSelection);
-  const applySuggestion = useOmniStore((state) => state.applySuggestion);
+export function OmniTextarea({
+  textareaRef,
+  onSubmitReady,
+}: OmniTextareaProps) {
+  const {
+    input,
+    activeSuggestion,
+    suggestionOptions,
+    calculationReady,
+    setInput,
+    setCursorIndex,
+    moveSuggestionSelection,
+    applySuggestion,
+  } = useOmniStore(
+    useShallow((state) => ({
+      input: state.input,
+      activeSuggestion: state.activeSuggestion,
+      suggestionOptions: state.suggestionOptions,
+      calculationReady: state.calculationReady,
+      setInput: state.setInput,
+      setCursorIndex: state.setCursorIndex,
+      moveSuggestionSelection: state.moveSuggestionSelection,
+      applySuggestion: state.applySuggestion,
+    })),
+  );
   const [caretAtEnd, setCaretAtEnd] = useState(true);
   const localRef = useRef<HTMLTextAreaElement>(null);
   const pendingSelectionRef = useRef<number | null>(null);
   const ref = textareaRef ?? localRef;
+
+  useEffect(() => {
+    const handleGlobalKeyDown = (event: KeyboardEvent) => {
+      if (
+        event.defaultPrevented ||
+        event.isComposing ||
+        event.key.toLowerCase() !== "k" ||
+        !event.altKey ||
+        event.ctrlKey ||
+        event.metaKey
+      ) {
+        return;
+      }
+
+      const target = event.target;
+      if (
+        target instanceof HTMLElement &&
+        (target.isContentEditable ||
+          target instanceof HTMLInputElement ||
+          target instanceof HTMLTextAreaElement ||
+          target instanceof HTMLSelectElement)
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      ref.current?.focus();
+    };
+
+    window.addEventListener("keydown", handleGlobalKeyDown);
+    return () => window.removeEventListener("keydown", handleGlobalKeyDown);
+  }, [ref]);
 
   useLayoutEffect(() => {
     const element = ref.current;
@@ -62,7 +118,8 @@ export function OmniTextarea({ textareaRef, onSubmitReady }: OmniTextareaProps) 
         value={input}
         spellCheck={false}
         placeholder="politoed !muddy-water @mystic-water x incineroar ~rain"
-        className="theme-input relative z-10 block min-h-[88px] w-full resize-none border-0 bg-transparent px-5 py-4 text-left font-mono text-lg leading-8 tracking-[-0.02em] outline-none md:text-xl"
+        aria-keyshortcuts="Alt+K"
+        className="theme-input relative z-10 block min-h-22 w-full resize-none border-0 bg-transparent px-5 py-4 text-left font-mono text-lg leading-8 tracking-[-0.02em] outline-none md:text-xl"
         onChange={(event) =>
           setInput(
             event.target.value,
@@ -70,7 +127,12 @@ export function OmniTextarea({ textareaRef, onSubmitReady }: OmniTextareaProps) 
           )
         }
         onKeyDown={(event) => {
-          if (event.key === "[" && !event.altKey && !event.ctrlKey && !event.metaKey) {
+          if (
+            event.key === "[" &&
+            !event.altKey &&
+            !event.ctrlKey &&
+            !event.metaKey
+          ) {
             event.preventDefault();
             const element = event.currentTarget;
             const selectionStart = element.selectionStart ?? input.length;

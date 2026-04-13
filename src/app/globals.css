@@ -17,8 +17,8 @@
     --accent-border: rgba(239, 68, 68, 0.48);
     --text: #f3f3f6;
     --text-muted: #b0b1bc;
-    --text-dim: #6a6b75;
-    --text-faint: #52535c;
+    --text-dim: #8a8b96;
+    --text-faint: #72737d;
     --grid: rgba(255, 255, 255, 0.025);
     --selection: rgba(239, 68, 68, 0.18);
     --shadow: 0 8px 48px rgba(0, 0, 0, 0.56);
@@ -27,6 +27,8 @@
     --accent-text-strong: #fca5a5;
     --accent-text-mid: #f87171;
     --accent-text-soft: #fecaca;
+    --font-sans: var(--font-space-grotesk);
+    --font-mono: var(--font-jetbrains-mono);
 }
 
 html[data-theme="light"] {
@@ -46,8 +48,8 @@ html[data-theme="light"] {
     --accent-border: rgba(220, 38, 38, 0.4);
     --text: #18181b;
     --text-muted: #4c4d58;
-    --text-dim: #7c7d87;
-    --text-faint: #9899a2;
+    --text-dim: #666874;
+    --text-faint: #555864;
     --grid: rgba(20, 20, 26, 0.035);
     --selection: rgba(220, 38, 38, 0.12);
     --shadow: 0 4px 24px rgba(16, 16, 20, 0.1);
@@ -56,9 +58,6 @@ html[data-theme="light"] {
     --accent-text-strong: #991b1b;
     --accent-text-mid: #b91c1c;
     --accent-text-soft: #7f1d1d;
-}
-
-@theme inline {
     --font-sans: var(--font-space-grotesk);
     --font-mono: var(--font-jetbrains-mono);
 }
@@ -144,12 +143,11 @@ button {
 }
 
 .theme-composer-top {
-    background:
-        linear-gradient(
-            180deg,
-            color-mix(in srgb, var(--surface) 88%, transparent),
-            var(--surface)
-        );
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--surface) 88%, transparent),
+        var(--surface)
+    );
 }
 
 .theme-composer-secondary {
@@ -189,10 +187,12 @@ button {
 
 .theme-text-dim {
     color: var(--text-dim);
+    font-size: 0.9375rem;
 }
 
 .theme-text-faint {
     color: var(--text-faint);
+    font-size: 0.8125rem;
 }
 
 .theme-inline-code {

@@ -90,6 +90,8 @@ const initialState = {
 
 let scheduledComputeFrame: number | null = null;
 let scheduledComputeVersion = 0;
+let scheduledCalculationHandle: number | null = null;
+let scheduledCalculationMode: "idle" | "timeout" | null = null;
 
 function cancelScheduledCompute() {
   if (
@@ -101,6 +103,31 @@ function cancelScheduledCompute() {
   }
 
   scheduledComputeFrame = null;
+}
+
+function cancelScheduledCalculation() {
+  if (scheduledCalculationHandle === null || typeof window === "undefined") {
+    scheduledCalculationHandle = null;
+    scheduledCalculationMode = null;
+    return;
+  }
+
+  if (
+    scheduledCalculationMode === "idle" &&
+    typeof window.cancelIdleCallback === "function"
+  ) {
+    window.cancelIdleCallback(scheduledCalculationHandle);
+  } else {
+    window.clearTimeout(scheduledCalculationHandle);
+  }
+
+  scheduledCalculationHandle = null;
+  scheduledCalculationMode = null;
+}
+
+function cancelScheduledWork() {
+  cancelScheduledCompute();
+  cancelScheduledCalculation();
 }
 
 type AutoFieldCategory = "weather" | "terrain";
@@ -715,6 +742,7 @@ function computeState(
   previousDismissedContextKey: string | null = null,
   cursorIndex = input.length,
   strictMode = false,
+  includeResults = true,
 ) {
   const normalizedInput = input.replace(/\s+$/g, (match) => match);
   const importedSets = useTeamStore.getState().importedSets;
@@ -740,24 +768,27 @@ function computeState(
     autocomplete.suggestionOptions,
     withAutoTokens.autoAppliedGlobalTokens,
   );
+  const parsedCommand = parsedResult.parsed;
+  const canCalculate =
+    Boolean(parsedCommand) && calculationIssues.length === 0;
 
   return {
     input: withAutoTokens.input,
     cursorIndex: nextCursorIndex,
     strictMode,
-    parsed: parsedResult.parsed,
+    parsed: parsedCommand,
     activeSuggestion: autocomplete.activeSuggestion,
     suggestionOptions,
     highlightedSuggestionIndex: suggestionOptions.length ? 0 : -1,
-    calculationReady: Boolean(parsedResult.parsed) && calculationIssues.length === 0,
+    calculationReady: includeResults ? canCalculate : false,
     autoAppliedGlobalTokens: withAutoTokens.autoAppliedGlobalTokens,
     autoGlobalContextKey: withAutoTokens.autoGlobalContextKey,
     dismissedAutoGlobalContextKey: withAutoTokens.dismissedAutoGlobalContextKey,
     activeChipTokens: buildActiveChipTokens(withAutoTokens.input),
     issues,
-    results: parsedResult.parsed && calculationIssues.length === 0
+    results: includeResults && canCalculate && parsedCommand
       ? calculateDamageResults(
-          parsedResult.parsed,
+          parsedCommand,
           importedSets,
           { strictMode },
         )
@@ -765,285 +796,206 @@ function computeState(
   };
 }
 
-export const useOmniStore = create<OmniStore>((set, get) => ({
-  ...initialState,
-  setInput: (input, cursorIndex) => {
-    const nextCursorIndex = cursorIndex ?? input.length;
-
-    set({
-      input,
-      cursorIndex: nextCursorIndex,
-    });
-
+export const useOmniStore = create<OmniStore>((set, get) => {
+  const commitState = (
+    nextInput: string,
+    nextCursorIndex: number,
+    nextStrictMode: boolean,
+  ) => {
     if (
       typeof window === "undefined" ||
       process.env.NODE_ENV === "test" ||
       typeof window.requestAnimationFrame !== "function"
     ) {
-      set(
-        computeState(
-          input,
-          get().autoAppliedGlobalTokens,
-          get().autoGlobalContextKey,
-          get().dismissedAutoGlobalContextKey,
-          nextCursorIndex,
-          get().strictMode,
-        ),
-      );
-      return;
-    }
-
-    const version = ++scheduledComputeVersion;
-    cancelScheduledCompute();
-    scheduledComputeFrame = window.requestAnimationFrame(() => {
-      scheduledComputeFrame = null;
-
-      if (version !== scheduledComputeVersion) {
-        return;
-      }
-
-      const state = get();
-      set(
-        computeState(
-          state.input,
-          state.autoAppliedGlobalTokens,
-          state.autoGlobalContextKey,
-          state.dismissedAutoGlobalContextKey,
-          state.cursorIndex,
-          state.strictMode,
-        ),
-      );
-    });
-  },
-  setCursorIndex: (cursorIndex) => {
-    set({ cursorIndex });
-
-    if (
-      typeof window === "undefined" ||
-      process.env.NODE_ENV === "test" ||
-      typeof window.requestAnimationFrame !== "function"
-    ) {
-      set(
-        computeState(
-          get().input,
-          get().autoAppliedGlobalTokens,
-          get().autoGlobalContextKey,
-          get().dismissedAutoGlobalContextKey,
-          cursorIndex,
-          get().strictMode,
-        ),
-      );
-      return;
-    }
-
-    const version = ++scheduledComputeVersion;
-    cancelScheduledCompute();
-    scheduledComputeFrame = window.requestAnimationFrame(() => {
-      scheduledComputeFrame = null;
-
-      if (version !== scheduledComputeVersion) {
-        return;
-      }
-
-      const state = get();
-      set(
-        computeState(
-          state.input,
-          state.autoAppliedGlobalTokens,
-          state.autoGlobalContextKey,
-          state.dismissedAutoGlobalContextKey,
-          state.cursorIndex,
-          state.strictMode,
-        ),
-      );
-    });
-  },
-  moveSuggestionSelection: (delta) => {
-    const options = get().suggestionOptions;
-    if (!options.length) {
-      return;
-    }
-
-    const currentIndex = get().highlightedSuggestionIndex;
-    const baseIndex = currentIndex >= 0 ? currentIndex : 0;
-    const nextIndex = (baseIndex + delta + options.length) % options.length;
-
-    set({ highlightedSuggestionIndex: nextIndex });
-  },
-  applySuggestion: () => {
-    cancelScheduledCompute();
-    const options = get().suggestionOptions;
-    const highlightedIndex = get().highlightedSuggestionIndex;
-    const highlightedOption =
-      highlightedIndex >= 0 && highlightedIndex < options.length
-        ? options[highlightedIndex]
-        : null;
-
-    if (highlightedOption) {
-      set(
-        computeState(
-          highlightedOption.applyText,
-          get().autoAppliedGlobalTokens,
-          get().autoGlobalContextKey,
-          get().dismissedAutoGlobalContextKey,
-          undefined,
-          get().strictMode,
-        ),
-      );
-      return;
-    }
-
-    const suggestion = get().activeSuggestion;
-    if (!suggestion) {
-      return;
-    }
-
-    set(
-      computeState(
-        suggestion.completionText,
-        get().autoAppliedGlobalTokens,
-        get().autoGlobalContextKey,
-        get().dismissedAutoGlobalContextKey,
-        undefined,
-        get().strictMode,
-      ),
-    );
-  },
-  applySuggestionText: (nextInput) =>
-    {
-      cancelScheduledCompute();
       set(
         computeState(
           nextInput,
           get().autoAppliedGlobalTokens,
           get().autoGlobalContextKey,
           get().dismissedAutoGlobalContextKey,
-          undefined,
-          get().strictMode,
+          nextCursorIndex,
+          nextStrictMode,
         ),
       );
-    },
-  insertChip: (scope, token) => {
-    cancelScheduledCompute();
-    set(
-      computeState(
-        insertChipToken(get().input, scope, token),
-        get().autoAppliedGlobalTokens,
-        get().autoGlobalContextKey,
-        get().dismissedAutoGlobalContextKey,
-        undefined,
-        get().strictMode,
-      ),
-    );
-  },
-  setStatModifier: (scope, value) => {
-    cancelScheduledCompute();
-    set(
-      computeState(
-        setStatModifierToken(get().input, scope, value),
-        get().autoAppliedGlobalTokens,
-        get().autoGlobalContextKey,
-        get().dismissedAutoGlobalContextKey,
-        undefined,
-        get().strictMode,
-      ),
-    );
-  },
-  setSpeedModifier: (scope, value) => {
-    cancelScheduledCompute();
-    set(
-      computeState(
-        setSpeedModifierToken(get().input, scope, value),
-        get().autoAppliedGlobalTokens,
-        get().autoGlobalContextKey,
-        get().dismissedAutoGlobalContextKey,
-        undefined,
-        get().strictMode,
-      ),
-    );
-  },
-  setHpPercentage: (scope, value) => {
-    cancelScheduledCompute();
-    set(
-      computeState(
-        setHpPercentageToken(get().input, scope, value),
-        get().autoAppliedGlobalTokens,
-        get().autoGlobalContextKey,
-        get().dismissedAutoGlobalContextKey,
-        undefined,
-        get().strictMode,
-      ),
-    );
-  },
-  setStrictMode: (strictMode) =>
-    {
-      cancelScheduledCompute();
-      set(
-        computeState(
-          get().input,
-          get().autoAppliedGlobalTokens,
-          get().autoGlobalContextKey,
-          get().dismissedAutoGlobalContextKey,
-          get().cursorIndex,
-          strictMode,
-        ),
-      );
-    },
-  recompute: () =>
-    {
-      cancelScheduledCompute();
-      set(
-        computeState(
-          get().input,
-          get().autoAppliedGlobalTokens,
-          get().autoGlobalContextKey,
-          get().dismissedAutoGlobalContextKey,
-          undefined,
-          get().strictMode,
-        ),
-      );
-    },
-  setAttackerMove: (moveName) => {
-    cancelScheduledCompute();
-    const currentInput = compactWhitespace(get().input);
-    const structure = analyzeCommandStructure(currentInput);
-
-    // Remove any existing move token from attacker tokens
-    const attackerTokens = structure.attacker.rawTokens
-      .filter((t) => {
-        const n = t.normalized;
-        return !n.startsWith("m:") && !n.startsWith("!");
-      })
-      .map((t) => t.raw);
-
-    // Append the new move token (slugified)
-    const moveSlug = slugifySymbolValue(moveName);
-    const newAttackerTokens = [...attackerTokens, `!${moveSlug}`];
-
-    let newInput: string;
-    if (structure.lexed.hasDelimiter) {
-      const defenderTokens = structure.defender.rawTokens.map((t) => t.raw);
-      newInput = [...newAttackerTokens, "x", ...defenderTokens]
-        .join(" ")
-        .trim();
-    } else {
-      newInput = newAttackerTokens.join(" ").trim();
+      return;
     }
 
-    set(
-      computeState(
-        newInput,
-        get().autoAppliedGlobalTokens,
-        get().autoGlobalContextKey,
-        get().dismissedAutoGlobalContextKey,
-        undefined,
+    set({
+      input: nextInput,
+      cursorIndex: nextCursorIndex,
+      strictMode: nextStrictMode,
+    });
+
+    const version = ++scheduledComputeVersion;
+    cancelScheduledWork();
+    scheduledComputeFrame = window.requestAnimationFrame(() => {
+      scheduledComputeFrame = null;
+
+      if (version !== scheduledComputeVersion) {
+        return;
+      }
+
+      const state = get();
+      const previewState = computeState(
+        state.input,
+        state.autoAppliedGlobalTokens,
+        state.autoGlobalContextKey,
+        state.dismissedAutoGlobalContextKey,
+        state.cursorIndex,
+        state.strictMode,
+        false,
+      );
+
+      set(previewState);
+
+      const previewParsed = previewState.parsed;
+
+      if (!previewParsed || previewState.issues.length > 0) {
+        return;
+      }
+
+      const runCalculation = () => {
+        scheduledCalculationHandle = null;
+        scheduledCalculationMode = null;
+
+        if (version !== scheduledComputeVersion) {
+          return;
+        }
+
+        const results = calculateDamageResults(
+          previewParsed,
+          useTeamStore.getState().importedSets,
+          { strictMode: previewState.strictMode },
+        );
+
+        if (version !== scheduledComputeVersion) {
+          return;
+        }
+
+        set({
+          results,
+          calculationReady: true,
+        });
+      };
+
+      if (typeof window.requestIdleCallback === "function") {
+        scheduledCalculationMode = "idle";
+        scheduledCalculationHandle = window.requestIdleCallback(
+          runCalculation,
+          { timeout: 120 },
+        );
+        return;
+      }
+
+      scheduledCalculationMode = "timeout";
+      scheduledCalculationHandle = window.setTimeout(runCalculation, 16);
+    });
+  };
+
+  return {
+    ...initialState,
+    setInput: (input, cursorIndex) => {
+      const nextCursorIndex = cursorIndex ?? input.length;
+      commitState(input, nextCursorIndex, get().strictMode);
+    },
+    setCursorIndex: (cursorIndex) => {
+      commitState(get().input, cursorIndex, get().strictMode);
+    },
+    moveSuggestionSelection: (delta) => {
+      const options = get().suggestionOptions;
+      if (!options.length) {
+        return;
+      }
+
+      const currentIndex = get().highlightedSuggestionIndex;
+      const baseIndex = currentIndex >= 0 ? currentIndex : 0;
+      const nextIndex = (baseIndex + delta + options.length) % options.length;
+
+      set({ highlightedSuggestionIndex: nextIndex });
+    },
+    applySuggestion: () => {
+      const options = get().suggestionOptions;
+      const highlightedIndex = get().highlightedSuggestionIndex;
+      const highlightedOption =
+        highlightedIndex >= 0 && highlightedIndex < options.length
+          ? options[highlightedIndex]
+          : null;
+
+      if (highlightedOption) {
+        commitState(
+          highlightedOption.applyText,
+          highlightedOption.applyText.length,
+          get().strictMode,
+        );
+        return;
+      }
+
+      const suggestion = get().activeSuggestion;
+      if (!suggestion) {
+        return;
+      }
+
+      commitState(
+        suggestion.completionText,
+        suggestion.completionText.length,
         get().strictMode,
-      ),
-    );
-  },
-}));
+      );
+    },
+    applySuggestionText: (nextInput) => {
+      commitState(nextInput, nextInput.length, get().strictMode);
+    },
+    insertChip: (scope, token) => {
+      const nextInput = insertChipToken(get().input, scope, token);
+      commitState(nextInput, nextInput.length, get().strictMode);
+    },
+    setStatModifier: (scope, value) => {
+      const nextInput = setStatModifierToken(get().input, scope, value);
+      commitState(nextInput, nextInput.length, get().strictMode);
+    },
+    setSpeedModifier: (scope, value) => {
+      const nextInput = setSpeedModifierToken(get().input, scope, value);
+      commitState(nextInput, nextInput.length, get().strictMode);
+    },
+    setHpPercentage: (scope, value) => {
+      const nextInput = setHpPercentageToken(get().input, scope, value);
+      commitState(nextInput, nextInput.length, get().strictMode);
+    },
+    setStrictMode: (strictMode) => {
+      commitState(get().input, get().cursorIndex, strictMode);
+    },
+    recompute: () => {
+      commitState(get().input, get().cursorIndex, get().strictMode);
+    },
+    setAttackerMove: (moveName) => {
+      const currentInput = compactWhitespace(get().input);
+      const structure = analyzeCommandStructure(currentInput);
+
+      const attackerTokens = structure.attacker.rawTokens
+        .filter((t) => {
+          const n = t.normalized;
+          return !n.startsWith("m:") && !n.startsWith("!");
+        })
+        .map((t) => t.raw);
+
+      const moveSlug = slugifySymbolValue(moveName);
+      const newAttackerTokens = [...attackerTokens, `!${moveSlug}`];
+
+      let newInput: string;
+      if (structure.lexed.hasDelimiter) {
+        const defenderTokens = structure.defender.rawTokens.map((t) => t.raw);
+        newInput = [...newAttackerTokens, "x", ...defenderTokens]
+          .join(" ")
+          .trim();
+      } else {
+        newInput = newAttackerTokens.join(" ").trim();
+      }
+
+      commitState(newInput, newInput.length, get().strictMode);
+    },
+  };
+});
 
 export function resetOmniStore() {
-  cancelScheduledCompute();
+  cancelScheduledWork();
   useOmniStore.setState(initialState);
 }

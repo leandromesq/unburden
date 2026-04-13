@@ -1,6 +1,7 @@
 "use client";
 
-import { type ReactNode, useSyncExternalStore } from "react";
+import { type ReactNode, useMemo } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
 import {
@@ -47,7 +48,6 @@ function ModifierButton({
   return (
     <button
       type="button"
-      tabIndex={-1}
       aria-pressed={active}
       disabled={disabled}
       onClick={onClick}
@@ -133,7 +133,6 @@ function HpPercentageControl({
         ))}
         <button
           type="button"
-          tabIndex={-1}
           disabled={disabled || value === null}
           onClick={() => onChange(null)}
           className={`rounded-full px-3 py-1.5 text-sm ${
@@ -182,7 +181,6 @@ function StageControl({
       <div className="flex items-center gap-3">
         <button
           type="button"
-          tabIndex={-1}
           disabled={decrementDisabled}
           className={`h-9 w-9 rounded-full ${
             decrementDisabled
@@ -197,7 +195,6 @@ function StageControl({
           <input
             aria-label={ariaLabel}
             type="range"
-            tabIndex={-1}
             min={-6}
             max={6}
             step={1}
@@ -218,7 +215,6 @@ function StageControl({
         </div>
         <button
           type="button"
-          tabIndex={-1}
           disabled={incrementDisabled}
           className={`h-9 w-9 rounded-full ${
             incrementDisabled
@@ -234,7 +230,6 @@ function StageControl({
         <div className="theme-text-dim text-sm">{summary}</div>
         <button
           type="button"
-          tabIndex={-1}
           disabled={resetDisabled}
           className={`rounded-full px-3 py-1.5 text-xs ${
             resetDisabled
@@ -356,17 +351,66 @@ function toGroupTokens(scope: ModifierScope, tokens: ModifierDefinition[]) {
   }));
 }
 
+const GLOBAL_WEATHER_TOKENS = toGroupTokens(
+  "global",
+  GLOBAL_CHIP_DEFINITIONS.filter(
+    (definition) => definition.section === "weather",
+  ),
+);
+const GLOBAL_TERRAIN_TOKENS = toGroupTokens(
+  "global",
+  GLOBAL_CHIP_DEFINITIONS.filter(
+    (definition) => definition.section === "terrain",
+  ),
+);
+const GLOBAL_FIELD_TOKENS = toGroupTokens(
+  "global",
+  GLOBAL_CHIP_DEFINITIONS.filter(
+    (definition) => definition.section === "field_effects",
+  ),
+);
+const ATTACKER_STAT_TOKENS = toGroupTokens(
+  "attacker",
+  ATTACKER_CHIP_DEFINITIONS.filter(
+    (definition) => definition.section === "stats",
+  ),
+);
+const ATTACKER_EFFECT_TOKENS = toGroupTokens(
+  "attacker",
+  ATTACKER_CHIP_DEFINITIONS.filter(
+    (definition) => definition.section === "move_effects",
+  ),
+);
+const DEFENDER_STAT_TOKENS = toGroupTokens(
+  "defender",
+  DEFENDER_CHIP_DEFINITIONS.filter(
+    (definition) => definition.section === "stats",
+  ),
+);
+const DEFENDER_EFFECT_TOKENS = toGroupTokens(
+  "defender",
+  DEFENDER_CHIP_DEFINITIONS.filter(
+    (definition) => definition.section === "move_effects",
+  ),
+);
+
 export function ModifierSwitches() {
-  const input = useOmniStore((state) => state.input);
-  const activeChipTokens = useOmniStore((state) => state.activeChipTokens);
-  const insertChip = useOmniStore((state) => state.insertChip);
-  const setStatModifier = useOmniStore((state) => state.setStatModifier);
-  const setSpeedModifier = useOmniStore((state) => state.setSpeedModifier);
-  const setHpPercentage = useOmniStore((state) => state.setHpPercentage);
-  const hasHydrated = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
+  const {
+    input,
+    activeChipTokens,
+    insertChip,
+    setStatModifier,
+    setSpeedModifier,
+    setHpPercentage,
+  } = useOmniStore(
+    useShallow((state) => ({
+      input: state.input,
+      activeChipTokens: state.activeChipTokens,
+      insertChip: state.insertChip,
+      setStatModifier: state.setStatModifier,
+      setSpeedModifier: state.setSpeedModifier,
+      setHpPercentage: state.setHpPercentage,
+    })),
   );
 
   const structure = analyzeCommandStructure(input);
@@ -374,9 +418,9 @@ export function ModifierSwitches() {
     structure.attacker.speciesExact ?? structure.attacker.speciesMatch;
   const defenderResolved =
     structure.defender.speciesExact ?? structure.defender.speciesMatch;
-  const defenderReady = hasHydrated
-    ? Boolean(structure.lexed.hasDelimiter && defenderResolved)
-    : true;
+  const defenderReady = Boolean(
+    structure.lexed.hasDelimiter && defenderResolved,
+  );
   const attackerHpPercent = structure.attacker.hpToken
     ? Number(structure.attacker.hpToken.value)
     : null;
@@ -433,22 +477,30 @@ export function ModifierSwitches() {
     ),
   );
 
-  const attackerAbilityTokens = attackerResolved
-    ? getSuggestedAbilities(attackerResolved.entry.id, "", 4).map(
-        (ability) => ({
-          token: formatAbilityToken("attacker", ability),
-          label: ability,
-        }),
-      )
-    : [];
-  const defenderAbilityTokens = defenderResolved
-    ? getSuggestedAbilities(defenderResolved.entry.id, "", 4).map(
-        (ability) => ({
-          token: formatAbilityToken("defender", ability),
-          label: ability,
-        }),
-      )
-    : [];
+  const attackerAbilityTokens = useMemo(
+    () =>
+      attackerResolved
+        ? getSuggestedAbilities(attackerResolved.entry.id, "", 4).map(
+            (ability) => ({
+              token: formatAbilityToken("attacker", ability),
+              label: ability,
+            }),
+          )
+        : [],
+    [attackerResolved],
+  );
+  const defenderAbilityTokens = useMemo(
+    () =>
+      defenderResolved
+        ? getSuggestedAbilities(defenderResolved.entry.id, "", 4).map(
+            (ability) => ({
+              token: formatAbilityToken("defender", ability),
+              label: ability,
+            }),
+          )
+        : [],
+    [defenderResolved],
+  );
 
   const handleInsert = (
     scope: "attacker" | "defender" | "global",
@@ -477,34 +529,19 @@ export function ModifierSwitches() {
         <div className="grid gap-3 md:grid-cols-3">
           <TokenGroup
             title="Weather"
-            tokens={toGroupTokens(
-              "global",
-              GLOBAL_CHIP_DEFINITIONS.filter(
-                (definition) => definition.section === "weather",
-              ),
-            )}
+            tokens={GLOBAL_WEATHER_TOKENS}
             activeTokens={activeChipTokens.global}
             onInsert={(token) => handleInsert("global", token)}
           />
           <TokenGroup
             title="Terrain"
-            tokens={toGroupTokens(
-              "global",
-              GLOBAL_CHIP_DEFINITIONS.filter(
-                (definition) => definition.section === "terrain",
-              ),
-            )}
+            tokens={GLOBAL_TERRAIN_TOKENS}
             activeTokens={activeChipTokens.global}
             onInsert={(token) => handleInsert("global", token)}
           />
           <TokenGroup
             title="Field Effects"
-            tokens={toGroupTokens(
-              "global",
-              GLOBAL_CHIP_DEFINITIONS.filter(
-                (definition) => definition.section === "field_effects",
-              ),
-            )}
+            tokens={GLOBAL_FIELD_TOKENS}
             activeTokens={activeChipTokens.global}
             onInsert={(token) => handleInsert("global", token)}
           />
@@ -517,18 +554,8 @@ export function ModifierSwitches() {
           stageValue={attackerStage}
           speedValue={attackerSpeedStage}
           hpPercent={attackerHpPercent}
-          statTokens={toGroupTokens(
-            "attacker",
-            ATTACKER_CHIP_DEFINITIONS.filter(
-              (definition) => definition.section === "stats",
-            ),
-          )}
-          effectTokens={toGroupTokens(
-            "attacker",
-            ATTACKER_CHIP_DEFINITIONS.filter(
-              (definition) => definition.section === "move_effects",
-            ),
-          )}
+          statTokens={ATTACKER_STAT_TOKENS}
+          effectTokens={ATTACKER_EFFECT_TOKENS}
           abilityTokens={attackerAbilityTokens}
           onInsert={(token) => handleInsert("attacker", token)}
           onStageChange={(value) => handleStageChange("attacker", value)}
@@ -542,18 +569,8 @@ export function ModifierSwitches() {
           stageValue={defenderStage}
           speedValue={defenderSpeedStage}
           hpPercent={defenderHpPercent}
-          statTokens={toGroupTokens(
-            "defender",
-            DEFENDER_CHIP_DEFINITIONS.filter(
-              (definition) => definition.section === "stats",
-            ),
-          )}
-          effectTokens={toGroupTokens(
-            "defender",
-            DEFENDER_CHIP_DEFINITIONS.filter(
-              (definition) => definition.section === "move_effects",
-            ),
-          )}
+          statTokens={DEFENDER_STAT_TOKENS}
+          effectTokens={DEFENDER_EFFECT_TOKENS}
           abilityTokens={defenderAbilityTokens}
           onInsert={(token) => handleInsert("defender", token)}
           onStageChange={(value) => handleStageChange("defender", value)}

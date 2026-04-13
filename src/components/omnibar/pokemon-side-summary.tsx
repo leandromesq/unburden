@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 import {
   getCanonicalPromptPokemonName,
@@ -261,7 +262,6 @@ function MoveChip({ moveName, isActive, onClick, disabled }: MoveChipProps) {
   return (
     <button
       type="button"
-      tabIndex={-1}
       disabled={disabled}
       onClick={onClick}
       className={`truncate rounded-lg px-2.5 py-1 text-xs transition-colors ${
@@ -387,45 +387,48 @@ function rebuildInputWithStatPoints(
 }
 
 export function PokemonSideSummary({ side }: { side: SummarySide }) {
-  const input = useOmniStore((state) => state.input);
-  const parsedCommand = useOmniStore((state) => state.parsed);
-  const setAttackerMove = useOmniStore((state) => state.setAttackerMove);
-  const setInput = useOmniStore((state) => state.setInput);
-  const recompute = useOmniStore((state) => state.recompute);
-  const importedSets = useTeamStore((state) => state.importedSets);
-  const removeSet = useTeamStore((state) => state.removeSet);
-  const saveSet = useTeamStore((state) => state.saveSet);
+  const { input, parsedCommand, setAttackerMove, setInput, recompute } =
+    useOmniStore(
+      useShallow((state) => ({
+        input: state.input,
+        parsedCommand: state.parsed,
+        setAttackerMove: state.setAttackerMove,
+        setInput: state.setInput,
+        recompute: state.recompute,
+      })),
+    );
+  const { importedSets, removeSet, saveSet } = useTeamStore(
+    useShallow((state) => ({
+      importedSets: state.importedSets,
+      removeSet: state.removeSet,
+      saveSet: state.saveSet,
+    })),
+  );
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [editorOpen, setEditorOpen] = useState(false);
   const [switchOpen, setSwitchOpen] = useState(false);
-  const [editingStat, setEditingStat] = useState<StatKey | null>(null);
-  const [editingStatValue, setEditingStatValue] = useState("");
   const [pendingStatPoints, setPendingStatPoints] = useState<StatSpread | null>(
     null,
   );
+  const [draftEntry, setDraftEntry] = useState<{
+    stat: StatKey;
+    value: string;
+  } | null>(null);
   const switchRef = useRef<HTMLDivElement>(null);
-  const statInputRef = useRef<HTMLInputElement>(null);
+
+  const handleSwitchPointerDown = useEffectEvent((e: MouseEvent) => {
+    if (switchRef.current && !switchRef.current.contains(e.target as Node)) {
+      setSwitchOpen(false);
+    }
+  });
 
   // Close the switch dropdown when clicking outside it
   useEffect(() => {
     if (!switchOpen) return;
-    const handler = (e: MouseEvent) => {
-      if (switchRef.current && !switchRef.current.contains(e.target as Node)) {
-        setSwitchOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener("mousedown", handleSwitchPointerDown);
+    return () =>
+      document.removeEventListener("mousedown", handleSwitchPointerDown);
   }, [switchOpen]);
-
-  useEffect(() => {
-    if (!editingStat) {
-      return;
-    }
-
-    statInputRef.current?.focus();
-    statInputRef.current?.select();
-  }, [editingStat]);
 
   const handleSelectSet = (nextSet: ImportedSet) => {
     const structure = analyzeCommandStructure(input);
@@ -699,22 +702,14 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
     };
   }, [input, side, importedSets, parsedCommand, pendingStatPoints]);
 
-  const handleStartInlineStatEdit = (stat: StatKey) => {
+  const commitDraft = (stat: StatKey, raw: string) => {
+    const parsed = Number(raw);
+    updateInlineStatPoint(stat, Number.isFinite(parsed) ? parsed : 0);
+    setDraftEntry(null);
+  };
+
+  const updateInlineStatPoint = (stat: StatKey, nextValue: number) => {
     if (!summary) {
-      return;
-    }
-
-    setEditingStat(stat);
-    setEditingStatValue(String(summary.effectiveStatPoints[stat]));
-  };
-
-  const handleCancelInlineStatEdit = () => {
-    setEditingStat(null);
-    setEditingStatValue("");
-  };
-
-  const handleCommitInlineStatEdit = () => {
-    if (!summary || !editingStat) {
       return;
     }
 
@@ -722,13 +717,9 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
       pendingStatPoints ??
       summary.promptStatPoints ??
       summary.effectiveStatPoints;
-    const parsedValue = Number(editingStatValue);
-    const sanitizedValue = Number.isFinite(parsedValue)
-      ? Math.max(0, Math.min(32, Math.round(parsedValue)))
-      : currentStatPoints[editingStat];
+    const sanitizedValue = Math.max(0, Math.min(32, Math.round(nextValue)));
     const remainingTotal = STAT_LABELS.reduce(
-      (total, [key]) =>
-        total + (key === editingStat ? 0 : currentStatPoints[key]),
+      (total, [key]) => total + (key === stat ? 0 : currentStatPoints[key]),
       0,
     );
     const cappedValue = Math.max(
@@ -737,7 +728,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
     );
     const nextStatPoints: StatSpread = {
       ...currentStatPoints,
-      [editingStat]: cappedValue,
+      [stat]: cappedValue,
     };
     const nextInput = rebuildInputWithStatPoints(
       input,
@@ -750,7 +741,6 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
 
     setPendingStatPoints(nextStatPoints);
     setInput(nextInput);
-    handleCancelInlineStatEdit();
   };
 
   const resolvedSetId = summary?.importedSet?.speciesId ?? null;
@@ -839,7 +829,6 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
                   </button>
                   <button
                     type="button"
-                    tabIndex={-1}
                     aria-label={`Remove ${set.speciesName}`}
                     onClick={() => handleRemoveSet(set.speciesId)}
                     className="theme-icon-button absolute right-2 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full text-sm opacity-0 transition-opacity group-hover:opacity-100"
@@ -893,7 +882,6 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
         {summary.megaTarget && (
           <button
             type="button"
-            tabIndex={-1}
             onClick={() => handleSwitchToMegaForm(summary.megaTarget!)}
             aria-label={
               summary.pokemonId === summary.megaTarget.id
@@ -986,78 +974,142 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
 
       {/* SP spread */}
       <div className="mt-3">
-        <div className="theme-text-faint mb-1.5 text-[10px] font-semibold uppercase tracking-[0.18em]">
-          SP Spread
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <div className="theme-text-faint text-[10px] font-semibold uppercase tracking-[0.18em]">
+            SP Spread
+          </div>
+          <div className="theme-pill-muted rounded-full px-2 py-0.5 text-[10px] font-medium">
+            <span className="theme-text-dim">
+              {`${Math.max(
+                0,
+                66 -
+                  STAT_LABELS.reduce(
+                    (total, [key]) => total + summary.effectiveStatPoints[key],
+                    0,
+                  ),
+              )} SP left`}
+            </span>
+          </div>
         </div>
-        <div className="grid grid-cols-6 gap-1.5">
+        <div className="grid grid-cols-6 gap-2">
           {STAT_LABELS.map(([statKey, label]) => {
             const value = summary.effectiveStatPoints[statKey];
-            const isEditing = editingStat === statKey;
+            const currentStatPoints =
+              pendingStatPoints ??
+              summary.promptStatPoints ??
+              summary.effectiveStatPoints;
+            const maxValue = Math.max(
+              0,
+              Math.min(
+                32,
+                66 -
+                  STAT_LABELS.reduce(
+                    (total, [key]) =>
+                      total + (key === statKey ? 0 : currentStatPoints[key]),
+                    0,
+                  ),
+              ),
+            );
+            const decrementDisabled = value <= 0;
+            const incrementDisabled = value >= maxValue;
 
-            return isEditing ? (
+            return (
               <div
                 key={statKey}
-                className="theme-pill-muted flex min-h-[44px] min-w-0 flex-col items-center justify-center rounded-xl px-1.5 py-1.5 text-center font-mono"
+                className="flex w-full flex-col items-center text-center font-mono"
               >
-                <div className="flex h-[11px] w-[3ch] items-center justify-center">
-                  <input
-                    ref={statInputRef}
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={2}
-                    tabIndex={-1}
-                    aria-label={`${label} SP`}
-                    value={editingStatValue}
-                    onChange={(event) =>
-                      setEditingStatValue(event.currentTarget.value)
-                    }
-                    onBlur={handleCommitInlineStatEdit}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === "Tab") {
-                        event.preventDefault();
-                        handleCommitInlineStatEdit();
-                      }
-
-                      if (event.key === "Escape") {
-                        event.preventDefault();
-                        handleCancelInlineStatEdit();
-                      }
-                    }}
-                    className="h-[11px] w-[3ch] min-w-0 bg-transparent text-center text-[11px] leading-none font-semibold outline-none appearance-none"
-                    style={{ color: "var(--text)" }}
-                  />
-                </div>
-                <span
-                  className="mt-1 text-[9px] leading-none"
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  aria-label={`Increase ${label} SP`}
+                  disabled={incrementDisabled}
+                  onClick={() => {
+                    setDraftEntry(null);
+                    updateInlineStatPoint(statKey, value + 1);
+                  }}
+                  className="flex h-2.5 w-full items-center justify-center rounded-sm text-[8px] leading-none disabled:opacity-25"
                   style={{ color: "var(--text-dim)" }}
                 >
-                  {label}
-                </span>
-              </div>
-            ) : (
-              <button
-                key={statKey}
-                type="button"
-                tabIndex={-1}
-                aria-label={`Edit ${label} SP`}
-                onClick={() => handleStartInlineStatEdit(statKey)}
-                className="theme-pill-muted flex min-h-[44px] min-w-0 flex-col items-center justify-center rounded-xl px-1.5 py-1.5 text-center font-mono"
-              >
-                <div className="flex h-[11px] w-[3ch] items-center justify-center">
+                  ▲
+                </button>
+                <div className="theme-pill-muted mt-0.5 flex min-w-0 flex-col items-center justify-center rounded-xl px-1.5 py-1">
+                  <div className="flex w-full items-center justify-center">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={2}
+                      aria-label={`${label} SP`}
+                      value={
+                        draftEntry?.stat === statKey
+                          ? draftEntry.value
+                          : String(value)
+                      }
+                      onFocus={(e) => {
+                        const el = e.currentTarget;
+                        setDraftEntry({ stat: statKey, value: String(value) });
+                        requestAnimationFrame(() => el.select());
+                      }}
+                      onChange={(e) => {
+                        if (draftEntry?.stat === statKey) {
+                          setDraftEntry({
+                            stat: statKey,
+                            value: e.currentTarget.value,
+                          });
+                        }
+                      }}
+                      onBlur={() => {
+                        if (draftEntry?.stat === statKey) {
+                          commitDraft(statKey, draftEntry.value);
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          if (draftEntry?.stat === statKey) {
+                            commitDraft(statKey, draftEntry.value);
+                          }
+                        }
+                        if (e.key === "Escape") {
+                          e.preventDefault();
+                          setDraftEntry(null);
+                        }
+                        if (e.key === "ArrowUp") {
+                          e.preventDefault();
+                          setDraftEntry(null);
+                          updateInlineStatPoint(statKey, value + 1);
+                        }
+                        if (e.key === "ArrowDown") {
+                          e.preventDefault();
+                          setDraftEntry(null);
+                          updateInlineStatPoint(statKey, value - 1);
+                        }
+                      }}
+                      className="w-full min-w-0 appearance-none bg-transparent text-center text-[11px] leading-none font-semibold outline-none"
+                      style={{ color: "var(--text)" }}
+                    />
+                  </div>
                   <span
-                    className="text-[11px] leading-none font-semibold"
-                    style={{ color: "var(--text)" }}
+                    className="mt-1 text-[9px] leading-none"
+                    style={{ color: "var(--text-dim)" }}
                   >
-                    {value}
+                    {label}
                   </span>
                 </div>
-                <span
-                  className="mt-1 text-[9px] leading-none"
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  aria-label={`Decrease ${label} SP`}
+                  disabled={decrementDisabled}
+                  onClick={() => {
+                    setDraftEntry(null);
+                    updateInlineStatPoint(statKey, value - 1);
+                  }}
+                  className="mt-0.5 flex h-2.5 w-full items-center justify-center rounded-sm text-[8px] leading-none disabled:opacity-25"
                   style={{ color: "var(--text-dim)" }}
                 >
-                  {label}
-                </span>
-              </button>
+                  ▼
+                </button>
+              </div>
             );
           })}
         </div>
@@ -1119,7 +1171,6 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
               <div className="relative" ref={switchRef}>
                 <button
                   type="button"
-                  tabIndex={-1}
                   onClick={() => setSwitchOpen((o) => !o)}
                   className="theme-chip flex items-center gap-1 rounded-full px-3 py-1 text-xs"
                 >
@@ -1134,7 +1185,6 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
                       <button
                         key={s.speciesId}
                         type="button"
-                        tabIndex={-1}
                         onClick={() => {
                           handleSelectSet(s);
                           setSwitchOpen(false);
@@ -1165,7 +1215,6 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                tabIndex={-1}
                 onClick={() => setEditorOpen(true)}
                 className="theme-chip rounded-full px-3 py-1 text-xs"
               >
@@ -1174,7 +1223,6 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
               {resolvedSetId && (
                 <button
                   type="button"
-                  tabIndex={-1}
                   onClick={() => handleRemoveSet(resolvedSetId)}
                   className="theme-chip rounded-full px-3 py-1 text-xs"
                   style={{ color: "var(--accent-text-mid)" }}
@@ -1188,7 +1236,6 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
           <div className="grid gap-2 sm:grid-cols-2">
             <button
               type="button"
-              tabIndex={-1}
               onClick={() => setEditorOpen(true)}
               className="theme-chip w-full rounded-2xl py-2 text-xs"
             >
@@ -1196,7 +1243,6 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
             </button>
             <button
               type="button"
-              tabIndex={-1}
               onClick={() => setImportModalOpen(true)}
               className="theme-chip w-full rounded-2xl py-2 text-xs"
             >

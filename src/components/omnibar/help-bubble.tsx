@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
 
 interface HotkeyRow {
   keys: string[];
@@ -18,6 +18,8 @@ const HOTKEYS: HotkeyRow[] = [
   { keys: ["Tab"], description: "Accept suggestion / complete token" },
   { keys: ["Enter"], description: "Scroll to results (when ready)" },
   { keys: ["Shift", "Enter"], description: "Insert a line break" },
+  { keys: ["Alt", "K"], description: "Focus the main prompt textarea" },
+  { keys: ["Esc"], description: "Close this help dialog" },
 ];
 
 const SYNTAX_ROWS: SyntaxRow[] = [
@@ -145,18 +147,26 @@ function Divider() {
 export function HelpBubble() {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const titleId = "help-bubble-title";
+  const descriptionId = "help-bubble-description";
+  const handlePointerDown = useEffectEvent((event: PointerEvent) => {
+    if (
+      containerRef.current &&
+      !containerRef.current.contains(event.target as Node)
+    ) {
+      setOpen(false);
+    }
+  });
+  const handleKeyDown = useEffectEvent((event: KeyboardEvent) => {
+    if (event.key === "Escape") {
+      setOpen(false);
+    }
+  });
 
   useEffect(() => {
     if (!open) return;
-
-    const handlePointerDown = (event: PointerEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setOpen(false);
-      }
-    };
 
     document.addEventListener("pointerdown", handlePointerDown);
     return () => document.removeEventListener("pointerdown", handlePointerDown);
@@ -165,22 +175,29 @@ export function HelpBubble() {
   useEffect(() => {
     if (!open) return;
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setOpen(false);
-      }
-    };
-
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
+
+  useEffect(() => {
+    if (open) {
+      requestAnimationFrame(() => {
+        dialogRef.current?.focus();
+      });
+      return;
+    }
+
+    buttonRef.current?.focus();
   }, [open]);
 
   return (
     <div ref={containerRef} className="relative z-30">
       <button
+        ref={buttonRef}
         type="button"
-        tabIndex={-1}
         aria-expanded={open}
+        aria-haspopup="dialog"
+        aria-controls="help-bubble-dialog"
         aria-label="Show syntax and hotkey reference"
         onClick={() => setOpen((prev) => !prev)}
         className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-all ${
@@ -192,11 +209,39 @@ export function HelpBubble() {
 
       {open && (
         <div
+          id="help-bubble-dialog"
+          ref={dialogRef}
           role="dialog"
-          aria-label="Syntax and hotkey reference"
-          className="theme-panel scrollbar-none absolute right-0 top-full z-50 mt-2 max-h-[80vh] w-[24rem] overflow-y-auto rounded-3xl p-4 text-left"
+          aria-modal="false"
+          aria-labelledby={titleId}
+          aria-describedby={descriptionId}
+          tabIndex={-1}
+          className="theme-panel scrollbar-none absolute right-0 top-full z-50 mt-2 max-h-[80vh] w-[24rem] overflow-y-auto rounded-3xl p-4 text-left outline-none"
           style={{ boxShadow: "var(--shadow-overlay)" }}
         >
+          <div className="mb-3 flex items-start justify-between gap-3">
+            <div>
+              <h2 id={titleId} className="text-sm font-semibold">
+                Syntax and hotkey reference
+              </h2>
+              <p
+                id={descriptionId}
+                className="theme-text-muted mt-1 text-[13px] leading-5"
+              >
+                Reference for prompt structure, supported tokens, and keyboard
+                shortcuts including the shortcut for returning focus to the main
+                textarea.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="Close help dialog"
+              className="theme-icon-button flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm"
+            >
+              ×
+            </button>
+          </div>
           <section>
             <SectionHeading>Structure</SectionHeading>
             <div className="theme-subpanel-strong rounded-2xl px-3 py-3">

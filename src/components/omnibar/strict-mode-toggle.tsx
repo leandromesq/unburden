@@ -1,10 +1,16 @@
 "use client";
 
+import { useShallow } from "zustand/react/shallow";
+
 import { useOmniStore } from "@/store/use-omni-store";
 
 export function StrictModeToggle() {
-  const strictMode = useOmniStore((state) => state.strictMode);
-  const setStrictMode = useOmniStore((state) => state.setStrictMode);
+  const { strictMode, setStrictMode } = useOmniStore(
+    useShallow((state) => ({
+      strictMode: state.strictMode,
+      setStrictMode: state.setStrictMode,
+    })),
+  );
 
   return (
     <div
@@ -23,7 +29,6 @@ export function StrictModeToggle() {
           <button
             key={option.label}
             type="button"
-            tabIndex={-1}
             aria-pressed={active}
             aria-label={`${option.label} calculation mode`}
             className={`theme-toggle-option rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] ${
