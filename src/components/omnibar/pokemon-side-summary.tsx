@@ -410,10 +410,6 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
   const [pendingStatPoints, setPendingStatPoints] = useState<StatSpread | null>(
     null,
   );
-  const [draftEntry, setDraftEntry] = useState<{
-    stat: StatKey;
-    value: string;
-  } | null>(null);
   const switchRef = useRef<HTMLDivElement>(null);
 
   const handleSwitchPointerDown = useEffectEvent((e: MouseEvent) => {
@@ -702,12 +698,6 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
     };
   }, [input, side, importedSets, parsedCommand, pendingStatPoints]);
 
-  const commitDraft = (stat: StatKey, raw: string) => {
-    const parsed = Number(raw);
-    updateInlineStatPoint(stat, Number.isFinite(parsed) ? parsed : 0);
-    setDraftEntry(null);
-  };
-
   const updateInlineStatPoint = (stat: StatKey, nextValue: number) => {
     if (!summary) {
       return;
@@ -856,7 +846,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
               onClick={() => setImportModalOpen(true)}
               className="theme-chip mt-4 w-full rounded-2xl py-2.5 text-xs"
             >
-              Import Set
+              Import
             </button>
           </>
         )}
@@ -869,6 +859,16 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
   }
 
   const { importedSet, stageBoosts, itemBoosts } = summary;
+  const currentStatPoints =
+    pendingStatPoints ??
+    summary.promptStatPoints ??
+    summary.effectiveStatPoints;
+  const spLeft = Math.max(
+    0,
+    66 -
+      STAT_LABELS.reduce((total, [key]) => total + currentStatPoints[key], 0),
+  );
+  const isSpDepleted = spLeft === 0;
 
   return (
     <aside
@@ -972,149 +972,6 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
         </div>
       )}
 
-      {/* SP spread */}
-      <div className="mt-3">
-        <div className="mb-3 flex items-center justify-between gap-2">
-          <div className="theme-text-faint text-[10px] font-semibold uppercase tracking-[0.18em]">
-            SP Spread
-          </div>
-          <div className="theme-pill-muted rounded-full px-2 py-0.5 text-[10px] font-medium">
-            <span className="theme-text-dim">
-              {`${Math.max(
-                0,
-                66 -
-                  STAT_LABELS.reduce(
-                    (total, [key]) => total + summary.effectiveStatPoints[key],
-                    0,
-                  ),
-              )} SP left`}
-            </span>
-          </div>
-        </div>
-        <div className="grid grid-cols-6 gap-2">
-          {STAT_LABELS.map(([statKey, label]) => {
-            const value = summary.effectiveStatPoints[statKey];
-            const currentStatPoints =
-              pendingStatPoints ??
-              summary.promptStatPoints ??
-              summary.effectiveStatPoints;
-            const maxValue = Math.max(
-              0,
-              Math.min(
-                32,
-                66 -
-                  STAT_LABELS.reduce(
-                    (total, [key]) =>
-                      total + (key === statKey ? 0 : currentStatPoints[key]),
-                    0,
-                  ),
-              ),
-            );
-            const decrementDisabled = value <= 0;
-            const incrementDisabled = value >= maxValue;
-
-            return (
-              <div
-                key={statKey}
-                className="flex w-full flex-col items-center text-center font-mono"
-              >
-                <button
-                  type="button"
-                  tabIndex={-1}
-                  aria-label={`Increase ${label} SP`}
-                  disabled={incrementDisabled}
-                  onClick={() => {
-                    setDraftEntry(null);
-                    updateInlineStatPoint(statKey, value + 1);
-                  }}
-                  className="flex h-2.5 w-full items-center justify-center rounded-sm text-[8px] leading-none disabled:opacity-25"
-                  style={{ color: "var(--text-dim)" }}
-                >
-                  ▲
-                </button>
-                <div className="theme-pill-muted mt-0.5 flex min-w-0 flex-col items-center justify-center rounded-xl px-1.5 py-1">
-                  <div className="flex w-full items-center justify-center">
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      maxLength={2}
-                      aria-label={`${label} SP`}
-                      value={
-                        draftEntry?.stat === statKey
-                          ? draftEntry.value
-                          : String(value)
-                      }
-                      onFocus={(e) => {
-                        const el = e.currentTarget;
-                        setDraftEntry({ stat: statKey, value: String(value) });
-                        requestAnimationFrame(() => el.select());
-                      }}
-                      onChange={(e) => {
-                        if (draftEntry?.stat === statKey) {
-                          setDraftEntry({
-                            stat: statKey,
-                            value: e.currentTarget.value,
-                          });
-                        }
-                      }}
-                      onBlur={() => {
-                        if (draftEntry?.stat === statKey) {
-                          commitDraft(statKey, draftEntry.value);
-                        }
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          if (draftEntry?.stat === statKey) {
-                            commitDraft(statKey, draftEntry.value);
-                          }
-                        }
-                        if (e.key === "Escape") {
-                          e.preventDefault();
-                          setDraftEntry(null);
-                        }
-                        if (e.key === "ArrowUp") {
-                          e.preventDefault();
-                          setDraftEntry(null);
-                          updateInlineStatPoint(statKey, value + 1);
-                        }
-                        if (e.key === "ArrowDown") {
-                          e.preventDefault();
-                          setDraftEntry(null);
-                          updateInlineStatPoint(statKey, value - 1);
-                        }
-                      }}
-                      className="w-full min-w-0 appearance-none bg-transparent text-center text-[11px] leading-none font-semibold outline-none"
-                      style={{ color: "var(--text)" }}
-                    />
-                  </div>
-                  <span
-                    className="mt-1 text-[9px] leading-none"
-                    style={{ color: "var(--text-dim)" }}
-                  >
-                    {label}
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  tabIndex={-1}
-                  aria-label={`Decrease ${label} SP`}
-                  disabled={decrementDisabled}
-                  onClick={() => {
-                    setDraftEntry(null);
-                    updateInlineStatPoint(statKey, value - 1);
-                  }}
-                  className="mt-0.5 flex h-2.5 w-full items-center justify-center rounded-sm text-[8px] leading-none disabled:opacity-25"
-                  style={{ color: "var(--text-dim)" }}
-                >
-                  ▼
-                </button>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
       {/* Stats grid */}
       <div className="theme-divider mt-4 border-t pt-3">
         <div className="mb-2">
@@ -1160,6 +1017,78 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
             stage={stageBoosts.spe}
             itemMultiplier={itemBoosts.spe}
           />
+        </div>
+      </div>
+
+      {/* SP spread */}
+      <div className="theme-divider mt-4 border-t pt-3">
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <div className="theme-text-faint text-[10px] font-semibold uppercase tracking-[0.18em]">
+            SP Spread
+          </div>
+          <div className="theme-pill-muted rounded-full px-2 py-0.5 text-[10px] font-medium">
+            <span
+              className="theme-text-dim"
+              style={{
+                color: isSpDepleted ? "var(--accent-strong)" : undefined,
+              }}
+            >
+              {`${spLeft} SP left`}
+            </span>
+          </div>
+        </div>
+        <div className="grid gap-2">
+          {STAT_LABELS.map(([statKey, label]) => {
+            const value = currentStatPoints[statKey];
+            const maxValue = Math.max(
+              0,
+              Math.min(
+                32,
+                66 -
+                  STAT_LABELS.reduce(
+                    (total, [key]) =>
+                      total + (key === statKey ? 0 : currentStatPoints[key]),
+                    0,
+                  ),
+              ),
+            );
+
+            return (
+              <div
+                key={statKey}
+                className="theme-subpanel rounded-lg px-2.5 py-1.5"
+              >
+                <div className="mb-1 flex items-center justify-between gap-2">
+                  <span className="theme-text-faint font-mono text-[9px] font-semibold uppercase tracking-[0.12em]">
+                    {label}
+                  </span>
+                  <span className="theme-text-dim font-mono text-[10px]">
+                    {value} SP
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={32}
+                  step={1}
+                  value={value}
+                  aria-label={`Set ${label} SP`}
+                  onChange={(event) => {
+                    const requested = Number(event.currentTarget.value);
+                    updateInlineStatPoint(
+                      statKey,
+                      Math.min(requested, maxValue),
+                    );
+                  }}
+                  className="h-1.5 w-full cursor-pointer appearance-none rounded-full"
+                  style={{
+                    background: "var(--line-strong)",
+                    accentColor: "var(--accent)",
+                  }}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -1213,6 +1142,18 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
               <div />
             )}
             <div className="flex items-center gap-2">
+              {editorInitialSet && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    saveSet(editorInitialSet);
+                    recompute();
+                  }}
+                  className="theme-chip rounded-full px-3 py-1 text-xs"
+                >
+                  Save
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => setEditorOpen(true)}
@@ -1233,7 +1174,19 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
             </div>
           </div>
         ) : (
-          <div className="grid gap-2 sm:grid-cols-2">
+          <div className="grid gap-2 sm:grid-cols-3">
+            {editorInitialSet && (
+              <button
+                type="button"
+                onClick={() => {
+                  saveSet(editorInitialSet);
+                  recompute();
+                }}
+                className="theme-chip w-full rounded-2xl py-2 text-xs"
+              >
+                Save
+              </button>
+            )}
             <button
               type="button"
               onClick={() => setEditorOpen(true)}
@@ -1246,7 +1199,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
               onClick={() => setImportModalOpen(true)}
               className="theme-chip w-full rounded-2xl py-2 text-xs"
             >
-              Import Set
+              Import
             </button>
           </div>
         )}
