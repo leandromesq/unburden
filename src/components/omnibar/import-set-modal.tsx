@@ -178,8 +178,11 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
                 found
               </div>
               <ul className="space-y-2">
-                {parsed.map((set) => (
-                  <SetPreviewCard key={set.speciesId} set={set} />
+                {parsed.map((set, index) => (
+                  <SetPreviewCard
+                    key={`${set.speciesId}-${set.nickname ?? ""}-${index}`}
+                    set={set}
+                  />
                 ))}
               </ul>
             </div>

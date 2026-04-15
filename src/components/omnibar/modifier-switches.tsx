@@ -20,7 +20,7 @@ import { useOmniStore } from "@/store/use-omni-store";
 
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
-    <div className="theme-text-dim mb-3 text-xs font-semibold uppercase tracking-[0.24em]">
+    <div className="theme-text-dim mb-3 text-[10px] font-semibold uppercase tracking-[0.24em]">
       {children}
     </div>
   );
@@ -28,7 +28,7 @@ function SectionLabel({ children }: { children: ReactNode }) {
 
 function GroupLabel({ children }: { children: ReactNode }) {
   return (
-    <div className="theme-text-dim mb-2 text-[11px] font-semibold uppercase tracking-[0.22em]">
+    <div className="theme-text-dim mb-2 text-[8px] font-semibold uppercase tracking-[0.22em]">
       {children}
     </div>
   );

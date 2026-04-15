@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { ModifierSwitches } from "@/components/omnibar/modifier-switches";
@@ -15,6 +15,7 @@ import { useOmniStore } from "@/store/use-omni-store";
 import { useTeamStore } from "@/store/use-team-store";
 
 export function OmniComposer() {
+  const [isClientMounted, setIsClientMounted] = useState(false);
   const { issues, calculationReady, input, setInput, setStrictMode } =
     useOmniStore(
       useShallow((state) => ({
@@ -34,6 +35,10 @@ export function OmniComposer() {
   const scrollToResults = () => {
     resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  useEffect(() => {
+    setIsClientMounted(true);
+  }, []);
 
   useEffect(() => {
     if (hasHydratedUrlPromptRef.current || typeof window === "undefined") {
@@ -110,7 +115,7 @@ export function OmniComposer() {
                 </div>
               </div>
               <div className="theme-composer-secondary">
-                <ModifierSwitches />
+                {isClientMounted ? <ModifierSwitches /> : null}
               </div>
             </div>
           </div>

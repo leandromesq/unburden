@@ -52,4 +52,48 @@ Careful Nature
     expect(set.evs.hp).toBe(252);
     expect(set.evs.def).toBe(80);
   });
+
+  test("parses first-line gender markers without corrupting species", () => {
+    const sets = parseShowdownSets(`Tinkaton (F) @ Metal Coat
+Ability: Own Tempo
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Gigaton Hammer
+- Feint
+- Fake Out
+- Helping Hand
+
+Tauros-Paldea-Aqua (M) @ White Herb
+Ability: Intimidate
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Protect
+- Wave Crash
+- Close Combat
+- Aqua Jet`);
+
+    expect(sets).toHaveLength(2);
+    expect(sets[0].speciesId).toBe("tinkaton");
+    expect(sets[0].gender).toBe("F");
+    expect(sets[1].speciesId).toBe("taurospaldeaaqua");
+    expect(sets[1].gender).toBe("M");
+  });
+
+  test("parses explicit Gender line when present", () => {
+    const [set] = parseShowdownSets(`Meowscarada @ Focus Sash
+Ability: Overgrow
+Gender: F
+Level: 50
+EVs: 32 Atk / 32 Spe
+Jolly Nature
+- Flower Trick
+- Knock Off
+- U-turn
+- Protect`);
+
+    expect(set.speciesId).toBe("meowscarada");
+    expect(set.gender).toBe("F");
+  });
 });

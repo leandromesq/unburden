@@ -23,6 +23,10 @@ function sanitizeSet(raw: unknown): ImportedSet | null {
       speciesId: s.speciesId,
       speciesName: s.speciesName,
       nickname: typeof s.nickname === "string" ? s.nickname : undefined,
+      gender:
+        s.gender === "M" || s.gender === "F" || s.gender === "N"
+          ? s.gender
+          : undefined,
       item: typeof s.item === "string" ? s.item : undefined,
       ability: typeof s.ability === "string" ? s.ability : undefined,
       level: typeof s.level === "number" ? s.level : 50,
@@ -74,7 +78,7 @@ function writeStorage(sets: Record<string, ImportedSet>): void {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(sets));
-  } catch {}
+  } catch { }
 }
 
 interface TeamStore {

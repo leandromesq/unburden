@@ -9,27 +9,39 @@ import { resolvePokemonEntity } from "@/lib/parser/fuse-indexes";
 import { normalizeImportedSet } from "@/lib/team/imported-set-utils";
 import type { ImportedSet, StatSpread } from "@/lib/types";
 
-function parseFirstLine(line: string): { nickname?: string; species: string; item?: string } {
-  // Try "[Nickname] (Species) @ Item" or "[Nickname] (Species)"
-  const nicknameMatch = line.match(/^(.+?)\s*\(([^)]+)\)\s*(?:@\s*(.+))?$/);
+function parseFirstLine(line: string): {
+  nickname?: string;
+  species: string;
+  item?: string;
+  gender?: "M" | "F" | "N";
+} {
+  const atIndex = line.indexOf(" @ ");
+  const item = atIndex !== -1 ? line.slice(atIndex + 3).trim() || undefined : undefined;
+  const identityPart = atIndex !== -1 ? line.slice(0, atIndex).trim() : line.trim();
+
+  // Parse trailing Showdown gender marker before nickname/species parsing.
+  const genderMatch = identityPart.match(/\s*\((M|F|N)\)\s*$/i);
+  const gender = genderMatch?.[1]?.toUpperCase() as "M" | "F" | "N" | undefined;
+  const identityWithoutGender = genderMatch
+    ? identityPart.slice(0, identityPart.length - genderMatch[0].length).trim()
+    : identityPart;
+
+  // Try "[Nickname] (Species)"
+  const nicknameMatch = identityWithoutGender.match(/^(.+?)\s*\(([^)]+)\)\s*$/);
   if (nicknameMatch) {
     return {
       nickname: nicknameMatch[1].trim() || undefined,
       species: nicknameMatch[2].trim(),
-      item: nicknameMatch[3]?.trim() || undefined,
+      item,
+      gender,
     };
   }
 
-  // Try "Species @ Item"
-  const atIndex = line.indexOf(" @ ");
-  if (atIndex !== -1) {
-    return {
-      species: line.slice(0, atIndex).trim(),
-      item: line.slice(atIndex + 3).trim() || undefined,
-    };
-  }
-
-  return { species: line.trim() };
+  return {
+    species: identityWithoutGender,
+    item,
+    gender,
+  };
 }
 
 function parseStatLine(line: string): Partial<StatSpread> {
@@ -90,6 +102,7 @@ function parseOneSet(block: string): ImportedSet | null {
     speciesId: resolved.id,
     speciesName: resolved.name,
     nickname: firstLine.nickname,
+    gender: firstLine.gender,
     item: firstLine.item,
     ability: undefined,
     level: 50,
@@ -108,6 +121,14 @@ function parseOneSet(block: string): ImportedSet | null {
       // Strip form name in parens, e.g. "As One (Spectrier)" → "As One"
       const rawAbility = line.slice(8).trim();
       set.ability = rawAbility.replace(/\s*\([^)]*\)\s*$/, "").trim();
+      continue;
+    }
+
+    if (line.startsWith("Gender:")) {
+      const parsedGender = line.slice(7).trim().toUpperCase();
+      if (parsedGender === "M" || parsedGender === "F" || parsedGender === "N") {
+        set.gender = parsedGender;
+      }
       continue;
     }
 

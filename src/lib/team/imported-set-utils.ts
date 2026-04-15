@@ -29,6 +29,7 @@ export function createImportedSet(options: {
   speciesId: string;
   speciesName: string;
   nickname?: string;
+  gender?: "M" | "F" | "N";
   item?: string;
   ability?: string;
   level?: number;
@@ -46,6 +47,7 @@ export function createImportedSet(options: {
     speciesId: options.speciesId,
     speciesName: options.speciesName,
     nickname: options.nickname,
+    gender: options.gender,
     item: options.item,
     ability: options.ability,
     level: options.level ?? 50,

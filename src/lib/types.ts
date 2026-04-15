@@ -151,13 +151,13 @@ export interface SuggestionState {
 
 export interface SuggestionOption {
   type:
-    | "pokemon"
-    | "move"
-    | "ability"
-    | "modifier"
-    | "separator"
-    | "item"
-    | "set";
+  | "pokemon"
+  | "move"
+  | "ability"
+  | "modifier"
+  | "separator"
+  | "item"
+  | "set";
   value: string;
   label: string;
   applyText: string;
@@ -182,6 +182,7 @@ export interface ImportedSet {
   speciesId: string;
   speciesName: string;
   nickname?: string;
+  gender?: "M" | "F" | "N";
   item?: string;
   ability?: string;
   level: number;
