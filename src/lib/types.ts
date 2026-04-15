@@ -161,6 +161,7 @@ export interface SuggestionOption {
   value: string;
   label: string;
   applyText: string;
+  cursorOffset?: number;
 }
 
 export interface ActiveChipTokens {

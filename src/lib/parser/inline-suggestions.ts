@@ -38,8 +38,46 @@ function getActiveToken(tokens: LexToken[], cursorIndex: number) {
   );
 }
 
-function replaceRange(input: string, start: number, end: number, replacement: string) {
-  return compactWhitespace(`${input.slice(0, start)}${replacement}${input.slice(end)}`);
+function replaceLastTokenWithCursor(
+  input: string,
+  token: LexToken,
+  replacement: string,
+): [text: string, cursorOffset: number] {
+  const beforeToken = input.slice(0, token.start);
+  const afterToken = input.slice(token.end);
+  const preCompact = `${beforeToken}${replacement}${afterToken}`;
+  const postCompact = compactWhitespace(preCompact);
+
+  const cursorOffset = beforeToken.length + replacement.length;
+  return [postCompact, cursorOffset];
+}
+
+function appendTokenWithCursor(
+  input: string,
+  token: string,
+  addTrailingSpace = false,
+): [text: string, cursorOffset: number] {
+  const base = input.trimEnd();
+  const next = base ? `${base} ${token}` : token;
+  const final = addTrailingSpace ? `${next} ` : next;
+
+  const cursorOffset = next.length;
+  return [final, cursorOffset];
+}
+
+function replaceRangeWithCursor(
+  input: string,
+  start: number,
+  end: number,
+  replacement: string,
+): [text: string, cursorOffset: number] {
+  const beforeRange = input.slice(0, start);
+  const afterRange = input.slice(end);
+  const preCompact = `${beforeRange}${replacement}${afterRange}`;
+  const postCompact = compactWhitespace(preCompact);
+
+  const cursorOffset = beforeRange.length + replacement.length;
+  return [postCompact, cursorOffset];
 }
 
 function formatSpeciesText(name: string) {
@@ -86,17 +124,6 @@ function getGhostSuffix(fragment: string, candidate: string) {
   return candidate.slice(fragment.length);
 }
 
-function appendToken(input: string, token: string, addTrailingSpace = false) {
-  const base = input.trimEnd();
-  const next = base ? `${base} ${token}` : token;
-  return addTrailingSpace ? `${next} ` : next;
-}
-
-function replaceLastToken(input: string, token: LexToken, replacement: string) {
-  const next = `${input.slice(0, token.start)}${replacement}${input.slice(token.end)}`;
-  return compactWhitespace(next);
-}
-
 function isTokenInCollection(token: LexToken | null, collection: LexToken[]) {
   if (!token) {
     return false;
@@ -135,8 +162,8 @@ function buildAttackerSideTokens(
     : structure.attacker.speciesExact
       ? formatSpeciesText(structure.attacker.speciesExact.entry.name)
       : structure.attacker.speciesMatch
-      ? formatSpeciesText(structure.attacker.speciesMatch.entry.name)
-      : joinTokenValues(structure.attacker.leadingFreeTokens);
+        ? formatSpeciesText(structure.attacker.speciesMatch.entry.name)
+        : joinTokenValues(structure.attacker.leadingFreeTokens);
   const explicitTokens = structure.attacker.symbolTokens
     .filter((token) => token.kind !== "move")
     .map((token) => token.raw);
@@ -189,6 +216,9 @@ function getModifierOptions(
         ? DEFENDER_CHIP_DEFINITIONS
         : GLOBAL_CHIP_DEFINITIONS;
   const normalizedQuery = slugifySymbolValue(query);
+  const labelQuery = normalizedQuery.includes("+") || normalizedQuery.includes("-")
+    ? normalizedQuery
+    : normalizedQuery.replace(/-/g, " ");
   const matches = catalog.filter((definition) => {
     if (!normalizedQuery) {
       return true;
@@ -196,20 +226,63 @@ function getModifierOptions(
 
     return (
       definition.token.startsWith(normalizedQuery) ||
-      definition.label.toLowerCase().includes(normalizedQuery.replace(/-/g, " "))
+      definition.label.toLowerCase().includes(labelQuery)
     );
   });
 
-  return matches.slice(0, 8).map((definition) => {
+  const stagePriorityByValue = new Map<number, number>([
+    [1, 0],
+    [-1, 1],
+    [2, 2],
+    [-2, 3],
+  ]);
+
+  const rankedMatches = matches
+    .map((definition, index) => ({ definition, index }))
+    .sort((left, right) => {
+      const leftStatMod = left.definition.kind === "stat_mod" || left.definition.kind === "speed_mod"
+        ? left.definition.statMod
+        : null;
+      const rightStatMod = right.definition.kind === "stat_mod" || right.definition.kind === "speed_mod"
+        ? right.definition.statMod
+        : null;
+
+      if (leftStatMod !== null && rightStatMod !== null) {
+        const leftKindBias = left.definition.kind === "stat_mod" ? 0 : 100;
+        const rightKindBias = right.definition.kind === "stat_mod" ? 0 : 100;
+        const leftPriority = leftKindBias + (stagePriorityByValue.get(leftStatMod) ?? (10 + Math.abs(leftStatMod) * 2 + (leftStatMod > 0 ? 0 : 1)));
+        const rightPriority = rightKindBias + (stagePriorityByValue.get(rightStatMod) ?? (10 + Math.abs(rightStatMod) * 2 + (rightStatMod > 0 ? 0 : 1)));
+
+        if (leftPriority !== rightPriority) {
+          return leftPriority - rightPriority;
+        }
+
+        return left.index - right.index;
+      }
+
+      if (leftStatMod !== null) {
+        return -1;
+      }
+
+      if (rightStatMod !== null) {
+        return 1;
+      }
+
+      return left.index - right.index;
+    })
+    .map((entry) => entry.definition);
+
+  return rankedMatches.slice(0, 8).map((definition) => {
     const token = formatModifierToken(scope, definition.token);
-    const applyText = lastToken
-      ? replaceLastToken(input, lastToken, token)
-      : appendToken(input, token);
+    const [applyText, cursorOffset] = lastToken
+      ? replaceLastTokenWithCursor(input, lastToken, token)
+      : appendTokenWithCursor(input, token);
 
     return withLabel({
       type: "modifier",
       value: token,
       applyText,
+      cursorOffset,
     });
   });
 }
@@ -223,15 +296,16 @@ function getAbilityOptions(
 ) {
   return getSuggestedAbilities(pokemonId, query, 6).map((ability) => {
     const token = formatAbilityToken(scope, ability);
-    const applyText = lastToken
-      ? replaceLastToken(input, lastToken, token)
-      : appendToken(input, token);
+    const [applyText, cursorOffset] = lastToken
+      ? replaceLastTokenWithCursor(input, lastToken, token)
+      : appendTokenWithCursor(input, token);
 
     return {
       type: "ability",
       value: token,
       label: ability,
       applyText,
+      cursorOffset,
     } satisfies SuggestionOption;
   });
 }
@@ -244,15 +318,16 @@ function getItemOptions(
 ) {
   return getSuggestedItems(pokemonId, query, 6).map((itemName) => {
     const token = formatItemToken(itemName);
-    const applyText = lastToken
-      ? replaceLastToken(input, lastToken, token)
-      : appendToken(input, token);
+    const [applyText, cursorOffset] = lastToken
+      ? replaceLastTokenWithCursor(input, lastToken, token)
+      : appendTokenWithCursor(input, token);
 
     return {
       type: "item",
       value: token,
       label: itemName,
       applyText,
+      cursorOffset,
     } satisfies SuggestionOption;
   });
 }
@@ -266,8 +341,7 @@ function getSlotSuggestions(
   const structure = cursorIndex === input.length
     ? fullStructure
     : analyzeCommandStructure(input.slice(0, cursorIndex));
-  const lastToken = structure.lexed.tokens.at(-1);
-  const activeToken = getActiveToken(fullStructure.lexed.tokens, cursorIndex) ?? lastToken ?? null;
+  const activeToken = getActiveToken(fullStructure.lexed.tokens, cursorIndex) ?? null;
   const trailingWhitespace = structure.lexed.trailingWhitespace;
   const attackerReferenceSet = resolveSetReferenceToken(
     structure.attacker.leadingFreeTokens[0]?.raw,
@@ -327,21 +401,23 @@ function getSlotSuggestions(
       const query = moveFragment;
       const options = getSuggestedMoves(attackerResolved.entry.id, query, 8).map((move) => {
         const token = `${formatMoveToken(move.name)}${hitSuffix}`;
+        const [applyText, cursorOffset] = replaceLastTokenWithCursor(input, activeToken, token);
         return {
           type: "move",
           value: token,
           label: move.name,
-          applyText: replaceLastToken(input, activeToken, token),
+          applyText,
+          cursorOffset,
         } satisfies SuggestionOption;
       });
       const active = options[0]
         ? buildActiveSuggestion(
-            "attacker_move",
-            raw,
-            options[0].value,
-            options[0].applyText,
-            input,
-          )
+          "attacker_move",
+          raw,
+          options[0].value,
+          options[0].applyText,
+          input,
+        )
         : null;
 
       return { activeSuggestion: active, suggestionOptions: options };
@@ -361,23 +437,23 @@ function getSlotSuggestions(
           : defenderExact?.entry.id;
       const options = abilityPokemonId
         ? getAbilityOptions(
-            abilityScope,
-            abilityPokemonId,
-            query,
-            input,
-            activeToken,
-          )
+          abilityScope,
+          abilityPokemonId,
+          query,
+          input,
+          activeToken,
+        )
         : [];
       const active = options[0]
         ? buildActiveSuggestion(
-            abilityScope === "attacker"
-              ? "attacker_modifier_or_item_or_ability"
-              : "defender_modifier_or_item_or_ability",
-            raw,
-            options[0].value,
-            options[0].applyText,
-            input,
-          )
+          abilityScope === "attacker"
+            ? "attacker_modifier_or_item_or_ability"
+            : "defender_modifier_or_item_or_ability",
+          raw,
+          options[0].value,
+          options[0].applyText,
+          input,
+        )
         : null;
 
       return { activeSuggestion: active, suggestionOptions: options };
@@ -391,12 +467,12 @@ function getSlotSuggestions(
       );
       const active = options[0]
         ? buildActiveSuggestion(
-            "global_modifier",
-            raw,
-            options[0].value,
-            options[0].applyText,
-            input,
-          )
+          "global_modifier",
+          raw,
+          options[0].value,
+          options[0].applyText,
+          input,
+        )
         : null;
 
       return { activeSuggestion: active, suggestionOptions: options };
@@ -415,14 +491,14 @@ function getSlotSuggestions(
         : [];
       const active = options[0]
         ? buildActiveSuggestion(
-            isDefenderToken
-              ? "defender_modifier_or_item_or_ability"
-              : "attacker_modifier_or_item_or_ability",
-            raw,
-            options[0].value,
-            options[0].applyText,
-            input,
-          )
+          isDefenderToken
+            ? "defender_modifier_or_item_or_ability"
+            : "attacker_modifier_or_item_or_ability",
+          raw,
+          options[0].value,
+          options[0].applyText,
+          input,
+        )
         : null;
 
       return { activeSuggestion: active, suggestionOptions: options };
@@ -445,12 +521,12 @@ function getSlotSuggestions(
       ]).slice(0, 8);
       const active = options[0]
         ? buildActiveSuggestion(
-            "attacker_modifier_or_item_or_ability",
-            raw,
-            options[0].value,
-            options[0].applyText,
-            input,
-          )
+          "attacker_modifier_or_item_or_ability",
+          raw,
+          options[0].value,
+          options[0].applyText,
+          input,
+        )
         : null;
 
       return { activeSuggestion: active, suggestionOptions: options };
@@ -463,12 +539,12 @@ function getSlotSuggestions(
       ]).slice(0, 8);
       const active = options[0]
         ? buildActiveSuggestion(
-            "defender_modifier_or_item_or_ability",
-            raw,
-            options[0].value,
-            options[0].applyText,
-            input,
-          )
+          "defender_modifier_or_item_or_ability",
+          raw,
+          options[0].value,
+          options[0].applyText,
+          input,
+        )
         : null;
 
       return { activeSuggestion: active, suggestionOptions: options };
@@ -479,35 +555,43 @@ function getSlotSuggestions(
     const query = joinTokenValues(structure.attacker.leadingFreeTokens);
     if (query.startsWith("#")) {
       const matches = searchSetReferences(query, importedSets, 6);
-      const options = matches.map(({ set, canonicalToken }) => ({
-        type: "set" as const,
-        value: canonicalToken,
-        label: set.nickname
-          ? `${set.nickname} · ${set.speciesName}`
-          : set.speciesName,
-        applyText:
+      const options = matches.map(({ set, canonicalToken }) => {
+        const [applyText, cursorOffset] =
           cursorIndex === input.length || !activeToken
-            ? compactWhitespace([
+            ? (() => {
+              const text = compactWhitespace([
                 canonicalToken,
                 ...structure.attacker.rawTokens
                   .slice(structure.attacker.leadingFreeTokens.length)
                   .map((token) => token.raw),
-              ].join(" "))
-            : replaceRange(
-                input,
-                fullStructure.attacker.rawTokens[0]?.start ?? 0,
-                activeToken.end,
-                canonicalToken,
-              ),
-      }));
+              ].join(" "));
+              return [text, canonicalToken.length] as const;
+            })()
+            : replaceRangeWithCursor(
+              input,
+              fullStructure.attacker.rawTokens[0]?.start ?? 0,
+              activeToken.end,
+              canonicalToken,
+            );
+
+        return {
+          type: "set" as const,
+          value: canonicalToken,
+          label: set.nickname
+            ? `${set.nickname} · ${set.speciesName}`
+            : set.speciesName,
+          applyText,
+          cursorOffset,
+        };
+      });
       const active = options[0]
         ? buildActiveSuggestion(
-            "attacker_pokemon",
-            query,
-            options[0].value,
-            options[0].applyText,
-            input,
-          )
+          "attacker_pokemon",
+          query,
+          options[0].value,
+          options[0].applyText,
+          input,
+        )
         : null;
 
       return { activeSuggestion: active, suggestionOptions: options };
@@ -516,36 +600,40 @@ function getSlotSuggestions(
     const matches = searchPokemonEntities(query, 6);
     const options = matches.map((match) => {
       const speciesText = formatSpeciesText(match.entry.name);
-      const applyText =
+      const [applyText, cursorOffset] =
         cursorIndex === input.length || !activeToken
-          ? compactWhitespace([
+          ? (() => {
+            const text = compactWhitespace([
               speciesText,
               ...structure.attacker.rawTokens
                 .slice(structure.attacker.leadingFreeTokens.length)
                 .map((token) => token.raw),
-            ].join(" "))
-          : replaceRange(
-              input,
-              fullStructure.attacker.rawTokens[0]?.start ?? 0,
-              activeToken.end,
-              speciesText,
-            );
+            ].join(" "));
+            return [text, speciesText.length + (text.length > speciesText.length ? 1 : 0)];
+          })()
+          : replaceRangeWithCursor(
+            input,
+            fullStructure.attacker.rawTokens[0]?.start ?? 0,
+            activeToken.end,
+            speciesText,
+          );
 
       return {
         type: "pokemon",
         value: speciesText,
         label: match.entry.name,
         applyText,
+        cursorOffset,
       } satisfies SuggestionOption;
     });
     const active = options[0]
       ? buildActiveSuggestion(
-          "attacker_pokemon",
-          query,
-          options[0].value,
-          options[0].applyText,
-          input,
-        )
+        "attacker_pokemon",
+        query,
+        options[0].value,
+        options[0].applyText,
+        input,
+      )
       : null;
 
     return { activeSuggestion: active, suggestionOptions: options };
@@ -555,43 +643,51 @@ function getSlotSuggestions(
     const query = joinTokenValues(structure.attacker.leadingRemainderTokens);
     const options = getSuggestedMoves(attackerResolved.entry.id, query, 8).map((move) => {
       const token = formatMoveToken(move.name);
+      const [applyText, cursorOffset] =
+        cursorIndex === input.length || !activeToken
+          ? (() => {
+            const text = buildFullText(
+              structure,
+              buildAttackerSideTokens(structure, token, attackerReferenceToken),
+              structure.lexed.hasDelimiter
+                ? structure.defender.rawTokens.map((token) => token.raw)
+                : undefined,
+              structure.lexed.hasDelimiter,
+            );
+            return [text, text.length] as const;
+          })()
+          : replaceLastTokenWithCursor(input, activeToken, token);
+
       return {
         type: "move",
         value: token,
         label: move.name,
-        applyText:
-          cursorIndex === input.length || !activeToken
-            ? buildFullText(
-                structure,
-                buildAttackerSideTokens(structure, token, attackerReferenceToken),
-                structure.lexed.hasDelimiter
-                  ? structure.defender.rawTokens.map((token) => token.raw)
-                  : undefined,
-                structure.lexed.hasDelimiter,
-              )
-            : replaceLastToken(input, activeToken, token),
+        applyText,
+        cursorOffset,
       } satisfies SuggestionOption;
     });
     const fragment = query || "";
     const active = options[0]
       ? buildActiveSuggestion(
-          "attacker_move",
-          fragment,
-          options[0].value,
-          options[0].applyText,
-          input,
-        )
+        "attacker_move",
+        fragment,
+        options[0].value,
+        options[0].applyText,
+        input,
+      )
       : null;
 
     return { activeSuggestion: active, suggestionOptions: options };
   }
 
   if (!structure.lexed.hasDelimiter) {
+    const [separatorApplyText, separatorCursorOffset] = appendTokenWithCursor(input, "x", true);
     const options: SuggestionOption[] = [
       withLabel({
         type: "separator",
         value: "x",
-        applyText: appendToken(input, "x", true),
+        applyText: separatorApplyText,
+        cursorOffset: separatorCursorOffset,
       }),
     ];
 
@@ -620,15 +716,11 @@ function getSlotSuggestions(
     if (query.startsWith("#")) {
       const attackerTokens = structure.attacker.rawTokens.map((token) => token.raw);
       const matches = searchSetReferences(query, importedSets, 6);
-      const options = matches.map(({ set, canonicalToken }) => ({
-        type: "set" as const,
-        value: canonicalToken,
-        label: set.nickname
-          ? `${set.nickname} · ${set.speciesName}`
-          : set.speciesName,
-        applyText:
+      const options = matches.map(({ set, canonicalToken }) => {
+        const [applyText, cursorOffset] =
           cursorIndex === input.length || !activeToken
-            ? buildFullText(
+            ? (() => {
+              const text = buildFullText(
                 structure,
                 attackerTokens,
                 [
@@ -638,23 +730,35 @@ function getSlotSuggestions(
                     .map((token) => token.raw),
                 ].filter(Boolean),
                 true,
-              )
-            : replaceRange(
-                input,
-                fullStructure.defender.rawTokens[0]?.start ??
-                  (fullStructure.attacker.rawTokens.at(-1)?.end ?? 0),
-                activeToken.end,
-                canonicalToken,
-              ),
-      }));
+              );
+              return [text, text.length] as const;
+            })()
+            : replaceRangeWithCursor(
+              input,
+              fullStructure.defender.rawTokens[0]?.start ??
+              (fullStructure.attacker.rawTokens.at(-1)?.end ?? 0),
+              activeToken.end,
+              canonicalToken,
+            );
+
+        return {
+          type: "set" as const,
+          value: canonicalToken,
+          label: set.nickname
+            ? `${set.nickname} · ${set.speciesName}`
+            : set.speciesName,
+          applyText,
+          cursorOffset,
+        };
+      });
       const active = options[0]
         ? buildActiveSuggestion(
-            "defender_pokemon",
-            query,
-            options[0].value,
-            options[0].applyText,
-            input,
-          )
+          "defender_pokemon",
+          query,
+          options[0].value,
+          options[0].applyText,
+          input,
+        )
         : null;
 
       return { activeSuggestion: active, suggestionOptions: options };
@@ -664,41 +768,46 @@ function getSlotSuggestions(
     const attackerTokens = structure.attacker.rawTokens.map((token) => token.raw);
     const options = matches.map((match) => {
       const speciesText = formatSpeciesText(match.entry.name);
+      const [applyText, cursorOffset] =
+        cursorIndex === input.length || !activeToken
+          ? (() => {
+            const text = buildFullText(
+              structure,
+              attackerTokens,
+              [
+                speciesText,
+                ...structure.defender.rawTokens
+                  .slice(structure.defender.leadingFreeTokens.length)
+                  .map((token) => token.raw),
+              ].filter(Boolean),
+              true,
+            );
+            return [text, text.length] as const;
+          })()
+          : replaceRangeWithCursor(
+            input,
+            fullStructure.defender.rawTokens[0]?.start ??
+            (fullStructure.attacker.rawTokens.at(-1)?.end ?? 0),
+            activeToken.end,
+            speciesText,
+          );
 
       return {
         type: "pokemon",
         value: speciesText,
         label: match.entry.name,
-        applyText:
-          cursorIndex === input.length || !activeToken
-            ? buildFullText(
-                structure,
-                attackerTokens,
-                [
-                  speciesText,
-                  ...structure.defender.rawTokens
-                    .slice(structure.defender.leadingFreeTokens.length)
-                    .map((token) => token.raw),
-                ].filter(Boolean),
-                true,
-              )
-            : replaceRange(
-                input,
-                fullStructure.defender.rawTokens[0]?.start ??
-                  (fullStructure.attacker.rawTokens.at(-1)?.end ?? 0),
-                activeToken.end,
-                speciesText,
-              ),
+        applyText,
+        cursorOffset,
       } satisfies SuggestionOption;
     });
     const active = options[0]
       ? buildActiveSuggestion(
-          "defender_pokemon",
-          query,
-          options[0].value,
-          options[0].applyText,
-          input,
-        )
+        "defender_pokemon",
+        query,
+        options[0].value,
+        options[0].applyText,
+        input,
+      )
       : null;
 
     return { activeSuggestion: active, suggestionOptions: options };
@@ -763,9 +872,9 @@ export function getContextualMoveSuggestions(
   const attacker =
     (attackerReferenceSet
       ? {
-          entry:
-            pokemonById.get(normalizeId(attackerReferenceSet.speciesId)) ?? null,
-        }
+        entry:
+          pokemonById.get(normalizeId(attackerReferenceSet.speciesId)) ?? null,
+      }
       : null) ??
     structure.attacker.speciesExact ??
     resolveExactPokemonEntity(structure.attacker.speciesText);

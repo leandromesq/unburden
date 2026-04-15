@@ -274,6 +274,9 @@ function StatItem({
       : stageEffective;
   const isBoosted = stage > 0 || itemMultiplier > 1;
   const isNerfed = stage < 0;
+  const hasNatureArrow = natureEffect === "boost" || natureEffect === "nerf";
+  const arrowColor =
+    natureEffect === "boost" ? "var(--accent-strong)" : "var(--text-dim)";
 
   return (
     <div className="flex items-baseline gap-1.5">
@@ -292,31 +295,44 @@ function StatItem({
       >
         {effective}
       </span>
-      {natureEffect === "boost" && (
-        <span
-          className="text-[9px] leading-none"
-          style={{ color: "var(--accent-strong)" }}
-        >
-          ▲
+      {stage !== 0 && hasNatureArrow ? (
+        <span className="relative ml-0.5 inline-flex h-4 w-5 items-end justify-center">
+          <span
+            className="text-[9px] leading-none"
+            style={{ color: arrowColor }}
+          >
+            {natureEffect === "boost" ? "▲" : "▼"}
+          </span>
+          <span
+            className="absolute -top-0.5 left-1/2 -translate-x-1/2 font-mono text-[8px] leading-none"
+            style={{
+              color: isBoosted ? "var(--accent-strong)" : "var(--text-dim)",
+            }}
+          >
+            {stage > 0 ? `+${stage}` : `${stage}`}
+          </span>
         </span>
-      )}
-      {natureEffect === "nerf" && (
-        <span
-          className="text-[9px] leading-none"
-          style={{ color: "var(--text-dim)" }}
-        >
-          ▼
-        </span>
-      )}
-      {stage !== 0 && (
-        <span
-          className="font-mono text-[9px]"
-          style={{
-            color: isBoosted ? "var(--accent-strong)" : "var(--text-dim)",
-          }}
-        >
-          {stage > 0 ? `+${stage}` : `${stage}`}
-        </span>
+      ) : (
+        <>
+          {hasNatureArrow && (
+            <span
+              className="text-[9px] leading-none"
+              style={{ color: arrowColor }}
+            >
+              {natureEffect === "boost" ? "▲" : "▼"}
+            </span>
+          )}
+          {stage !== 0 && (
+            <span
+              className="font-mono text-[9px]"
+              style={{
+                color: isBoosted ? "var(--accent-strong)" : "var(--text-dim)",
+              }}
+            >
+              {stage > 0 ? `+${stage}` : `${stage}`}
+            </span>
+          )}
+        </>
       )}
       {itemMultiplier !== 1 && (
         <span

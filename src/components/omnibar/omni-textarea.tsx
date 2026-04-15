@@ -168,10 +168,10 @@ export function OmniTextarea({
                   return;
                 }
 
-                const cursor = element.value.length;
+                const cursor = useOmniStore.getState().cursorIndex;
                 element.focus();
                 element.setSelectionRange(cursor, cursor);
-                setCaretAtEnd(true);
+                setCaretAtEnd(cursor === element.value.length);
               });
             }
             return;

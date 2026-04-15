@@ -965,9 +965,10 @@ export const useOmniStore = create<OmniStore>((set, get) => {
           : null;
 
       if (highlightedOption) {
+        const cursorIndex = highlightedOption.cursorOffset ?? highlightedOption.applyText.length;
         commitState(
           highlightedOption.applyText,
-          highlightedOption.applyText.length,
+          cursorIndex,
           get().strictMode,
         );
         return;

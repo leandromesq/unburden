@@ -99,4 +99,11 @@ describe("inline suggestions", () => {
     expect(result.suggestionOptions[0]?.value).toBe("!muddy-water");
     expect(result.activeSuggestion?.completionText).toBe("#raintoed !muddy-water");
   });
+
+  test("prioritizes common negative multipliers over extreme values", () => {
+    const result = getAutocompleteState("politoed !muddy-water -");
+
+    expect(result.suggestionOptions[0]?.value).toBe("-1");
+    expect(result.suggestionOptions[1]?.value).toBe("-2");
+  });
 });
