@@ -248,10 +248,12 @@ function getModifierOptions(
         : null;
 
       if (leftStatMod !== null && rightStatMod !== null) {
+        const l = leftStatMod;
+        const r = rightStatMod;
         const leftKindBias = left.definition.kind === "stat_mod" ? 0 : 100;
         const rightKindBias = right.definition.kind === "stat_mod" ? 0 : 100;
-        const leftPriority = leftKindBias + (stagePriorityByValue.get(leftStatMod) ?? (10 + Math.abs(leftStatMod) * 2 + (leftStatMod > 0 ? 0 : 1)));
-        const rightPriority = rightKindBias + (stagePriorityByValue.get(rightStatMod) ?? (10 + Math.abs(rightStatMod) * 2 + (rightStatMod > 0 ? 0 : 1)));
+        const leftPriority = leftKindBias + (stagePriorityByValue.get(l) ?? (10 + Math.abs(l) * 2 + (l > 0 ? 0 : 1)));
+        const rightPriority = rightKindBias + (stagePriorityByValue.get(r) ?? (10 + Math.abs(r) * 2 + (r > 0 ? 0 : 1)));
 
         if (leftPriority !== rightPriority) {
           return leftPriority - rightPriority;

@@ -17166,35 +17166,6 @@
     }
   },
   {
-    "id": "poltchageistartisan",
-    "name": "Poltchageist-Artisan",
-    "aliases": [
-      "poltchageist",
-      "poltchageist artisan",
-      "poltchageist-artisan",
-      "poltchageistartisan"
-    ],
-    "types": [
-      "Grass",
-      "Ghost"
-    ],
-    "abilities": [
-      "Hospitality",
-      "Heatproof"
-    ],
-    "isMega": false,
-    "baseSpeciesId": "poltchageist",
-    "baseStats": {
-      "hp": 40,
-      "atk": 45,
-      "def": 45,
-      "spa": 74,
-      "spd": 54,
-      "spe": 50
-    },
-    "defaultFormOf": "poltchageist"
-  },
-  {
     "id": "polteageist",
     "name": "Polteageist",
     "aliases": [
@@ -17217,34 +17188,6 @@
       "spd": 114,
       "spe": 70
     }
-  },
-  {
-    "id": "polteageistantique",
-    "name": "Polteageist-Antique",
-    "aliases": [
-      "polteageist",
-      "polteageist antique",
-      "polteageist-antique",
-      "polteageistantique"
-    ],
-    "types": [
-      "Ghost"
-    ],
-    "abilities": [
-      "Weak Armor",
-      "Cursed Body"
-    ],
-    "isMega": false,
-    "baseSpeciesId": "polteageist",
-    "baseStats": {
-      "hp": 60,
-      "atk": 65,
-      "def": 65,
-      "spa": 134,
-      "spd": 114,
-      "spe": 70
-    },
-    "defaultFormOf": "polteageist"
   },
   {
     "id": "poochyena",
@@ -20238,35 +20181,6 @@
     }
   },
   {
-    "id": "sinistchamasterpiece",
-    "name": "Sinistcha-Masterpiece",
-    "aliases": [
-      "sinistcha",
-      "sinistcha masterpiece",
-      "sinistcha-masterpiece",
-      "sinistchamasterpiece"
-    ],
-    "types": [
-      "Grass",
-      "Ghost"
-    ],
-    "abilities": [
-      "Hospitality",
-      "Heatproof"
-    ],
-    "isMega": false,
-    "baseSpeciesId": "sinistcha",
-    "baseStats": {
-      "hp": 71,
-      "atk": 60,
-      "def": 106,
-      "spa": 121,
-      "spd": 80,
-      "spe": 70
-    },
-    "defaultFormOf": "sinistcha"
-  },
-  {
     "id": "sinistea",
     "name": "Sinistea",
     "aliases": [
@@ -20289,34 +20203,6 @@
       "spd": 54,
       "spe": 50
     }
-  },
-  {
-    "id": "sinisteaantique",
-    "name": "Sinistea-Antique",
-    "aliases": [
-      "sinistea",
-      "sinistea antique",
-      "sinistea-antique",
-      "sinisteaantique"
-    ],
-    "types": [
-      "Ghost"
-    ],
-    "abilities": [
-      "Weak Armor",
-      "Cursed Body"
-    ],
-    "isMega": false,
-    "baseSpeciesId": "sinistea",
-    "baseStats": {
-      "hp": 40,
-      "atk": 45,
-      "def": 45,
-      "spa": 74,
-      "spd": 54,
-      "spe": 50
-    },
-    "defaultFormOf": "sinistea"
   },
   {
     "id": "skarmory",

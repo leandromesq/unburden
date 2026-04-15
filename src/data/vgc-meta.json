@@ -79,7 +79,7 @@
   {
     "pokemonId": "basculegion",
     "defaultItem": "Focus Sash",
-    "defaultAbility": "Mold Breaker",
+    "defaultAbility": "Adaptability",
     "defaultMove": "Wave Crash",
     "commonMoves": [
       "Wave Crash",
@@ -92,13 +92,13 @@
       "Psychic Fangs"
     ],
     "commonAbilities": [
-      "Mold Breaker",
       "Swift Swim",
-      "Adaptability"
+      "Adaptability",
+      "Mold Breaker"
     ],
     "commonItems": [
-      "Focus Sash",
       "Choice Scarf",
+      "Focus Sash",
       "Leftovers",
       "Lum Berry",
       "Sitrus Berry"
@@ -107,7 +107,7 @@
   {
     "pokemonId": "charizard",
     "defaultItem": "Charizardite Y",
-    "defaultAbility": "Drought",
+    "defaultAbility": "Solar Power",
     "defaultMove": "Heat Wave",
     "commonMoves": [
       "Heat Wave",
@@ -120,7 +120,6 @@
       "Fire Pledge"
     ],
     "commonAbilities": [
-      "Drought",
       "Solar Power",
       "Blaze"
     ],
@@ -208,7 +207,7 @@
   {
     "pokemonId": "delphox",
     "defaultItem": "Delphoxite",
-    "defaultAbility": "Levitate",
+    "defaultAbility": "Blaze",
     "defaultMove": "Heat Wave",
     "commonMoves": [
       "Heat Wave",
@@ -221,7 +220,6 @@
       "Calm Mind"
     ],
     "commonAbilities": [
-      "Levitate",
       "Blaze",
       "Magician"
     ],
@@ -414,7 +412,7 @@
   {
     "pokemonId": "froslass",
     "defaultItem": "Froslassite",
-    "defaultAbility": "Snow Warning",
+    "defaultAbility": "Cursed Body",
     "defaultMove": "Blizzard",
     "commonMoves": [
       "Blizzard",
@@ -427,7 +425,6 @@
       "Will-O-Wisp"
     ],
     "commonAbilities": [
-      "Snow Warning",
       "Cursed Body",
       "Snow Cloak"
     ],
@@ -509,7 +506,7 @@
   {
     "pokemonId": "gardevoir",
     "defaultItem": "Gardevoirite",
-    "defaultAbility": "Hospitality",
+    "defaultAbility": "Trace",
     "defaultMove": "Psychic",
     "commonMoves": [
       "Psychic",
@@ -522,7 +519,6 @@
       "Psyshock"
     ],
     "commonAbilities": [
-      "Hospitality",
       "Trace",
       "Telepathy"
     ],
@@ -621,8 +617,7 @@
     ],
     "commonAbilities": [
       "Toxic Debris",
-      "Corrosion",
-      "Hospitality"
+      "Corrosion"
     ],
     "commonItems": [
       "Glimmoranite",
@@ -756,7 +751,7 @@
   {
     "pokemonId": "kangaskhan",
     "defaultItem": "Kangaskhanite",
-    "defaultAbility": "Scrappy",
+    "defaultAbility": "Inner Focus",
     "defaultMove": "Double-Edge",
     "commonMoves": [
       "Double-Edge",
@@ -802,7 +797,7 @@
   },
   {
     "pokemonId": "kingambit",
-    "defaultItem": "Chople Berry",
+    "defaultItem": "Black Glasses",
     "defaultAbility": "Defiant",
     "defaultMove": "Sucker Punch",
     "commonMoves": [
@@ -821,8 +816,8 @@
       "Supreme Overlord"
     ],
     "commonItems": [
-      "Chople Berry",
       "Black Glasses",
+      "Chople Berry",
       "Leftovers",
       "Focus Sash",
       "Sitrus Berry",
@@ -916,7 +911,7 @@
   {
     "pokemonId": "meganium",
     "defaultItem": "Meganiumite",
-    "defaultAbility": "Overgrow",
+    "defaultAbility": "Leaf Guard",
     "defaultMove": "Solar Beam",
     "commonMoves": [
       "Solar Beam",
@@ -930,8 +925,7 @@
     ],
     "commonAbilities": [
       "Overgrow",
-      "Leaf Guard",
-      "Hospitality"
+      "Leaf Guard"
     ],
     "commonItems": [
       "Meganiumite"
@@ -963,10 +957,10 @@
     "pokemonId": "meowscarada",
     "defaultItem": "Focus Sash",
     "defaultAbility": "Protean",
-    "defaultMove": "Triple Axel",
+    "defaultMove": "FLlower Trick",
     "commonMoves": [
-      "Triple Axel",
       "Flower Trick",
+      "Triple Axel",
       "Knock Off",
       "Protect",
       "Sucker Punch",
@@ -987,7 +981,7 @@
   {
     "pokemonId": "meowsticf",
     "defaultItem": "Meowsticite",
-    "defaultAbility": "Psychic Surge",
+    "defaultAbility": "Competitive",
     "defaultMove": "Earth Power",
     "commonMoves": [
       "Earth Power",
@@ -1000,8 +994,8 @@
       "Fake Out"
     ],
     "commonAbilities": [
-      "Psychic Surge",
       "Competitive",
+      "Infiltrator",
       "Keen Eye"
     ],
     "commonItems": [
@@ -1103,8 +1097,7 @@
       "Drain Punch"
     ],
     "commonAbilities": [
-      "Zero to Hero",
-      "Hospitality"
+      "Zero to Hero"
     ],
     "commonItems": [
       "Leftovers",
@@ -1169,11 +1162,11 @@
   {
     "pokemonId": "primarina",
     "defaultItem": "Leftovers",
-    "defaultAbility": "Torrent",
-    "defaultMove": "Moonblast",
+    "defaultAbility": "Liquid Voice",
+    "defaultMove": "Hyper Voice",
     "commonMoves": [
-      "Moonblast",
       "Hyper Voice",
+      "Moonblast",
       "Protect",
       "Haze",
       "Calm Mind",
@@ -1182,9 +1175,8 @@
       "Perish Song"
     ],
     "commonAbilities": [
-      "Torrent",
       "Liquid Voice",
-      "Hospitality"
+      "Torrent"
     ],
     "commonItems": [
       "Leftovers",
@@ -1283,8 +1275,7 @@
     ],
     "commonAbilities": [
       "Hospitality",
-      "Heatproof",
-      "Trace"
+      "Heatproof"
     ],
     "commonItems": [
       "Sitrus Berry",
@@ -1296,38 +1287,9 @@
     ]
   },
   {
-    "pokemonId": "sinistchamasterpiece",
-    "defaultItem": "Sitrus Berry",
-    "defaultAbility": "Hospitality",
-    "defaultMove": "Matcha Gotcha",
-    "commonMoves": [
-      "Matcha Gotcha",
-      "Rage Powder",
-      "Trick Room",
-      "Protect",
-      "Life Dew",
-      "Strength Sap",
-      "Shadow Ball",
-      "Calm Mind"
-    ],
-    "commonAbilities": [
-      "Hospitality",
-      "Heatproof",
-      "Trace"
-    ],
-    "commonItems": [
-      "Sitrus Berry",
-      "Leftovers",
-      "Mental Herb",
-      "Focus Sash",
-      "Choice Scarf",
-      "Occa Berry"
-    ]
-  },
-  {
     "pokemonId": "sneasler",
     "defaultItem": "White Herb",
-    "defaultAbility": "Pressure",
+    "defaultAbility": "Unburden",
     "defaultMove": "Close Combat",
     "commonMoves": [
       "Close Combat",
@@ -1340,9 +1302,9 @@
       "Rock Slide"
     ],
     "commonAbilities": [
-      "Pressure",
+      "Unburden",
       "Poison Touch",
-      "Unburden"
+      "Pressure"
     ],
     "commonItems": [
       "White Herb",
@@ -1353,11 +1315,11 @@
   {
     "pokemonId": "sylveon",
     "defaultItem": "Leftovers",
-    "defaultAbility": "Cute Charm",
-    "defaultMove": "Moonblast",
+    "defaultAbility": "Pixilate",
+    "defaultMove": "Hyper Voice",
     "commonMoves": [
-      "Moonblast",
       "Hyper Voice",
+      "Moonblast",
       "Protect",
       "Calm Mind",
       "Hyper Beam",
@@ -1366,19 +1328,18 @@
       "Shadow Ball"
     ],
     "commonAbilities": [
-      "Cute Charm",
       "Pixilate",
-      "Hospitality"
+      "Cute Charm"
     ],
     "commonItems": [
-      "Leftovers",
-      "Fairy Feather"
+      "Fairy Feather",
+      "Leftovers"
     ]
   },
   {
     "pokemonId": "talonflame",
     "defaultItem": "Focus Sash",
-    "defaultAbility": "Flame Body",
+    "defaultAbility": "Gale Wings",
     "defaultMove": "Brave Bird",
     "commonMoves": [
       "Brave Bird",
@@ -1391,9 +1352,8 @@
       "Overheat"
     ],
     "commonAbilities": [
-      "Flame Body",
       "Gale Wings",
-      "Hospitality"
+      "Flame Body"
     ],
     "commonItems": [
       "Focus Sash",
@@ -1459,10 +1419,10 @@
     "pokemonId": "tyranitar",
     "defaultItem": "Tyranitarite",
     "defaultAbility": "Sand Stream",
-    "defaultMove": "Earthquake",
+    "defaultMove": "Rock Slide",
     "commonMoves": [
-      "Earthquake",
       "Rock Slide",
+      "Earthquake",
       "Protect",
       "Knock Off",
       "Low Kick",
@@ -1485,10 +1445,10 @@
     "pokemonId": "tyranitarmega",
     "defaultItem": "Tyranitarite",
     "defaultAbility": "Sand Stream",
-    "defaultMove": "Earthquake",
+    "defaultMove": "Rock Slide",
     "commonMoves": [
-      "Earthquake",
       "Rock Slide",
+      "Earthquake",
       "Protect",
       "Knock Off",
       "Low Kick",
@@ -1506,7 +1466,7 @@
   {
     "pokemonId": "venusaur",
     "defaultItem": "Focus Sash",
-    "defaultAbility": "Overgrow",
+    "defaultAbility": "Chlorophyll",
     "defaultMove": "Sludge Bomb",
     "commonMoves": [
       "Sludge Bomb",
@@ -1519,9 +1479,8 @@
       "Earth Power"
     ],
     "commonAbilities": [
-      "Overgrow",
       "Chlorophyll",
-      "Trace"
+      "Overgrow"
     ],
     "commonItems": [
       "Focus Sash",
