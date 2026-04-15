@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-  type RefObject,
-} from "react";
+import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { GhostSuggestion } from "@/components/omnibar/ghost-suggestion";
@@ -82,22 +75,26 @@ export function OmniTextarea({
     return () => window.removeEventListener("keydown", handleGlobalKeyDown);
   }, [ref]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const element = ref.current;
     if (!element) {
       return;
     }
 
-    element.style.height = "0px";
-    const nextHeight = Math.min(element.scrollHeight, MAX_TEXTAREA_HEIGHT);
-    element.style.height = `${nextHeight}px`;
+    const frame = window.requestAnimationFrame(() => {
+      element.style.height = "0px";
+      const nextHeight = Math.min(element.scrollHeight, MAX_TEXTAREA_HEIGHT);
+      element.style.height = `${nextHeight}px`;
 
-    if (pendingSelectionRef.current !== null) {
-      const cursor = pendingSelectionRef.current;
-      element.focus();
-      element.setSelectionRange(cursor, cursor);
-      pendingSelectionRef.current = null;
-    }
+      if (pendingSelectionRef.current !== null) {
+        const cursor = pendingSelectionRef.current;
+        element.focus();
+        element.setSelectionRange(cursor, cursor);
+        pendingSelectionRef.current = null;
+      }
+    });
+
+    return () => window.cancelAnimationFrame(frame);
   }, [input, ref]);
 
   const ghostText = useMemo(() => {
@@ -180,18 +177,23 @@ export function OmniTextarea({
             return;
           }
 
-          if (event.key === "Enter" && !event.shiftKey && calculationReady) {
+          if (event.key === "Enter") {
             event.preventDefault();
-            onSubmitReady?.();
+            if (calculationReady) {
+              onSubmitReady?.();
+            }
           }
         }}
         onSelect={(event) => {
           const element = event.currentTarget;
           const cursorIndex = element.selectionEnd ?? element.value.length;
-          setCursorIndex(cursorIndex);
-          setCaretAtEnd(
+          const nextCaretAtEnd =
             element.selectionStart === element.selectionEnd &&
-              cursorIndex === element.value.length,
+            cursorIndex === element.value.length;
+
+          setCursorIndex(cursorIndex);
+          setCaretAtEnd((current) =>
+            current === nextCaretAtEnd ? current : nextCaretAtEnd,
           );
         }}
       />

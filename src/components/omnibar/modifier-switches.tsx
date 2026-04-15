@@ -396,7 +396,7 @@ const DEFENDER_EFFECT_TOKENS = toGroupTokens(
 
 export function ModifierSwitches() {
   const {
-    input,
+    commandStructure,
     activeChipTokens,
     insertChip,
     setStatModifier,
@@ -404,7 +404,7 @@ export function ModifierSwitches() {
     setHpPercentage,
   } = useOmniStore(
     useShallow((state) => ({
-      input: state.input,
+      commandStructure: state.commandStructure,
       activeChipTokens: state.activeChipTokens,
       insertChip: state.insertChip,
       setStatModifier: state.setStatModifier,
@@ -413,26 +413,27 @@ export function ModifierSwitches() {
     })),
   );
 
-  const structure = analyzeCommandStructure(input);
   const attackerResolved =
-    structure.attacker.speciesExact ?? structure.attacker.speciesMatch;
+    commandStructure.attacker.speciesExact ??
+    commandStructure.attacker.speciesMatch;
   const defenderResolved =
-    structure.defender.speciesExact ?? structure.defender.speciesMatch;
+    commandStructure.defender.speciesExact ??
+    commandStructure.defender.speciesMatch;
   const defenderReady = Boolean(
-    structure.lexed.hasDelimiter && defenderResolved,
+    commandStructure.lexed.hasDelimiter && defenderResolved,
   );
-  const attackerHpPercent = structure.attacker.hpToken
-    ? Number(structure.attacker.hpToken.value)
+  const attackerHpPercent = commandStructure.attacker.hpToken
+    ? Number(commandStructure.attacker.hpToken.value)
     : null;
-  const defenderHpPercent = structure.defender.hpToken
-    ? Number(structure.defender.hpToken.value)
+  const defenderHpPercent = commandStructure.defender.hpToken
+    ? Number(commandStructure.defender.hpToken.value)
     : null;
 
   const attackerStage = Math.max(
     -6,
     Math.min(
       6,
-      structure.attacker.modifierTokens.reduce((sum, token) => {
+      commandStructure.attacker.modifierTokens.reduce((sum, token) => {
         const definition = ATTACKER_MODIFIER_MAP.get(token.value);
         return definition?.kind === "stat_mod"
           ? sum + (definition.statMod ?? 0)
@@ -444,7 +445,7 @@ export function ModifierSwitches() {
     -6,
     Math.min(
       6,
-      structure.attacker.modifierTokens.reduce((sum, token) => {
+      commandStructure.attacker.modifierTokens.reduce((sum, token) => {
         const definition = ATTACKER_MODIFIER_MAP.get(token.value);
         return definition?.kind === "speed_mod"
           ? sum + (definition.statMod ?? 0)
@@ -456,7 +457,7 @@ export function ModifierSwitches() {
     -6,
     Math.min(
       6,
-      structure.defender.modifierTokens.reduce((sum, token) => {
+      commandStructure.defender.modifierTokens.reduce((sum, token) => {
         const definition = DEFENDER_MODIFIER_MAP.get(token.value);
         return definition?.kind === "stat_mod"
           ? sum + (definition.statMod ?? 0)
@@ -468,7 +469,7 @@ export function ModifierSwitches() {
     -6,
     Math.min(
       6,
-      structure.defender.modifierTokens.reduce((sum, token) => {
+      commandStructure.defender.modifierTokens.reduce((sum, token) => {
         const definition = DEFENDER_MODIFIER_MAP.get(token.value);
         return definition?.kind === "speed_mod"
           ? sum + (definition.statMod ?? 0)

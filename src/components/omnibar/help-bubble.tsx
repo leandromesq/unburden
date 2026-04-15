@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useEffectEvent, useRef, useState } from "react";
+import {
+  startTransition,
+  useEffect,
+  useEffectEvent,
+  useRef,
+  useState,
+} from "react";
 
 interface HotkeyRow {
   keys: string[];
@@ -17,7 +23,6 @@ const HOTKEYS: HotkeyRow[] = [
   { keys: ["↑", "↓"], description: "Navigate autocomplete suggestions" },
   { keys: ["Tab"], description: "Accept suggestion / complete token" },
   { keys: ["Enter"], description: "Scroll to results (when ready)" },
-  { keys: ["Shift", "Enter"], description: "Insert a line break" },
   { keys: ["Alt", "K"], description: "Focus the main prompt textarea" },
   { keys: ["Esc"], description: "Close this help dialog" },
 ];
@@ -156,12 +161,16 @@ export function HelpBubble() {
       containerRef.current &&
       !containerRef.current.contains(event.target as Node)
     ) {
-      setOpen(false);
+      startTransition(() => {
+        setOpen(false);
+      });
     }
   });
   const handleKeyDown = useEffectEvent((event: KeyboardEvent) => {
     if (event.key === "Escape") {
-      setOpen(false);
+      startTransition(() => {
+        setOpen(false);
+      });
     }
   });
 
@@ -199,7 +208,11 @@ export function HelpBubble() {
         aria-haspopup="dialog"
         aria-controls="help-bubble-dialog"
         aria-label="Show syntax and hotkey reference"
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={() => {
+          startTransition(() => {
+            setOpen((prev) => !prev);
+          });
+        }}
         className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-all ${
           open ? "theme-icon-button-active" : "theme-icon-button"
         }`}
@@ -235,7 +248,11 @@ export function HelpBubble() {
             </div>
             <button
               type="button"
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                startTransition(() => {
+                  setOpen(false);
+                });
+              }}
               aria-label="Close help dialog"
               className="theme-icon-button flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm"
             >

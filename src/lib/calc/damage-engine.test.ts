@@ -282,6 +282,26 @@ describe("damage engine", () => {
     expect(results).toHaveLength(1);
   });
 
+  test("treats attacker moves as sun-affected when using Mega Sol", () => {
+    const neutral = parseCommand("meganium !weather-ball x tinkaton").parsed;
+    const explicitSun = parseCommand("meganium-mega !weather-ball ~sun x tinkaton").parsed;
+    const megaSol = parseCommand("meganium-mega !weather-ball x tinkaton").parsed;
+
+    const [neutralResult] = calculateDamageResults(neutral!);
+    const [explicitSunResult] = calculateDamageResults(explicitSun!);
+    const [megaSolResult] = calculateDamageResults(megaSol!);
+    const megaSolContext = buildCalculationContext(megaSol!);
+
+    expect(megaSolResult.maxPercentage).toBeGreaterThanOrEqual(neutralResult.maxPercentage);
+    expect(megaSolResult.minPercentage).toBe(explicitSunResult.minPercentage);
+    expect(megaSolResult.maxPercentage).toBe(explicitSunResult.maxPercentage);
+    expect(megaSolContext?.field.weather).toBe("Sun");
+    expect(megaSolResult.assumptions.some((assumption) => assumption.includes("Mega Sol"))).toBe(true);
+    expect(megaSolResult.assumptions).toContain(
+      "Mega Sol: attacker move is treated as Sun weather",
+    );
+  });
+
   test("uses referenced defender sets as an explicit custom bulk row", () => {
     const importedSets = {
       incineroar: createImportedSet({

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import {
   MAX_STAT_POINTS,
+  NATURE_MODIFIERS,
   sumStatPoints,
 } from "@/lib/calc/stat-calc";
 import {
@@ -58,6 +59,38 @@ const STAT_FIELDS: Array<[keyof StatSpread, string]> = [
   ["spe", "Spe"],
 ];
 
+const STAT_LABEL_MAP: Record<string, string> = {
+  atk: "Atk",
+  def: "Def",
+  spa: "SpA",
+  spd: "SpD",
+  spe: "Spe",
+};
+
+function getNatureDescription(nature: string): string {
+  const mods = NATURE_MODIFIERS[nature];
+  if (!mods) return "";
+  const entries = Object.entries(mods) as Array<[string, number]>;
+  const boosted = entries.find(([, v]) => v > 1);
+  const lowered = entries.find(([, v]) => v < 1);
+  if (!boosted && !lowered) return "";
+  const parts = [
+    boosted ? `+${STAT_LABEL_MAP[boosted[0]]}` : null,
+    lowered ? `-${STAT_LABEL_MAP[lowered[0]]}` : null,
+  ].filter(Boolean);
+  return `(${parts.join("/")})`;
+}
+
+function renderNatureOption(option: string) {
+  const desc = getNatureDescription(option);
+  return (
+    <span className="flex items-center justify-between gap-3">
+      <span>{option}</span>
+      {desc && <span className="theme-text-faint text-xs">{desc}</span>}
+    </span>
+  );
+}
+
 interface PokemonSetEditorModalProps {
   initialSet: ImportedSet;
   onClose: () => void;
@@ -86,7 +119,8 @@ export function PokemonSetEditorModal({
     () => resolveExactPokemonEntity(speciesName)?.entry ?? null,
     [speciesName],
   );
-  const pokemon = resolvedSpecies ?? pokemonById.get(initialSet.speciesId) ?? null;
+  const pokemon =
+    resolvedSpecies ?? pokemonById.get(initialSet.speciesId) ?? null;
   const profile = pokemon ? vgcMetaByPokemonId.get(pokemon.id) : undefined;
 
   const totalStatPoints = useMemo(
@@ -116,18 +150,16 @@ export function PokemonSetEditorModal({
   const abilityOptions = useMemo(
     () =>
       Array.from(
-        new Set(
-          buildCommonAbilities(profile, pokemon?.abilities ?? []),
-        ),
+        new Set(buildCommonAbilities(profile, pokemon?.abilities ?? [])),
       ),
     [pokemon?.abilities, profile],
   );
   const moveOptions = useMemo(() => {
     const learnset = pokemon
-      ? (learnsetByPokemonId.get(pokemon.id)
-      ?? (pokemon.baseSpeciesId
-        ? learnsetByPokemonId.get(pokemon.baseSpeciesId)
-        : undefined))
+      ? (learnsetByPokemonId.get(pokemon.id) ??
+        (pokemon.baseSpeciesId
+          ? learnsetByPokemonId.get(pokemon.baseSpeciesId)
+          : undefined))
       : undefined;
     const prioritizedMoveIds = [
       profile?.defaultMove,
@@ -210,7 +242,8 @@ export function PokemonSetEditorModal({
           <div>
             <h2 className="text-base font-semibold">Edit Set</h2>
             <p className="theme-text-dim mt-1 text-sm">
-              {(pokemon?.name ?? speciesName).trim() || "Choose a Pokemon"} · Champions SP spread
+              {(pokemon?.name ?? speciesName).trim() || "Choose a Pokemon"} ·
+              Champions SP spread
             </p>
           </div>
           <button
@@ -244,7 +277,7 @@ export function PokemonSetEditorModal({
                 type="text"
                 value={nickname}
                 onChange={(event) => setNickname(event.currentTarget.value)}
-                placeholder="rain-toed"
+                placeholder="poli-rain"
                 className="theme-control theme-input w-full rounded-2xl px-3 py-2.5"
               />
             </label>
@@ -254,25 +287,50 @@ export function PokemonSetEditorModal({
                 label="Item"
                 value={item}
                 options={itemOptions}
-                placeholder="Mystic Water"
+                placeholder="Leftovers"
                 onChange={setItem}
               />
-              <SearchableCombobox
-                label="Ability"
-                value={ability}
-                options={abilityOptions}
-                placeholder="Drizzle"
-                onChange={setAbility}
-              />
+              <label className="block space-y-1 text-sm">
+                <span className="theme-text-dim">Ability</span>
+                <select
+                  value={ability}
+                  onChange={(event) => setAbility(event.currentTarget.value)}
+                  className="theme-input w-full rounded-xl border px-3 py-2"
+                  style={{
+                    background: "var(--surface-3)",
+                    borderColor: "var(--line-strong)",
+                  }}
+                >
+                  {abilityOptions.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+              </label>
             </div>
 
-            <SearchableCombobox
-              label="Nature"
-              value={nature}
-              options={NATURES}
-              placeholder="Modest"
-              onChange={setNature}
-            />
+            <label className="block space-y-1 text-sm">
+              <span className="theme-text-dim">Nature</span>
+              <select
+                value={nature}
+                onChange={(event) => setNature(event.currentTarget.value)}
+                className="theme-input w-full rounded-xl border px-3 py-2"
+                style={{
+                  background: "var(--surface-3)",
+                  borderColor: "var(--line-strong)",
+                }}
+              >
+                {NATURES.map((n) => {
+                  const desc = getNatureDescription(n);
+                  return (
+                    <option key={n} value={n}>
+                      {desc ? `${n} ${desc}` : n}
+                    </option>
+                  );
+                })}
+              </select>
+            </label>
 
             <div className="space-y-2">
               <div className="theme-text-dim text-sm">Moves</div>
@@ -281,6 +339,7 @@ export function PokemonSetEditorModal({
                   <SearchableCombobox
                     key={index}
                     label={`Move ${index + 1}`}
+                    hideLabel
                     value={move}
                     options={moveComboboxOptions}
                     placeholder={`Move ${index + 1}`}
@@ -304,28 +363,52 @@ export function PokemonSetEditorModal({
               </div>
             </div>
             <div className="mt-3 space-y-2.5">
-              {STAT_FIELDS.map(([key, label]) => (
-                <label
-                  key={key}
-                  className="flex items-center justify-between gap-3 text-sm"
-                >
-                  <span className="theme-text-dim w-10 shrink-0">{label}</span>
-                  <input
-                    type="number"
-                    min={0}
-                    max={32}
-                    value={statPoints[key]}
-                    onChange={(event) => updateStatPoint(key, event.currentTarget.value)}
-                    className="theme-control theme-input w-20 rounded-xl px-3 py-1.5 text-right font-mono"
-                  />
-                </label>
-              ))}
+              {STAT_FIELDS.map(([key, label]) => {
+                const value = statPoints[key];
+                const remaining = MAX_STAT_POINTS - totalStatPoints;
+                const maxValue = Math.min(32, value + remaining);
+                return (
+                  <div
+                    key={key}
+                    className="theme-subpanel rounded-lg px-2.5 py-1.5"
+                  >
+                    <div className="mb-1 flex items-center justify-between gap-2">
+                      <span className="theme-text-faint font-mono text-[9px] font-semibold uppercase tracking-[0.12em]">
+                        {label}
+                      </span>
+                      <span className="theme-text-dim font-mono text-[10px]">
+                        {value} SP
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={0}
+                      max={32}
+                      step={1}
+                      value={value}
+                      aria-label={`Set ${label} SP`}
+                      onChange={(event) => {
+                        const requested = Number(event.currentTarget.value);
+                        updateStatPoint(
+                          key,
+                          String(Math.min(requested, maxValue)),
+                        );
+                      }}
+                      className="h-1.5 w-full cursor-pointer appearance-none rounded-full"
+                      style={{
+                        background: "var(--line-strong)",
+                        accentColor: "var(--accent)",
+                      }}
+                    />
+                  </div>
+                );
+              })}
             </div>
-            <p className="theme-text-faint mt-3 text-xs leading-5">
-              1 SP = 8 EVs. The editor stores SPs and derives calc EVs automatically.
-            </p>
             {!resolvedSpecies && (
-              <p className="mt-2 text-xs" style={{ color: "var(--accent-strong)" }}>
+              <p
+                className="mt-2 text-xs"
+                style={{ color: "var(--accent-strong)" }}
+              >
                 Pick a valid Pokemon from the list before saving.
               </p>
             )}

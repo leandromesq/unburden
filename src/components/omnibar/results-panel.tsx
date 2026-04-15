@@ -123,9 +123,8 @@ function fallbackCopyText(text: string) {
 }
 
 export function ResultsPanel() {
-  const { input, results, parsed, strictMode } = useOmniStore(
+  const { results, parsed, strictMode } = useOmniStore(
     useShallow((state) => ({
-      input: state.input,
       results: state.results,
       parsed: state.parsed,
       strictMode: state.strictMode,
@@ -170,6 +169,7 @@ export function ResultsPanel() {
   };
 
   const buildShareUrl = (archetype: string) => {
+    const input = useOmniStore.getState().input;
     if (typeof window === "undefined" || !input.trim()) {
       return null;
     }

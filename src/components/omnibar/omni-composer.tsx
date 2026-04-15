@@ -16,16 +16,14 @@ import { useTeamStore } from "@/store/use-team-store";
 
 export function OmniComposer() {
   const [isClientMounted, setIsClientMounted] = useState(false);
-  const { issues, calculationReady, input, setInput, setStrictMode } =
-    useOmniStore(
-      useShallow((state) => ({
-        issues: state.issues,
-        calculationReady: state.calculationReady,
-        input: state.input,
-        setInput: state.setInput,
-        setStrictMode: state.setStrictMode,
-      })),
-    );
+  const { issues, calculationReady, setInput, setStrictMode } = useOmniStore(
+    useShallow((state) => ({
+      issues: state.issues,
+      calculationReady: state.calculationReady,
+      setInput: state.setInput,
+      setStrictMode: state.setStrictMode,
+    })),
+  );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
   const hasHydratedUrlPromptRef = useRef(false);
@@ -61,10 +59,10 @@ export function OmniComposer() {
       teamStore.clearSharedSets();
     }
 
-    if (prompt && !input.trim()) {
+    if (prompt && !useOmniStore.getState().input.trim()) {
       setInput(prompt);
     }
-  }, [input, setInput, setStrictMode]);
+  }, [setInput, setStrictMode]);
 
   useEffect(() => {
     if (

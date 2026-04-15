@@ -18,6 +18,8 @@ interface SearchableComboboxProps {
   options: string[];
   placeholder?: string;
   onChange: (value: string) => void;
+  renderOption?: (option: string) => React.ReactNode;
+  hideLabel?: boolean;
 }
 
 function rankOptions(options: string[], query: string) {
@@ -57,6 +59,8 @@ export function SearchableCombobox({
   options,
   placeholder,
   onChange,
+  renderOption,
+  hideLabel = false,
 }: SearchableComboboxProps) {
   const listboxId = useId();
   const optionIdBase = useId();
@@ -134,8 +138,8 @@ export function SearchableCombobox({
   };
 
   return (
-    <div ref={rootRef} className="space-y-1 text-sm">
-      <span className="theme-text-dim">{label}</span>
+    <div ref={rootRef} className={hideLabel ? "text-sm" : "space-y-1 text-sm"}>
+      {!hideLabel ? <span className="theme-text-dim">{label}</span> : null}
       <div className="relative">
         <input
           value={query}
@@ -144,7 +148,7 @@ export function SearchableCombobox({
           aria-expanded={open}
           aria-autocomplete="list"
           aria-activedescendant={activeOptionId}
-          aria-label={label}
+          aria-label={label || placeholder || "Select value"}
           onFocus={() => setOpen(true)}
           onChange={(event) => {
             const nextValue = event.currentTarget.value;
@@ -230,7 +234,7 @@ export function SearchableCombobox({
                   index === highlightedIndex ? "theme-menu-item-active" : ""
                 }`}
               >
-                {option}
+                {renderOption ? renderOption(option) : option}
               </button>
             ))}
           </div>

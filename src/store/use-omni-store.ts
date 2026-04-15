@@ -43,6 +43,7 @@ interface OmniStore {
   input: string;
   cursorIndex: number;
   strictMode: boolean;
+  commandStructure: ReturnType<typeof analyzeCommandStructure>;
   parsed: ParsedCommand | null;
   activeSuggestion: SuggestionState | null;
   suggestionOptions: SuggestionOption[];
@@ -75,6 +76,7 @@ const initialState = {
   input: "",
   cursorIndex: 0,
   strictMode: false,
+  commandStructure: analyzeCommandStructure(""),
   parsed: null as ParsedCommand | null,
   activeSuggestion: null as SuggestionState | null,
   suggestionOptions: [] as SuggestionOption[],
@@ -92,6 +94,9 @@ let scheduledComputeFrame: number | null = null;
 let scheduledComputeVersion = 0;
 let scheduledCalculationHandle: number | null = null;
 let scheduledCalculationMode: "idle" | "timeout" | null = null;
+let scheduledPreviewTimeout: number | null = null;
+
+const TYPING_PREVIEW_DEBOUNCE_MS = 72;
 
 function cancelScheduledCompute() {
   if (
@@ -103,6 +108,11 @@ function cancelScheduledCompute() {
   }
 
   scheduledComputeFrame = null;
+
+  if (scheduledPreviewTimeout !== null && typeof window !== "undefined") {
+    window.clearTimeout(scheduledPreviewTimeout);
+    scheduledPreviewTimeout = null;
+  }
 }
 
 function cancelScheduledCalculation() {
@@ -399,9 +409,9 @@ function prioritizeRecommendedGlobals(
   return [...synthesized, ...prioritized, ...remaining];
 }
 
-function buildActiveChipTokens(input: string): ActiveChipTokens {
-  const structure = analyzeCommandStructure(input);
-
+function buildActiveChipTokens(
+  structure: ReturnType<typeof analyzeCommandStructure>,
+): ActiveChipTokens {
   return {
     attacker: [
       ...structure.attacker.modifierTokens.map((token) =>
@@ -412,11 +422,11 @@ function buildActiveChipTokens(input: string): ActiveChipTokens {
         : []),
       ...(structure.attacker.abilityToken
         ? [
-            formatAbilityToken(
-              "attacker",
-              structure.attacker.abilityToken.value,
-            ),
-          ]
+          formatAbilityToken(
+            "attacker",
+            structure.attacker.abilityToken.value,
+          ),
+        ]
         : []),
     ],
     defender: [
@@ -428,11 +438,11 @@ function buildActiveChipTokens(input: string): ActiveChipTokens {
         : []),
       ...(structure.defender.abilityToken
         ? [
-            formatAbilityToken(
-              "defender",
-              structure.defender.abilityToken.value,
-            ),
-          ]
+          formatAbilityToken(
+            "defender",
+            structure.defender.abilityToken.value,
+          ),
+        ]
         : []),
     ],
     global: structure.globalTokens.map((token) =>
@@ -443,7 +453,9 @@ function buildActiveChipTokens(input: string): ActiveChipTokens {
 
 function insertChipToken(input: string, scope: ChipScope, token: string) {
   let normalizedInput = compactWhitespace(input);
-  const activeChips = buildActiveChipTokens(normalizedInput);
+  const activeChips = buildActiveChipTokens(
+    analyzeCommandStructure(normalizedInput),
+  );
 
   if (activeChips[scope].includes(token)) {
     return removeChipToken(normalizedInput, scope, token);
@@ -617,34 +629,34 @@ function setScopedStageToken(
   const attackerTokens = (
     scope === "attacker"
       ? stripModifierTokensByKind(
-          "attacker",
-          structure.attacker.rawTokens,
-          kind,
-        )
+        "attacker",
+        structure.attacker.rawTokens,
+        kind,
+      )
       : structure.attacker.rawTokens
   ).map((entry) => entry.raw);
   const defenderTokens = (
     scope === "defender"
       ? stripModifierTokensByKind(
-          "defender",
-          structure.defender.rawTokens,
-          kind,
-        )
+        "defender",
+        structure.defender.rawTokens,
+        kind,
+      )
       : structure.defender.rawTokens
   ).map((entry) => entry.raw);
   const token =
     value === 0
       ? null
       : formatModifierToken(
-          scope,
-          kind === "speed_mod"
-            ? value > 0
-              ? `spe+${value}`
-              : `spe${value}`
-            : value > 0
-              ? `+${value}`
-              : `${value}`,
-        );
+        scope,
+        kind === "speed_mod"
+          ? value > 0
+            ? `spe+${value}`
+            : `spe${value}`
+          : value > 0
+            ? `+${value}`
+            : `${value}`,
+      );
 
   if (scope === "attacker") {
     const nextAttackerTokens = token
@@ -752,6 +764,7 @@ function computeState(
     previousContextKey,
     previousDismissedContextKey,
   );
+  const commandStructure = analyzeCommandStructure(withAutoTokens.input);
   const parsedResult = parseCommand(withAutoTokens.input, importedSets);
   const calculationIssues = parsedResult.parsed
     ? getCalculationIssues(parsedResult.parsed, importedSets, { strictMode })
@@ -776,6 +789,7 @@ function computeState(
     input: withAutoTokens.input,
     cursorIndex: nextCursorIndex,
     strictMode,
+    commandStructure,
     parsed: parsedCommand,
     activeSuggestion: autocomplete.activeSuggestion,
     suggestionOptions,
@@ -784,14 +798,14 @@ function computeState(
     autoAppliedGlobalTokens: withAutoTokens.autoAppliedGlobalTokens,
     autoGlobalContextKey: withAutoTokens.autoGlobalContextKey,
     dismissedAutoGlobalContextKey: withAutoTokens.dismissedAutoGlobalContextKey,
-    activeChipTokens: buildActiveChipTokens(withAutoTokens.input),
+    activeChipTokens: buildActiveChipTokens(commandStructure),
     issues,
     results: includeResults && canCalculate && parsedCommand
       ? calculateDamageResults(
-          parsedCommand,
-          importedSets,
-          { strictMode },
-        )
+        parsedCommand,
+        importedSets,
+        { strictMode },
+      )
       : [],
   };
 }
@@ -801,7 +815,18 @@ export const useOmniStore = create<OmniStore>((set, get) => {
     nextInput: string,
     nextCursorIndex: number,
     nextStrictMode: boolean,
+    options?: { debounceMs?: number },
   ) => {
+    const currentState = get();
+
+    if (
+      currentState.input === nextInput &&
+      currentState.cursorIndex === nextCursorIndex &&
+      currentState.strictMode === nextStrictMode
+    ) {
+      return;
+    }
+
     if (
       typeof window === "undefined" ||
       process.env.NODE_ENV === "test" ||
@@ -810,9 +835,9 @@ export const useOmniStore = create<OmniStore>((set, get) => {
       set(
         computeState(
           nextInput,
-          get().autoAppliedGlobalTokens,
-          get().autoGlobalContextKey,
-          get().dismissedAutoGlobalContextKey,
+          currentState.autoAppliedGlobalTokens,
+          currentState.autoGlobalContextKey,
+          currentState.dismissedAutoGlobalContextKey,
           nextCursorIndex,
           nextStrictMode,
         ),
@@ -827,79 +852,97 @@ export const useOmniStore = create<OmniStore>((set, get) => {
     });
 
     const version = ++scheduledComputeVersion;
+    const runPreview = () => {
+      scheduledPreviewTimeout = null;
+      scheduledComputeFrame = window.requestAnimationFrame(() => {
+        scheduledComputeFrame = null;
+
+        if (version !== scheduledComputeVersion) {
+          return;
+        }
+
+        const state = get();
+        const previewState = computeState(
+          state.input,
+          state.autoAppliedGlobalTokens,
+          state.autoGlobalContextKey,
+          state.dismissedAutoGlobalContextKey,
+          state.cursorIndex,
+          state.strictMode,
+          false,
+        );
+
+        set(previewState);
+
+        const previewParsed = previewState.parsed;
+
+        if (!previewParsed || previewState.issues.length > 0) {
+          return;
+        }
+
+        const runCalculation = () => {
+          scheduledCalculationHandle = null;
+          scheduledCalculationMode = null;
+
+          if (version !== scheduledComputeVersion) {
+            return;
+          }
+
+          const results = calculateDamageResults(
+            previewParsed,
+            useTeamStore.getState().importedSets,
+            { strictMode: previewState.strictMode },
+          );
+
+          if (version !== scheduledComputeVersion) {
+            return;
+          }
+
+          set({
+            results,
+            calculationReady: true,
+          });
+        };
+
+        if (typeof window.requestIdleCallback === "function") {
+          scheduledCalculationMode = "idle";
+          scheduledCalculationHandle = window.requestIdleCallback(
+            runCalculation,
+            { timeout: 120 },
+          );
+          return;
+        }
+
+        scheduledCalculationMode = "timeout";
+        scheduledCalculationHandle = window.setTimeout(runCalculation, 16);
+      });
+    };
+
     cancelScheduledWork();
-    scheduledComputeFrame = window.requestAnimationFrame(() => {
-      scheduledComputeFrame = null;
 
-      if (version !== scheduledComputeVersion) {
-        return;
-      }
-
-      const state = get();
-      const previewState = computeState(
-        state.input,
-        state.autoAppliedGlobalTokens,
-        state.autoGlobalContextKey,
-        state.dismissedAutoGlobalContextKey,
-        state.cursorIndex,
-        state.strictMode,
-        false,
+    if ((options?.debounceMs ?? 0) > 0) {
+      scheduledPreviewTimeout = window.setTimeout(
+        runPreview,
+        options?.debounceMs,
       );
+      return;
+    }
 
-      set(previewState);
-
-      const previewParsed = previewState.parsed;
-
-      if (!previewParsed || previewState.issues.length > 0) {
-        return;
-      }
-
-      const runCalculation = () => {
-        scheduledCalculationHandle = null;
-        scheduledCalculationMode = null;
-
-        if (version !== scheduledComputeVersion) {
-          return;
-        }
-
-        const results = calculateDamageResults(
-          previewParsed,
-          useTeamStore.getState().importedSets,
-          { strictMode: previewState.strictMode },
-        );
-
-        if (version !== scheduledComputeVersion) {
-          return;
-        }
-
-        set({
-          results,
-          calculationReady: true,
-        });
-      };
-
-      if (typeof window.requestIdleCallback === "function") {
-        scheduledCalculationMode = "idle";
-        scheduledCalculationHandle = window.requestIdleCallback(
-          runCalculation,
-          { timeout: 120 },
-        );
-        return;
-      }
-
-      scheduledCalculationMode = "timeout";
-      scheduledCalculationHandle = window.setTimeout(runCalculation, 16);
-    });
+    runPreview();
   };
 
   return {
     ...initialState,
     setInput: (input, cursorIndex) => {
       const nextCursorIndex = cursorIndex ?? input.length;
-      commitState(input, nextCursorIndex, get().strictMode);
+      commitState(input, nextCursorIndex, get().strictMode, {
+        debounceMs: TYPING_PREVIEW_DEBOUNCE_MS,
+      });
     },
     setCursorIndex: (cursorIndex) => {
-      commitState(get().input, cursorIndex, get().strictMode);
+      commitState(get().input, cursorIndex, get().strictMode, {
+        debounceMs: TYPING_PREVIEW_DEBOUNCE_MS,
+      });
     },
     moveSuggestionSelection: (delta) => {
       const options = get().suggestionOptions;

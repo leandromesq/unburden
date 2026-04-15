@@ -22,27 +22,27 @@ export const MAX_STAT_POINTS = 66;
 const MAX_STAT_POINTS_PER_STAT = 32;
 
 /** Maps nature name → { stat: multiplier } for boosted/lowered stats only */
-const NATURE_MODIFIERS: Record<string, Partial<Record<keyof Omit<StatSpread, "hp">, number>>> = {
+export const NATURE_MODIFIERS: Record<string, Partial<Record<keyof Omit<StatSpread, "hp">, number>>> = {
   Hardy: {}, Docile: {}, Serious: {}, Bashful: {}, Quirky: {},
-  Lonely:  { atk: 1.1, def: 0.9 },
-  Brave:   { atk: 1.1, spe: 0.9 },
+  Lonely: { atk: 1.1, def: 0.9 },
+  Brave: { atk: 1.1, spe: 0.9 },
   Adamant: { atk: 1.1, spa: 0.9 },
   Naughty: { atk: 1.1, spd: 0.9 },
-  Bold:    { def: 1.1, atk: 0.9 },
+  Bold: { def: 1.1, atk: 0.9 },
   Relaxed: { def: 1.1, spe: 0.9 },
-  Impish:  { def: 1.1, spa: 0.9 },
-  Lax:     { def: 1.1, spd: 0.9 },
-  Timid:   { spe: 1.1, atk: 0.9 },
-  Hasty:   { spe: 1.1, def: 0.9 },
-  Jolly:   { spe: 1.1, spa: 0.9 },
-  Naive:   { spe: 1.1, spd: 0.9 },
-  Modest:  { spa: 1.1, atk: 0.9 },
-  Mild:    { spa: 1.1, def: 0.9 },
-  Quiet:   { spa: 1.1, spe: 0.9 },
-  Rash:    { spa: 1.1, spd: 0.9 },
-  Calm:    { spd: 1.1, atk: 0.9 },
-  Gentle:  { spd: 1.1, def: 0.9 },
-  Sassy:   { spd: 1.1, spe: 0.9 },
+  Impish: { def: 1.1, spa: 0.9 },
+  Lax: { def: 1.1, spd: 0.9 },
+  Timid: { spe: 1.1, atk: 0.9 },
+  Hasty: { spe: 1.1, def: 0.9 },
+  Jolly: { spe: 1.1, spa: 0.9 },
+  Naive: { spe: 1.1, spd: 0.9 },
+  Modest: { spa: 1.1, atk: 0.9 },
+  Mild: { spa: 1.1, def: 0.9 },
+  Quiet: { spa: 1.1, spe: 0.9 },
+  Rash: { spa: 1.1, spd: 0.9 },
+  Calm: { spd: 1.1, atk: 0.9 },
+  Gentle: { spd: 1.1, def: 0.9 },
+  Sassy: { spd: 1.1, spe: 0.9 },
   Careful: { spd: 1.1, spa: 0.9 },
 };
 
@@ -86,7 +86,7 @@ export function computeStats(
   level: number,
 ): ComputedStats {
   return {
-    hp:  calcHp(baseStats.hp,  evs.hp,  ivs.hp,  level),
+    hp: calcHp(baseStats.hp, evs.hp, ivs.hp, level),
     atk: calcStat(baseStats.atk, evs.atk, ivs.atk, getNatureMult(nature, "atk"), level),
     def: calcStat(baseStats.def, evs.def, ivs.def, getNatureMult(nature, "def"), level),
     spa: calcStat(baseStats.spa, evs.spa, ivs.spa, getNatureMult(nature, "spa"), level),

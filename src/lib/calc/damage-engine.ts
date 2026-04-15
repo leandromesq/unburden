@@ -56,6 +56,22 @@ function getWeather(parsed: ParsedCommand) {
   return undefined;
 }
 
+function hasMegaSolWeatherOverride(ability: string | undefined) {
+  const normalizedAbility = normalizeId(ability ?? "");
+  return normalizedAbility === "megasol";
+}
+
+function getEffectiveWeather(
+  parsed: ParsedCommand,
+  attackerAbility: string | undefined,
+) {
+  if (hasMegaSolWeatherOverride(attackerAbility)) {
+    return "Sun" as const;
+  }
+
+  return getWeather(parsed);
+}
+
 function getTerrain(parsed: ParsedCommand) {
   if (parsed.globalEffects.includes("electric_terrain")) {
     return "Electric";
@@ -366,12 +382,12 @@ function buildEffectiveSpeed(
 
   effectiveSpeed = Math.floor(
     effectiveSpeed *
-      getSpeedRelevantAbilityMultiplier(
-        options.ability,
-        options.weather,
-        options.terrain,
-        options.status,
-      ),
+    getSpeedRelevantAbilityMultiplier(
+      options.ability,
+      options.weather,
+      options.terrain,
+      options.status,
+    ),
   );
   effectiveSpeed = Math.floor(
     effectiveSpeed * getSpeedRelevantItemMultiplier(options.item),
@@ -688,6 +704,7 @@ function describeAssumptions(
     defenderSpeed: number;
     ratio?: number;
   },
+  hasMegaSolOverride?: boolean,
 ) {
   const assumptions: string[] = [];
   const hasWeatherBoost = parsed.globalEffects.includes("sun");
@@ -819,6 +836,10 @@ function describeAssumptions(
 
   if (parsed.isCriticalHit) {
     assumptions.push("Critical hit");
+  }
+
+  if (hasMegaSolOverride) {
+    assumptions.push("Mega Sol: attacker move is treated as Sun weather");
   }
 
   if (speedContext) {
@@ -978,7 +999,7 @@ export function buildCalculationContext(
       : "default";
   const field = new Field({
     gameType: "Doubles",
-    weather: getWeather(parsed),
+    weather: getEffectiveWeather(parsed, attackerAbility),
     terrain: getTerrain(parsed),
     isGravity: parsed.globalEffects.includes("gravity"),
     attackerSide: {
@@ -1007,13 +1028,13 @@ export function buildCalculationContext(
     evs: parsed.attackerStatPoints
       ? statPointsToCalcEvs(parsed.attackerStatPoints)
       : buildBaseEvs(attackerSet, {
-          hp: 4,
-          atk: attackInvestment === "atk" ? 252 : 0,
-          def: 0,
-          spa: attackInvestment === "spa" ? 252 : 0,
-          spd: 0,
-          spe: 0,
-        }),
+        hp: 4,
+        atk: attackInvestment === "atk" ? 252 : 0,
+        def: 0,
+        spa: attackInvestment === "spa" ? 252 : 0,
+        spd: 0,
+        spe: 0,
+      }),
     boosts: {
       atk: move.category === "Physical" ? parsed.attackerStatMod : 0,
       spa: move.category === "Special" ? parsed.attackerStatMod : 0,
@@ -1062,7 +1083,7 @@ export function buildCalculationContext(
     hasTailwind: parsed.attackerSideEffects.includes("tailwind"),
     ability: attackerAbility,
     item: attackerItem,
-    weather: getWeather(parsed),
+    weather: getEffectiveWeather(parsed, attackerAbility),
     terrain: getTerrain(parsed),
   });
   const defenderSpeedContext = buildEffectiveSpeed(defender, {
@@ -1075,7 +1096,7 @@ export function buildCalculationContext(
     hasTailwind: parsed.defenderSideEffects.includes("tailwind"),
     ability: defenderAbility,
     item: defenderItem,
-    weather: getWeather(parsed),
+    weather: getEffectiveWeather(parsed, attackerAbility),
     terrain: getTerrain(parsed),
   });
   const shouldIncludeSpeedContext = shouldDescribeSpeedContext(
@@ -1117,19 +1138,19 @@ export function buildCalculationContext(
     defenderAbility,
     archetypes: defenderSet
       ? [
-          buildCustomSetArchetypeConfig({
-            ...defenderSet,
-            nature: parsed.defenderNature ?? defenderSet.nature,
-            item: defenderItem,
-            ability: defenderAbility,
-          }),
-        ]
+        buildCustomSetArchetypeConfig({
+          ...defenderSet,
+          nature: parsed.defenderNature ?? defenderSet.nature,
+          item: defenderItem,
+          ability: defenderAbility,
+        }),
+      ]
       : getArchetypeConfigs(
-          defender,
-          move.category as "Physical" | "Special",
-          parsed.defenderNature,
-          parsed.defenderInvestment ?? "auto",
-        ),
+        defender,
+        move.category as "Physical" | "Special",
+        parsed.defenderNature,
+        parsed.defenderInvestment ?? "auto",
+      ),
     assumptions: describeAssumptions(
       parsed,
       attacker.name,
@@ -1150,11 +1171,12 @@ export function buildCalculationContext(
       moveHitMetadata.isVariable,
       shouldIncludeSpeedContext
         ? {
-            attackerSpeed: attackerSpeedContext.effectiveSpeed,
-            defenderSpeed: defenderSpeedContext.effectiveSpeed,
-            ratio: speedRatio,
-          }
+          attackerSpeed: attackerSpeedContext.effectiveSpeed,
+          defenderSpeed: defenderSpeedContext.effectiveSpeed,
+          ratio: speedRatio,
+        }
         : undefined,
+      hasMegaSolWeatherOverride(attackerAbility),
     ),
     moveHitCount,
   };

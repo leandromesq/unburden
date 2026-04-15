@@ -16,6 +16,7 @@ import {
 import {
   DEFAULT_IV_SPREAD,
   EMPTY_STAT_SPREAD,
+  NATURE_MODIFIERS,
   applyStage,
   computeStats,
   statPointsToCalcEvs,
@@ -52,6 +53,31 @@ const STAT_LABELS: Array<[StatKey, string]> = [
   ["spe", "Spe"],
 ];
 
+const NATURE_STAT_LABELS: Record<string, string> = {
+  atk: "Atk",
+  def: "Def",
+  spa: "SpA",
+  spd: "SpD",
+  spe: "Spe",
+};
+
+function formatNatureWithDescription(nature: string) {
+  const mods = NATURE_MODIFIERS[nature] ?? {};
+  const entries = Object.entries(mods) as Array<[string, number]>;
+  const boosted = entries.find(([, value]) => value > 1);
+  const lowered = entries.find(([, value]) => value < 1);
+
+  if (!boosted && !lowered) {
+    return nature;
+  }
+
+  const boostedLabel = boosted ? `+${NATURE_STAT_LABELS[boosted[0]]}` : null;
+  const loweredLabel = lowered ? `-${NATURE_STAT_LABELS[lowered[0]]}` : null;
+  const detail = [boostedLabel, loweredLabel].filter(Boolean).join("/");
+
+  return `${nature} (${detail})`;
+}
+
 function resolveParsedSpecies(
   segment: ReturnType<typeof analyzeCommandStructure>["attacker"],
   importedSets: Record<string, ImportedSet>,
@@ -71,6 +97,41 @@ function resolveParsedSpecies(
   if (segment.leadingRemainderTokens.length === 0) {
     return segment.speciesMatch?.entry ?? null;
   }
+  return null;
+}
+
+function resolveImportedSetByRelatedForm(
+  pokemon: PokemonEntry | null,
+  importedSets: Record<string, ImportedSet>,
+): ImportedSet | null {
+  if (!pokemon) {
+    return null;
+  }
+
+  const direct = importedSets[normalizeId(pokemon.id)];
+  if (direct) {
+    return direct;
+  }
+
+  if (pokemon.baseSpeciesId) {
+    const baseSet = importedSets[normalizeId(pokemon.baseSpeciesId)];
+    if (baseSet) {
+      return baseSet;
+    }
+  }
+
+  for (const set of Object.values(importedSets)) {
+    const setSpecies = pokemonById.get(normalizeId(set.speciesId));
+    if (!setSpecies) {
+      continue;
+    }
+
+    const setMega = resolveMegaEvolution(setSpecies.id, set.item);
+    if (setMega?.id === pokemon.id) {
+      return set;
+    }
+  }
+
   return null;
 }
 
@@ -196,6 +257,7 @@ interface StatItemProps {
   value: number;
   stage?: number;
   itemMultiplier?: number;
+  natureEffect?: "boost" | "nerf" | "neutral";
 }
 
 function StatItem({
@@ -203,6 +265,7 @@ function StatItem({
   value,
   stage = 0,
   itemMultiplier = 1,
+  natureEffect,
 }: StatItemProps) {
   const stageEffective = applyStage(value, stage);
   const effective =
@@ -229,6 +292,22 @@ function StatItem({
       >
         {effective}
       </span>
+      {natureEffect === "boost" && (
+        <span
+          className="text-[9px] leading-none"
+          style={{ color: "var(--accent-strong)" }}
+        >
+          ▲
+        </span>
+      )}
+      {natureEffect === "nerf" && (
+        <span
+          className="text-[9px] leading-none"
+          style={{ color: "var(--text-dim)" }}
+        >
+          ▼
+        </span>
+      )}
       {stage !== 0 && (
         <span
           className="font-mono text-[9px]"
@@ -387,16 +466,21 @@ function rebuildInputWithStatPoints(
 }
 
 export function PokemonSideSummary({ side }: { side: SummarySide }) {
-  const { input, parsedCommand, setAttackerMove, setInput, recompute } =
-    useOmniStore(
-      useShallow((state) => ({
-        input: state.input,
-        parsedCommand: state.parsed,
-        setAttackerMove: state.setAttackerMove,
-        setInput: state.setInput,
-        recompute: state.recompute,
-      })),
-    );
+  const {
+    commandStructure,
+    parsedCommand,
+    setAttackerMove,
+    setInput,
+    recompute,
+  } = useOmniStore(
+    useShallow((state) => ({
+      commandStructure: state.commandStructure,
+      parsedCommand: state.parsed,
+      setAttackerMove: state.setAttackerMove,
+      setInput: state.setInput,
+      recompute: state.recompute,
+    })),
+  );
   const { importedSets, removeSet, saveSet } = useTeamStore(
     useShallow((state) => ({
       importedSets: state.importedSets,
@@ -427,6 +511,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
   }, [switchOpen]);
 
   const handleSelectSet = (nextSet: ImportedSet) => {
+    const input = useOmniStore.getState().input;
     const structure = analyzeCommandStructure(input);
     const globalTokens = structure.globalTokens.map((token) => token.raw);
     const referenceToken = getCanonicalSetReferenceToken(nextSet);
@@ -463,11 +548,12 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
   };
 
   const handleSwitchToMegaForm = (targetPokemon: PokemonEntry) => {
+    const input = useOmniStore.getState().input;
     setInput(rebuildInputWithSpecies(input, side, targetPokemon));
   };
 
   const summary = useMemo(() => {
-    const structure = analyzeCommandStructure(input);
+    const structure = commandStructure;
 
     const attackerPromptSpecies = resolveParsedSpecies(
       structure.attacker,
@@ -489,12 +575,16 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
       resolveReferencedImportedSet(
         parsedCommand?.attackerSetReferenceId,
         importedSets,
-      ) ?? attackerReferenceSet;
+      ) ??
+      attackerReferenceSet ??
+      resolveImportedSetByRelatedForm(attackerPromptSpecies, importedSets);
     const defenderImportedSet =
       resolveReferencedImportedSet(
         parsedCommand?.defenderSetReferenceId,
         importedSets,
-      ) ?? defenderReferenceSet;
+      ) ??
+      defenderReferenceSet ??
+      resolveImportedSetByRelatedForm(defenderPromptSpecies, importedSets);
     const promptStatPoints =
       side === "attacker"
         ? parsedCommand?.attackerStatPoints
@@ -696,7 +786,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
       },
       itemBoosts: defenderChoiceBoosts,
     };
-  }, [input, side, importedSets, parsedCommand, pendingStatPoints]);
+  }, [commandStructure, side, importedSets, parsedCommand, pendingStatPoints]);
 
   const updateInlineStatPoint = (stat: StatKey, nextValue: number) => {
     if (!summary) {
@@ -720,6 +810,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
       ...currentStatPoints,
       [stat]: cappedValue,
     };
+    const input = useOmniStore.getState().input;
     const nextInput = rebuildInputWithStatPoints(
       input,
       side,
@@ -879,29 +970,43 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
         <div className="theme-text-faint text-xs font-semibold uppercase tracking-[0.24em]">
           {summary.title}
         </div>
-        {summary.megaTarget && (
-          <button
-            type="button"
-            onClick={() => handleSwitchToMegaForm(summary.megaTarget!)}
-            aria-label={
-              summary.pokemonId === summary.megaTarget.id
-                ? "Switch to base form"
-                : "Switch to mega form"
-            }
-            title={
-              summary.pokemonId === summary.megaTarget.id
-                ? "Base form"
-                : "Mega form"
-            }
-            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full p-0 text-[11px] font-bold uppercase tracking-[0.08em] ${
-              summary.pokemonId === summary.megaTarget.id
-                ? "theme-icon-button-active"
-                : "theme-icon-button"
-            }`}
-          >
-            M
-          </button>
-        )}
+        <div className="flex items-center gap-1">
+          {summary.megaTarget && (
+            <button
+              type="button"
+              onClick={() => handleSwitchToMegaForm(summary.megaTarget!)}
+              aria-label={
+                summary.pokemonId === summary.megaTarget.id
+                  ? "Switch to base form"
+                  : "Switch to mega form"
+              }
+              title={
+                summary.pokemonId === summary.megaTarget.id
+                  ? "Base form"
+                  : "Mega form"
+              }
+              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full p-0 text-[11px] font-bold uppercase tracking-[0.08em] ${
+                summary.pokemonId === summary.megaTarget.id
+                  ? "theme-icon-button-active"
+                  : "theme-icon-button"
+              }`}
+            >
+              M
+            </button>
+          )}
+          {importedSet && resolvedSetId && (
+            <button
+              type="button"
+              aria-label={`Remove ${summary.name} set`}
+              title="Remove set"
+              onClick={() => handleRemoveSet(resolvedSetId)}
+              className="theme-icon-button flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm"
+              style={{ color: "var(--accent-text-mid)" }}
+            >
+              ×
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Sprite + info row */}
@@ -931,7 +1036,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
           )}
           {importedSet && (
             <div className="theme-text-dim mt-0.5 text-xs">
-              {importedSet.nature}
+              {formatNatureWithDescription(importedSet.nature)}
             </div>
           )}
         </div>
@@ -982,41 +1087,60 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
           </span>
         </div>
         <div className="grid grid-cols-3 gap-x-2 gap-y-2.5">
-          <StatItem
-            label="HP"
-            value={summary.stats.hp}
-            stage={stageBoosts.hp}
-          />
-          <StatItem
-            label="Atk"
-            value={summary.stats.atk}
-            stage={stageBoosts.atk}
-            itemMultiplier={itemBoosts.atk}
-          />
-          <StatItem
-            label="Def"
-            value={summary.stats.def}
-            stage={stageBoosts.def}
-            itemMultiplier={itemBoosts.def}
-          />
-          <StatItem
-            label="SpA"
-            value={summary.stats.spa}
-            stage={stageBoosts.spa}
-            itemMultiplier={itemBoosts.spa}
-          />
-          <StatItem
-            label="SpD"
-            value={summary.stats.spd}
-            stage={stageBoosts.spd}
-            itemMultiplier={itemBoosts.spd}
-          />
-          <StatItem
-            label="Spe"
-            value={summary.stats.spe}
-            stage={stageBoosts.spe}
-            itemMultiplier={itemBoosts.spe}
-          />
+          {(() => {
+            const natureMods = NATURE_MODIFIERS[summary.nature] ?? {};
+            const getNatureEffect = (
+              stat: keyof Omit<typeof natureMods, never>,
+            ) => {
+              const v = (natureMods as Record<string, number>)[stat as string];
+              if (v === undefined) return undefined;
+              return v > 1 ? ("boost" as const) : ("nerf" as const);
+            };
+            return (
+              <>
+                <StatItem
+                  label="HP"
+                  value={summary.stats.hp}
+                  stage={stageBoosts.hp}
+                />
+                <StatItem
+                  label="Atk"
+                  value={summary.stats.atk}
+                  stage={stageBoosts.atk}
+                  itemMultiplier={itemBoosts.atk}
+                  natureEffect={getNatureEffect("atk")}
+                />
+                <StatItem
+                  label="Def"
+                  value={summary.stats.def}
+                  stage={stageBoosts.def}
+                  itemMultiplier={itemBoosts.def}
+                  natureEffect={getNatureEffect("def")}
+                />
+                <StatItem
+                  label="SpA"
+                  value={summary.stats.spa}
+                  stage={stageBoosts.spa}
+                  itemMultiplier={itemBoosts.spa}
+                  natureEffect={getNatureEffect("spa")}
+                />
+                <StatItem
+                  label="SpD"
+                  value={summary.stats.spd}
+                  stage={stageBoosts.spd}
+                  itemMultiplier={itemBoosts.spd}
+                  natureEffect={getNatureEffect("spd")}
+                />
+                <StatItem
+                  label="Spe"
+                  value={summary.stats.spe}
+                  stage={stageBoosts.spe}
+                  itemMultiplier={itemBoosts.spe}
+                  natureEffect={getNatureEffect("spe")}
+                />
+              </>
+            );
+          })()}
         </div>
       </div>
 
@@ -1161,16 +1285,6 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
               >
                 Edit
               </button>
-              {resolvedSetId && (
-                <button
-                  type="button"
-                  onClick={() => handleRemoveSet(resolvedSetId)}
-                  className="theme-chip rounded-full px-3 py-1 text-xs"
-                  style={{ color: "var(--accent-text-mid)" }}
-                >
-                  Remove
-                </button>
-              )}
             </div>
           </div>
         ) : (
@@ -1222,6 +1336,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
             if (speciesChanged) {
               const targetPokemon = pokemonById.get(nextSet.speciesId);
               if (targetPokemon) {
+                const input = useOmniStore.getState().input;
                 setInput(rebuildInputWithSpecies(input, side, targetPokemon));
               }
             }
