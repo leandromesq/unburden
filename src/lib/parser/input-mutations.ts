@@ -9,9 +9,11 @@ import {
   parseAbilitySymbol,
 } from "@/lib/parser/grammar";
 import { compactWhitespace, joinTokenValues } from "@/lib/parser/tokenize";
-import type { ActiveChipTokens } from "@/lib/types";
+import { getCanonicalPromptPokemonName } from "@/lib/data/loaders";
+import type { ActiveChipTokens, PokemonEntry, StatSpread } from "@/lib/types";
 
 export type ChipScope = keyof ActiveChipTokens;
+export type SummarySide = "attacker" | "defender";
 type AutoFieldCategory = "weather" | "terrain";
 
 function isLegacyScopedToken(raw: string) {
@@ -149,7 +151,11 @@ export function removeChipToken(
   return baseTokens.join(" ").trim();
 }
 
-export function insertChipToken(input: string, scope: ChipScope, token: string) {
+export function insertChipToken(
+  input: string,
+  scope: ChipScope,
+  token: string,
+) {
   let normalizedInput = compactWhitespace(input);
   const activeChips = buildActiveChipTokens(
     analyzeCommandStructure(normalizedInput),
@@ -364,4 +370,113 @@ export function setHpPercentageToken(
     ? [...defenderTokens, token]
     : defenderTokens;
   return [...attackerTokens, "x", ...nextDefenderTokens].join(" ").trim();
+}
+
+function buildStatPointsToken(statPoints: StatSpread) {
+  return `sp:${statPoints.hp}/${statPoints.atk}/${statPoints.def}/${statPoints.spa}/${statPoints.spd}/${statPoints.spe}`;
+}
+
+export function rebuildInputWithSpecies(
+  input: string,
+  side: SummarySide,
+  targetPokemon: PokemonEntry,
+) {
+  const structure = analyzeCommandStructure(input);
+  const globalTokens = structure.globalTokens.map((token) => token.raw);
+  const attackerTail = structure.attacker.rawTokens
+    .slice(structure.attacker.speciesTokens.length)
+    .map((token) => token.raw)
+    .join(" ")
+    .trim();
+  const defenderTail = structure.defender.rawTokens
+    .slice(structure.defender.speciesTokens.length)
+    .map((token) => token.raw)
+    .join(" ")
+    .trim();
+  const attackerSpecies =
+    side === "attacker"
+      ? getCanonicalPromptPokemonName(targetPokemon)
+      : (
+          structure.attacker.speciesText ||
+          joinTokenValues(structure.attacker.rawTokens)
+        ).trim();
+  const defenderSpecies =
+    side === "defender"
+      ? getCanonicalPromptPokemonName(targetPokemon)
+      : (
+          structure.defender.speciesText ||
+          joinTokenValues(structure.defender.rawTokens)
+        ).trim();
+  const attackerText = [attackerSpecies, attackerTail]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+  const defenderText = [defenderSpecies, defenderTail]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+
+  if (!structure.lexed.hasDelimiter) {
+    return attackerText;
+  }
+
+  return [attackerText, "x", defenderText, ...globalTokens]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+}
+
+export function rebuildInputWithStatPoints(
+  input: string,
+  side: SummarySide,
+  nextStatPoints: StatSpread,
+  persistExplicitToken: boolean,
+) {
+  const structure = analyzeCommandStructure(input);
+  const nextToken = buildStatPointsToken(nextStatPoints);
+  const shouldIncludeToken =
+    persistExplicitToken ||
+    Object.values(nextStatPoints).some((value) => value > 0);
+
+  const rewriteSegmentTokens = (
+    tokens: ReturnType<typeof analyzeCommandStructure>["attacker"]["rawTokens"],
+  ) => {
+    const nextTokens = tokens
+      .filter((token) => !token.normalized.startsWith("sp:"))
+      .map((token) => token.raw);
+
+    if (!shouldIncludeToken) {
+      return nextTokens;
+    }
+
+    const firstGlobalTokenIndex = nextTokens.findIndex((token) =>
+      token.toLowerCase().startsWith("~"),
+    );
+
+    if (firstGlobalTokenIndex === -1) {
+      nextTokens.push(nextToken);
+    } else {
+      nextTokens.splice(firstGlobalTokenIndex, 0, nextToken);
+    }
+
+    return nextTokens;
+  };
+
+  const attackerTokens =
+    side === "attacker"
+      ? rewriteSegmentTokens(structure.attacker.rawTokens)
+      : structure.attacker.rawTokens.map((token) => token.raw);
+  const defenderTokens =
+    side === "defender"
+      ? rewriteSegmentTokens(structure.defender.rawTokens)
+      : structure.defender.rawTokens.map((token) => token.raw);
+
+  if (!structure.lexed.hasDelimiter) {
+    return attackerTokens.join(" ").trim();
+  }
+
+  return [attackerTokens.join(" ").trim(), "x", defenderTokens.join(" ").trim()]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
 }
