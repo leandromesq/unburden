@@ -1,4 +1,11 @@
-import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { createRef } from "react";
 
 import { ModifierSwitches } from "@/components/omnibar/modifier-switches";
@@ -93,9 +100,7 @@ describe("omnibar components", () => {
     render(<ModifierSwitches textareaRef={textareaRef} />);
 
     act(() => {
-      useOmniStore
-        .getState()
-        .setInput("incineroar !flare-blitz x tinkaton");
+      useOmniStore.getState().setInput("incineroar !flare-blitz x tinkaton");
     });
 
     fireEvent.click(screen.getByRole("button", { name: /^Rain$/i }));
@@ -105,7 +110,9 @@ describe("omnibar components", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /^Rain$/i }));
 
-    expect(useOmniStore.getState().input).toBe("incineroar !flare-blitz x tinkaton");
+    expect(useOmniStore.getState().input).toBe(
+      "incineroar !flare-blitz x tinkaton",
+    );
   });
 
   test("stage slider rewrites attacker and defender stages intuitively", () => {
@@ -166,9 +173,7 @@ describe("omnibar components", () => {
     render(<ModifierSwitches textareaRef={textareaRef} />);
 
     act(() => {
-      useOmniStore
-        .getState()
-        .setInput("incineroar !flare-blitz x tinkaton");
+      useOmniStore.getState().setInput("incineroar !flare-blitz x tinkaton");
     });
 
     const hp25Buttons = screen.getAllByRole("button", { name: "25%" });
@@ -249,15 +254,17 @@ describe("omnibar components", () => {
     });
 
     await act(async () => {
-      fireEvent.click(screen.getAllByRole("button", { name: /copy share url/i })[0]);
+      fireEvent.click(
+        screen.getAllByRole("button", { name: /copy share url/i })[0],
+      );
     });
 
     expect(writeText).toHaveBeenCalledWith(
-      expect.stringContaining(
-        "prompt=politoed+%21muddy-water+x+incineroar",
-      ),
+      expect.stringContaining("prompt=politoed+%21muddy-water+x+incineroar"),
     );
-    expect(writeText).toHaveBeenCalledWith(expect.stringContaining("#result-glass"));
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringContaining("#result-glass"),
+    );
   });
 
   test("copy button includes relevant custom set state in the share URL", async () => {
@@ -290,7 +297,9 @@ describe("omnibar components", () => {
     });
 
     await act(async () => {
-      fireEvent.click(screen.getAllByRole("button", { name: /copy share url/i })[0]);
+      fireEvent.click(
+        screen.getAllByRole("button", { name: /copy share url/i })[0],
+      );
     });
 
     const sharedUrl = writeText.mock.calls[0][0] as string;
@@ -324,7 +333,9 @@ describe("omnibar components", () => {
     });
 
     await act(async () => {
-      fireEvent.click(screen.getAllByRole("button", { name: /copy share url/i })[0]);
+      fireEvent.click(
+        screen.getAllByRole("button", { name: /copy share url/i })[0],
+      );
     });
 
     expect(writeText).toHaveBeenCalledWith(expect.stringContaining("strict=1"));
@@ -345,15 +356,13 @@ describe("omnibar components", () => {
     });
 
     await act(async () => {
-      fireEvent.click(screen.getAllByRole("button", { name: /copy result text/i })[0]);
+      fireEvent.click(
+        screen.getAllByRole("button", { name: /copy result text/i })[0],
+      );
     });
 
-    expect(writeText).toHaveBeenCalledWith(
-      expect.stringContaining("Politoed"),
-    );
-    expect(writeText).toHaveBeenCalledWith(
-      expect.stringContaining("--"),
-    );
+    expect(writeText).toHaveBeenCalledWith(expect.stringContaining("Politoed"));
+    expect(writeText).toHaveBeenCalledWith(expect.stringContaining("--"));
   });
 
   test("Tab applies the highlighted suggestion even without inline ghost text", () => {
@@ -370,7 +379,9 @@ describe("omnibar components", () => {
     fireEvent.keyDown(textarea, { key: "Tab" });
 
     expect(document.activeElement).toBe(textareaRef.current);
-    expect(useOmniStore.getState().input).toBe("politoed !muddy-water x incineroar ~rain");
+    expect(useOmniStore.getState().input).toBe(
+      "politoed !muddy-water x incineroar ~rain",
+    );
   });
 
   test("Enter scrolls to the results when a calculation is ready", () => {
@@ -469,9 +480,15 @@ describe("omnibar components", () => {
       useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
     });
 
-    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("Politoed");
-    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("Muddy Water");
-    expect(screen.getByTestId("defender-summary")).toHaveTextContent("Incineroar");
+    expect(screen.getByTestId("attacker-summary")).toHaveTextContent(
+      "Politoed",
+    );
+    expect(screen.getByTestId("attacker-summary")).toHaveTextContent(
+      "Muddy Water",
+    );
+    expect(screen.getByTestId("defender-summary")).toHaveTextContent(
+      "Incineroar",
+    );
   });
 
   test("saved set cards insert canonical #set references into the prompt", () => {
@@ -511,7 +528,9 @@ describe("omnibar components", () => {
         .setInput("charizard !heat-wave x tinkaton @occa-berry");
     });
 
-    expect(screen.getByTestId("defender-summary")).toHaveTextContent("Occa Berry");
+    expect(screen.getByTestId("defender-summary")).toHaveTextContent(
+      "Occa Berry",
+    );
   });
 
   test("editing a summary set stores SPs and updates the summary card", () => {
@@ -544,20 +563,32 @@ describe("omnibar components", () => {
     });
     fireEvent.click(within(dialog).getByRole("button", { name: "Save" }));
 
-    expect(useTeamStore.getState().importedSets.politoed.statPoints).toMatchObject({
+    expect(
+      useTeamStore.getState().importedSets.politoed.statPoints,
+    ).toMatchObject({
       hp: 32,
       spa: 13,
       spe: 19,
     });
-    expect(useTeamStore.getState().importedSets.politoed.item).toBe("Mystic Water");
+    expect(useTeamStore.getState().importedSets.politoed.item).toBe(
+      "Mystic Water",
+    );
 
     act(() => {
       useOmniStore.getState().setInput("#politoed !muddy-water x incineroar");
     });
 
-    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("32");
+    expect(
+      within(screen.getByTestId("attacker-summary")).getByRole("textbox", {
+        name: "HP SP",
+      }),
+    ).toHaveValue("32");
     expect(screen.getByTestId("attacker-summary")).toHaveTextContent("HP");
-    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("13");
+    expect(
+      within(screen.getByTestId("attacker-summary")).getByRole("textbox", {
+        name: "SpA SP",
+      }),
+    ).toHaveValue("13");
     expect(screen.getByTestId("attacker-summary")).toHaveTextContent("SpA");
   });
 
@@ -568,22 +599,23 @@ describe("omnibar components", () => {
       useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
     });
 
-    fireEvent.click(
-      within(screen.getByTestId("attacker-summary")).getByRole("button", {
-        name: "Edit HP SP",
-      }),
+    const hpInput = within(screen.getByTestId("attacker-summary")).getByRole(
+      "textbox",
+      {
+        name: "HP SP",
+      },
     );
-
-    const hpInput = within(screen.getByTestId("attacker-summary")).getByRole("textbox", {
-      name: "HP SP",
-    });
     fireEvent.change(hpInput, { target: { value: "32" } });
     fireEvent.keyDown(hpInput, { key: "Enter" });
 
     expect(useOmniStore.getState().input).toBe(
       "politoed !muddy-water sp:32/0/0/0/0/0 x incineroar",
     );
-    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("32");
+    expect(
+      within(screen.getByTestId("attacker-summary")).getByRole("textbox", {
+        name: "HP SP",
+      }),
+    ).toHaveValue("32");
     expect(screen.getByTestId("attacker-summary")).toHaveTextContent("HP");
   });
 
@@ -601,7 +633,9 @@ describe("omnibar components", () => {
     );
 
     const dialog = screen.getByRole("dialog", { name: /edit politoed set/i });
-    const speciesCombobox = within(dialog).getByRole("combobox", { name: "Pokemon" });
+    const speciesCombobox = within(dialog).getByRole("combobox", {
+      name: "Pokemon",
+    });
     fireEvent.focus(speciesCombobox);
     fireEvent.change(speciesCombobox, { target: { value: "incin" } });
     fireEvent.keyDown(speciesCombobox, { key: "ArrowDown" });
@@ -610,7 +644,9 @@ describe("omnibar components", () => {
 
     expect(useTeamStore.getState().importedSets.incineroar).toBeDefined();
     expect(useTeamStore.getState().importedSets.politoed).toBeUndefined();
-    expect(useOmniStore.getState().input).toBe("incineroar !muddy-water x incineroar");
+    expect(useOmniStore.getState().input).toBe(
+      "incineroar !muddy-water x incineroar",
+    );
   });
 
   test("summary exposes a mega switch when the held item is a mega stone", () => {
@@ -641,7 +677,9 @@ describe("omnibar components", () => {
       }),
     );
 
-    expect(useOmniStore.getState().input).toBe("charizard-mega-y !heat-wave x tinkaton");
+    expect(useOmniStore.getState().input).toBe(
+      "charizard-mega-y !heat-wave x tinkaton",
+    );
   });
 
   test("does not auto-add weather before the defender side is resolved", () => {
@@ -683,18 +721,24 @@ describe("omnibar components", () => {
     render(<OmniTextarea textareaRef={textareaRef} />);
 
     act(() => {
-      useOmniStore
-        .getState()
-        .setInput("politoed !muddy-water x incineroar");
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
     });
 
     const textarea = screen.getByTestId("omni-textarea");
     fireEvent.change(textarea, {
-      target: { value: "politoed !muddy-water x incineroar ", selectionStart: 35 },
-      currentTarget: { value: "politoed !muddy-water x incineroar ", selectionStart: 35 },
+      target: {
+        value: "politoed !muddy-water x incineroar ",
+        selectionStart: 35,
+      },
+      currentTarget: {
+        value: "politoed !muddy-water x incineroar ",
+        selectionStart: 35,
+      },
     });
 
-    expect(useOmniStore.getState().input).toBe("politoed !muddy-water x incineroar ");
+    expect(useOmniStore.getState().input).toBe(
+      "politoed !muddy-water x incineroar ",
+    );
   });
 
   test("surfaces rain from another resolved weather-setting ability as an opt-in suggestion", () => {
@@ -702,24 +746,32 @@ describe("omnibar components", () => {
       useOmniStore.getState().setInput("pelipper !hurricane x tinkaton");
     });
 
-    expect(useOmniStore.getState().input).toBe("pelipper !hurricane x tinkaton");
+    expect(useOmniStore.getState().input).toBe(
+      "pelipper !hurricane x tinkaton",
+    );
     expect(useOmniStore.getState().suggestionOptions[0]?.value).toBe("~rain");
   });
 
   test("does not treat a mega stone alone as a mega weather setter", () => {
     act(() => {
-      useOmniStore.getState().setInput("charizard !heat-wave @charizardite-y x tinkaton");
+      useOmniStore
+        .getState()
+        .setInput("charizard !heat-wave @charizardite-y x tinkaton");
     });
 
     expect(useOmniStore.getState().input).toBe(
       "charizard !heat-wave @charizardite-y x tinkaton",
     );
-    expect(useOmniStore.getState().suggestionOptions[0]?.value).not.toBe("~sun");
+    expect(useOmniStore.getState().suggestionOptions[0]?.value).not.toBe(
+      "~sun",
+    );
   });
 
   test("surfaces weather for an explicit mega form as an opt-in suggestion", () => {
     act(() => {
-      useOmniStore.getState().setInput("charizard-mega-y !heat-wave @charizardite-y x tinkaton");
+      useOmniStore
+        .getState()
+        .setInput("charizard-mega-y !heat-wave @charizardite-y x tinkaton");
     });
 
     expect(useOmniStore.getState().suggestionOptions[0]?.value).toBe("~sun");
@@ -734,15 +786,21 @@ describe("omnibar components", () => {
     act(() => {
       useOmniStore.getState().setInput("incineroar !flare-blitz x tinkaton");
     });
-    expect(useOmniStore.getState().input).toBe("incineroar !flare-blitz x tinkaton");
-    expect(useOmniStore.getState().suggestionOptions[0]?.value).not.toBe("~sun");
+    expect(useOmniStore.getState().input).toBe(
+      "incineroar !flare-blitz x tinkaton",
+    );
+    expect(useOmniStore.getState().suggestionOptions[0]?.value).not.toBe(
+      "~sun",
+    );
   });
 
   test("lets the user opt in to the suggested global token with Tab", () => {
     act(() => {
       useOmniStore.getState().setInput("politoed !muddy-water x tinkaton");
     });
-    expect(useOmniStore.getState().input).toBe("politoed !muddy-water x tinkaton");
+    expect(useOmniStore.getState().input).toBe(
+      "politoed !muddy-water x tinkaton",
+    );
     expect(useOmniStore.getState().suggestionOptions[0]?.value).toBe("~rain");
 
     act(() => {
@@ -784,10 +842,10 @@ describe("omnibar components", () => {
       "incineroar !flare-blitz x tinkaton []",
     );
     expect(textareaRef.current?.selectionStart).toBe(
-      "incineroar !flare-blitz x tinkaton [".length,
+      "incineroar !flare-blitz x tinkaton []".length,
     );
     expect(textareaRef.current?.selectionEnd).toBe(
-      "incineroar !flare-blitz x tinkaton [".length,
+      "incineroar !flare-blitz x tinkaton []".length,
     );
   });
 });

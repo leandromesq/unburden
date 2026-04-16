@@ -1,43 +1,30 @@
 import { create } from "zustand";
 
-import { calculateDamageResults, getCalculationIssues } from "@/lib/calc/damage-engine";
-import {
-  normalizeAlias,
-  pokemonById,
-  vgcMetaByPokemonId,
-} from "@/lib/data/loaders";
+import { calculateDamageResults } from "@/lib/calc/damage-engine";
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
-import { parseCommand } from "@/lib/parser/command-parser";
 import {
-  ATTACKER_MODIFIER_MAP,
-  DEFENDER_MODIFIER_MAP,
-  GLOBAL_MODIFIER_MAP,
   buildInitialChipState,
-  buildCommonAbilities,
-  formatAbilityToken,
-  formatModifierToken,
-  normalizeModifierValue,
-  parseAbilitySymbol,
   slugifySymbolValue,
 } from "@/lib/parser/grammar";
 import {
-  getAutoGlobalTokenForAbilityName,
-  inferDefaultAbility,
-} from "@/lib/parser/inference";
-import { getAutocompleteState } from "@/lib/parser/inline-suggestions";
-import { compactWhitespace, joinTokenValues } from "@/lib/parser/tokenize";
-import { resolveSetReferenceToken } from "@/lib/team/set-references";
+  insertChipToken,
+  setHpPercentageToken,
+  setSpeedModifierToken,
+  setStatModifierToken,
+  type ChipScope,
+} from "@/lib/parser/input-mutations";
+import { compactWhitespace } from "@/lib/parser/tokenize";
+import { applyAutoGlobalTokens } from "@/lib/omni/auto-global-tokens";
+import { computeOmniState } from "@/lib/omni/compute-state";
 import type {
   ActiveChipTokens,
   DamageResult,
-  ImportedSet,
   ParsedCommand,
   SuggestionOption,
   SuggestionState,
 } from "@/lib/types";
+import { omniScheduler } from "@/store/omni-scheduler";
 import { useTeamStore } from "@/store/use-team-store";
-
-type ChipScope = keyof ActiveChipTokens;
 
 interface OmniStore {
   input: string;
@@ -90,725 +77,7 @@ const initialState = {
   issues: [] as string[],
 };
 
-let scheduledComputeFrame: number | null = null;
-let scheduledComputeVersion = 0;
-let scheduledCalculationHandle: number | null = null;
-let scheduledCalculationMode: "idle" | "timeout" | null = null;
-let scheduledPreviewTimeout: number | null = null;
-
 const TYPING_PREVIEW_DEBOUNCE_MS = 72;
-
-function cancelScheduledCompute() {
-  if (
-    scheduledComputeFrame !== null &&
-    typeof window !== "undefined" &&
-    typeof window.cancelAnimationFrame === "function"
-  ) {
-    window.cancelAnimationFrame(scheduledComputeFrame);
-  }
-
-  scheduledComputeFrame = null;
-
-  if (scheduledPreviewTimeout !== null && typeof window !== "undefined") {
-    window.clearTimeout(scheduledPreviewTimeout);
-    scheduledPreviewTimeout = null;
-  }
-}
-
-function cancelScheduledCalculation() {
-  if (scheduledCalculationHandle === null || typeof window === "undefined") {
-    scheduledCalculationHandle = null;
-    scheduledCalculationMode = null;
-    return;
-  }
-
-  if (
-    scheduledCalculationMode === "idle" &&
-    typeof window.cancelIdleCallback === "function"
-  ) {
-    window.cancelIdleCallback(scheduledCalculationHandle);
-  } else {
-    window.clearTimeout(scheduledCalculationHandle);
-  }
-
-  scheduledCalculationHandle = null;
-  scheduledCalculationMode = null;
-}
-
-function cancelScheduledWork() {
-  cancelScheduledCompute();
-  cancelScheduledCalculation();
-}
-
-type AutoFieldCategory = "weather" | "terrain";
-
-function isLegacyScopedToken(raw: string) {
-  return /^(?:[adg]:|>|<)/i.test(raw);
-}
-
-function resolveParsedSpecies(
-  segment: ReturnType<typeof analyzeCommandStructure>["attacker"],
-  importedSets: Record<string, ImportedSet>,
-) {
-  const referenceSet = resolveSetReferenceToken(
-    segment.leadingFreeTokens[0]?.raw,
-    importedSets,
-  );
-
-  if (referenceSet && segment.leadingFreeTokens.length === 1) {
-    return pokemonById.get(referenceSet.speciesId) ?? null;
-  }
-
-  if (segment.speciesExact) {
-    return segment.speciesExact.entry;
-  }
-
-  if (segment.leadingRemainderTokens.length === 0) {
-    return segment.speciesMatch?.entry ?? null;
-  }
-
-  return null;
-}
-
-function resolveScopedAbilityName(
-  pokemonId: string | undefined,
-  explicitAbility: string | undefined,
-) {
-  if (!pokemonId) {
-    return explicitAbility;
-  }
-
-  if (explicitAbility) {
-    const profile = vgcMetaByPokemonId.get(pokemonId);
-    const pokemonAbilities = resolveParsedPokemonAbilities(pokemonId);
-    const knownAbilities = buildCommonAbilities(profile, pokemonAbilities);
-    const normalized = normalizeAlias(explicitAbility);
-
-    return (
-      knownAbilities.find(
-        (ability) => normalizeAlias(ability) === normalized,
-      ) ?? explicitAbility
-    );
-  }
-
-  return inferDefaultAbility(pokemonId) ?? undefined;
-}
-
-function resolveParsedPokemonAbilities(pokemonId: string) {
-  const profile = vgcMetaByPokemonId.get(pokemonId);
-  const pokemon = pokemonById.get(pokemonId);
-  const abilityPool = new Set<string>();
-
-  for (const ability of pokemon?.abilities ?? []) {
-    abilityPool.add(ability);
-  }
-
-  if (profile?.defaultAbility) {
-    abilityPool.add(profile.defaultAbility);
-  }
-
-  for (const ability of profile?.commonAbilities ?? []) {
-    abilityPool.add(ability);
-  }
-
-  return Array.from(abilityPool);
-}
-
-function getGlobalTokenCategory(token: string): AutoFieldCategory | null {
-  const definition = GLOBAL_MODIFIER_MAP.get(token);
-
-  if (!definition) {
-    return null;
-  }
-
-  if (definition.section === "weather") {
-    return "weather";
-  }
-
-  if (definition.section === "terrain") {
-    return "terrain";
-  }
-
-  return null;
-}
-
-function deriveAutoGlobalState(input: string) {
-  const structure = analyzeCommandStructure(input);
-  const importedSets = useTeamStore.getState().importedSets;
-  const attacker = resolveParsedSpecies(structure.attacker, importedSets);
-  const defender = resolveParsedSpecies(structure.defender, importedSets);
-
-  if (!structure.lexed.hasDelimiter || !attacker || !defender) {
-    return {
-      key: null,
-      tokens: [] as string[],
-    };
-  }
-
-  const parsed = parseCommand(input, importedSets).parsed;
-
-  if (
-    !parsed ||
-    !structure.attacker.speciesExact ||
-    !structure.defender.speciesExact
-  ) {
-    return {
-      key: null,
-      tokens: [] as string[],
-    };
-  }
-
-  const attackerAbility = resolveScopedAbilityName(
-    attacker?.id,
-    structure.attacker.abilityToken?.value,
-  );
-  const defenderAbility = resolveScopedAbilityName(
-    defender?.id,
-    structure.defender.abilityToken?.value,
-  );
-  const contextKey = [
-    attacker.id,
-    normalizeAlias(attackerAbility ?? ""),
-    defender.id,
-    normalizeAlias(defenderAbility ?? ""),
-  ].join("|");
-  const candidates = [
-    {
-      token: getAutoGlobalTokenForAbilityName(attackerAbility),
-      speed: attacker.baseStats.spe,
-    },
-    {
-      token: getAutoGlobalTokenForAbilityName(defenderAbility),
-      speed: defender.baseStats.spe,
-    },
-  ]
-    .map((candidate) => {
-      if (!candidate.token) {
-        return null;
-      }
-
-      const category = getGlobalTokenCategory(candidate.token);
-      if (!category) {
-        return null;
-      }
-
-      return {
-        ...candidate,
-        category,
-      };
-    })
-    .filter(
-      (
-        candidate,
-      ): candidate is {
-        token: string;
-        speed: number;
-        category: AutoFieldCategory;
-      } => Boolean(candidate),
-    );
-  const desiredByCategory = new Map<AutoFieldCategory, typeof candidates>();
-
-  for (const candidate of candidates) {
-    const existing = desiredByCategory.get(candidate.category) ?? [];
-    existing.push(candidate);
-    desiredByCategory.set(candidate.category, existing);
-  }
-
-  const manualGlobalTokens = new Set(
-    structure.globalTokens.map((token) => token.value),
-  );
-  const nextAutoTokens: string[] = [];
-
-  for (const [category, entries] of desiredByCategory.entries()) {
-    const hasManualCategoryToken = Array.from(manualGlobalTokens).some(
-      (token) => {
-        return getGlobalTokenCategory(token) === category;
-      },
-    );
-
-    if (hasManualCategoryToken) {
-      continue;
-    }
-
-    const uniqueTokens = Array.from(
-      new Set(entries.map((entry) => entry.token)),
-    );
-
-    if (uniqueTokens.length === 1) {
-      nextAutoTokens.push(formatModifierToken("global", uniqueTokens[0]));
-      continue;
-    }
-
-    const sorted = [...entries].sort((left, right) => left.speed - right.speed);
-    const [slowest, secondSlowest] = sorted;
-
-    if (!slowest || (secondSlowest && secondSlowest.speed === slowest.speed)) {
-      continue;
-    }
-
-    nextAutoTokens.push(formatModifierToken("global", slowest.token));
-  }
-
-  return {
-    key: contextKey,
-    tokens: nextAutoTokens,
-  };
-}
-
-function applyAutoGlobalTokens(
-  input: string,
-  _previousAutoTokens: string[],
-  _previousContextKey: string | null,
-  _previousDismissedContextKey: string | null,
-) {
-  void _previousAutoTokens;
-  void _previousContextKey;
-  void _previousDismissedContextKey;
-
-  const autoState = deriveAutoGlobalState(input);
-  return {
-    input,
-    autoAppliedGlobalTokens: autoState.tokens,
-    autoGlobalContextKey: autoState.key,
-    dismissedAutoGlobalContextKey: null,
-  };
-}
-
-function buildRecommendedGlobalOptions(
-  input: string,
-  recommendedTokens: string[],
-): SuggestionOption[] {
-  const baseInput = input.trimEnd();
-
-  return recommendedTokens.map((token) => ({
-    type: "modifier",
-    value: token,
-    label: token,
-    applyText: baseInput ? `${baseInput} ${token}` : token,
-  }));
-}
-
-function prioritizeRecommendedGlobals(
-  input: string,
-  options: SuggestionOption[],
-  recommendedTokens: string[],
-) {
-  if (!recommendedTokens.length || !options.length) {
-    return recommendedTokens.length
-      ? buildRecommendedGlobalOptions(input, recommendedTokens)
-      : options;
-  }
-
-  const recommendedSet = new Set(recommendedTokens);
-  const synthesized = buildRecommendedGlobalOptions(input, recommendedTokens).filter(
-    (option) => !options.some((existing) => existing.value === option.value),
-  );
-  const prioritized = options.filter((option) => recommendedSet.has(option.value));
-  const remaining = options.filter((option) => !recommendedSet.has(option.value));
-
-  return [...synthesized, ...prioritized, ...remaining];
-}
-
-function buildActiveChipTokens(
-  structure: ReturnType<typeof analyzeCommandStructure>,
-): ActiveChipTokens {
-  return {
-    attacker: [
-      ...structure.attacker.modifierTokens.map((token) =>
-        formatModifierToken("attacker", token.value),
-      ),
-      ...(structure.attacker.hpToken
-        ? [`%${structure.attacker.hpToken.value}`]
-        : []),
-      ...(structure.attacker.abilityToken
-        ? [
-          formatAbilityToken(
-            "attacker",
-            structure.attacker.abilityToken.value,
-          ),
-        ]
-        : []),
-    ],
-    defender: [
-      ...structure.defender.modifierTokens.map((token) =>
-        formatModifierToken("defender", token.value),
-      ),
-      ...(structure.defender.hpToken
-        ? [`%${structure.defender.hpToken.value}`]
-        : []),
-      ...(structure.defender.abilityToken
-        ? [
-          formatAbilityToken(
-            "defender",
-            structure.defender.abilityToken.value,
-          ),
-        ]
-        : []),
-    ],
-    global: structure.globalTokens.map((token) =>
-      formatModifierToken("global", token.value),
-    ),
-  };
-}
-
-function insertChipToken(input: string, scope: ChipScope, token: string) {
-  let normalizedInput = compactWhitespace(input);
-  const activeChips = buildActiveChipTokens(
-    analyzeCommandStructure(normalizedInput),
-  );
-
-  if (activeChips[scope].includes(token)) {
-    return removeChipToken(normalizedInput, scope, token);
-  }
-
-  if (scope === "global") {
-    const rawValue = token.startsWith("~")
-      ? token.slice(1)
-      : token.toLowerCase().startsWith("g:")
-        ? token.slice(2)
-        : token;
-    const definition = GLOBAL_MODIFIER_MAP.get(
-      normalizeModifierValue(rawValue),
-    );
-    if (
-      definition?.section === "weather" ||
-      definition?.section === "terrain"
-    ) {
-      normalizedInput = stripGlobalSectionTokens(
-        normalizedInput,
-        definition.section,
-      );
-    }
-  }
-
-  const structure = analyzeCommandStructure(normalizedInput);
-  const attackerTokens = structure.attacker.rawTokens.map((entry) => entry.raw);
-  const defenderTokens = structure.defender.rawTokens.map((entry) => entry.raw);
-
-  if (scope === "attacker") {
-    if (structure.lexed.hasDelimiter) {
-      return [...attackerTokens, token, "x", ...defenderTokens]
-        .join(" ")
-        .trim();
-    }
-
-    return [...attackerTokens, token].join(" ").trim();
-  }
-
-  if (scope === "defender") {
-    if (
-      !structure.lexed.hasDelimiter ||
-      !joinTokenValues(structure.defender.speciesTokens)
-    ) {
-      return normalizedInput;
-    }
-
-    return [...attackerTokens, "x", ...defenderTokens, token].join(" ").trim();
-  }
-
-  const baseTokens = structure.lexed.hasDelimiter
-    ? [...attackerTokens, "x", ...defenderTokens]
-    : attackerTokens;
-
-  return [...baseTokens, token].join(" ").trim();
-}
-
-function toCanonicalScopeToken(scope: ChipScope, raw: string) {
-  if (isLegacyScopedToken(raw)) {
-    return null;
-  }
-
-  if (scope !== "global" && /^%\d{1,3}$/i.test(raw)) {
-    return raw;
-  }
-
-  const ability = parseAbilitySymbol(
-    raw,
-    scope === "global" ? undefined : scope,
-  );
-  if (ability && scope !== "global" && ability.scope === scope) {
-    return formatAbilityToken(scope, ability.ability);
-  }
-
-  const normalizedValue =
-    scope === "global" && raw.startsWith("~")
-      ? normalizeModifierValue(raw.slice(1))
-      : normalizeModifierValue(raw);
-
-  if (scope === "attacker" && ATTACKER_MODIFIER_MAP.has(normalizedValue)) {
-    return formatModifierToken("attacker", normalizedValue);
-  }
-
-  if (scope === "defender" && DEFENDER_MODIFIER_MAP.has(normalizedValue)) {
-    return formatModifierToken("defender", normalizedValue);
-  }
-
-  if (scope === "global" && GLOBAL_MODIFIER_MAP.has(normalizedValue)) {
-    return formatModifierToken("global", normalizedValue);
-  }
-
-  return null;
-}
-
-function removeChipToken(input: string, scope: ChipScope, token: string) {
-  const normalizedInput = compactWhitespace(input);
-  const structure = analyzeCommandStructure(normalizedInput);
-  const attackerTokens = structure.attacker.rawTokens
-    .filter((entry) => toCanonicalScopeToken("attacker", entry.raw) !== token)
-    .map((entry) => entry.raw);
-  const defenderTokens = structure.defender.rawTokens
-    .filter((entry) => toCanonicalScopeToken("defender", entry.raw) !== token)
-    .map((entry) => entry.raw);
-  const baseTokens = structure.lexed.hasDelimiter
-    ? [...attackerTokens, "x", ...defenderTokens]
-    : attackerTokens;
-
-  if (scope === "global") {
-    return baseTokens
-      .filter((entry) => toCanonicalScopeToken("global", entry) !== token)
-      .join(" ")
-      .trim();
-  }
-
-  return baseTokens.join(" ").trim();
-}
-
-function stripGlobalSectionTokens(
-  input: string,
-  section: "weather" | "terrain",
-): string {
-  const normalizedInput = compactWhitespace(input);
-  const structure = analyzeCommandStructure(normalizedInput);
-  const attackerTokens = structure.attacker.rawTokens.map((entry) => entry.raw);
-  const defenderTokens = structure.defender.rawTokens.map((entry) => entry.raw);
-  const baseTokens = structure.lexed.hasDelimiter
-    ? [...attackerTokens, "x", ...defenderTokens]
-    : attackerTokens;
-
-  return baseTokens
-    .filter((raw) => {
-      const canonical = toCanonicalScopeToken("global", raw);
-      if (canonical === null) return true;
-      const tokenValue = canonical.slice(1); // strip leading "~"
-      const definition = GLOBAL_MODIFIER_MAP.get(tokenValue);
-      return definition?.section !== section;
-    })
-    .join(" ")
-    .trim();
-}
-
-function stripModifierTokensByKind(
-  scope: "attacker" | "defender",
-  tokens: ReturnType<typeof analyzeCommandStructure>["attacker"]["rawTokens"],
-  kind: "stat_mod" | "speed_mod",
-) {
-  const modifierMap =
-    scope === "attacker" ? ATTACKER_MODIFIER_MAP : DEFENDER_MODIFIER_MAP;
-
-  return tokens.filter((entry) => {
-    const raw = entry.raw;
-    if (isLegacyScopedToken(raw)) {
-      return false;
-    }
-
-    const value = normalizeModifierValue(raw);
-    const definition = value ? modifierMap.get(value) : undefined;
-
-    return definition?.kind !== kind;
-  });
-}
-
-function setScopedStageToken(
-  input: string,
-  scope: "attacker" | "defender",
-  value: number,
-  kind: "stat_mod" | "speed_mod",
-) {
-  const normalizedInput = compactWhitespace(input);
-  const structure = analyzeCommandStructure(normalizedInput);
-  const attackerTokens = (
-    scope === "attacker"
-      ? stripModifierTokensByKind(
-        "attacker",
-        structure.attacker.rawTokens,
-        kind,
-      )
-      : structure.attacker.rawTokens
-  ).map((entry) => entry.raw);
-  const defenderTokens = (
-    scope === "defender"
-      ? stripModifierTokensByKind(
-        "defender",
-        structure.defender.rawTokens,
-        kind,
-      )
-      : structure.defender.rawTokens
-  ).map((entry) => entry.raw);
-  const token =
-    value === 0
-      ? null
-      : formatModifierToken(
-        scope,
-        kind === "speed_mod"
-          ? value > 0
-            ? `spe+${value}`
-            : `spe${value}`
-          : value > 0
-            ? `+${value}`
-            : `${value}`,
-      );
-
-  if (scope === "attacker") {
-    const nextAttackerTokens = token
-      ? [...attackerTokens, token]
-      : attackerTokens;
-    if (structure.lexed.hasDelimiter) {
-      return [...nextAttackerTokens, "x", ...defenderTokens].join(" ").trim();
-    }
-
-    return nextAttackerTokens.join(" ").trim();
-  }
-
-  if (
-    !structure.lexed.hasDelimiter ||
-    !joinTokenValues(structure.defender.speciesTokens)
-  ) {
-    return normalizedInput;
-  }
-
-  const nextDefenderTokens = token
-    ? [...defenderTokens, token]
-    : defenderTokens;
-  return [...attackerTokens, "x", ...nextDefenderTokens].join(" ").trim();
-}
-
-function setStatModifierToken(
-  input: string,
-  scope: "attacker" | "defender",
-  value: number,
-) {
-  return setScopedStageToken(input, scope, value, "stat_mod");
-}
-
-function setSpeedModifierToken(
-  input: string,
-  scope: "attacker" | "defender",
-  value: number,
-) {
-  return setScopedStageToken(input, scope, value, "speed_mod");
-}
-
-function stripHpTokens(
-  tokens: ReturnType<typeof analyzeCommandStructure>["attacker"]["rawTokens"],
-) {
-  return tokens.filter((entry) => !/^%\d{1,3}$/i.test(entry.raw));
-}
-
-function setHpPercentageToken(
-  input: string,
-  scope: "attacker" | "defender",
-  value: number | null,
-) {
-  const normalizedInput = compactWhitespace(input);
-  const structure = analyzeCommandStructure(normalizedInput);
-  const attackerTokens = (
-    scope === "attacker"
-      ? stripHpTokens(structure.attacker.rawTokens)
-      : structure.attacker.rawTokens
-  ).map((entry) => entry.raw);
-  const defenderTokens = (
-    scope === "defender"
-      ? stripHpTokens(structure.defender.rawTokens)
-      : structure.defender.rawTokens
-  ).map((entry) => entry.raw);
-  const token = value === null ? null : `%${Math.max(1, Math.min(100, value))}`;
-
-  if (scope === "attacker") {
-    const nextAttackerTokens = token
-      ? [...attackerTokens, token]
-      : attackerTokens;
-    if (structure.lexed.hasDelimiter) {
-      return [...nextAttackerTokens, "x", ...defenderTokens].join(" ").trim();
-    }
-
-    return nextAttackerTokens.join(" ").trim();
-  }
-
-  if (
-    !structure.lexed.hasDelimiter ||
-    !joinTokenValues(structure.defender.speciesTokens)
-  ) {
-    return normalizedInput;
-  }
-
-  const nextDefenderTokens = token
-    ? [...defenderTokens, token]
-    : defenderTokens;
-  return [...attackerTokens, "x", ...nextDefenderTokens].join(" ").trim();
-}
-
-function computeState(
-  input: string,
-  previousAutoTokens: string[] = [],
-  previousContextKey: string | null = null,
-  previousDismissedContextKey: string | null = null,
-  cursorIndex = input.length,
-  strictMode = false,
-  includeResults = true,
-) {
-  const normalizedInput = input.replace(/\s+$/g, (match) => match);
-  const importedSets = useTeamStore.getState().importedSets;
-  const withAutoTokens = applyAutoGlobalTokens(
-    normalizedInput,
-    previousAutoTokens,
-    previousContextKey,
-    previousDismissedContextKey,
-  );
-  const commandStructure = analyzeCommandStructure(withAutoTokens.input);
-  const parsedResult = parseCommand(withAutoTokens.input, importedSets);
-  const calculationIssues = parsedResult.parsed
-    ? getCalculationIssues(parsedResult.parsed, importedSets, { strictMode })
-    : [];
-  const issues = Array.from(new Set([...parsedResult.issues, ...calculationIssues]));
-  const nextCursorIndex = Math.min(cursorIndex, withAutoTokens.input.length);
-  const autocomplete = getAutocompleteState(
-    withAutoTokens.input,
-    nextCursorIndex,
-    importedSets,
-  );
-  const suggestionOptions = prioritizeRecommendedGlobals(
-    withAutoTokens.input,
-    autocomplete.suggestionOptions,
-    withAutoTokens.autoAppliedGlobalTokens,
-  );
-  const parsedCommand = parsedResult.parsed;
-  const canCalculate =
-    Boolean(parsedCommand) && calculationIssues.length === 0;
-
-  return {
-    input: withAutoTokens.input,
-    cursorIndex: nextCursorIndex,
-    strictMode,
-    commandStructure,
-    parsed: parsedCommand,
-    activeSuggestion: autocomplete.activeSuggestion,
-    suggestionOptions,
-    highlightedSuggestionIndex: suggestionOptions.length ? 0 : -1,
-    calculationReady: includeResults ? canCalculate : false,
-    autoAppliedGlobalTokens: withAutoTokens.autoAppliedGlobalTokens,
-    autoGlobalContextKey: withAutoTokens.autoGlobalContextKey,
-    dismissedAutoGlobalContextKey: withAutoTokens.dismissedAutoGlobalContextKey,
-    activeChipTokens: buildActiveChipTokens(commandStructure),
-    issues,
-    results: includeResults && canCalculate && parsedCommand
-      ? calculateDamageResults(
-        parsedCommand,
-        importedSets,
-        { strictMode },
-      )
-      : [],
-  };
-}
 
 export const useOmniStore = create<OmniStore>((set, get) => {
   const commitState = (
@@ -827,20 +96,25 @@ export const useOmniStore = create<OmniStore>((set, get) => {
       return;
     }
 
+    const importedSets = useTeamStore.getState().importedSets;
+
     if (
       typeof window === "undefined" ||
       process.env.NODE_ENV === "test" ||
       typeof window.requestAnimationFrame !== "function"
     ) {
       set(
-        computeState(
-          nextInput,
-          currentState.autoAppliedGlobalTokens,
-          currentState.autoGlobalContextKey,
-          currentState.dismissedAutoGlobalContextKey,
-          nextCursorIndex,
-          nextStrictMode,
-        ),
+        computeOmniState({
+          input: nextInput,
+          importedSets,
+          previousAutoTokens: currentState.autoAppliedGlobalTokens,
+          previousContextKey: currentState.autoGlobalContextKey,
+          previousDismissedContextKey:
+            currentState.dismissedAutoGlobalContextKey,
+          cursorIndex: nextCursorIndex,
+          strictMode: nextStrictMode,
+          applyAutoGlobalTokens,
+        }),
       );
       return;
     }
@@ -851,26 +125,23 @@ export const useOmniStore = create<OmniStore>((set, get) => {
       strictMode: nextStrictMode,
     });
 
-    const version = ++scheduledComputeVersion;
-    const runPreview = () => {
-      scheduledPreviewTimeout = null;
-      scheduledComputeFrame = window.requestAnimationFrame(() => {
-        scheduledComputeFrame = null;
+    const version = omniScheduler.bumpVersion();
 
-        if (version !== scheduledComputeVersion) {
-          return;
-        }
-
+    omniScheduler.schedulePreview(
+      version,
+      () => {
         const state = get();
-        const previewState = computeState(
-          state.input,
-          state.autoAppliedGlobalTokens,
-          state.autoGlobalContextKey,
-          state.dismissedAutoGlobalContextKey,
-          state.cursorIndex,
-          state.strictMode,
-          false,
-        );
+        const previewState = computeOmniState({
+          input: state.input,
+          importedSets: useTeamStore.getState().importedSets,
+          previousAutoTokens: state.autoAppliedGlobalTokens,
+          previousContextKey: state.autoGlobalContextKey,
+          previousDismissedContextKey: state.dismissedAutoGlobalContextKey,
+          cursorIndex: state.cursorIndex,
+          strictMode: state.strictMode,
+          includeResults: false,
+          applyAutoGlobalTokens,
+        });
 
         set(previewState);
 
@@ -880,21 +151,14 @@ export const useOmniStore = create<OmniStore>((set, get) => {
           return;
         }
 
-        const runCalculation = () => {
-          scheduledCalculationHandle = null;
-          scheduledCalculationMode = null;
-
-          if (version !== scheduledComputeVersion) {
-            return;
-          }
-
+        omniScheduler.scheduleCalculation(version, () => {
           const results = calculateDamageResults(
             previewParsed,
             useTeamStore.getState().importedSets,
             { strictMode: previewState.strictMode },
           );
 
-          if (version !== scheduledComputeVersion) {
+          if (version !== omniScheduler.getVersion()) {
             return;
           }
 
@@ -902,33 +166,10 @@ export const useOmniStore = create<OmniStore>((set, get) => {
             results,
             calculationReady: true,
           });
-        };
-
-        if (typeof window.requestIdleCallback === "function") {
-          scheduledCalculationMode = "idle";
-          scheduledCalculationHandle = window.requestIdleCallback(
-            runCalculation,
-            { timeout: 120 },
-          );
-          return;
-        }
-
-        scheduledCalculationMode = "timeout";
-        scheduledCalculationHandle = window.setTimeout(runCalculation, 16);
-      });
-    };
-
-    cancelScheduledWork();
-
-    if ((options?.debounceMs ?? 0) > 0) {
-      scheduledPreviewTimeout = window.setTimeout(
-        runPreview,
-        options?.debounceMs,
-      );
-      return;
-    }
-
-    runPreview();
+        });
+      },
+      options?.debounceMs ?? 0,
+    );
   };
 
   return {
@@ -965,12 +206,9 @@ export const useOmniStore = create<OmniStore>((set, get) => {
           : null;
 
       if (highlightedOption) {
-        const cursorIndex = highlightedOption.cursorOffset ?? highlightedOption.applyText.length;
-        commitState(
-          highlightedOption.applyText,
-          cursorIndex,
-          get().strictMode,
-        );
+        const cursorIndex =
+          highlightedOption.cursorOffset ?? highlightedOption.applyText.length;
+        commitState(highlightedOption.applyText, cursorIndex, get().strictMode);
         return;
       }
 
@@ -1040,6 +278,6 @@ export const useOmniStore = create<OmniStore>((set, get) => {
 });
 
 export function resetOmniStore() {
-  cancelScheduledWork();
+  omniScheduler.reset();
   useOmniStore.setState(initialState);
 }

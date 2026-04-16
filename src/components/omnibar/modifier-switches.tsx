@@ -3,7 +3,6 @@
 import { type ReactNode, useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 
-import { analyzeCommandStructure } from "@/lib/parser/command-structure";
 import {
   ATTACKER_MODIFIER_MAP,
   ATTACKER_CHIP_DEFINITIONS,

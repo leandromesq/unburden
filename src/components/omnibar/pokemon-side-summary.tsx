@@ -32,6 +32,13 @@ import { resolveMoveEntity } from "@/lib/parser/fuse-indexes";
 import { inferDefaultAbility } from "@/lib/parser/inference";
 import { createImportedSet } from "@/lib/team/imported-set-utils";
 import {
+  applyMarkerToState,
+  buildNatureMarkerState,
+  buildStatInputDrafts,
+  parseStatInputDraft,
+  resolveNatureFromMarkerState,
+} from "@/lib/team/nature-markers";
+import {
   getCanonicalSetReferenceToken,
   resolveReferencedImportedSet,
   resolveSetReferenceToken,
@@ -510,6 +517,10 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
   const [pendingStatPoints, setPendingStatPoints] = useState<StatSpread | null>(
     null,
   );
+  const [natureMarkers, setNatureMarkers] = useState(
+    buildNatureMarkerState("Hardy"),
+  );
+
   const switchRef = useRef<HTMLDivElement>(null);
 
   const handleSwitchPointerDown = useEffectEvent((e: MouseEvent) => {
@@ -840,6 +851,44 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
     setInput(nextInput);
   };
 
+  const updateInlineStatInput = (
+    stat: StatKey,
+    rawValue: string,
+    maxValue: number,
+  ) => {
+    const parsed = parseStatInputDraft(rawValue);
+    if (!parsed.isValid) {
+      return;
+    }
+
+    const nextMarkers = applyMarkerToState(natureMarkers, stat, parsed.marker);
+    const nextNature = resolveNatureFromMarkerState(nextMarkers);
+
+    setNatureMarkers(nextMarkers);
+
+    if (summary.importedSet && nextNature !== summary.nature) {
+      saveSet({
+        ...summary.importedSet,
+        nature: nextNature,
+      });
+      recompute();
+    }
+
+    if (parsed.isEmpty) {
+      updateInlineStatPoint(stat, 0);
+      return;
+    }
+
+    if (parsed.numericValue === null) {
+      return;
+    }
+
+    updateInlineStatPoint(
+      stat,
+      Math.min(Math.max(0, Math.round(parsed.numericValue)), maxValue),
+    );
+  };
+
   const resolvedSetId = summary?.importedSet?.speciesId ?? null;
 
   // All imported sets that are NOT the currently displayed Pokémon
@@ -869,6 +918,17 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
           : [],
     });
   }, [summary]);
+
+  const currentStatPoints =
+    pendingStatPoints ??
+    summary?.promptStatPoints ??
+    summary?.effectiveStatPoints ??
+    EMPTY_STAT_SPREAD;
+  const summaryNature = summary?.nature ?? "Hardy";
+  const derivedNatureMarkers =
+    Object.keys(natureMarkers).length > 0
+      ? natureMarkers
+      : buildNatureMarkerState(summaryNature);
 
   if (!summary) {
     const importedSetList = Object.values(importedSets);
@@ -966,10 +1026,6 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
   }
 
   const { importedSet, stageBoosts, itemBoosts } = summary;
-  const currentStatPoints =
-    pendingStatPoints ??
-    summary.promptStatPoints ??
-    summary.effectiveStatPoints;
   const spLeft = Math.max(
     0,
     66 -
@@ -1198,13 +1254,45 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
                 key={statKey}
                 className="theme-subpanel rounded-lg px-2.5 py-1.5"
               >
-                <div className="mb-1 flex items-center justify-between gap-2">
-                  <span className="theme-text-faint font-mono text-[9px] font-semibold uppercase tracking-[0.12em]">
+                <div className="mb-1 flex items-center gap-2">
+                  <span className="theme-text-faint w-8 shrink-0 font-mono text-[9px] font-semibold uppercase tracking-[0.12em]">
                     {label}
                   </span>
-                  <span className="theme-text-dim font-mono text-[10px]">
-                    {value} SP
-                  </span>
+                  <div className="ml-auto flex items-center gap-1.5">
+                    <label
+                      className="sr-only"
+                      htmlFor={`${side}-summary-${statKey}-sp`}
+                    >
+                      {label} SP
+                    </label>
+                    <input
+                      key={`${side}-${statKey}-${currentStatPoints[statKey]}-${derivedNatureMarkers[statKey] ?? ""}`}
+                      id={`${side}-summary-${statKey}-sp`}
+                      type="text"
+                      inputMode="text"
+                      aria-label={`${label} SP`}
+                      defaultValue={
+                        buildStatInputDrafts(
+                          currentStatPoints,
+                          derivedNatureMarkers,
+                        )[statKey]
+                      }
+                      onFocus={(event) => {
+                        event.currentTarget.select();
+                      }}
+                      onChange={(event) => {
+                        updateInlineStatInput(
+                          statKey,
+                          event.currentTarget.value,
+                          maxValue,
+                        );
+                      }}
+                      className="theme-control theme-input h-7 w-16 rounded-md px-2 py-1 font-mono text-xs"
+                    />
+                    <span className="theme-text-dim font-mono text-[10px]">
+                      SP
+                    </span>
+                  </div>
                 </div>
                 <input
                   type="range"

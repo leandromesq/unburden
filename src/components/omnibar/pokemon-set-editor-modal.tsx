@@ -18,8 +18,8 @@ import {
 } from "@/lib/data/loaders";
 import { resolveExactPokemonEntity } from "@/lib/parser/fuse-indexes";
 import { buildCommonAbilities } from "@/lib/parser/grammar";
-import { createImportedSet } from "@/lib/team/imported-set-utils";
 import { SearchableCombobox } from "@/components/omnibar/searchable-combobox";
+import { createImportedSet } from "@/lib/team/imported-set-utils";
 import type { ImportedSet, StatSpread } from "@/lib/types";
 
 const NATURES = [
@@ -29,26 +29,22 @@ const NATURES = [
   "Adamant",
   "Naughty",
   "Bold",
-  "Docile",
   "Relaxed",
   "Impish",
   "Lax",
   "Timid",
   "Hasty",
-  "Serious",
   "Jolly",
   "Naive",
   "Modest",
   "Mild",
   "Quiet",
-  "Bashful",
   "Rash",
   "Calm",
   "Gentle",
   "Sassy",
   "Careful",
-  "Quirky",
-];
+] as const;
 
 const STAT_FIELDS: Array<[keyof StatSpread, string]> = [
   ["hp", "HP"],
@@ -59,6 +55,14 @@ const STAT_FIELDS: Array<[keyof StatSpread, string]> = [
   ["spe", "Spe"],
 ];
 
+const NON_HP_STATS: Array<keyof Omit<StatSpread, "hp">> = [
+  "atk",
+  "def",
+  "spa",
+  "spd",
+  "spe",
+];
+
 const STAT_LABEL_MAP: Record<string, string> = {
   atk: "Atk",
   def: "Def",
@@ -66,6 +70,35 @@ const STAT_LABEL_MAP: Record<string, string> = {
   spd: "SpD",
   spe: "Spe",
 };
+
+const NATURE_BY_MARKERS: Record<string, string> = {
+  "atk:def": "Lonely",
+  "atk:spe": "Brave",
+  "atk:spa": "Adamant",
+  "atk:spd": "Naughty",
+  "def:atk": "Bold",
+  "def:spe": "Relaxed",
+  "def:spa": "Impish",
+  "def:spd": "Lax",
+  "spe:atk": "Timid",
+  "spe:def": "Hasty",
+  "spe:spa": "Jolly",
+  "spe:spd": "Naive",
+  "spa:atk": "Modest",
+  "spa:def": "Mild",
+  "spa:spe": "Quiet",
+  "spa:spd": "Rash",
+  "spd:atk": "Calm",
+  "spd:def": "Gentle",
+  "spd:spe": "Sassy",
+  "spd:spa": "Careful",
+};
+
+type NatureMarker = "+" | "-";
+type NatureMarkerState = Partial<
+  Record<keyof Omit<StatSpread, "hp">, NatureMarker>
+>;
+type StatInputDrafts = Record<keyof StatSpread, string>;
 
 function getNatureDescription(nature: string): string {
   const mods = NATURE_MODIFIERS[nature];
@@ -81,14 +114,136 @@ function getNatureDescription(nature: string): string {
   return `(${parts.join("/")})`;
 }
 
-function renderNatureOption(option: string) {
-  const desc = getNatureDescription(option);
-  return (
-    <span className="flex items-center justify-between gap-3">
-      <span>{option}</span>
-      {desc && <span className="theme-text-faint text-xs">{desc}</span>}
-    </span>
-  );
+function buildNatureMarkerState(nature: string): NatureMarkerState {
+  const pair = Object.entries(NATURE_BY_MARKERS).find(
+    ([, mappedNature]) => mappedNature === nature,
+  )?.[0];
+
+  if (!pair) {
+    return {};
+  }
+
+  const [boosted, lowered] = pair.split(":") as Array<
+    keyof Omit<StatSpread, "hp">
+  >;
+
+  return {
+    [boosted]: "+",
+    [lowered]: "-",
+  };
+}
+
+function resolveNatureFromMarkerState(markerState: NatureMarkerState): string {
+  const boosted = NON_HP_STATS.find((stat) => markerState[stat] === "+");
+  const lowered = NON_HP_STATS.find((stat) => markerState[stat] === "-");
+
+  if (!boosted || !lowered) {
+    return "Hardy";
+  }
+
+  return NATURE_BY_MARKERS[`${boosted}:${lowered}`] ?? "Hardy";
+}
+
+function buildStatInputDraft(
+  stat: keyof StatSpread,
+  statPoints: StatSpread,
+  markerState: NatureMarkerState,
+): string {
+  if (stat === "hp") {
+    return String(statPoints.hp);
+  }
+
+  const marker = markerState[stat as keyof Omit<StatSpread, "hp">] ?? "";
+  return `${statPoints[stat]}${marker}`;
+}
+
+function buildStatInputDrafts(
+  statPoints: StatSpread,
+  markerState: NatureMarkerState,
+): StatInputDrafts {
+  return {
+    hp: buildStatInputDraft("hp", statPoints, markerState),
+    atk: buildStatInputDraft("atk", statPoints, markerState),
+    def: buildStatInputDraft("def", statPoints, markerState),
+    spa: buildStatInputDraft("spa", statPoints, markerState),
+    spd: buildStatInputDraft("spd", statPoints, markerState),
+    spe: buildStatInputDraft("spe", statPoints, markerState),
+  };
+}
+
+function parseStatDraft(rawValue: string): {
+  numericValue: number | null;
+  marker: NatureMarker | null;
+  isEmpty: boolean;
+  isValid: boolean;
+} {
+  const trimmed = rawValue.trim();
+
+  if (trimmed === "") {
+    return {
+      numericValue: null,
+      marker: null,
+      isEmpty: true,
+      isValid: true,
+    };
+  }
+
+  const markerMatch = trimmed.match(/[+-]$/);
+  const marker = (markerMatch?.[0] as NatureMarker | undefined) ?? null;
+  const numericPart = marker ? trimmed.slice(0, -1).trim() : trimmed;
+
+  if (numericPart === "" && marker) {
+    return {
+      numericValue: 0,
+      marker,
+      isEmpty: false,
+      isValid: true,
+    };
+  }
+
+  if (!/^\d+$/.test(numericPart)) {
+    return {
+      numericValue: null,
+      marker,
+      isEmpty: false,
+      isValid: false,
+    };
+  }
+
+  return {
+    numericValue: Number(numericPart),
+    marker,
+    isEmpty: false,
+    isValid: true,
+  };
+}
+
+function applyMarkerToState(
+  currentState: NatureMarkerState,
+  stat: keyof StatSpread,
+  marker: NatureMarker | null,
+): NatureMarkerState {
+  if (stat === "hp") {
+    return currentState;
+  }
+
+  const typedStat = stat as keyof Omit<StatSpread, "hp">;
+  const nextState: NatureMarkerState = { ...currentState };
+
+  delete nextState[typedStat];
+
+  if (!marker) {
+    return nextState;
+  }
+
+  for (const key of NON_HP_STATS) {
+    if (key !== typedStat && nextState[key] === marker) {
+      delete nextState[key];
+    }
+  }
+
+  nextState[typedStat] = marker;
+  return nextState;
 }
 
 interface PokemonSetEditorModalProps {
@@ -115,6 +270,16 @@ export function PokemonSetEditorModal({
     return next.slice(0, 4);
   });
   const [statPoints, setStatPoints] = useState(initialSet.statPoints);
+  const [, setNatureMarkers] = useState<NatureMarkerState>(() =>
+    buildNatureMarkerState(initialSet.nature),
+  );
+  const [statInputDrafts, setStatInputDrafts] = useState<StatInputDrafts>(() =>
+    buildStatInputDrafts(
+      initialSet.statPoints,
+      buildNatureMarkerState(initialSet.nature),
+    ),
+  );
+
   const resolvedSpecies = useMemo(
     () => resolveExactPokemonEntity(speciesName)?.entry ?? null,
     [speciesName],
@@ -128,6 +293,7 @@ export function PokemonSetEditorModal({
     [statPoints],
   );
   const isOverCap = totalStatPoints > MAX_STAT_POINTS;
+
   const speciesOptions = useMemo(
     () =>
       Array.from(
@@ -138,6 +304,7 @@ export function PokemonSetEditorModal({
       ).sort((left, right) => left.localeCompare(right)),
     [initialSet.speciesName],
   );
+
   const itemOptions = useMemo(() => {
     const prioritized = [
       profile?.defaultItem,
@@ -147,6 +314,7 @@ export function PokemonSetEditorModal({
 
     return Array.from(new Set(prioritized));
   }, [profile]);
+
   const abilityOptions = useMemo(
     () =>
       Array.from(
@@ -154,6 +322,7 @@ export function PokemonSetEditorModal({
       ),
     [pokemon?.abilities, profile],
   );
+
   const moveOptions = useMemo(() => {
     const learnset = pokemon
       ? (learnsetByPokemonId.get(pokemon.id) ??
@@ -161,6 +330,7 @@ export function PokemonSetEditorModal({
           ? learnsetByPokemonId.get(pokemon.baseSpeciesId)
           : undefined))
       : undefined;
+
     const prioritizedMoveIds = [
       profile?.defaultMove,
       ...(profile?.commonMoves ?? []),
@@ -175,19 +345,56 @@ export function PokemonSetEditorModal({
       ),
     );
   }, [pokemon, profile]);
+
   const moveComboboxOptions = useMemo(
     () => Array.from(new Set([...moveOptions, ...moves.filter(Boolean)])),
     [moveOptions, moves],
   );
 
-  const updateStatPoint = (key: keyof StatSpread, value: string) => {
-    const parsed = Number(value);
-    setStatPoints((current) => ({
+  const updateStatPoint = (key: keyof StatSpread, rawValue: string) => {
+    setStatInputDrafts((current) => ({
       ...current,
-      [key]: Number.isFinite(parsed)
-        ? Math.max(0, Math.min(32, Math.round(parsed)))
-        : 0,
+      [key]: rawValue,
     }));
+
+    const parsed = parseStatDraft(rawValue);
+    if (!parsed.isValid) {
+      return;
+    }
+
+    setNatureMarkers((currentMarkers) => {
+      const nextMarkers = applyMarkerToState(
+        currentMarkers,
+        key,
+        parsed.marker,
+      );
+      const nextNature = resolveNatureFromMarkerState(nextMarkers);
+
+      setNature(nextNature);
+
+      if (parsed.isEmpty) {
+        const nextStatPoints = {
+          ...statPoints,
+          [key]: 0,
+        };
+        setStatPoints(nextStatPoints);
+        setStatInputDrafts(buildStatInputDrafts(nextStatPoints, nextMarkers));
+        return nextMarkers;
+      }
+
+      if (parsed.numericValue === null) {
+        return nextMarkers;
+      }
+
+      const nextStatPoints = {
+        ...statPoints,
+        [key]: Math.max(0, Math.min(32, Math.round(parsed.numericValue))),
+      };
+      setStatPoints(nextStatPoints);
+      setStatInputDrafts(buildStatInputDrafts(nextStatPoints, nextMarkers));
+
+      return nextMarkers;
+    });
   };
 
   const updateMove = (index: number, value: string) => {
@@ -196,6 +403,13 @@ export function PokemonSetEditorModal({
       next[index] = value;
       return next;
     });
+  };
+
+  const handleNatureChange = (nextNature: string) => {
+    const nextMarkers = buildNatureMarkerState(nextNature);
+    setNature(nextNature);
+    setNatureMarkers(nextMarkers);
+    setStatInputDrafts(buildStatInputDrafts(statPoints, nextMarkers));
   };
 
   const handleSave = () => {
@@ -314,7 +528,9 @@ export function PokemonSetEditorModal({
               <span className="theme-text-dim">Nature</span>
               <select
                 value={nature}
-                onChange={(event) => setNature(event.currentTarget.value)}
+                onChange={(event) =>
+                  handleNatureChange(event.currentTarget.value)
+                }
                 className="theme-input w-full rounded-xl border px-3 py-2"
                 style={{
                   background: "var(--surface-3)",
@@ -350,7 +566,7 @@ export function PokemonSetEditorModal({
             </div>
           </div>
 
-          <div className="theme-subpanel rounded-2xl border p-4">
+          <div className="theme-subpanel rounded-2xl border p-3">
             <div className="flex items-center justify-between">
               <div className="text-sm font-medium">SPs</div>
               <div
@@ -362,23 +578,46 @@ export function PokemonSetEditorModal({
                 {totalStatPoints} / {MAX_STAT_POINTS}
               </div>
             </div>
-            <div className="mt-3 space-y-2.5">
+            <div className="mt-2 grid gap-2">
               {STAT_FIELDS.map(([key, label]) => {
                 const value = statPoints[key];
                 const remaining = MAX_STAT_POINTS - totalStatPoints;
                 const maxValue = Math.min(32, value + remaining);
+
                 return (
                   <div
                     key={key}
-                    className="theme-subpanel rounded-lg px-2.5 py-1.5"
+                    className="theme-subpanel rounded-lg px-2 py-1.5"
                   >
-                    <div className="mb-1 flex items-center justify-between gap-2">
-                      <span className="theme-text-faint font-mono text-[9px] font-semibold uppercase tracking-[0.12em]">
+                    <div className="mb-1 flex items-center gap-2">
+                      <span className="theme-text-faint w-8 shrink-0 font-mono text-[9px] font-semibold uppercase tracking-[0.12em]">
                         {label}
                       </span>
-                      <span className="theme-text-dim font-mono text-[10px]">
-                        {value} SP
-                      </span>
+                      <div className="ml-auto flex items-center gap-1.5">
+                        <label
+                          className="sr-only"
+                          htmlFor={`set-editor-${key}`}
+                        >
+                          {label}
+                        </label>
+                        <input
+                          id={`set-editor-${key}`}
+                          type="text"
+                          inputMode="text"
+                          value={statInputDrafts[key]}
+                          aria-label={label}
+                          onFocus={(event) => {
+                            event.currentTarget.select();
+                          }}
+                          onChange={(event) => {
+                            updateStatPoint(key, event.currentTarget.value);
+                          }}
+                          className="theme-control theme-input h-7 w-16 rounded-md px-2 py-1 font-mono text-xs"
+                        />
+                        <span className="theme-text-dim font-mono text-[10px]">
+                          SP
+                        </span>
+                      </div>
                     </div>
                     <input
                       type="range"

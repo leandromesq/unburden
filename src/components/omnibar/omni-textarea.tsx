@@ -142,6 +142,7 @@ export function OmniTextarea({
 
             pendingSelectionRef.current = cursor;
             setInput(nextInput, cursor);
+            element.setSelectionRange(cursor, cursor);
             setCaretAtEnd(cursor === nextInput.length);
             return;
           }

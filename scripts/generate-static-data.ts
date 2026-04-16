@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { Generations } from "@pkmn/data";
@@ -76,6 +76,11 @@ const EXTRA_SPECIES_NAMES = ["Floette-Eternal"];
 const SPECIAL_BASE_SPECIES_IDS = new Map<string, string>([
   ["floettemega", "floetteeternal"],
 ]);
+const MIN_POKEMON_ENTRY_COUNT = 400;
+const MIN_MOVE_ENTRY_COUNT = 200;
+const MIN_LEARNSET_ENTRY_COUNT = 350;
+const MIN_ITEM_ENTRY_COUNT = 50;
+const MAX_ENTRY_COUNT_DELTA = 75;
 
 function normalizeAlias(value: string) {
   return value
@@ -148,7 +153,11 @@ function shouldAddBaseSpeciesAliases(species: SpeciesSource) {
     return false;
   }
 
-  return species.baseSpecies && species.baseSpecies !== species.name && !species.isMega;
+  return (
+    species.baseSpecies &&
+    species.baseSpecies !== species.name &&
+    !species.isMega
+  );
 }
 
 function buildSpeciesIdIndex(speciesPool: Iterable<SpeciesSource>) {
@@ -213,7 +222,8 @@ function decodeHtmlEntities(value: string) {
 }
 
 function parseChampionsItems(html: string) {
-  const legalSection = html.split(/<u>\s*Miscellaneous Items\s*<\/u>/i)[0] ?? html;
+  const legalSection =
+    html.split(/<u>\s*Miscellaneous Items\s*<\/u>/i)[0] ?? html;
   const items = new Map<string, string>();
   const matcher =
     /<td class="fooinfo"><a href="\/itemdex\/([a-z0-9-]+)\.shtml">([^<]+)<\/a><\/td>/gi;
@@ -245,7 +255,9 @@ async function fetchText(url: string) {
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);
+    throw new Error(
+      `Failed to fetch ${url}: ${response.status} ${response.statusText}`,
+    );
   }
 
   return response.text();
@@ -291,12 +303,17 @@ function toSpeciesSource(species: {
     abilities: Object.fromEntries(
       Object.entries(species.abilities as Record<string, string | undefined>),
     ),
-    isMega: "isMega" in species ? Boolean((species as { isMega?: boolean }).isMega) : false,
-    requiredItem: "requiredItems" in species
-      ? ((species as { requiredItems?: string[] }).requiredItems?.[0] ?? undefined)
-      : "requiredItem" in species
-        ? ((species as { requiredItem?: string }).requiredItem ?? undefined)
-        : undefined,
+    isMega:
+      "isMega" in species
+        ? Boolean((species as { isMega?: boolean }).isMega)
+        : false,
+    requiredItem:
+      "requiredItems" in species
+        ? ((species as { requiredItems?: string[] }).requiredItems?.[0] ??
+          undefined)
+        : "requiredItem" in species
+          ? ((species as { requiredItem?: string }).requiredItem ?? undefined)
+          : undefined,
     baseStats: { ...species.baseStats },
   };
 }
@@ -323,10 +340,187 @@ function resolveLearnsetSpecies(
 
     currentId =
       SPECIAL_BASE_SPECIES_IDS.get(current.id) ??
-      (current.baseSpecies ? Dex.species.get(current.baseSpecies).id : undefined);
+      (current.baseSpecies
+        ? Dex.species.get(current.baseSpecies).id
+        : undefined);
   }
 
   return null;
+}
+
+async function readExistingJson<T>(filepath: string): Promise<T | null> {
+  try {
+    const content = await readFile(filepath, "utf8");
+    return JSON.parse(content) as T;
+  } catch {
+    return null;
+  }
+}
+
+function assertUniqueIds<T extends { id: string }>(
+  entries: T[],
+  label: string,
+) {
+  const seen = new Set<string>();
+
+  for (const entry of entries) {
+    if (seen.has(entry.id)) {
+      throw new Error(`Duplicate ${label} id detected: ${entry.id}`);
+    }
+
+    seen.add(entry.id);
+  }
+}
+
+function validatePokemonEntries(entries: PokemonEntry[]) {
+  if (entries.length < MIN_POKEMON_ENTRY_COUNT) {
+    throw new Error(
+      `Generated only ${entries.length} pokemon entries; expected at least ${MIN_POKEMON_ENTRY_COUNT}.`,
+    );
+  }
+
+  assertUniqueIds(entries, "pokemon");
+
+  for (const entry of entries) {
+    if (!entry.name.trim()) {
+      throw new Error(`Pokemon entry ${entry.id} is missing a display name.`);
+    }
+
+    if (!entry.aliases.length) {
+      throw new Error(`Pokemon entry ${entry.id} is missing aliases.`);
+    }
+
+    if (!entry.types.length) {
+      throw new Error(`Pokemon entry ${entry.id} is missing types.`);
+    }
+
+    if (!entry.abilities.length) {
+      throw new Error(`Pokemon entry ${entry.id} is missing abilities.`);
+    }
+
+    const stats = Object.entries(entry.baseStats);
+    const hasInvalidStat = stats.some(
+      ([, value]) => !Number.isInteger(value) || value <= 0,
+    );
+
+    if (hasInvalidStat) {
+      throw new Error(`Pokemon entry ${entry.id} has invalid base stats.`);
+    }
+  }
+}
+
+function validateMoveEntries(entries: MoveEntry[]) {
+  if (entries.length < MIN_MOVE_ENTRY_COUNT) {
+    throw new Error(
+      `Generated only ${entries.length} move entries; expected at least ${MIN_MOVE_ENTRY_COUNT}.`,
+    );
+  }
+
+  assertUniqueIds(entries, "move");
+
+  for (const entry of entries) {
+    if (!entry.name.trim()) {
+      throw new Error(`Move entry ${entry.id} is missing a display name.`);
+    }
+
+    if (!entry.type.trim()) {
+      throw new Error(`Move entry ${entry.id} is missing a type.`);
+    }
+
+    if (!entry.category.trim()) {
+      throw new Error(`Move entry ${entry.id} is missing a category.`);
+    }
+
+    if (!Number.isFinite(entry.basePower) || entry.basePower < 0) {
+      throw new Error(`Move entry ${entry.id} has invalid base power.`);
+    }
+  }
+}
+
+function validateLearnsetEntries(
+  entries: LearnsetEntry[],
+  pokemonEntries: PokemonEntry[],
+  moveEntries: MoveEntry[],
+) {
+  if (entries.length < MIN_LEARNSET_ENTRY_COUNT) {
+    throw new Error(
+      `Generated only ${entries.length} learnset entries; expected at least ${MIN_LEARNSET_ENTRY_COUNT}.`,
+    );
+  }
+
+  const pokemonIds = new Set(pokemonEntries.map((entry) => entry.id));
+  const moveIds = new Set(moveEntries.map((entry) => entry.id));
+  const seenPokemonIds = new Set<string>();
+
+  for (const entry of entries) {
+    if (!pokemonIds.has(entry.pokemonId)) {
+      throw new Error(
+        `Learnset entry references unknown pokemon id: ${entry.pokemonId}`,
+      );
+    }
+
+    if (seenPokemonIds.has(entry.pokemonId)) {
+      throw new Error(
+        `Duplicate learnset entry detected for pokemon id: ${entry.pokemonId}`,
+      );
+    }
+
+    seenPokemonIds.add(entry.pokemonId);
+
+    for (const moveId of entry.moveIds) {
+      if (!moveIds.has(moveId)) {
+        throw new Error(
+          `Learnset entry ${entry.pokemonId} references unknown move id: ${moveId}`,
+        );
+      }
+    }
+  }
+}
+
+function validateItemEntries(entries: ItemEntry[]) {
+  if (entries.length < MIN_ITEM_ENTRY_COUNT) {
+    throw new Error(
+      `Generated only ${entries.length} item entries; expected at least ${MIN_ITEM_ENTRY_COUNT}.`,
+    );
+  }
+
+  assertUniqueIds(entries, "item");
+
+  for (const entry of entries) {
+    if (!entry.name.trim()) {
+      throw new Error(`Item entry ${entry.id} is missing a display name.`);
+    }
+  }
+}
+
+function validateGeneratedData(
+  pokemonEntries: PokemonEntry[],
+  moveEntries: MoveEntry[],
+  learnsetEntries: LearnsetEntry[],
+  itemEntries: ItemEntry[],
+) {
+  validatePokemonEntries(pokemonEntries);
+  validateMoveEntries(moveEntries);
+  validateLearnsetEntries(learnsetEntries, pokemonEntries, moveEntries);
+  validateItemEntries(itemEntries);
+}
+
+function warnOnLargeCountDelta(
+  label: string,
+  previousCount: number | null,
+  nextCount: number,
+) {
+  if (previousCount === null) {
+    return;
+  }
+
+  const delta = Math.abs(previousCount - nextCount);
+
+  if (delta > MAX_ENTRY_COUNT_DELTA) {
+    console.warn(
+      `[warn] ${label} count changed by ${delta} entries (${previousCount} -> ${nextCount}).`,
+    );
+  }
 }
 
 async function main() {
@@ -511,6 +705,47 @@ async function main() {
   }
 
   learnsetEntries.sort((a, b) => a.pokemonId.localeCompare(b.pokemonId));
+
+  validateGeneratedData(
+    pokemonEntries,
+    moveEntries,
+    learnsetEntries,
+    itemEntries,
+  );
+
+  const previousPokemonEntries = await readExistingJson<PokemonEntry[]>(
+    path.join(dataDir, "pokemon.gen9.json"),
+  );
+  const previousMoveEntries = await readExistingJson<MoveEntry[]>(
+    path.join(dataDir, "moves.gen9.json"),
+  );
+  const previousLearnsetEntries = await readExistingJson<LearnsetEntry[]>(
+    path.join(dataDir, "learnsets.gen9.json"),
+  );
+  const previousItemEntries = await readExistingJson<ItemEntry[]>(
+    path.join(dataDir, "champions-items.json"),
+  );
+
+  warnOnLargeCountDelta(
+    "pokemon",
+    previousPokemonEntries?.length ?? null,
+    pokemonEntries.length,
+  );
+  warnOnLargeCountDelta(
+    "moves",
+    previousMoveEntries?.length ?? null,
+    moveEntries.length,
+  );
+  warnOnLargeCountDelta(
+    "learnsets",
+    previousLearnsetEntries?.length ?? null,
+    learnsetEntries.length,
+  );
+  warnOnLargeCountDelta(
+    "champions-items",
+    previousItemEntries?.length ?? null,
+    itemEntries.length,
+  );
 
   const writeJson = async (filename: string, data: unknown) => {
     const target = path.join(dataDir, filename);

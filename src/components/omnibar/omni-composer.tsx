@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useSyncExternalStore } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { ModifierSwitches } from "@/components/omnibar/modifier-switches";
@@ -14,8 +14,24 @@ import { parseShareState } from "@/lib/share/parse-share-state";
 import { useOmniStore } from "@/store/use-omni-store";
 import { useTeamStore } from "@/store/use-team-store";
 
+function subscribeToHydration() {
+  return () => {};
+}
+
+function getClientHydrationSnapshot() {
+  return true;
+}
+
+function getServerHydrationSnapshot() {
+  return false;
+}
+
 export function OmniComposer() {
-  const [isClientMounted, setIsClientMounted] = useState(false);
+  const isHydrated = useSyncExternalStore(
+    subscribeToHydration,
+    getClientHydrationSnapshot,
+    getServerHydrationSnapshot,
+  );
   const { issues, calculationReady, setInput, setStrictMode } = useOmniStore(
     useShallow((state) => ({
       issues: state.issues,
@@ -33,10 +49,6 @@ export function OmniComposer() {
   const scrollToResults = () => {
     resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
-
-  useEffect(() => {
-    setIsClientMounted(true);
-  }, []);
 
   useEffect(() => {
     if (hasHydratedUrlPromptRef.current || typeof window === "undefined") {
@@ -113,7 +125,7 @@ export function OmniComposer() {
                 </div>
               </div>
               <div className="theme-composer-secondary">
-                {isClientMounted ? <ModifierSwitches /> : null}
+                {isHydrated ? <ModifierSwitches /> : null}
               </div>
             </div>
           </div>
