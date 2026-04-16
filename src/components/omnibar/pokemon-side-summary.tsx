@@ -856,6 +856,10 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
     rawValue: string,
     maxValue: number,
   ) => {
+    if (!summary) {
+      return;
+    }
+
     const parsed = parseStatInputDraft(rawValue);
     if (!parsed.isValid) {
       return;
@@ -1266,7 +1270,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
                       {label} SP
                     </label>
                     <input
-                      key={`${side}-${statKey}-${currentStatPoints[statKey]}-${derivedNatureMarkers[statKey] ?? ""}`}
+                      key={`${side}-${statKey}-${currentStatPoints[statKey]}-${statKey === "hp" ? "" : (derivedNatureMarkers[statKey] ?? "")}`}
                       id={`${side}-summary-${statKey}-sp`}
                       type="text"
                       inputMode="text"
