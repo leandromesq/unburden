@@ -14,7 +14,8 @@ export const resolveAttackerMoveSuggestion: SlotResolver = (context) => {
   if (
     context.activeToken &&
     context.raw &&
-    (context.raw.toLowerCase().startsWith("m:") || context.raw.startsWith("!")) &&
+    (context.raw.toLowerCase().startsWith("m:") ||
+      context.raw.startsWith("!")) &&
     context.attackerResolved
   ) {
     const { moveFragment, hitSuffix } = splitMoveFragment(context.raw);
@@ -24,11 +25,21 @@ export const resolveAttackerMoveSuggestion: SlotResolver = (context) => {
       8,
     ).map((move) => {
       const token = `${formatMoveToken(move.name)}${hitSuffix}`;
-      const [applyText, cursorOffset] = replaceLastTokenWithCursor(
-        context.input,
-        context.activeToken,
-        token,
-      );
+
+      let applyText: string, cursorOffset: number;
+      if (context.activeToken) {
+        [applyText, cursorOffset] = replaceLastTokenWithCursor(
+          context.input,
+
+          context.activeToken,
+
+          token,
+        );
+      } else {
+        // Fallback: just use the input and token, cursor at end
+        applyText = context.input + token;
+        cursorOffset = applyText.length;
+      }
 
       return {
         type: "move" as const,
@@ -59,38 +70,42 @@ export const resolveAttackerMoveSuggestion: SlotResolver = (context) => {
     return null;
   }
 
-  const query = joinTokenValues(context.structure.attacker.leadingRemainderTokens);
-  const options = getSuggestedMoves(context.attackerResolved.entry.id, query, 8).map(
-    (move) => {
-      const token = formatMoveToken(move.name);
-      const [applyText, cursorOffset] =
-        context.cursorIndex === context.input.length || !context.activeToken
-          ? (() => {
-              const text = buildFullText(
-                context.structure,
-                buildAttackerSideTokens(
-                  context.structure,
-                  token,
-                  context.attackerReferenceToken,
-                ),
-                context.structure.lexed.hasDelimiter
-                  ? context.structure.defender.rawTokens.map((entry) => entry.raw)
-                  : undefined,
-                context.structure.lexed.hasDelimiter,
-              );
-              return [text, text.length] as const;
-            })()
-          : replaceLastTokenWithCursor(context.input, context.activeToken, token);
-
-      return {
-        type: "move" as const,
-        value: token,
-        label: move.name,
-        applyText,
-        cursorOffset,
-      };
-    },
+  const query = joinTokenValues(
+    context.structure.attacker.leadingRemainderTokens,
   );
+  const options = getSuggestedMoves(
+    context.attackerResolved.entry.id,
+    query,
+    8,
+  ).map((move) => {
+    const token = formatMoveToken(move.name);
+    const [applyText, cursorOffset] =
+      context.cursorIndex === context.input.length || !context.activeToken
+        ? (() => {
+            const text = buildFullText(
+              context.structure,
+              buildAttackerSideTokens(
+                context.structure,
+                token,
+                context.attackerReferenceToken,
+              ),
+              context.structure.lexed.hasDelimiter
+                ? context.structure.defender.rawTokens.map((entry) => entry.raw)
+                : undefined,
+              context.structure.lexed.hasDelimiter,
+            );
+            return [text, text.length] as const;
+          })()
+        : replaceLastTokenWithCursor(context.input, context.activeToken, token);
+
+    return {
+      type: "move" as const,
+      value: token,
+      label: move.name,
+      applyText,
+      cursorOffset,
+    };
+  });
   const active = options[0]
     ? buildActiveSuggestion(
         "attacker_move",
