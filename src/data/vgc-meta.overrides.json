@@ -1,19 +1,12 @@
 {
-  "format": "championspreview",
-  "minUsageFraction": 0.001,
-  "commonMoveLimit": 8,
+  "commonMoveLimit": 15,
   "commonAbilityLimit": 3,
-  "commonItemLimit": 6,
+  "commonItemLimit": 10,
   "speciesIdOverrides": {
-    "landorus": "landorustherian",
-    "urshifu": "urshifurapidstrike",
-    "ogerpon": "ogerponwellspring",
-    "indeedee": "indeedeef",
     "arcanine-hisui": "arcaninehisui",
     "rotom-wash": "rotomwash",
     "meowstic-f": "meowsticf",
     "ninetales-alola": "ninetalesalola",
-    "maushold-four": "mausholdfour",
     "palafin-hero": "palafinhero",
     "kommo-o": "kommoo"
   },

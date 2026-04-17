@@ -33,7 +33,7 @@ import type {
   StatSpread,
 } from "@/lib/types";
 
-export type SummarySide = "attacker" | "defender";
+type SummarySide = "attacker" | "defender";
 type StatKey = keyof StatSpread;
 
 const STAT_LABELS: Array<[StatKey, string]> = [
@@ -53,7 +53,7 @@ interface ItemStatBoosts {
   spe: number;
 }
 
-export interface PokemonSummaryData {
+interface PokemonSummaryData {
   title: "Attacker" | "Defender";
   name: string;
   pokemonId: string;

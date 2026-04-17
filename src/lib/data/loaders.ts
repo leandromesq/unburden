@@ -133,7 +133,7 @@ function expandSpriteSlugVariants(slug: string) {
   ];
 }
 
-export function getPokemonSpriteSlugs(pokemon: PokemonEntry) {
+function getPokemonSpriteSlugs(pokemon: PokemonEntry) {
   const rawCandidates = [
     pokemon.name,
     ...pokemon.aliases,

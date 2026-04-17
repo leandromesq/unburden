@@ -120,7 +120,7 @@ function getGlobalTokenCategory(token: string): AutoFieldCategory | null {
   return null;
 }
 
-export function deriveAutoGlobalState(
+function deriveAutoGlobalState(
   input: string,
   importedSets: Record<string, ImportedSet>,
 ): AutoGlobalState {
@@ -267,7 +267,7 @@ export function applyAutoGlobalTokens(
   };
 }
 
-export function buildRecommendedGlobalOptions(
+function buildRecommendedGlobalOptions(
   input: string,
   recommendedTokens: string[],
 ): SuggestionOption[] {

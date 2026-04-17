@@ -239,7 +239,7 @@ function stripModifierTokensByKind(
   });
 }
 
-export function setScopedStageToken(
+function setScopedStageToken(
   input: string,
   scope: "attacker" | "defender",
   value: number,

@@ -1,10 +1,10 @@
 import type { StatSpread } from "@/lib/types";
 
-export type NatureMarker = "+" | "-";
-export type NatureMarkerState = Partial<
+type NatureMarker = "+" | "-";
+type NatureMarkerState = Partial<
   Record<keyof Omit<StatSpread, "hp">, NatureMarker>
 >;
-export type StatInputDrafts = Record<keyof StatSpread, string>;
+type StatInputDrafts = Record<keyof StatSpread, string>;
 
 const NATURE_BY_MARKERS: Record<string, string> = {
   "atk:def": "Lonely",
@@ -39,22 +39,14 @@ const NON_HP_STATS: Array<keyof Omit<StatSpread, "hp">> = [
   "spe",
 ];
 
-export interface ParsedStatInputDraft {
+interface ParsedStatInputDraft {
   numericValue: number | null;
   marker: NatureMarker | null;
   isEmpty: boolean;
   isValid: boolean;
 }
 
-export function getNeutralNature() {
-  return NEUTRAL_NATURE;
-}
-
-export function getNatureByMarkers() {
-  return NATURE_BY_MARKERS;
-}
-
-export function getNatureMarkers(nature: string): NatureMarkerState {
+function getNatureMarkers(nature: string): NatureMarkerState {
   const normalizedNature = nature.trim();
   const entry = Object.entries(NATURE_BY_MARKERS).find(
     ([, mappedNature]) => mappedNature === normalizedNature,
@@ -96,7 +88,7 @@ export function resolveNatureFromMarkerState(
   return NATURE_BY_MARKERS[`${boosted}:${lowered}`] ?? NEUTRAL_NATURE;
 }
 
-export function buildStatInputDraft(
+function buildStatInputDraft(
   value: number,
   marker?: NatureMarker | null,
 ): string {
@@ -190,15 +182,3 @@ export function applyMarkerToState(
   return nextState;
 }
 
-export function clearMarkerFromState(
-  currentState: NatureMarkerState,
-  stat: keyof StatSpread,
-): NatureMarkerState {
-  if (stat === "hp") {
-    return currentState;
-  }
-
-  const nextState: NatureMarkerState = { ...currentState };
-  delete nextState[stat as keyof Omit<StatSpread, "hp">];
-  return nextState;
-}

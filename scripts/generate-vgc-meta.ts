@@ -10,6 +10,7 @@ type PokemonEntry = {
   isMega?: boolean;
   requiredItem?: string;
   baseSpeciesId?: string;
+  defaultFormOf?: string;
 };
 
 type MoveEntry = {
@@ -43,7 +44,6 @@ type VgcMetaProfile = {
 
 type VgcMetaOverrides = {
   format?: string;
-  minUsageFraction?: number;
   minWeightedUsage?: number;
   commonMoveLimit?: number;
   commonAbilityLimit?: number;
@@ -57,6 +57,15 @@ type UsageEntry = {
   usage: number;
 };
 
+type ActiveRegulationConfig = {
+  regulationId: string;
+};
+
+type RegulationEntry = {
+  id: string;
+  allowedPokemonIds: string[];
+};
+
 type PikalyticsIndexEntry = {
   speciesName: string;
   usagePercent: number;
@@ -65,8 +74,7 @@ type PikalyticsIndexEntry = {
 };
 
 const PIKALYTICS_AI_BASE_URL = "https://www.pikalytics.com/ai/pokedex";
-const DEFAULT_FORMAT = "championspreview";
-const DEFAULT_MIN_USAGE_FRACTION = 0.0025;
+const PIKALYTICS_WEB_BASE_URL = "https://www.pikalytics.com/pokedex";
 const DEFAULT_COMMON_MOVE_LIMIT = 8;
 const DEFAULT_COMMON_ABILITY_LIMIT = 6;
 const DEFAULT_COMMON_ITEM_LIMIT = 6;
@@ -334,22 +342,6 @@ function buildMoveIndex(moveData: MoveEntry[]) {
   return index;
 }
 
-function buildMegaEvolutionIndex(pokemonData: PokemonEntry[]) {
-  return new Map(
-    pokemonData
-      .filter(
-        (entry) => entry.isMega && entry.requiredItem && entry.baseSpeciesId,
-      )
-      .map(
-        (entry) =>
-          [
-            `${entry.baseSpeciesId}:${normalizeId(entry.requiredItem!)}`,
-            entry,
-          ] as const,
-      ),
-  );
-}
-
 function extractMarkdownSection(markdown: string, heading: string) {
   const match = markdown.match(
     new RegExp(
@@ -394,6 +386,85 @@ function parseIndexEntries(markdown: string) {
 function parseFormatDataDate(markdown: string) {
   const match = markdown.match(/- \*\*Data Date\*\*: ([\d-]+)/);
   return match?.[1] ?? null;
+}
+
+function parseCurrentFormatCode(pageContent: string) {
+  const markdownMatch = pageContent.match(/- \*\*Format Code\*\*: `([^`]+)`/);
+
+  if (markdownMatch?.[1]) {
+    return markdownMatch[1];
+  }
+
+  const aiUrlMatch = pageContent.match(
+    /"contentUrl":"https:\/\/www\.pikalytics\.com\/ai\/pokedex\/([^/"\\]+)\//,
+  );
+
+  if (aiUrlMatch?.[1]) {
+    return aiUrlMatch[1];
+  }
+
+  const webUrlMatch = pageContent.match(
+    /"url":"https:\/\/www\.pikalytics\.com\/pokedex\/([^/"\\]+)\//,
+  );
+
+  return webUrlMatch?.[1] ?? null;
+}
+
+function buildPikalyticsSpeciesNameCandidates(
+  pokemon: PokemonEntry,
+  pokemonById: Map<string, PokemonEntry>,
+) {
+  const candidates = new Set<string>();
+  const relatedPokemonIds = dedupeStrings([
+    pokemon.id,
+    pokemon.defaultFormOf,
+    pokemon.baseSpeciesId,
+  ]);
+
+  for (const relatedPokemonId of relatedPokemonIds) {
+    const relatedPokemon = pokemonById.get(relatedPokemonId);
+
+    if (!relatedPokemon) {
+      continue;
+    }
+
+    candidates.add(relatedPokemon.name);
+
+    for (const alias of relatedPokemon.aliases) {
+      candidates.add(alias);
+    }
+  }
+
+  return Array.from(candidates).filter(Boolean);
+}
+
+async function resolvePikalyticsAiMarkdown(
+  format: string,
+  candidateSpeciesNames: string[],
+) {
+  const attempts: string[] = [];
+
+  for (const speciesName of dedupeStrings(candidateSpeciesNames)) {
+    const url = `${PIKALYTICS_AI_BASE_URL}/${format}/${encodeURIComponent(speciesName)}`;
+
+    try {
+      return {
+        speciesName,
+        url,
+        markdown: await fetchText(url),
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      attempts.push(`${speciesName} (${message})`);
+    }
+  }
+
+  return {
+    speciesName: null,
+    url: null,
+    markdown: null,
+    error: attempts.join(" | "),
+  };
 }
 
 function resolveDefaultItem(
@@ -570,37 +641,6 @@ function mergeProfile(
   };
 }
 
-function deriveMegaProfile(
-  profile: VgcMetaProfile,
-  pokemon: PokemonEntry,
-  megaEvolutionIndex: Map<string, PokemonEntry>,
-  override: Partial<VgcMetaProfile> | undefined,
-) {
-  const megaPokemon = megaEvolutionIndex.get(
-    `${pokemon.id}:${normalizeId(profile.defaultItem)}`,
-  );
-
-  if (!megaPokemon?.requiredItem) {
-    return null;
-  }
-
-  return mergeProfile(
-    {
-      pokemonId: megaPokemon.id,
-      defaultItem: megaPokemon.requiredItem,
-      defaultAbility: megaPokemon.abilities[0] ?? profile.defaultAbility,
-      defaultMove: profile.defaultMove,
-      commonMoves: [...(profile.commonMoves ?? [])],
-      commonAbilities: dedupeStrings([
-        megaPokemon.abilities[0],
-        ...megaPokemon.abilities,
-      ]),
-      commonItems: [megaPokemon.requiredItem],
-    },
-    override,
-  );
-}
-
 async function mapWithConcurrency<T, U>(
   items: T[],
   concurrency: number,
@@ -630,6 +670,8 @@ async function main() {
   const dataDir = path.join(rootDir, "src", "data");
   const outputPath = path.join(dataDir, "vgc-meta.json");
   const overridesPath = path.join(dataDir, "vgc-meta.overrides.json");
+  const regulationsDir = path.join(dataDir, "regulations");
+  const activeRegulationPath = path.join(regulationsDir, "active.json");
 
   const overrides =
     (await maybeReadJson<VgcMetaOverrides>(overridesPath)) ??
@@ -638,14 +680,6 @@ async function main() {
       profileOverrides: {},
     } satisfies VgcMetaOverrides);
 
-  const resolvedFormat =
-    args.get("--format") ?? overrides.format ?? DEFAULT_FORMAT;
-  const minUsageFraction = Number(
-    args.get("--min-usage") ??
-      overrides.minUsageFraction ??
-      overrides.minWeightedUsage ??
-      DEFAULT_MIN_USAGE_FRACTION,
-  );
   const commonMoveLimit = Number(
     args.get("--top-moves") ??
       overrides.commonMoveLimit ??
@@ -661,6 +695,13 @@ async function main() {
       overrides.commonItemLimit ??
       DEFAULT_COMMON_ITEM_LIMIT,
   );
+  const activeRegulationConfig =
+    await readJson<ActiveRegulationConfig>(activeRegulationPath);
+  const regulationPath = path.join(
+    regulationsDir,
+    `${activeRegulationConfig.regulationId}.json`,
+  );
+  const activeRegulation = await readJson<RegulationEntry>(regulationPath);
 
   const [pokemonData, moveData, formAliasData, legalItemData, previousMeta] =
     await Promise.all([
@@ -683,8 +724,33 @@ async function main() {
     formAliasData,
     overrides.speciesIdOverrides ?? {},
   );
-  const megaEvolutionIndex = buildMegaEvolutionIndex(pokemonData);
   const moveIndex = buildMoveIndex(moveData);
+  const unresolvedSpecies: string[] = [];
+  const legalPokemonIds = dedupeStrings(activeRegulation.allowedPokemonIds);
+  const legalPokemon = legalPokemonIds
+    .map((pokemonId) => pokemonById.get(pokemonId) ?? null)
+    .filter((entry): entry is PokemonEntry => Boolean(entry));
+  const missingLegalPokemonIds = legalPokemonIds.filter(
+    (pokemonId) => !pokemonById.has(pokemonId),
+  );
+
+  if (missingLegalPokemonIds.length) {
+    unresolvedSpecies.push(
+      ...missingLegalPokemonIds.map(
+        (pokemonId) =>
+          `${pokemonId} (missing from pokemon.gen9.json for active regulation ${activeRegulation.id})`,
+      ),
+    );
+  }
+
+  const pikalyticsHomePage = await fetchText(`${PIKALYTICS_WEB_BASE_URL}/`);
+  const resolvedFormat = parseCurrentFormatCode(pikalyticsHomePage);
+
+  if (!resolvedFormat) {
+    throw new Error(
+      `Unable to determine current Pikalytics format code from ${PIKALYTICS_WEB_BASE_URL}/.`,
+    );
+  }
 
   const indexMarkdown = await fetchText(
     `${PIKALYTICS_AI_BASE_URL}/${resolvedFormat}`,
@@ -698,50 +764,111 @@ async function main() {
     );
   }
 
-  const unresolvedSpecies: string[] = [];
   const skippedSpecies: string[] = [];
   const fetchFailures: string[] = [];
+  const speciesNameByPokemonId = new Map<string, string>();
+
+  for (const entry of indexEntries) {
+    const pokemonId = pokemonIdIndex.get(compactAlias(entry.speciesName));
+
+    if (!pokemonId || speciesNameByPokemonId.has(pokemonId)) {
+      continue;
+    }
+
+    speciesNameByPokemonId.set(pokemonId, entry.speciesName);
+  }
 
   const profileResults = await mapWithConcurrency(
-    indexEntries,
+    legalPokemon,
     REQUEST_CONCURRENCY,
-    async (entry) => {
-      if (entry.usagePercent / 100 < minUsageFraction) {
-        return null;
-      }
+    async (pokemon) => {
+      const sourcePokemon =
+        pokemonById.get(pokemon.defaultFormOf ?? "") ??
+        pokemonById.get(pokemon.baseSpeciesId ?? "") ??
+        pokemon;
+      const previousProfile = previousMetaByPokemonId.get(pokemon.id);
+      const directIndexSpeciesName = speciesNameByPokemonId.get(pokemon.id);
+      const sourceIndexSpeciesName = speciesNameByPokemonId.get(
+        sourcePokemon.id,
+      );
+      const candidateSpeciesNames = dedupeStrings([
+        directIndexSpeciesName,
+        sourceIndexSpeciesName,
+        ...buildPikalyticsSpeciesNameCandidates(pokemon, pokemonById),
+        ...buildPikalyticsSpeciesNameCandidates(sourcePokemon, pokemonById),
+      ]);
+      const indexEntry =
+        indexEntries.find(
+          (entry) => entry.speciesName === directIndexSpeciesName,
+        ) ??
+        indexEntries.find(
+          (entry) => entry.speciesName === sourceIndexSpeciesName,
+        ) ??
+        null;
 
       try {
-        const markdown = await fetchText(entry.aiUrl);
-        const pokemonId = pokemonIdIndex.get(compactAlias(entry.speciesName));
+        const resolvedMarkdown = await resolvePikalyticsAiMarkdown(
+          resolvedFormat,
+          candidateSpeciesNames,
+        );
 
-        if (!pokemonId) {
-          unresolvedSpecies.push(entry.speciesName);
+        if (!resolvedMarkdown.markdown) {
+          if (previousProfile) {
+            const mergedPreviousProfile = mergeProfile(
+              {
+                ...previousProfile,
+                pokemonId: pokemon.id,
+              },
+              overrides.profileOverrides?.[pokemon.id],
+            );
+
+            return {
+              usagePercent: indexEntry?.usagePercent ?? 0,
+              profile: {
+                ...mergedPreviousProfile,
+                commonMoves: dedupeStrings(
+                  mergedPreviousProfile.commonMoves ?? [],
+                ).slice(0, commonMoveLimit),
+                commonAbilities: dedupeStrings(
+                  mergedPreviousProfile.commonAbilities ?? [],
+                ).slice(0, commonAbilityLimit),
+                commonItems: dedupeStrings(
+                  mergedPreviousProfile.commonItems ?? [],
+                ).slice(0, commonItemLimit),
+              },
+            };
+          }
+
+          fetchFailures.push(
+            `${pokemon.name}: ${
+              resolvedMarkdown.error ??
+              `No Pikalytics AI page resolved from candidates ${candidateSpeciesNames.join(", ")}`
+            }`,
+          );
           return null;
         }
 
-        const pokemon = pokemonById.get(pokemonId);
-
-        if (!pokemon) {
-          unresolvedSpecies.push(`${entry.speciesName} -> ${pokemonId}`);
-          return null;
-        }
-
-        const previousProfile = previousMetaByPokemonId.get(pokemonId);
         const commonMovesSection = parseUsageEntries(
-          extractMarkdownSection(markdown, "Common Moves"),
+          extractMarkdownSection(resolvedMarkdown.markdown, "Common Moves"),
         );
         const commonAbilitiesSection = parseUsageEntries(
-          extractMarkdownSection(markdown, "Common Abilities"),
+          extractMarkdownSection(resolvedMarkdown.markdown, "Common Abilities"),
         );
         const commonItemsSection = parseUsageEntries(
-          extractMarkdownSection(markdown, "Common Items"),
+          extractMarkdownSection(resolvedMarkdown.markdown, "Common Items"),
         );
-        const { defaultItem, commonItems } = resolveDefaultItem(
-          commonItemsSection,
-          previousProfile,
-          commonItemLimit,
-          legalItemById,
-        );
+        const { defaultItem, commonItems } =
+          pokemon.isMega && pokemon.requiredItem
+            ? {
+                defaultItem: pokemon.requiredItem,
+                commonItems: [pokemon.requiredItem],
+              }
+            : resolveDefaultItem(
+                commonItemsSection,
+                previousProfile,
+                commonItemLimit,
+                legalItemById,
+              );
         const { defaultAbility, commonAbilities } = resolveDefaultAbility(
           commonAbilitiesSection,
           pokemon,
@@ -757,13 +884,15 @@ async function main() {
         );
 
         if (!defaultItem || !defaultAbility || !defaultMove) {
-          skippedSpecies.push(entry.speciesName);
+          skippedSpecies.push(
+            `${pokemon.name}${resolvedMarkdown.speciesName ? ` <- ${resolvedMarkdown.speciesName}` : ""}`,
+          );
           return null;
         }
 
         const mergedProfile = mergeProfile(
           {
-            pokemonId,
+            pokemonId: pokemon.id,
             defaultItem,
             defaultAbility,
             defaultMove,
@@ -771,11 +900,11 @@ async function main() {
             commonAbilities,
             commonItems,
           },
-          overrides.profileOverrides?.[pokemonId],
+          overrides.profileOverrides?.[pokemon.id],
         );
 
         return {
-          usagePercent: entry.usagePercent,
+          usagePercent: indexEntry?.usagePercent ?? 0,
           profile: {
             ...mergedProfile,
             commonMoves: dedupeStrings(mergedProfile.commonMoves ?? []).slice(
@@ -793,7 +922,7 @@ async function main() {
         };
       } catch (error) {
         fetchFailures.push(
-          `${entry.speciesName}: ${error instanceof Error ? error.message : String(error)}`,
+          `${pokemon.name}: ${error instanceof Error ? error.message : String(error)}`,
         );
         return null;
       }
@@ -812,26 +941,7 @@ async function main() {
       return left.profile.pokemonId.localeCompare(right.profile.pokemonId);
     });
   const nextMeta = dedupeStrings(
-    baseProfiles.flatMap(({ profile }) => {
-      const pokemon = pokemonById.get(profile.pokemonId);
-      const megaProfile = pokemon
-        ? deriveMegaProfile(
-            profile,
-            pokemon,
-            megaEvolutionIndex,
-            overrides.profileOverrides?.[
-              megaEvolutionIndex.get(
-                `${pokemon.id}:${normalizeId(profile.defaultItem)}`,
-              )?.id ?? ""
-            ],
-          )
-        : null;
-
-      return [
-        JSON.stringify(profile),
-        megaProfile ? JSON.stringify(megaProfile) : null,
-      ];
-    }),
+    baseProfiles.map(({ profile }) => JSON.stringify(profile)),
   )
     .map((profileText) => JSON.parse(profileText) as VgcMetaProfile)
     .sort((left, right) => left.pokemonId.localeCompare(right.pokemonId));
@@ -845,8 +955,9 @@ async function main() {
   console.log(
     [
       `Generated ${nextMeta.length} Champions meta profiles from Pikalytics format ${resolvedFormat}.`,
+      `Active regulation: ${activeRegulation.id}.`,
       dataDate ? `Data date: ${dataDate}.` : "Data date: unavailable.",
-      `Minimum usage fraction: ${minUsageFraction}.`,
+      `Legal Pokemon crawled: ${legalPokemon.length}.`,
       unresolvedSpecies.length
         ? `Unresolved species (${unresolvedSpecies.length}): ${unresolvedSpecies.join(", ")}`
         : "Unresolved species: none.",

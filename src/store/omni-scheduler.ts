@@ -1,6 +1,6 @@
-export type ScheduledCalculationMode = "idle" | "timeout";
+type ScheduledCalculationMode = "idle" | "timeout";
 
-export interface OmniScheduler {
+interface OmniScheduler {
   bumpVersion(): number;
   getVersion(): number;
   schedulePreview(
@@ -31,7 +31,7 @@ function getSchedulerWindow(): SchedulerWindow | null {
   return window as SchedulerWindow;
 }
 
-export function createOmniScheduler(): OmniScheduler {
+function createOmniScheduler(): OmniScheduler {
   let scheduledComputeFrame: number | null = null;
   let scheduledComputeVersion = 0;
   let scheduledCalculationHandle: number | null = null;

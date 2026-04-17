@@ -4,7 +4,7 @@ import {
 } from "@/components/omnibar/pokemon-summary/shared";
 import type { SummarySide } from "@/lib/parser/input-mutations";
 
-export interface SummaryIdentityCardProps {
+interface SummaryIdentityCardProps {
   name: string;
   spriteSources: string[];
   ability: string | null;

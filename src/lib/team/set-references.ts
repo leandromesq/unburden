@@ -5,7 +5,7 @@ function normalizeReferenceValue(value: string) {
   return normalizeId(value.replace(/^#/, ""));
 }
 
-export function getImportedSetReferenceAliases(set: ImportedSet) {
+function getImportedSetReferenceAliases(set: ImportedSet) {
   const aliases = new Set<string>();
 
   aliases.add(normalizeReferenceValue(set.speciesId));

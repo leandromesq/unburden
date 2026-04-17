@@ -16,7 +16,7 @@ import type {
   SuggestionState,
 } from "@/lib/types";
 
-export interface ComputeStateInput {
+interface ComputeStateInput {
   input: string;
   importedSets: Record<string, ImportedSet>;
   previousAutoTokens?: string[];
@@ -39,7 +39,7 @@ export interface ComputeStateInput {
   };
 }
 
-export interface ComputedOmniState {
+interface ComputedOmniState {
   input: string;
   cursorIndex: number;
   strictMode: boolean;
