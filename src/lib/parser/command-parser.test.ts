@@ -137,6 +137,14 @@ describe("parseCommand", () => {
     });
   });
 
+  test("maps attacker +nature to a defense-boosting nature for body press", () => {
+    const result = parseCommand("archaludon !body-press +nature x incineroar");
+
+    expect(result.parsed).toMatchObject({
+      attackerNature: "Impish",
+    });
+  });
+
   test("clamps attacker and defender stages to the -6..+6 range", () => {
     const result = parseCommand(
       "politoed !muddy-water +6 +3 x incineroar -4 -5",

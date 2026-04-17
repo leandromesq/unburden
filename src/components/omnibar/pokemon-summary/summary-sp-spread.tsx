@@ -1,7 +1,3 @@
-import {
-  buildStatInputDrafts,
-  buildNatureMarkerState,
-} from "@/lib/team/nature-markers";
 import type { StatSpread } from "@/lib/types";
 import {
   SUMMARY_STAT_LABELS,
@@ -15,9 +11,9 @@ const STAT_LABELS: Array<[StatKey, string]> = SUMMARY_STAT_LABELS;
 interface SummarySpSpreadProps {
   side: "attacker" | "defender";
   currentStatPoints: StatSpread;
-  derivedNatureMarkers: ReturnType<typeof buildNatureMarkerState>;
   isSpDepleted: boolean;
   spLeft: number;
+  statInputDrafts: Record<StatKey, string>;
   onChangeInput: (stat: StatKey, rawValue: string, maxValue: number) => void;
   onChangeSlider: (stat: StatKey, nextValue: number, maxValue: number) => void;
 }
@@ -25,9 +21,9 @@ interface SummarySpSpreadProps {
 export function SummarySpSpread({
   side,
   currentStatPoints,
-  derivedNatureMarkers,
   isSpDepleted,
   spLeft,
+  statInputDrafts,
   onChangeInput,
   onChangeSlider,
 }: SummarySpSpreadProps) {
@@ -84,17 +80,11 @@ export function SummarySpSpread({
                   </label>
 
                   <input
-                    key={`${side}-${statKey}-${currentStatPoints[statKey]}-${statKey === "hp" ? "" : (derivedNatureMarkers[statKey] ?? "")}`}
                     id={`${side}-summary-${statKey}-sp`}
                     type="text"
                     inputMode="text"
                     aria-label={`${label} SP`}
-                    defaultValue={
-                      buildStatInputDrafts(
-                        currentStatPoints,
-                        derivedNatureMarkers,
-                      )[statKey]
-                    }
+                    value={statInputDrafts[statKey]}
                     onFocus={(event) => {
                       event.currentTarget.select();
                     }}

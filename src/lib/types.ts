@@ -6,6 +6,12 @@ export interface RegulationEntry {
   allowedPokemonIds: string[];
 }
 
+export interface ActiveRegulationConfig {
+  regulationId: string;
+  rosterHash?: string;
+  lastVerified?: string;
+}
+
 export type BulkArchetype = "glass" | "mid" | "tank";
 export type PokemonStatus = "brn" | "par" | "psn" | "slp" | "frz";
 

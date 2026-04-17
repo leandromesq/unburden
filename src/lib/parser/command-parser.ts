@@ -1,3 +1,4 @@
+import { resolveAttackerRepresentativeNature } from "@/lib/calc/move-stat-context";
 import {
   allowedItemIds,
   itemDisplayById,
@@ -165,14 +166,15 @@ function parseModifierCollections(
 
 function resolveAttackerNature(
   nature: string | undefined,
+  moveId: string,
   moveCategory: string,
 ) {
   if (nature === ATTACKER_POSITIVE_NATURE) {
-    return moveCategory === "Physical" ? "Adamant" : "Modest";
+    return resolveAttackerRepresentativeNature(moveId, moveCategory, "boost");
   }
 
   if (nature === ATTACKER_NEGATIVE_NATURE) {
-    return moveCategory === "Physical" ? "Modest" : "Adamant";
+    return resolveAttackerRepresentativeNature(moveId, moveCategory, "nerf");
   }
 
   return nature;
@@ -415,7 +417,11 @@ export function parseCommand(
     structure.defender.modifierTokens.map((token) => token.value),
     structure.globalTokens.map((token) => token.value),
   );
-  const attackerNature = resolveAttackerNature(modifiers.attackerNature, move.category);
+  const attackerNature = resolveAttackerNature(
+    modifiers.attackerNature,
+    move.id,
+    move.category,
+  );
   const defenderNature = resolveDefenderNature(modifiers.defenderNature, move.category);
 
   return {

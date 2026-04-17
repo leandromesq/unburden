@@ -1,6 +1,7 @@
 import { Field, Generations, Move, Pokemon, calculate } from "@smogon/calc";
 
 import { buildCustomSetArchetypeConfig, getArchetypeConfigs } from "@/lib/calc/archetypes";
+import { resolveAttackingStatKey } from "@/lib/calc/move-stat-context";
 import {
   DEFAULT_IV_SPREAD,
   EMPTY_STAT_SPREAD,
@@ -709,7 +710,13 @@ function describeAssumptions(
   const assumptions: string[] = [];
   const hasWeatherBoost = parsed.globalEffects.includes("sun");
   const hasTerrainBoost = parsed.globalEffects.includes("electric_terrain");
-  const attackerStageStat = moveCategory === "Physical" ? "Atk" : "SpA";
+  const attackerStageStatKey = resolveAttackingStatKey(parsed.move, moveCategory);
+  const attackerStageStat =
+    attackerStageStatKey === "def"
+      ? "Def"
+      : attackerStageStatKey === "spa"
+        ? "SpA"
+        : "Atk";
   const defenderStageStat = moveCategory === "Physical" ? "Def" : "SpD";
 
   if (parsed.attackerStatMod !== 0) {
@@ -956,12 +963,15 @@ export function buildCalculationContext(
   );
 
   const isPhysical = move.category === "Physical";
+  const attackingStatKey = resolveAttackingStatKey(move.id, move.category);
   const attackInvestment =
     parsed.attackerInvestment === "max_atk"
       ? "atk"
       : parsed.attackerInvestment === "max_spa"
         ? "spa"
-        : isPhysical
+        : attackingStatKey === "def"
+          ? "def"
+          : isPhysical
           ? "atk"
           : "spa";
   const attackerItemSource: ValueSource = parsed.attackerItem
@@ -1030,14 +1040,15 @@ export function buildCalculationContext(
       : buildBaseEvs(attackerSet, {
         hp: 4,
         atk: attackInvestment === "atk" ? 252 : 0,
-        def: 0,
+        def: attackInvestment === "def" ? 252 : 0,
         spa: attackInvestment === "spa" ? 252 : 0,
         spd: 0,
         spe: 0,
       }),
     boosts: {
-      atk: move.category === "Physical" ? parsed.attackerStatMod : 0,
-      spa: move.category === "Special" ? parsed.attackerStatMod : 0,
+      atk: attackingStatKey === "atk" ? parsed.attackerStatMod : 0,
+      def: attackingStatKey === "def" ? parsed.attackerStatMod : 0,
+      spa: attackingStatKey === "spa" ? parsed.attackerStatMod : 0,
       spe: parsed.attackerSpeedMod,
     },
     status: parsed.attackerStatus,

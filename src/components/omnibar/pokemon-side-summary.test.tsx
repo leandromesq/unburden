@@ -134,6 +134,25 @@ describe("PokemonSideSummary nature marker synchronization", () => {
     );
   });
 
+  test("summary SP inputs support multi-digit edits without remounting", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    const summary = screen.getByTestId("attacker-summary");
+    const hpInput = within(summary).getByRole("textbox", { name: "HP SP" });
+
+    fireEvent.focus(hpInput);
+    fireEvent.change(hpInput, { target: { value: "3" } });
+    fireEvent.change(hpInput, { target: { value: "32" } });
+
+    expect(within(summary).getByRole("textbox", { name: "HP SP" })).toHaveValue(
+      "32",
+    );
+  });
+
   test("typing paired markers updates the live nature for prompt-only summaries", () => {
     render(<OmniComposer />);
 
@@ -152,6 +171,58 @@ describe("PokemonSideSummary nature marker synchronization", () => {
     fireEvent.change(spaInput, { target: { value: "32+" } });
 
     expect(summary).toHaveTextContent("Modest (+SpA/-Atk)");
+  });
+
+  test("prompt-only defender defense markers update the calc nature for physical moves", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("snorlax !body-slam x incineroar");
+    });
+
+    const startingMax = useOmniStore.getState().results[0]?.maxPercentage ?? 0;
+    expect(useOmniStore.getState().parsed?.defenderNature).toBeUndefined();
+
+    const summary = screen.getByTestId("defender-summary");
+    const atkInput = within(summary).getByRole("textbox", { name: "Atk SP" });
+    const defInput = within(summary).getByRole("textbox", { name: "Def SP" });
+
+    fireEvent.focus(atkInput);
+    fireEvent.change(atkInput, { target: { value: "0-" } });
+
+    fireEvent.focus(defInput);
+    fireEvent.change(defInput, { target: { value: "0+" } });
+
+    expect(useOmniStore.getState().input).toContain("x incineroar +nature");
+    expect(useOmniStore.getState().parsed?.defenderNature).toBe("Bold");
+    expect(useOmniStore.getState().results[0]?.maxPercentage).toBeLessThan(
+      startingMax,
+    );
+  });
+
+  test("prompt-only attacker defense markers update body press calcs", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("archaludon !body-press x incineroar");
+    });
+
+    const startingMax = useOmniStore.getState().results[0]?.maxPercentage ?? 0;
+    const summary = screen.getByTestId("attacker-summary");
+    const atkInput = within(summary).getByRole("textbox", { name: "Atk SP" });
+    const defInput = within(summary).getByRole("textbox", { name: "Def SP" });
+
+    fireEvent.focus(atkInput);
+    fireEvent.change(atkInput, { target: { value: "0-" } });
+
+    fireEvent.focus(defInput);
+    fireEvent.change(defInput, { target: { value: "0+" } });
+
+    expect(useOmniStore.getState().input).toContain("!body-press +nature");
+    expect(useOmniStore.getState().parsed?.attackerNature).toBe("Impish");
+    expect(useOmniStore.getState().results[0]?.maxPercentage).toBeGreaterThan(
+      startingMax,
+    );
   });
 
   test("summary reflects updated saved set nature markers after recompute", () => {

@@ -34,6 +34,28 @@ describe("stat point utilities", () => {
     expect(evToStatPointsValue(999)).toBe(32);
   });
 
+  test("rounds EV values across the smallest conversion boundary", () => {
+    expect(evToStatPointsValue(3)).toBe(0);
+    expect(evToStatPointsValue(4)).toBe(1);
+    expect(
+      evsToStatPoints({
+        hp: 3,
+        atk: 4,
+        def: 0,
+        spa: 0,
+        spd: 0,
+        spe: 0,
+      }),
+    ).toEqual({
+      hp: 0,
+      atk: 1,
+      def: 0,
+      spa: 0,
+      spd: 0,
+      spe: 0,
+    });
+  });
+
   test("derives calc EVs from stat points", () => {
     expect(
       statPointsToCalcEvs({
@@ -108,6 +130,27 @@ describe("stat point utilities", () => {
     });
   });
 
+  test("reduces overflow one pass at a time until the total reaches 66", () => {
+    const clamped = clampStatPoints({
+      hp: 32,
+      atk: 32,
+      def: 32,
+      spa: 32,
+      spd: 32,
+      spe: 32,
+    });
+
+    expect(clamped).toEqual({
+      hp: 11,
+      atk: 11,
+      def: 11,
+      spa: 11,
+      spd: 11,
+      spe: 11,
+    });
+    expect(sumStatPoints(clamped)).toBe(66);
+  });
+
   test("returns the original spread when already within limits", () => {
     const spread = {
       hp: 32,
@@ -120,5 +163,26 @@ describe("stat point utilities", () => {
 
     expect(clampStatPoints(spread)).toEqual(spread);
     expect(sumStatPoints(spread)).toBe(66);
+  });
+
+  test("never leaves the total above 66 after clamping arbitrary spreads", () => {
+    const clamped = clampStatPoints({
+      hp: 999,
+      atk: 999,
+      def: 999,
+      spa: 999,
+      spd: 999,
+      spe: 999,
+    });
+
+    expect(sumStatPoints(clamped)).toBeLessThanOrEqual(66);
+    expect(clamped).toEqual({
+      hp: 11,
+      atk: 11,
+      def: 11,
+      spa: 11,
+      spd: 11,
+      spe: 11,
+    });
   });
 });

@@ -1,12 +1,13 @@
 import {
-  PokemonSprite,
   formatNatureWithDescription,
 } from "@/components/omnibar/pokemon-summary/shared";
+import { PokemonSprite } from "@/components/omnibar/pokemon-summary/pokemon-sprite";
 import type { SummarySide } from "@/lib/parser/input-mutations";
 
 interface SummaryIdentityCardProps {
   name: string;
   spriteSources: string[];
+  primaryType: string | null;
   ability: string | null;
   item: string | null;
   move: string | null;
@@ -17,6 +18,7 @@ interface SummaryIdentityCardProps {
 export function SummaryIdentityCard({
   name,
   spriteSources,
+  primaryType,
   ability,
   item,
   move,
@@ -26,7 +28,12 @@ export function SummaryIdentityCard({
   return (
     <div className="mt-3 flex items-center gap-3">
       <div className="theme-subpanel-strong flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl p-2">
-        <PokemonSprite key={name} sources={spriteSources} name={name} />
+        <PokemonSprite
+          key={name}
+          sources={spriteSources}
+          name={name}
+          primaryType={primaryType}
+        />
       </div>
       <div className="min-w-0">
         <div className="truncate text-lg font-medium">{name}</div>

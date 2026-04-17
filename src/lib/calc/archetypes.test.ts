@@ -60,6 +60,22 @@ function createImportedSet(overrides: Partial<ImportedSet> = {}): ImportedSet {
 
 describe("archetypes", () => {
   describe("getArchetypeConfigs", () => {
+    test.each(["Physical", "Special"] as const)(
+      "returns the three default defensive archetypes for %s moves",
+      (moveCategory) => {
+        const defender = createPokemon();
+
+        const configs = getArchetypeConfigs(defender, moveCategory);
+
+        expect(configs).toHaveLength(3);
+        expect(configs.map((config) => config.archetype)).toEqual([
+          "glass",
+          "mid",
+          "tank",
+        ]);
+      },
+    );
+
     test("returns the three default defensive archetypes", () => {
       const defender = createPokemon();
 
@@ -118,26 +134,43 @@ describe("archetypes", () => {
       expect(tank.evs.spd).toBe(4);
     });
 
-    test("respects explicit defender investment overrides", () => {
+    test("custom nature overrides the tank default nature", () => {
       const defender = createPokemon();
 
-      const maxDefConfigs = getArchetypeConfigs(
-        defender,
-        "Special",
-        undefined,
-        "max_def",
-      );
-      const maxSpdConfigs = getArchetypeConfigs(
-        defender,
-        "Physical",
-        undefined,
-        "max_spd",
-      );
+      const configs = getArchetypeConfigs(defender, "Physical", "Careful");
+      const tank = configs[2];
 
-      expect(maxDefConfigs[2].evs.def).toBe(252);
-      expect(maxDefConfigs[2].evs.spd).toBe(4);
-      expect(maxSpdConfigs[2].evs.def).toBe(4);
-      expect(maxSpdConfigs[2].evs.spd).toBe(252);
+      expect(tank.nature).toBe("Careful");
+      expect(tank.evs).toEqual({
+        hp: 252,
+        atk: 0,
+        def: 4,
+        spa: 0,
+        spd: 252,
+        spe: 0,
+      });
+    });
+
+    test("max_def investment forces Defense tank regardless of move category", () => {
+      const defender = createPokemon();
+
+      const configs = getArchetypeConfigs(defender, "Special", undefined, "max_def");
+      const tank = configs[2];
+
+      expect(tank.evs.def).toBe(252);
+      expect(tank.evs.spd).toBe(4);
+      expect(tank.nature).toBe("Bold");
+    });
+
+    test("max_spd investment forces Special Defense tank regardless of move category", () => {
+      const defender = createPokemon();
+
+      const configs = getArchetypeConfigs(defender, "Physical", undefined, "max_spd");
+      const tank = configs[2];
+
+      expect(tank.evs.def).toBe(4);
+      expect(tank.evs.spd).toBe(252);
+      expect(tank.nature).toBe("Calm");
     });
   });
 

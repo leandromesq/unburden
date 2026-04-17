@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import { NATURE_MODIFIERS } from "@/lib/calc/stat-calc";
 import type { StatSpread } from "@/lib/types";
 
@@ -49,33 +47,6 @@ export function getNatureEffect(
   }
 
   return value > 1 ? ("boost" as const) : ("nerf" as const);
-}
-
-interface PokemonSpriteProps {
-  sources: string[];
-  name: string;
-}
-
-export function PokemonSprite({ sources, name }: PokemonSpriteProps) {
-  const [spriteIndex, setSpriteIndex] = useState(0);
-
-  return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={sources[spriteIndex]}
-      alt={name}
-      width={72}
-      height={72}
-      loading="lazy"
-      className="h-18 w-18 object-contain"
-      style={{ imageRendering: "pixelated" }}
-      onError={() => {
-        setSpriteIndex((current) =>
-          current < sources.length - 1 ? current + 1 : current,
-        );
-      }}
-    />
-  );
 }
 
 interface MoveChipProps {

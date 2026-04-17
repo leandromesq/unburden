@@ -241,7 +241,7 @@ describe("damage engine", () => {
     const context = buildCalculationContext(parsed!);
 
     expect(context?.attacker.name).toBe("Charizard");
-    expect(context?.attackerAbility).toBe("Solar Power");
+    expect(context?.attackerAbility).toBe("Blaze");
   });
 
   test("resolves mega evolution only when the mega form is explicit in the prompt", () => {
@@ -279,7 +279,7 @@ describe("damage engine", () => {
     const context = buildCalculationContext(parsed!);
 
     expect(context?.attacker.name).toBe("Charizard");
-    expect(context?.attackerAbility).toBe("Solar Power");
+    expect(context?.attackerAbility).toBe("Blaze");
   });
 
   test("applies defender items that mitigate or bulk special damage", () => {

@@ -14,6 +14,7 @@ import {
   computeStats,
   statPointsToCalcEvs,
 } from "@/lib/calc/stat-calc";
+import { resolveAttackingStatKey } from "@/lib/calc/move-stat-context";
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
 import {
   ATTACKER_MODIFIER_MAP,
@@ -60,8 +61,11 @@ interface PokemonSummaryData {
   pokemonId: string;
   promptPokemonId: string;
   spriteSources: string[];
+  primaryType: string | null;
   ability: string | null;
   move: string | null;
+  moveId: string | null;
+  moveCategory: string | null;
   activeMoveEntry:
     | (typeof moveById extends Map<string, infer T> ? T : never)
     | null;
@@ -370,6 +374,7 @@ export function usePokemonSummary({
         resolveMoveEntity(moveSlug.replace(/-/g, " "))?.entry ??
         null)
       : null;
+    const moveId = moveEntry?.id ?? null;
     const moveCategory = moveEntry?.category ?? null;
 
     const attackerItemDisplay = structure.attacker.itemToken?.value
@@ -432,8 +437,7 @@ export function usePokemonSummary({
           )
         : attacker.baseStats;
 
-      const atkStage = moveCategory === "Special" ? 0 : attackerStatStage;
-      const spaStage = moveCategory === "Physical" ? 0 : attackerStatStage;
+      const attackingStatKey = resolveAttackingStatKey(moveId, moveCategory);
       const attackerChoiceBoosts = getItemStatBoosts(attackerItemName);
       const megaTarget = attacker.isMega
         ? attacker.baseSpeciesId
@@ -448,26 +452,29 @@ export function usePokemonSummary({
         pokemonId: attacker.id,
         promptPokemonId: attackerPromptSpecies?.id ?? attacker.id,
         spriteSources: getPokemonSpriteSources(attacker),
+        primaryType: attacker.types[0] ?? null,
         ability: resolveAbilityDisplay(
           attacker,
           parsedCommand?.attackerAbility ??
             structure.attacker.abilityToken?.value,
         ),
         move: parsedCommand?.move ?? moveName,
+        moveId,
+        moveCategory,
         activeMoveEntry: moveEntry,
         item: attackerItemName,
         nature: effectiveSet.nature,
         stats,
         isBaseStats: !hasCustomStats,
         importedSet,
-        promptStatPoints: effectivePromptStatPoints,
+        promptStatPoints,
         effectiveStatPoints: effectiveSet.statPoints,
         megaTarget,
         stageBoosts: {
           hp: 0,
-          atk: atkStage,
-          def: 0,
-          spa: spaStage,
+          atk: attackingStatKey === "atk" ? attackerStatStage : 0,
+          def: attackingStatKey === "def" ? attackerStatStage : 0,
+          spa: attackingStatKey === "spa" ? attackerStatStage : 0,
           spd: 0,
           spe: attackerSpeedStage,
         },
@@ -530,19 +537,22 @@ export function usePokemonSummary({
       pokemonId: defender.id,
       promptPokemonId: defenderPromptSpecies?.id ?? defender.id,
       spriteSources: getPokemonSpriteSources(defender),
+      primaryType: defender.types[0] ?? null,
       ability: resolveAbilityDisplay(
         defender,
         parsedCommand?.defenderAbility ??
           structure.defender.abilityToken?.value,
       ),
       move: null,
+      moveId,
+      moveCategory,
       activeMoveEntry: null,
       item: defenderItemName,
       nature: effectiveSet.nature,
       stats,
       isBaseStats: !hasCustomStats,
       importedSet,
-      promptStatPoints: effectivePromptStatPoints,
+      promptStatPoints,
       effectiveStatPoints: effectiveSet.statPoints,
       megaTarget,
       stageBoosts: {

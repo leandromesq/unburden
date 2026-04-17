@@ -2,6 +2,7 @@ import {
   buildActiveChipTokens,
   insertChipToken,
   removeChipToken,
+  setNatureModifierToken,
   setHpPercentageToken,
   setSpeedModifierToken,
   setStatModifierToken,
@@ -242,6 +243,32 @@ describe("input mutations", () => {
           0,
         ),
       ).toBe("regieleki !electro-ball x amoonguss");
+    });
+  });
+
+  describe("setNatureModifierToken", () => {
+    test("maps defense-boosting attacker natures to +nature for body press", () => {
+      expect(
+        setNatureModifierToken(
+          "zamazenta !body-press x incineroar",
+          "attacker",
+          "bodypress",
+          "Physical",
+          "Bold",
+        ),
+      ).toBe("zamazenta !body-press +nature x incineroar");
+    });
+
+    test("maps defender defensive natures by the active move category", () => {
+      expect(
+        setNatureModifierToken(
+          "snorlax !body-slam x incineroar",
+          "defender",
+          "bodyslam",
+          "Physical",
+          "Bold",
+        ),
+      ).toBe("snorlax !body-slam x incineroar +nature");
     });
   });
 

@@ -1,3 +1,7 @@
+import {
+  getNatureEffectDirectionForStat,
+  resolveAttackingStatKey,
+} from "@/lib/calc/move-stat-context";
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
 import {
   ATTACKER_MODIFIER_MAP,
@@ -221,7 +225,7 @@ export function insertChipToken(
 function stripModifierTokensByKind(
   scope: "attacker" | "defender",
   tokens: ReturnType<typeof analyzeCommandStructure>["attacker"]["rawTokens"],
-  kind: "stat_mod" | "speed_mod",
+  kind: "stat_mod" | "speed_mod" | "nature",
 ) {
   const modifierMap =
     scope === "attacker" ? ATTACKER_MODIFIER_MAP : DEFENDER_MODIFIER_MAP;
@@ -319,6 +323,90 @@ export function setSpeedModifierToken(
   value: number,
 ) {
   return setScopedStageToken(input, scope, value, "speed_mod");
+}
+
+function resolveNatureModifierToken(
+  scope: "attacker" | "defender",
+  moveId: string | null | undefined,
+  moveCategory: string | null | undefined,
+  nature: string | null | undefined,
+) {
+  if (!nature) {
+    return null;
+  }
+
+  if (scope === "attacker") {
+    const attackingStatKey = resolveAttackingStatKey(moveId, moveCategory);
+    const natureEffect = getNatureEffectDirectionForStat(
+      nature,
+      attackingStatKey,
+    );
+
+    if (natureEffect) {
+      return natureEffect === "boost" ? "+nature" : "-nature";
+    }
+
+    return null;
+  }
+
+  if (!moveCategory) {
+    return null;
+  }
+
+  const defendingStatKey = moveCategory === "Physical" ? "def" : "spd";
+  const natureEffect = getNatureEffectDirectionForStat(
+    nature,
+    defendingStatKey,
+  );
+
+  if (natureEffect) {
+    return natureEffect === "boost" ? "+nature" : "-nature";
+  }
+
+  return null;
+}
+
+export function setNatureModifierToken(
+  input: string,
+  scope: "attacker" | "defender",
+  moveId: string | null | undefined,
+  moveCategory: string | null | undefined,
+  nature: string | null | undefined,
+) {
+  const normalizedInput = compactWhitespace(input);
+  const structure = analyzeCommandStructure(normalizedInput);
+  const attackerTokens = (
+    scope === "attacker"
+      ? stripModifierTokensByKind("attacker", structure.attacker.rawTokens, "nature")
+      : structure.attacker.rawTokens
+  ).map((entry) => entry.raw);
+  const defenderTokens = (
+    scope === "defender"
+      ? stripModifierTokensByKind("defender", structure.defender.rawTokens, "nature")
+      : structure.defender.rawTokens
+  ).map((entry) => entry.raw);
+
+  const token = resolveNatureModifierToken(scope, moveId, moveCategory, nature);
+
+  if (scope === "attacker") {
+    const nextAttackerTokens = token ? [...attackerTokens, token] : attackerTokens;
+
+    if (structure.lexed.hasDelimiter) {
+      return [...nextAttackerTokens, "x", ...defenderTokens].join(" ").trim();
+    }
+
+    return nextAttackerTokens.join(" ").trim();
+  }
+
+  if (
+    !structure.lexed.hasDelimiter ||
+    !joinTokenValues(structure.defender.speciesTokens)
+  ) {
+    return normalizedInput;
+  }
+
+  const nextDefenderTokens = token ? [...defenderTokens, token] : defenderTokens;
+  return [...attackerTokens, "x", ...nextDefenderTokens].join(" ").trim();
 }
 
 function stripHpTokens(
