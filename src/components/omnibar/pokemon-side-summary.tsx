@@ -40,6 +40,24 @@ import type { ImportedSet, PokemonEntry, StatSpread } from "@/lib/types";
 type StatKey = keyof StatSpread;
 const STAT_LABELS: Array<[StatKey, string]> = SUMMARY_STAT_LABELS;
 
+function buildSetEditorKey(set: ImportedSet): string {
+  return [
+    set.speciesId,
+    set.speciesName,
+    set.nickname ?? "",
+    set.item ?? "",
+    set.ability ?? "",
+    set.nature,
+    set.moves.join("|"),
+    set.statPoints.hp,
+    set.statPoints.atk,
+    set.statPoints.def,
+    set.statPoints.spa,
+    set.statPoints.spd,
+    set.statPoints.spe,
+  ].join("::");
+}
+
 export function PokemonSideSummary({ side }: { side: SummarySide }) {
   const {
     commandStructure,
@@ -66,12 +84,17 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [editorOpen, setEditorOpen] = useState(false);
   const [switchOpen, setSwitchOpen] = useState(false);
-  const [pendingStatPoints, setPendingStatPoints] = useState<StatSpread | null>(
-    null,
-  );
-  const [natureMarkers, setNatureMarkers] = useState(
-    buildNatureMarkerState("Hardy"),
-  );
+  const [summaryDraftState, setSummaryDraftState] = useState<{
+    contextKey: string;
+    pendingStatPoints: StatSpread | null;
+    pendingNature: string | null;
+    natureMarkers: ReturnType<typeof buildNatureMarkerState>;
+  }>(() => ({
+    contextKey: "empty",
+    pendingStatPoints: null,
+    pendingNature: null,
+    natureMarkers: buildNatureMarkerState("Hardy"),
+  }));
 
   const switchRef = useRef<HTMLDivElement>(null);
 
@@ -136,8 +159,21 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
     commandStructure,
     parsedCommand,
     importedSets,
-    pendingStatPoints,
+    pendingContextKey: summaryDraftState.contextKey,
+    pendingNature: summaryDraftState.pendingNature,
+    pendingStatPoints: summaryDraftState.pendingStatPoints,
   });
+
+  const summaryContextKey = summary?.contextKey ?? "empty";
+  const summaryNature = summary?.nature ?? "Hardy";
+  const pendingStatPoints =
+    summaryDraftState.contextKey === summaryContextKey
+      ? summaryDraftState.pendingStatPoints
+      : null;
+  const natureMarkers =
+    summaryDraftState.contextKey === summaryContextKey
+      ? summaryDraftState.natureMarkers
+      : buildNatureMarkerState(summaryNature);
 
   const updateInlineStatPoint = (stat: StatKey, nextValue: number) => {
     if (!summary) {
@@ -171,7 +207,18 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
       ),
     );
 
-    setPendingStatPoints(nextStatPoints);
+    setSummaryDraftState((current) => ({
+      contextKey: summaryContextKey,
+      pendingStatPoints: nextStatPoints,
+      pendingNature:
+        current.contextKey === summaryContextKey
+          ? current.pendingNature
+          : null,
+      natureMarkers:
+        current.contextKey === summaryContextKey
+          ? current.natureMarkers
+          : buildNatureMarkerState(summaryNature),
+    }));
     setInput(nextInput);
   };
 
@@ -192,7 +239,15 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
     const nextMarkers = applyMarkerToState(natureMarkers, stat, parsed.marker);
     const nextNature = resolveNatureFromMarkerState(nextMarkers);
 
-    setNatureMarkers(nextMarkers);
+    setSummaryDraftState((current) => ({
+      contextKey: summaryContextKey,
+      pendingStatPoints:
+        current.contextKey === summaryContextKey
+          ? current.pendingStatPoints
+          : null,
+      pendingNature: nextNature,
+      natureMarkers: nextMarkers,
+    }));
 
     if (summary.importedSet && nextNature !== summary.nature) {
       saveSet({
@@ -252,7 +307,6 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
     summary?.promptStatPoints ??
     summary?.effectiveStatPoints ??
     EMPTY_STAT_SPREAD;
-  const summaryNature = summary?.nature ?? "Hardy";
   const derivedNatureMarkers =
     Object.keys(natureMarkers).length > 0
       ? natureMarkers
@@ -354,7 +408,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
         item={summary.item}
         move={summary.move}
         side={side}
-        importedNature={importedSet?.nature ?? null}
+        displayNature={summary.isBaseStats ? null : summary.nature}
       />
 
       {importedSet && (
@@ -419,6 +473,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
       )}
       {editorOpen && editorInitialSet && (
         <PokemonSetEditorModal
+          key={buildSetEditorKey(editorInitialSet)}
           initialSet={editorInitialSet}
           onClose={() => setEditorOpen(false)}
           onSave={(nextSet) => {

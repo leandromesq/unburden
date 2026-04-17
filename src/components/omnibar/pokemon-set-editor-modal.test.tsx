@@ -166,4 +166,45 @@ describe("PokemonSetEditorModal nature marker synchronization", () => {
       }),
     );
   });
+
+  test("syncs the SP inputs when a different initial set is passed in", () => {
+    const handleSave = jest.fn();
+    const { rerender } = render(
+      <PokemonSetEditorModal
+        key="politoed"
+        initialSet={createInitialSet()}
+        onClose={() => {}}
+        onSave={handleSave}
+      />,
+    );
+
+    rerender(
+      <PokemonSetEditorModal
+        key="incineroar"
+        initialSet={createInitialSet({
+          speciesId: "incineroar",
+          speciesName: "Incineroar",
+          nature: "Adamant",
+          statPoints: {
+            hp: 12,
+            atk: 20,
+            def: 4,
+            spa: 0,
+            spd: 10,
+            spe: 20,
+          },
+          moves: ["Fake Out", "Flare Blitz", "Parting Shot", "Protect"],
+        })}
+        onClose={() => {}}
+        onSave={handleSave}
+      />,
+    );
+
+    const dialog = screen.getByRole("dialog", { name: /edit incineroar set/i });
+
+    expect(within(dialog).getByLabelText("HP")).toHaveValue("12");
+    expect(within(dialog).getByLabelText("Atk")).toHaveValue("20+");
+    expect(within(dialog).getByLabelText("SpA")).toHaveValue("0-");
+    expect(within(dialog).getByLabelText("Spe")).toHaveValue("20");
+  });
 });

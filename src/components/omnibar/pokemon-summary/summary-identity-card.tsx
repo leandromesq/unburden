@@ -11,7 +11,7 @@ interface SummaryIdentityCardProps {
   item: string | null;
   move: string | null;
   side: SummarySide;
-  importedNature: string | null;
+  displayNature: string | null;
 }
 
 export function SummaryIdentityCard({
@@ -21,7 +21,7 @@ export function SummaryIdentityCard({
   item,
   move,
   side,
-  importedNature,
+  displayNature,
 }: SummaryIdentityCardProps) {
   return (
     <div className="mt-3 flex items-center gap-3">
@@ -43,9 +43,9 @@ export function SummaryIdentityCard({
             Move: <span className="theme-text-muted">{move}</span>
           </div>
         )}
-        {importedNature && (
+        {displayNature && (
           <div className="theme-text-dim mt-0.5 text-xs">
-            {formatNatureWithDescription(importedNature)}
+            {formatNatureWithDescription(displayNature)}
           </div>
         )}
       </div>

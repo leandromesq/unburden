@@ -252,6 +252,14 @@ interface PokemonSetEditorModalProps {
   onSave: (set: ImportedSet) => void;
 }
 
+function buildMovesDraft(moves: string[]) {
+  const next = [...moves];
+  while (next.length < 4) {
+    next.push("");
+  }
+  return next.slice(0, 4);
+}
+
 export function PokemonSetEditorModal({
   initialSet,
   onClose,
@@ -262,13 +270,7 @@ export function PokemonSetEditorModal({
   const [item, setItem] = useState(initialSet.item ?? "");
   const [ability, setAbility] = useState(initialSet.ability ?? "");
   const [nature, setNature] = useState(initialSet.nature);
-  const [moves, setMoves] = useState(() => {
-    const next = [...initialSet.moves];
-    while (next.length < 4) {
-      next.push("");
-    }
-    return next.slice(0, 4);
-  });
+  const [moves, setMoves] = useState(() => buildMovesDraft(initialSet.moves));
   const [statPoints, setStatPoints] = useState(initialSet.statPoints);
   const [, setNatureMarkers] = useState<NatureMarkerState>(() =>
     buildNatureMarkerState(initialSet.nature),

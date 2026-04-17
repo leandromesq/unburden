@@ -54,6 +54,7 @@ interface ItemStatBoosts {
 }
 
 interface PokemonSummaryData {
+  contextKey: string;
   title: "Attacker" | "Defender";
   name: string;
   pokemonId: string;
@@ -89,6 +90,8 @@ interface UsePokemonSummaryOptions {
   parsedCommand: ParsedCommand | null;
   importedSets: Record<string, ImportedSet>;
   pendingStatPoints: StatSpread | null;
+  pendingContextKey: string;
+  pendingNature: string | null;
 }
 
 function resolveParsedSpecies(
@@ -294,6 +297,8 @@ export function usePokemonSummary({
   parsedCommand,
   importedSets,
   pendingStatPoints,
+  pendingContextKey,
+  pendingNature,
 }: UsePokemonSummaryOptions): PokemonSummaryData | null {
   return useMemo(() => {
     const structure = commandStructure;
@@ -336,15 +341,6 @@ export function usePokemonSummary({
       side === "attacker"
         ? parsedCommand?.attackerStatPoints
         : parsedCommand?.defenderStatPoints;
-
-    const effectivePromptStatPoints =
-      promptStatPoints &&
-      pendingStatPoints &&
-      STAT_LABELS.every(
-        ([key]) => promptStatPoints[key] === pendingStatPoints[key],
-      )
-        ? promptStatPoints
-        : (pendingStatPoints ?? promptStatPoints);
 
     const attackerStatStage = getStageValue(
       structure.attacker.modifierTokens,
@@ -403,10 +399,27 @@ export function usePokemonSummary({
       }
 
       const importedSet = attackerImportedSet;
+      const contextKey = [
+        attackerPromptSpecies?.id ?? attacker.id,
+        attacker.id,
+        importedSet?.speciesId ?? "",
+      ].join("::");
+      const activePendingStatPoints =
+        pendingContextKey === contextKey ? pendingStatPoints : null;
+      const activePendingNature =
+        pendingContextKey === contextKey ? pendingNature : null;
+      const effectivePromptStatPoints =
+        promptStatPoints &&
+        activePendingStatPoints &&
+        STAT_LABELS.every(
+          ([key]) => promptStatPoints[key] === activePendingStatPoints[key],
+        )
+          ? promptStatPoints
+          : (activePendingStatPoints ?? promptStatPoints);
       const effectiveSet = buildEffectiveSetPreview(
         importedSet,
         effectivePromptStatPoints,
-        parsedCommand?.attackerNature,
+        activePendingNature ?? parsedCommand?.attackerNature,
       );
       const hasCustomStats = Boolean(importedSet || effectivePromptStatPoints);
       const stats = hasCustomStats
@@ -429,6 +442,7 @@ export function usePokemonSummary({
         : resolveMegaEvolution(attacker.id, attackerItemName ?? undefined);
 
       return {
+        contextKey,
         title: "Attacker",
         name: attacker.name,
         pokemonId: attacker.id,
@@ -467,10 +481,27 @@ export function usePokemonSummary({
     }
 
     const importedSet = defenderImportedSet;
+    const contextKey = [
+      defenderPromptSpecies?.id ?? defender.id,
+      defender.id,
+      importedSet?.speciesId ?? "",
+    ].join("::");
+    const activePendingStatPoints =
+      pendingContextKey === contextKey ? pendingStatPoints : null;
+    const activePendingNature =
+      pendingContextKey === contextKey ? pendingNature : null;
+    const effectivePromptStatPoints =
+      promptStatPoints &&
+      activePendingStatPoints &&
+      STAT_LABELS.every(
+        ([key]) => promptStatPoints[key] === activePendingStatPoints[key],
+      )
+        ? promptStatPoints
+        : (activePendingStatPoints ?? promptStatPoints);
     const effectiveSet = buildEffectiveSetPreview(
       importedSet,
       effectivePromptStatPoints,
-      parsedCommand?.defenderNature,
+      activePendingNature ?? parsedCommand?.defenderNature,
     );
     const hasCustomStats = Boolean(importedSet || effectivePromptStatPoints);
     const stats = hasCustomStats
@@ -493,6 +524,7 @@ export function usePokemonSummary({
       : resolveMegaEvolution(defender.id, defenderItemName ?? undefined);
 
     return {
+      contextKey,
       title: "Defender",
       name: defender.name,
       pokemonId: defender.id,
@@ -523,5 +555,13 @@ export function usePokemonSummary({
       },
       itemBoosts: defenderChoiceBoosts,
     };
-  }, [commandStructure, importedSets, parsedCommand, pendingStatPoints, side]);
+  }, [
+    commandStructure,
+    importedSets,
+    parsedCommand,
+    pendingContextKey,
+    pendingNature,
+    pendingStatPoints,
+    side,
+  ]);
 }
