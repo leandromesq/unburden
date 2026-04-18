@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   notify:
-    if: contains(github.event.issue.body, '<!-- source: app-bug-report -->')
+    if: ${{ contains(github.event.issue.body, '<!-- source: app-bug-report -->') }}
     runs-on: ubuntu-latest
 
     steps:
