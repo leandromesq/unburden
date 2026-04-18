@@ -198,11 +198,12 @@ export function BugReportButton() {
                 <div className="theme-text-dim mt-1 text-xs">
                   Strict mode: {strictMode ? "on" : "off"}
                 </div>
-                <div className="theme-text-dim mt-2 text-xs leading-5">
-                  Privacy: this sends your description, current prompt, page
-                  URL, browser user agent, and strict-mode setting.
-                </div>
               </div>
+
+              <p className="theme-text-dim mt-3 text-xs leading-5">
+                Privacy: this sends your description, current prompt, page URL,
+                browser user agent, and strict-mode setting.
+              </p>
 
               <p
                 id={statusId}
