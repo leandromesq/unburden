@@ -70,26 +70,31 @@ export function PokemonSprite({
   name,
   primaryType,
 }: PokemonSpriteProps) {
-  const [spriteIndex, setSpriteIndex] = useState(0);
+  const [failedSources, setFailedSources] = useState<string[]>([]);
+  const activeSource = sources.find((source) => !failedSources.includes(source));
 
-  if (sources.length === 0 || spriteIndex >= sources.length) {
+  if (!activeSource) {
     return <PokemonSpriteFallback name={name} primaryType={primaryType} />;
   }
 
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={sources[spriteIndex]}
+      src={activeSource}
       alt={name}
       width={72}
       height={72}
-      loading="lazy"
+      loading="eager"
       className="h-18 w-18 object-contain"
       style={{ imageRendering: "pixelated" }}
-      onError={() => {
-        setSpriteIndex((current) => current + 1);
+      onError={(event) => {
+        const nextFailedSource = event.currentTarget.currentSrc || activeSource;
+        setFailedSources((current) =>
+          current.includes(nextFailedSource)
+            ? current
+            : [...current, nextFailedSource],
+        );
       }}
     />
   );
 }
-

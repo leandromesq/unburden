@@ -1,4 +1,5 @@
 import { OmniComposer } from "@/components/omnibar/omni-composer";
+import { TesterLinks } from "@/components/tester-links";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { RegulationBadge } from "@/components/regulation-badge";
 
@@ -21,6 +22,7 @@ export default function Home() {
           Type a matchup like a chat prompt. Accept suggestions using Arrow Keys
           and Tab. Compare Min, Mid, and Max bulk instantly.
         </p>
+        <TesterLinks />
         <div className="mt-8 w-full">
           <OmniComposer />
         </div>

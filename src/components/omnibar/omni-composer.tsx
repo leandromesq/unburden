@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { useShallow } from "zustand/react/shallow";
 
+import { BugReportButton } from "@/components/bug-report-button";
 import { ModifierSwitches } from "@/components/omnibar/modifier-switches";
 import { OmniTextarea } from "@/components/omnibar/omni-textarea";
 import { PokemonSideSummary } from "@/components/omnibar/pokemon-side-summary";
@@ -104,7 +105,11 @@ export function OmniComposer() {
           <PokemonSideSummary side="attacker" />
         </div>
         <div className="order-1 xl:order-2">
-          <div className="mb-2 flex items-center justify-end gap-1.5">
+          <div className="mb-2 flex items-center justify-between gap-3">
+            <div className="flex items-center">
+              <BugReportButton />
+            </div>
+            <div className="flex items-center justify-end gap-1.5">
             <button
               type="button"
               aria-expanded={modifiersOpen}
@@ -119,6 +124,7 @@ export function OmniComposer() {
             </button>
             <StrictModeToggle />
             <HelpBubble />
+            </div>
           </div>
           <div className="relative">
             <div className="theme-composer rounded-4xl">

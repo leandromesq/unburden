@@ -29,7 +29,6 @@ export function SummaryIdentityCard({
     <div className="mt-3 flex items-center gap-3">
       <div className="theme-subpanel-strong flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl p-2">
         <PokemonSprite
-          key={name}
           sources={spriteSources}
           name={name}
           primaryType={primaryType}

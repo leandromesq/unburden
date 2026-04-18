@@ -1,0 +1,57 @@
+name: Bug report
+description: Report a bug or incorrect app behavior
+title: "[Bug] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for reproducible app problems. If you found the issue through the in-app reporter, you can paste the generated issue link or add extra detail here.
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the bug and what you expected instead.
+      placeholder: The summary card flickers when switching between mega and base form.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Give the smallest set of steps needed to reproduce the problem.
+      placeholder: |
+        1. Enter a prompt
+        2. Switch forms
+        3. Observe the sprite area
+    validations:
+      required: true
+  - type: textarea
+    id: prompt
+    attributes:
+      label: Prompt or calc context
+      description: Paste the prompt, imported set reference, or any relevant calc context.
+      render: text
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Where did this happen?
+      options:
+        - Production
+        - Preview deployment
+        - Local development
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: browser
+    attributes:
+      label: Browser / device
+      description: Include browser version, OS, and device if relevant.
+      placeholder: Chrome 135 on Windows 11 desktop
+  - type: textarea
+    id: extra
+    attributes:
+      label: Extra details
+      description: Screenshots, console errors, or anything else that helps triage.

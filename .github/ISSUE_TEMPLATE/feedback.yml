@@ -1,0 +1,53 @@
+name: Feedback
+description: Share product feedback, UX pain points, or feature ideas
+title: "[Feedback] "
+labels:
+  - feedback
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for product feedback, usability notes, workflow friction, or feature requests that are not clear bugs.
+  - type: textarea
+    id: feedback
+    attributes:
+      label: Feedback
+      description: What is working, what is confusing, or what should change?
+      placeholder: I like the prompt-first flow, but I want a faster way to compare multiple defender sets.
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - UX / design
+        - Prompt syntax
+        - Damage calc behavior
+        - Team / set workflow
+        - Performance
+        - Documentation
+        - Feature request
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: What were you trying to do when this came up?
+      placeholder: I was testing multiple matchups for the same attacker and wanted faster switching between saved defenders.
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Suggested improvement
+      description: If you have a concrete idea, put it here.
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Impact
+      options:
+        - Nice to have
+        - Would noticeably improve the app
+        - High impact for my workflow
+        - Blocking me from using it

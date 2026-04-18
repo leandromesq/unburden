@@ -1,0 +1,58 @@
+name: Forward Bug Reports To Discord
+
+on:
+  issues:
+    types:
+      - opened
+
+permissions:
+  contents: read
+  issues: read
+
+jobs:
+  notify:
+    if: contains(github.event.issue.body, '<!-- source: app-bug-report -->')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Post issue to Discord
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_BUG_REPORT_WEBHOOK_URL }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        shell: bash
+        run: |
+          if [ -z "${DISCORD_WEBHOOK_URL}" ]; then
+            echo "DISCORD_BUG_REPORT_WEBHOOK_URL is not configured."
+            exit 1
+          fi
+
+          python - <<'PY'
+          import json
+          import os
+
+          body = os.environ.get("ISSUE_BODY", "")
+          marker = "<!-- source: app-bug-report -->"
+          body = body.replace(marker, "").strip()
+          if len(body) > 1500:
+              body = body[:1499] + "…"
+
+          payload = {
+              "content": (
+                  f"New Omniboost bug report: issue #{os.environ['ISSUE_NUMBER']}\n"
+                  f"**{os.environ['ISSUE_TITLE']}**\n"
+                  f"{os.environ['ISSUE_URL']}\n\n"
+                  f"{body}"
+              )
+          }
+
+          with open("discord-payload.json", "w", encoding="utf-8") as fh:
+              json.dump(payload, fh)
+          PY
+
+          curl -sS -X POST \
+            -H "Content-Type: application/json" \
+            --data @discord-payload.json \
+            "${DISCORD_WEBHOOK_URL}"

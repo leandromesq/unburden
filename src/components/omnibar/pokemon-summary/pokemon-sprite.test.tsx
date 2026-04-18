@@ -48,5 +48,33 @@ describe("PokemonSprite", () => {
       screen.getByRole("img", { name: "Incineroar sprite fallback" }),
     ).toHaveTextContent("IN");
   });
-});
 
+  test("resets to the new sprite list when the displayed pokemon changes", () => {
+    const { rerender } = render(
+      <PokemonSprite
+        sources={["https://example.com/one.png", "https://example.com/two.png"]}
+        name="Politoed"
+        primaryType="Water"
+      />,
+    );
+
+    fireEvent.error(screen.getByRole("img", { name: "Politoed" }));
+    expect(screen.getByRole("img", { name: "Politoed" })).toHaveAttribute(
+      "src",
+      "https://example.com/two.png",
+    );
+
+    rerender(
+      <PokemonSprite
+        sources={["https://example.com/mega.png"]}
+        name="Mega Politoed"
+        primaryType="Water"
+      />,
+    );
+
+    expect(screen.getByRole("img", { name: "Mega Politoed" })).toHaveAttribute(
+      "src",
+      "https://example.com/mega.png",
+    );
+  });
+});
