@@ -151,7 +151,7 @@ npm run build
 
 GitHub Actions:
 
-- `.github/workflows/quality.yml` runs Qlty, lint, coverage tests, dead-code check, production build on push to `main`
+- `.github/workflows/validation.yml` runs lint, coverage tests, dead-code check, production build on push to `main`
 - `.github/workflows/data-freshness.yml` runs snapshot freshness check on demand and monthly
 
 ## Data Generation

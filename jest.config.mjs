@@ -1,15 +1,12 @@
-import type { Config } from "jest";
 import nextJest from "next/jest.js";
 
 const createJestConfig = nextJest({
   dir: "./",
 });
 
-const config: Config = {
+const config = {
   coverageProvider: "v8",
-  collectCoverageFrom: [
-    "src/lib/**/*.{ts,tsx}",
-  ],
+  collectCoverageFrom: ["src/lib/**/*.{ts,tsx}"],
   coverageThreshold: {
     global: {
       lines: 0,
