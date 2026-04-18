@@ -154,6 +154,7 @@ export function HelpBubble() {
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const hasOpenedRef = useRef(false);
   const titleId = "help-bubble-title";
   const descriptionId = "help-bubble-description";
   const handlePointerDown = useEffectEvent((event: PointerEvent) => {
@@ -190,13 +191,19 @@ export function HelpBubble() {
 
   useEffect(() => {
     if (open) {
+      hasOpenedRef.current = true;
       requestAnimationFrame(() => {
         dialogRef.current?.focus();
       });
       return;
     }
 
+    if (!hasOpenedRef.current) {
+      return;
+    }
+
     buttonRef.current?.focus();
+    hasOpenedRef.current = false;
   }, [open]);
 
   return (

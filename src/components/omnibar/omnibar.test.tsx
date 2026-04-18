@@ -25,6 +25,14 @@ describe("omnibar components", () => {
     window.history.replaceState({}, "", "/");
   });
 
+  test("composer focuses the main textarea on initial load", async () => {
+    render(<OmniComposer />);
+
+    await waitFor(() => {
+      expect(document.activeElement).toBe(screen.getByTestId("omni-textarea"));
+    });
+  });
+
   test("Tab applies the active suggestion and keeps focus on the textarea", () => {
     const textareaRef = createRef<HTMLTextAreaElement>();
 

@@ -130,7 +130,7 @@ describe("PokemonSideSummary nature marker synchronization", () => {
 
     expect(hpInput).toHaveValue("32");
     expect(useOmniStore.getState().input).toBe(
-      "politoed !muddy-water sp:32/0/0/32/0/0 x incineroar",
+      "politoed !muddy-water sp:32/0/0/0/0/0 x incineroar",
     );
   });
 
@@ -171,6 +171,80 @@ describe("PokemonSideSummary nature marker synchronization", () => {
     fireEvent.change(spaInput, { target: { value: "32+" } });
 
     expect(summary).toHaveTextContent("Modest (+SpA/-Atk)");
+  });
+
+  test("plain species prompts do not implicitly adopt a saved attacker set", () => {
+    useTeamStore.getState().saveSet(
+      createImportedSet({
+        speciesId: "politoed",
+        speciesName: "Politoed",
+        ability: "Drizzle",
+        item: "Mystic Water",
+        nature: "Bold",
+        statPoints: {
+          hp: 31,
+          atk: 0,
+          def: 20,
+          spa: 0,
+          spd: 15,
+          spe: 0,
+        },
+        moves: ["Muddy Water", "Ice Beam", "Protect", "Helping Hand"],
+      }),
+    );
+
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    const summary = screen.getByTestId("attacker-summary");
+
+    expect(summary).not.toHaveTextContent("Mystic Water");
+    expect(within(summary).getByRole("textbox", { name: "HP SP" })).toHaveValue(
+      "0",
+    );
+    expect(
+      within(summary).getByRole("textbox", { name: "Def SP" }),
+    ).toHaveValue("0");
+  });
+
+  test("plain species prompts do not implicitly adopt a saved defender set", () => {
+    useTeamStore.getState().saveSet(
+      createImportedSet({
+        speciesId: "incineroar",
+        speciesName: "Incineroar",
+        ability: "Intimidate",
+        item: "Safety Goggles",
+        nature: "Careful",
+        statPoints: {
+          hp: 24,
+          atk: 0,
+          def: 10,
+          spa: 0,
+          spd: 32,
+          spe: 0,
+        },
+        moves: ["Fake Out", "Flare Blitz", "Parting Shot", "Protect"],
+      }),
+    );
+
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    const summary = screen.getByTestId("defender-summary");
+
+    expect(summary).not.toHaveTextContent("Safety Goggles");
+    expect(within(summary).getByRole("textbox", { name: "HP SP" })).toHaveValue(
+      "0",
+    );
+    expect(
+      within(summary).getByRole("textbox", { name: "SpD SP" }),
+    ).toHaveValue("0");
   });
 
   test("prompt-only defender defense markers update the calc nature for physical moves", () => {

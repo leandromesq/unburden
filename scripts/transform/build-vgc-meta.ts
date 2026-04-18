@@ -78,11 +78,11 @@ const EFFECTIVE_POWER_OVERRIDES = new Map<string, number>([
   ["scaleshot", 100],
 ]);
 
-export function normalizeId(value: string) {
+function normalizeId(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "");
 }
 
-export function normalizeAlias(value: string) {
+function normalizeAlias(value: string) {
   return value
     .toLowerCase()
     .replace(/['.:]/g, "")

@@ -53,6 +53,26 @@ function rankOptions(options: string[], query: string) {
     .slice(0, 10);
 }
 
+function resolveHighlightedIndex(
+  options: string[],
+  query: string,
+  highlightedIndex: number,
+) {
+  if (options.length === 0) {
+    return 0;
+  }
+
+  const exactMatchIndex = options.findIndex(
+    (option) => normalizeAlias(option) === normalizeAlias(query),
+  );
+
+  if (exactMatchIndex >= 0) {
+    return exactMatchIndex;
+  }
+
+  return Math.min(highlightedIndex, options.length - 1);
+}
+
 export function SearchableCombobox({
   label,
   value,
@@ -64,21 +84,16 @@ export function SearchableCombobox({
 }: SearchableComboboxProps) {
   const listboxId = useId();
   const optionIdBase = useId();
-  const [query, setQuery] = useState(value);
   const [open, setOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
   const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
-  const deferredQuery = useDeferredValue(query);
+  const deferredQuery = useDeferredValue(value);
   const handlePointerDown = useEffectEvent((event: MouseEvent) => {
     if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
       setOpen(false);
     }
   });
-
-  useEffect(() => {
-    setQuery(value);
-  }, [value]);
 
   useEffect(() => {
     if (!open) {
@@ -93,46 +108,26 @@ export function SearchableCombobox({
     () => rankOptions(options, deferredQuery),
     [deferredQuery, options],
   );
+  const resolvedHighlightedIndex = open
+    ? resolveHighlightedIndex(filteredOptions, value, highlightedIndex)
+    : highlightedIndex;
 
   useEffect(() => {
     if (!open) {
       return;
     }
 
-    setHighlightedIndex((current) => {
-      if (filteredOptions.length === 0) {
-        return 0;
-      }
-
-      const exactMatchIndex = filteredOptions.findIndex(
-        (option) => normalizeAlias(option) === normalizeAlias(query),
-      );
-
-      if (exactMatchIndex >= 0) {
-        return exactMatchIndex;
-      }
-
-      return Math.min(current, filteredOptions.length - 1);
-    });
-  }, [filteredOptions, open, query]);
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    optionRefs.current[highlightedIndex]?.scrollIntoView?.({
+    optionRefs.current[resolvedHighlightedIndex]?.scrollIntoView?.({
       block: "nearest",
     });
-  }, [highlightedIndex, open]);
+  }, [open, resolvedHighlightedIndex]);
 
   const activeOptionId =
-    open && filteredOptions[highlightedIndex]
-      ? `${optionIdBase}-${highlightedIndex}`
+    open && filteredOptions[resolvedHighlightedIndex]
+      ? `${optionIdBase}-${resolvedHighlightedIndex}`
       : undefined;
 
   const selectOption = (option: string) => {
-    setQuery(option);
     onChange(option);
     setOpen(false);
   };
@@ -142,7 +137,7 @@ export function SearchableCombobox({
       {!hideLabel ? <span className="theme-text-dim">{label}</span> : null}
       <div className="relative">
         <input
-          value={query}
+          value={value}
           role="combobox"
           aria-controls={listboxId}
           aria-expanded={open}
@@ -152,7 +147,6 @@ export function SearchableCombobox({
           onFocus={() => setOpen(true)}
           onChange={(event) => {
             const nextValue = event.currentTarget.value;
-            setQuery(nextValue);
             onChange(nextValue);
             setOpen(true);
             setHighlightedIndex(0);
@@ -167,7 +161,7 @@ export function SearchableCombobox({
               }
               if (filteredOptions.length > 0) {
                 setHighlightedIndex(
-                  (current) => (current + 1) % filteredOptions.length,
+                  () => (resolvedHighlightedIndex + 1) % filteredOptions.length,
                 );
               }
               return;
@@ -183,8 +177,10 @@ export function SearchableCombobox({
                 return;
               }
               if (filteredOptions.length > 0) {
-                setHighlightedIndex((current) =>
-                  current === 0 ? filteredOptions.length - 1 : current - 1,
+                setHighlightedIndex(() =>
+                  resolvedHighlightedIndex === 0
+                    ? filteredOptions.length - 1
+                    : resolvedHighlightedIndex - 1,
                 );
               }
               return;
@@ -193,10 +189,10 @@ export function SearchableCombobox({
             if (
               event.key === "Enter" &&
               open &&
-              filteredOptions[highlightedIndex]
+              filteredOptions[resolvedHighlightedIndex]
             ) {
               event.preventDefault();
-              selectOption(filteredOptions[highlightedIndex]);
+              selectOption(filteredOptions[resolvedHighlightedIndex]);
               return;
             }
 
@@ -221,7 +217,7 @@ export function SearchableCombobox({
                 id={`${optionIdBase}-${index}`}
                 type="button"
                 role="option"
-                aria-selected={index === highlightedIndex}
+                aria-selected={index === resolvedHighlightedIndex}
                 ref={(node) => {
                   optionRefs.current[index] = node;
                 }}
@@ -231,7 +227,7 @@ export function SearchableCombobox({
                 }}
                 onMouseEnter={() => setHighlightedIndex(index)}
                 className={`theme-menu-item w-full px-3 py-2.5 text-left text-sm ${
-                  index === highlightedIndex ? "theme-menu-item-active" : ""
+                  index === resolvedHighlightedIndex ? "theme-menu-item-active" : ""
                 }`}
               >
                 {renderOption ? renderOption(option) : option}

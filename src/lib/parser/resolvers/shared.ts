@@ -86,7 +86,7 @@ export function splitMoveFragment(raw: string) {
   };
 }
 
-export function formatItemToken(itemName: string) {
+function formatItemToken(itemName: string) {
   return `@${slugifySymbolValue(itemName)}`;
 }
 

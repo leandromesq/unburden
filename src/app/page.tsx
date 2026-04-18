@@ -5,8 +5,8 @@ import { RegulationBadge } from "@/components/regulation-badge";
 export default function Home() {
   return (
     <main className="theme-page relative min-h-screen overflow-hidden">
-      <div className="theme-page-grid absolute inset-0 opacity-20" />
-      <section className="relative mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center px-6 py-16 text-center">
+      <div className="theme-page-grid" />
+      <section className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center px-6 py-16 text-center">
         <div className="mb-5 flex flex-wrap items-center justify-center gap-2 md:gap-3">
           <div className="theme-kicker rounded-full px-4 py-1 text-xs uppercase tracking-[0.35em]">
             VGC Damage Calculator

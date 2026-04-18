@@ -1,16 +1,16 @@
 # Sintaxe do Prompt do Omniboost
 
-Este documento define a sintaxe canônica do prompt usado pelo Omniboost.
+Este doc define sintaxe canônica do prompt do Omniboost.
 
 ## Visão Geral
 
-O Omniboost usa uma gramática compacta, segmentada por lados:
+Omniboost usa gramática compacta, separada por lados:
 
-- tudo antes de `x` ou `vs` pertence ao atacante
-- tudo depois de `x` ou `vs` pertence ao defensor
-- tokens iniciados com `~` são sempre globais
-- somente o nome do Pokémon é texto livre
-- todo o resto deve seguir a gramática abaixo
+- tudo antes de `x` ou `vs` = atacante
+- tudo depois de `x` ou `vs` = defensor
+- token que começa com `~` = global
+- só nome do Pokémon é texto livre
+- resto segue gramática abaixo
 
 Estrutura base:
 
@@ -28,7 +28,7 @@ politoed !muddy-water @mystic-water x incineroar @assault-vest %75 ~rain
 
 ### Segmento do atacante
 
-É o trecho antes do separador `x` ou `vs`.
+Trecho antes de `x` ou `vs`.
 
 Exemplo:
 
@@ -38,7 +38,7 @@ politoed !muddy-water @mystic-water +1 +nature
 
 ### Segmento do defensor
 
-É o trecho depois do separador `x` ou `vs`.
+Trecho depois de `x` ou `vs`.
 
 Exemplo:
 
@@ -48,7 +48,7 @@ incineroar @assault-vest %75 reflect
 
 ### Tokens globais
 
-Qualquer token que começa com `~` é global, independente da posição.
+Todo token que começa com `~` = global, não importa posição.
 
 Exemplo:
 
@@ -59,7 +59,7 @@ Exemplo:
 
 ### Crítico
 
-O token `*` representa golpe crítico. Ele é interpretado globalmente e pode ser escrito em qualquer ponto do prompt.
+Token `*` = golpe crítico. Sistema trata como global. Pode aparecer em qualquer ponto.
 
 Exemplo:
 
@@ -69,12 +69,12 @@ politoed !muddy-water * x incineroar
 
 ## Separador
 
-O sistema aceita:
+Sistema aceita:
 
 - `x`
 - `vs`
 
-O separador canônico recomendado é `x`.
+Separador canônico recomendado = `x`.
 
 Exemplo:
 
@@ -86,7 +86,7 @@ politoed !muddy-water x incineroar
 
 ### 1. Pokémon
 
-O nome do Pokémon é o único elemento de texto livre.
+Nome do Pokémon = único elemento de texto livre.
 
 Exemplos:
 
@@ -98,8 +98,8 @@ charizard-mega-y
 
 Observações:
 
-- o sistema usa fuzzy match para ajudar com nomes digitados parcialmente ou com pequenos erros
-- formas especiais podem ser escritas no formato canônico com hífen, como `charizard-mega-y`
+- sistema usa fuzzy match para nomes parciais ou com erro pequeno
+- formas especiais podem usar formato canônico com hífen, como `charizard-mega-y`
 
 ### 2. Move
 
@@ -119,9 +119,9 @@ Exemplos:
 
 Regras:
 
-- somente o atacante pode ter `!move`
-- o move é obrigatório para o cálculo
-- o move usa slug com hífens
+- só atacante pode ter `!move`
+- move é obrigatório para cálculo
+- move usa slug com hífens
 
 ### 2.5. Referência a set salvo
 
@@ -140,10 +140,10 @@ Exemplos:
 
 Regras:
 
-- `#set` pode ser usado no slot de Pokémon do atacante ou do defensor
-- ele resolve um set salvo ou compartilhado pelo apelido (`nickname`) ou pelo `speciesId`
-- quando um `#set` é resolvido, o sistema usa a espécie e os dados do set salvo
-- tokens explícitos no prompt continuam tendo prioridade sobre o que veio do set referenciado
+- `#set` pode ocupar slot do atacante ou do defensor
+- resolve set salvo ou compartilhado por `nickname` ou `speciesId`
+- quando `#set` resolve, sistema usa espécie e dados do set salvo
+- token explícito no prompt ainda tem prioridade sobre dado vindo do set
 
 ### 3. Item
 
@@ -163,8 +163,8 @@ Exemplos:
 
 Regras:
 
-- `@item` vale para o segmento onde ele foi escrito
-- portanto, pode ser usado tanto no atacante quanto no defensor
+- `@item` vale para segmento onde foi escrito
+- pode aparecer no atacante ou no defensor
 
 ### 4. HP atual
 
@@ -184,8 +184,8 @@ Exemplos:
 
 Regras:
 
-- `N` deve estar entre `1` e `100`
-- `%N` vale para o segmento onde ele foi escrito
+- `N` entre `1` e `100`
+- `%N` vale para segmento onde foi escrito
 
 ### 5. Ability explícita
 
@@ -205,8 +205,8 @@ Exemplos:
 
 Regras:
 
-- a ability vale para o segmento onde ela foi escrita
-- ao digitar `[` na UI, o sistema fecha automaticamente para `[]` e coloca o cursor no meio
+- ability vale para segmento onde foi escrita
+- ao digitar `[` na UI, sistema fecha para `[]` e põe cursor no meio
 
 ### 6. Spread de SPs
 
@@ -226,8 +226,8 @@ Regras:
 
 - sempre exige 6 valores
 - cada stat vai de `0` a `32`
-- o total não pode passar de `66`
-- o token vale para o segmento onde ele foi escrito
+- total não pode passar de `66`
+- token vale para segmento onde foi escrito
 
 ### 7. Efeitos globais
 
@@ -249,9 +249,9 @@ Exemplos:
 
 Regras:
 
-- `~efeito` é sempre global
-- weather e terrain vindos de abilities como `Drizzle`, `Drought` ou `Grassy Surge` não são mais inseridos automaticamente no prompt
-- em vez disso, o sistema oferece o `~token` correspondente como sugestão opt-in
+- `~efeito` sempre global
+- weather e terrain vindos de abilities como `Drizzle`, `Drought`, `Grassy Surge` não entram mais no prompt sozinhos
+- sistema oferece `~token` correspondente como sugestão opt-in
 
 ### 8. Crítico
 
@@ -269,13 +269,13 @@ politoed !muddy-water * x incineroar
 
 ## Tokens de Segmento
 
-Tokens de segmento são escritos sem prefixo extra. O sistema entende se pertencem ao atacante ou ao defensor pela posição no prompt.
+Tokens de segmento não usam prefixo extra. Sistema decide se pertencem ao atacante ou defensor pela posição.
 
 ## Modificadores do Atacante
 
 ### Multiplicadores ofensivos
 
-Faixa suportada:
+Faixa:
 
 ```txt
 +1 até +6
@@ -292,12 +292,12 @@ Exemplos:
 
 Interpretação:
 
-- se o move for físico, afeta `Atk`
-- se o move for especial, afeta `SpA`
+- se move for físico, afeta `Atk`
+- se move for especial, afeta `SpA`
 
 ### Multiplicadores de Speed
 
-Faixa suportada:
+Faixa:
 
 ```txt
 spe+1 até spe+6
@@ -311,7 +311,7 @@ spe+2
 spe-6
 ```
 
-Esses tokens são relevantes para golpes que dependem de Speed, como:
+Importante para golpes como:
 
 - `Electro Ball`
 - `Gyro Ball`
@@ -327,8 +327,8 @@ Sintaxe:
 
 Interpretação no atacante:
 
-- `+nature`: nature ofensiva positiva
-- `-nature`: nature ofensiva negativa
+- `+nature` = nature ofensiva positiva
+- `-nature` = nature ofensiva negativa
 
 Mapeamento atual:
 
@@ -341,7 +341,7 @@ Mapeamento atual:
 
 ### Investimento ofensivo
 
-Tokens suportados:
+Tokens:
 
 ```txt
 max-atk
@@ -350,7 +350,7 @@ max-spa
 
 ### Efeitos de suporte ofensivo
 
-Tokens suportados:
+Tokens:
 
 ```txt
 helping-hand
@@ -363,7 +363,7 @@ power-spot
 
 ### Multiplicadores defensivos
 
-Faixa suportada:
+Faixa:
 
 ```txt
 +1 até +6
@@ -372,12 +372,12 @@ Faixa suportada:
 
 Interpretação:
 
-- se o move do atacante for físico, afeta `Def`
-- se o move do atacante for especial, afeta `SpD`
+- se move do atacante for físico, afeta `Def`
+- se move do atacante for especial, afeta `SpD`
 
 ### Multiplicadores de Speed
 
-Faixa suportada:
+Faixa:
 
 ```txt
 spe+1 até spe+6
@@ -395,8 +395,8 @@ Sintaxe:
 
 Interpretação no defensor:
 
-- `+nature`: nature defensiva positiva
-- `-nature`: nature defensiva negativa
+- `+nature` = nature defensiva positiva
+- `-nature` = nature defensiva negativa
 
 Mapeamento atual:
 
@@ -409,7 +409,7 @@ Mapeamento atual:
 
 ### Investimento defensivo
 
-Tokens suportados:
+Tokens:
 
 ```txt
 max-def
@@ -418,7 +418,7 @@ max-spd
 
 ### Efeitos defensivos
 
-Tokens suportados:
+Tokens:
 
 ```txt
 reflect
@@ -458,15 +458,15 @@ tailwind
 
 ## Regras Importantes de Interpretação
 
-### 1. Somente o atacante tem move
+### 1. Só atacante tem move
 
-Exemplo válido:
+Válido:
 
 ```txt
 politoed !muddy-water x incineroar
 ```
 
-Exemplo inválido:
+Inválido:
 
 ```txt
 politoed !muddy-water x incineroar !flare-blitz
@@ -474,23 +474,23 @@ politoed !muddy-water x incineroar !flare-blitz
 
 ### 2. Itens, HP e abilities são posicionais
 
-Isso significa que o mesmo token muda de dono conforme o lado:
+Mesmo token troca de dono conforme lado:
 
 ```txt
 politoed !muddy-water @mystic-water x incineroar
 ```
 
-Aqui `@mystic-water` é do atacante.
+Aqui `@mystic-water` = atacante.
 
 ```txt
 politoed !muddy-water x incineroar @assault-vest
 ```
 
-Aqui `@assault-vest` é do defensor.
+Aqui `@assault-vest` = defensor.
 
-### 3. Species é livre; o resto é gramática
+### 3. Species é livre. Resto é gramática
 
-Depois que o Pokémon é resolvido em um segmento, tokens soltos passam a ser interpretados como possíveis modificadores daquele lado, não como outro Pokémon.
+Depois que Pokémon resolve em segmento, token solto passa a ser interpretado como possível modificador daquele lado, não como outro Pokémon.
 
 ## Exemplos Completos
 
@@ -500,7 +500,7 @@ Depois que o Pokémon é resolvido em um segmento, tokens soltos passam a ser in
 politoed !muddy-water x incineroar
 ```
 
-### Exemplo com item em ambos os lados
+### Exemplo com item nos dois lados
 
 ```txt
 politoed !muddy-water @mystic-water x incineroar @assault-vest
@@ -546,8 +546,7 @@ politoed x incineroar
 
 Motivo:
 
-- o cálculo exige `!move`
-
+- cálculo exige `!move`
 
 ### Move no defensor
 
@@ -557,11 +556,11 @@ politoed !muddy-water x incineroar !flare-blitz
 
 Motivo:
 
-- o defensor não possui slot de move nesta gramática
+- defensor não tem slot de move nesta gramática
 
 ## Como o Autocomplete Trabalha
 
-O autocomplete é sensível ao slot atual do prompt.
+Autocomplete é sensível ao slot atual.
 
 Ordem de leitura:
 
@@ -575,18 +574,18 @@ Ordem de leitura:
 
 Isso evita ambiguidades como:
 
-- sugerir um Pokémon quando o slot atual espera um move
+- sugerir Pokémon quando slot atual espera move
 - completar `blitz` para `blitzle` depois de `!flare-blitz`
 
 ## Sugestões Automáticas de Campo
 
-Abilities que ativam weather ou terrain não alteram mais o prompt sozinhas.
+Abilities que ativam weather ou terrain não alteram mais prompt sozinhas.
 
 Em vez disso:
 
-- o sistema detecta a ability relevante
-- calcula qual weather/terrain seria o aplicável
-- oferece o `~token` correspondente como sugestão prioritária
+- sistema detecta ability relevante
+- calcula weather/terrain aplicável
+- oferece `~token` correspondente como sugestão prioritária
 
 Exemplo:
 
@@ -600,14 +599,14 @@ Pode sugerir:
 ~sun
 ```
 
-mas o prompt só muda se o usuário aceitar a sugestão.
+Mas prompt só muda se usuário aceitar sugestão.
 
 ## Atalhos de Teclado Relacionados à Gramática
 
-- `↑` / `↓`: navega pelas sugestões
-- `Tab`: aceita a sugestão atual
-- `Enter`: rola até os resultados quando já existe cálculo válido
-- `Shift + Enter`: quebra de linha
+- `↑` / `↓` - navega pelas sugestões
+- `Tab` - aceita sugestão atual
+- `Enter` - rola até resultados quando cálculo já é válido
+- `Shift + Enter` - quebra de linha
 
 ## Resumo Rápido
 

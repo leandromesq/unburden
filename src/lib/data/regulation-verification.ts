@@ -23,7 +23,7 @@ const ROSTER_SECTION_PATTERN =
   /<h2[^>]*>\s*Newly Useable Pok(?:&eacute;|é)mon\s*<\/h2><\/p>([\s\S]*?)(?=<p><h2|$)/i;
 const ROSTER_NAME_PATTERN = /<a href="\/pokedex-champions\/[^"]+\/">([\s\S]*?)<\/a>/gi;
 
-export function parseSerebiiRegulationRosterNames(html: string) {
+function parseSerebiiRegulationRosterNames(html: string) {
   const rosterSection = html.match(ROSTER_SECTION_PATTERN)?.[1];
 
   if (!rosterSection) {
@@ -54,7 +54,7 @@ export function parseSerebiiRegulationRosterNames(html: string) {
   return Array.from(names);
 }
 
-export function resolveRegulationRosterIds(
+function resolveRegulationRosterIds(
   speciesNames: string[],
   speciesIdIndex: Map<string, string>,
 ) {
@@ -78,7 +78,7 @@ export function resolveRegulationRosterIds(
   };
 }
 
-export function compareRegulationRosters(
+function compareRegulationRosters(
   liveRosterIds: Iterable<string>,
   localRosterIds: Iterable<string>,
 ) {
@@ -95,7 +95,7 @@ export function compareRegulationRosters(
   };
 }
 
-export async function buildRosterHash(pokemonIds: Iterable<string>) {
+async function buildRosterHash(pokemonIds: Iterable<string>) {
   const { createHash } = await import("node:crypto");
   const normalizedRoster = Array.from(new Set(pokemonIds)).sort();
 
@@ -104,7 +104,7 @@ export async function buildRosterHash(pokemonIds: Iterable<string>) {
     .digest("hex")}`;
 }
 
-export function formatVerificationDate(date = new Date()) {
+function formatVerificationDate(date = new Date()) {
   return date.toISOString().slice(0, 10);
 }
 

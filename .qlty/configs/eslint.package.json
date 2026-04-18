@@ -1,0 +1,10 @@
+{
+  "name": "omniboost-qlty-eslint",
+  "private": true,
+  "devDependencies": {
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.2.3",
+    "next": "16.2.3",
+    "typescript": "5.9.3"
+  }
+}

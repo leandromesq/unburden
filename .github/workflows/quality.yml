@@ -1,0 +1,65 @@
+name: Quality
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  qlty:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install Qlty CLI
+        uses: qltysh/qlty-action/install@a19242102d17e497f437d7466aa01b528537e899
+
+      - name: Run Qlty checks
+        run: qlty check --all
+
+      - name: Report Qlty smells
+        run: qlty smells --all
+
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test with coverage
+        run: npm test -- --coverage --runInBand
+
+      - name: Detect dead code
+        run: npm run knip
+
+      - name: Build
+        run: npm run build

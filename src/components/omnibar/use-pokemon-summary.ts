@@ -122,41 +122,6 @@ function resolveParsedSpecies(
   return null;
 }
 
-function resolveImportedSetByRelatedForm(
-  pokemon: PokemonEntry | null,
-  importedSets: Record<string, ImportedSet>,
-): ImportedSet | null {
-  if (!pokemon) {
-    return null;
-  }
-
-  const direct = importedSets[normalizeId(pokemon.id)];
-  if (direct) {
-    return direct;
-  }
-
-  if (pokemon.baseSpeciesId) {
-    const baseSet = importedSets[normalizeId(pokemon.baseSpeciesId)];
-    if (baseSet) {
-      return baseSet;
-    }
-  }
-
-  for (const set of Object.values(importedSets)) {
-    const setSpecies = pokemonById.get(normalizeId(set.speciesId));
-    if (!setSpecies) {
-      continue;
-    }
-
-    const setMega = resolveMegaEvolution(setSpecies.id, set.item);
-    if (setMega?.id === pokemon.id) {
-      return set;
-    }
-  }
-
-  return null;
-}
-
 function resolveMoveName(moveInput: string | undefined): string | null {
   if (!moveInput) {
     return null;
@@ -330,16 +295,14 @@ export function usePokemonSummary({
         parsedCommand?.attackerSetReferenceId,
         importedSets,
       ) ??
-      attackerReferenceSet ??
-      resolveImportedSetByRelatedForm(attackerPromptSpecies, importedSets);
+      attackerReferenceSet;
 
     const defenderImportedSet =
       resolveReferencedImportedSet(
         parsedCommand?.defenderSetReferenceId,
         importedSets,
       ) ??
-      defenderReferenceSet ??
-      resolveImportedSetByRelatedForm(defenderPromptSpecies, importedSets);
+      defenderReferenceSet;
 
     const promptStatPoints =
       side === "attacker"

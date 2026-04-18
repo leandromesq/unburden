@@ -118,35 +118,6 @@ function slugifySpriteCandidate(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-function expandSpriteSlugVariants(slug: string) {
-  return [
-    slug,
-    slug.replace(/-mega-x$/i, "-megax"),
-    slug.replace(/-mega-y$/i, "-megay"),
-    slug.replace(/-rapid-strike$/i, "-rapidstrike"),
-    slug.replace(/-single-strike$/i, "-singlestrike"),
-    slug.replace(/-paldea-combat$/i, "-paldeacombat"),
-    slug.replace(/-paldea-blaze$/i, "-paldeablaze"),
-    slug.replace(/-paldea-aqua$/i, "-paldeaaqua"),
-    slug.replace(/-blood-moon$/i, "-bloodmoon"),
-    normalizeId(slug),
-  ];
-}
-
-function getPokemonSpriteSlugs(pokemon: PokemonEntry) {
-  const rawCandidates = [
-    pokemon.name,
-    ...pokemon.aliases,
-    pokemon.id,
-  ].map(slugifySpriteCandidate);
-
-  return Array.from(
-    new Set(
-      rawCandidates.flatMap((candidate) => expandSpriteSlugVariants(candidate)),
-    ),
-  ).filter(Boolean);
-}
-
 export function getCanonicalPromptPokemonName(pokemon: PokemonEntry) {
   return slugifySpriteCandidate(pokemon.name);
 }

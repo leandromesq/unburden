@@ -1,8 +1,8 @@
 import { NATURE_MODIFIERS } from "@/lib/calc/stat-calc";
 import { normalizeId } from "@/lib/data/loaders";
 
-export type AttackingStatKey = "atk" | "def" | "spa";
-export type NatureEffectDirection = "boost" | "nerf";
+type AttackingStatKey = "atk" | "def" | "spa";
+type NatureEffectDirection = "boost" | "nerf";
 type NatureStatKey = "atk" | "def" | "spa" | "spd" | "spe";
 
 export function resolveAttackingStatKey(
