@@ -33,6 +33,20 @@ describe("omnibar components", () => {
     });
   });
 
+  test("modifier switches stay collapsed until the modifiers button is pressed", () => {
+    render(<OmniComposer />);
+
+    expect(
+      screen.queryByRole("button", { name: /^Rain$/i }),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Toggle modifiers panel" }),
+    );
+
+    expect(screen.getByRole("button", { name: /^Rain$/i })).toBeInTheDocument();
+  });
+
   test("Tab applies the active suggestion and keeps focus on the textarea", () => {
     const textareaRef = createRef<HTMLTextAreaElement>();
 
@@ -685,9 +699,9 @@ describe("omnibar components", () => {
       }),
     );
 
-    expect(useOmniStore.getState().input).toBe(
-      "charizard-mega-y !heat-wave x tinkaton",
-    );
+    expect(useOmniStore.getState().input).toBe("#charizardmegay !heat-wave x tinkaton");
+    expect(useTeamStore.getState().importedSets.charizard).toBeUndefined();
+    expect(useTeamStore.getState().importedSets.charizardmegay).toBeDefined();
   });
 
   test("does not auto-add weather before the defender side is resolved", () => {

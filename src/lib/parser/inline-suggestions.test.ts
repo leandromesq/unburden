@@ -106,4 +106,13 @@ describe("inline suggestions", () => {
     expect(result.suggestionOptions[0]?.value).toBe("-1");
     expect(result.suggestionOptions[1]?.value).toBe("-2");
   });
+
+  test("suggests explicit nature names while typing modifier tokens", () => {
+    const result = getAutocompleteState("politoed !muddy-water tim");
+
+    expect(result.suggestionOptions[0]?.value).toBe("timid");
+    expect(result.activeSuggestion?.completionText).toBe(
+      "politoed !muddy-water timid",
+    );
+  });
 });

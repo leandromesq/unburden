@@ -6,6 +6,7 @@ import { useShallow } from "zustand/react/shallow";
 import { EMPTY_STAT_SPREAD } from "@/lib/calc/stat-calc";
 import { pokemonById } from "@/lib/data/loaders";
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
+import { joinTokenValues } from "@/lib/parser/tokenize";
 import {
   rebuildInputWithSpecies,
   rebuildInputWithStatPoints,
@@ -69,6 +70,52 @@ function buildSetEditorKey(set: ImportedSet): string {
     set.statPoints.spd,
     set.statPoints.spe,
   ].join("::");
+}
+
+function rebuildInputWithSetReference(
+  input: string,
+  side: SummarySide,
+  referenceToken: string,
+) {
+  const structure = analyzeCommandStructure(input);
+  const attackerTail = structure.attacker.rawTokens
+    .slice(structure.attacker.speciesTokens.length)
+    .map((token) => token.raw)
+    .join(" ")
+    .trim();
+  const defenderTail = structure.defender.rawTokens
+    .slice(structure.defender.speciesTokens.length)
+    .map((token) => token.raw)
+    .join(" ")
+    .trim();
+  const attackerSpecies =
+    side === "attacker"
+      ? referenceToken
+      : (
+          structure.attacker.speciesText ||
+          joinTokenValues(structure.attacker.rawTokens)
+        ).trim();
+  const defenderSpecies =
+    side === "defender"
+      ? referenceToken
+      : (
+          structure.defender.speciesText ||
+          joinTokenValues(structure.defender.rawTokens)
+        ).trim();
+  const attackerText = [attackerSpecies, attackerTail]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+  const defenderText = [defenderSpecies, defenderTail]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+
+  if (!structure.lexed.hasDelimiter) {
+    return attackerText;
+  }
+
+  return [attackerText, "x", defenderText].filter(Boolean).join(" ").trim();
 }
 
 export function usePokemonSideSummaryController(side: SummarySide) {
@@ -251,6 +298,39 @@ export function usePokemonSideSummaryController(side: SummarySide) {
 
   const handleSwitchToMegaForm = (targetPokemon: PokemonEntry) => {
     const input = useOmniStore.getState().input;
+    if (summary?.importedSet) {
+      const nextSet = createImportedSet({
+        speciesId: targetPokemon.id,
+        speciesName: targetPokemon.name,
+        nickname: summary.importedSet.nickname,
+        item: summary.importedSet.item ?? summary.item ?? undefined,
+        ability: summary.importedSet.ability &&
+          targetPokemon.abilities.includes(summary.importedSet.ability)
+          ? summary.importedSet.ability
+          : undefined,
+        level: summary.importedSet.level,
+        nature: summary.importedSet.nature,
+        statPoints: summary.importedSet.statPoints,
+        ivs: summary.importedSet.ivs,
+        moves: summary.importedSet.moves,
+        teraType: summary.importedSet.teraType,
+      });
+
+      if (summary.importedSet.speciesId !== nextSet.speciesId) {
+        removeSet(summary.importedSet.speciesId);
+      }
+
+      saveSet(nextSet);
+      setInput(
+        rebuildInputWithSetReference(
+          input,
+          side,
+          getCanonicalSetReferenceToken(nextSet),
+        ),
+      );
+      return;
+    }
+
     setInput(rebuildInputWithSpecies(input, side, targetPokemon));
   };
 

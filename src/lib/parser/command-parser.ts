@@ -88,8 +88,10 @@ function parseModifierCollections(
   let defenderStatMod = 0;
   let attackerSpeedMod = 0;
   let defenderSpeedMod = 0;
-  let attackerNature: string | undefined;
-  let defenderNature: string | undefined;
+  let attackerRepresentativeNature: string | undefined;
+  let defenderRepresentativeNature: string | undefined;
+  let attackerExplicitNature: string | undefined;
+  let defenderExplicitNature: string | undefined;
   let attackerStatus: ParsedCommand["attackerStatus"];
   let defenderStatus: ParsedCommand["defenderStatus"];
   let attackerInvestment: ParsedCommand["attackerInvestment"] = "auto";
@@ -109,7 +111,14 @@ function parseModifierCollections(
     } else if (definition.kind === "speed_mod") {
       attackerSpeedMod += definition.statMod ?? 0;
     } else if (definition.kind === "nature") {
-      attackerNature = definition.nature;
+      if (
+        definition.nature === ATTACKER_POSITIVE_NATURE ||
+        definition.nature === ATTACKER_NEGATIVE_NATURE
+      ) {
+        attackerRepresentativeNature = definition.nature;
+      } else {
+        attackerExplicitNature = definition.nature;
+      }
     } else if (definition.kind === "status") {
       attackerStatus = definition.status;
     } else if (definition.kind === "investment") {
@@ -130,7 +139,14 @@ function parseModifierCollections(
     } else if (definition.kind === "speed_mod") {
       defenderSpeedMod += definition.statMod ?? 0;
     } else if (definition.kind === "nature") {
-      defenderNature = definition.nature;
+      if (
+        definition.nature === DEFENDER_POSITIVE_NATURE ||
+        definition.nature === DEFENDER_NEGATIVE_NATURE
+      ) {
+        defenderRepresentativeNature = definition.nature;
+      } else {
+        defenderExplicitNature = definition.nature;
+      }
     } else if (definition.kind === "status") {
       defenderStatus = definition.status;
     } else if (definition.kind === "investment") {
@@ -152,8 +168,8 @@ function parseModifierCollections(
     defenderStatMod: Math.max(-6, Math.min(6, defenderStatMod)),
     attackerSpeedMod: Math.max(-6, Math.min(6, attackerSpeedMod)),
     defenderSpeedMod: Math.max(-6, Math.min(6, defenderSpeedMod)),
-    attackerNature,
-    defenderNature,
+    attackerNature: attackerExplicitNature ?? attackerRepresentativeNature,
+    defenderNature: defenderExplicitNature ?? defenderRepresentativeNature,
     attackerStatus,
     defenderStatus,
     attackerInvestment,
@@ -299,13 +315,13 @@ export function parseCommand(
 
   if (structure.attacker.postExplicitFreeTokens.length) {
     issues.push(
-      "Attacker tokens after !move must use known segment-scoped forms like @item, %75, sp:32/0/0/0/0/0, [Ability], +1, +nature, or helping-hand.",
+      "Attacker tokens after !move must use known segment-scoped forms like @item, %75, sp:32/0/0/0/0/0, [Ability], +1, +nature, timid, or helping-hand.",
     );
   }
 
   if (structure.defender.postExplicitFreeTokens.length) {
     issues.push(
-      "Defender tokens must use known segment-scoped forms like @item, %75, sp:32/0/0/0/0/0, [Ability], +1, +nature, or reflect.",
+      "Defender tokens must use known segment-scoped forms like @item, %75, sp:32/0/0/0/0/0, [Ability], +1, +nature, calm, or reflect.",
     );
   }
 
@@ -325,7 +341,7 @@ export function parseCommand(
 
   if (structure.defender.leadingRemainderTokens.length) {
     issues.push(
-      "Unrecognized defender token. Use segment-scoped tokens like @item, %75, sp:32/0/0/0/0/0, [Ability], +nature, reflect, or ~rain.",
+      "Unrecognized defender token. Use segment-scoped tokens like @item, %75, sp:32/0/0/0/0/0, [Ability], +nature, calm, reflect, or ~rain.",
     );
   }
 

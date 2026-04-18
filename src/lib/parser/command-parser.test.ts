@@ -137,6 +137,28 @@ describe("parseCommand", () => {
     });
   });
 
+  test("accepts explicit nature names for attacker and defender", () => {
+    const result = parseCommand(
+      "politoed !muddy-water timid x incineroar calm",
+    );
+
+    expect(result.parsed).toMatchObject({
+      attackerNature: "Timid",
+      defenderNature: "Calm",
+    });
+  });
+
+  test("prefers explicit nature names over representative +nature tokens", () => {
+    const result = parseCommand(
+      "politoed !muddy-water +nature timid x incineroar +nature calm",
+    );
+
+    expect(result.parsed).toMatchObject({
+      attackerNature: "Timid",
+      defenderNature: "Calm",
+    });
+  });
+
   test("maps attacker +nature to a defense-boosting nature for body press", () => {
     const result = parseCommand("archaludon !body-press +nature x incineroar");
 

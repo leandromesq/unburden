@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useSyncExternalStore } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { ModifierSwitches } from "@/components/omnibar/modifier-switches";
@@ -32,6 +32,7 @@ export function OmniComposer() {
     getClientHydrationSnapshot,
     getServerHydrationSnapshot,
   );
+  const [modifiersOpen, setModifiersOpen] = useState(false);
   const { issues, calculationReady, setInput, setStrictMode } = useOmniStore(
     useShallow((state) => ({
       issues: state.issues,
@@ -45,6 +46,7 @@ export function OmniComposer() {
   const hasHydratedUrlPromptRef = useRef(false);
   const issuesStatusId = useId();
   const resultsStatusId = useId();
+  const modifiersSectionId = useId();
 
   const scrollToResults = () => {
     resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -103,6 +105,18 @@ export function OmniComposer() {
         </div>
         <div className="order-1 xl:order-2">
           <div className="mb-2 flex items-center justify-end gap-1.5">
+            <button
+              type="button"
+              aria-expanded={modifiersOpen}
+              aria-controls={modifiersSectionId}
+              aria-label="Toggle modifiers panel"
+              onClick={() => setModifiersOpen((current) => !current)}
+              className={`flex h-8 items-center justify-center rounded-full px-3 text-sm font-medium transition-all ${
+                modifiersOpen ? "theme-icon-button-active" : "theme-icon-button"
+              }`}
+            >
+              Modifiers
+            </button>
             <StrictModeToggle />
             <HelpBubble />
           </div>
@@ -124,9 +138,14 @@ export function OmniComposer() {
                   {issues.length > 0 ? issues[0] : "No issues."}
                 </div>
               </div>
-              <div className="theme-composer-secondary">
-                {isHydrated ? <ModifierSwitches /> : null}
-              </div>
+              {modifiersOpen ? (
+                <div
+                  id={modifiersSectionId}
+                  className="theme-composer-secondary"
+                >
+                  {isHydrated ? <ModifierSwitches /> : null}
+                </div>
+              ) : null}
             </div>
           </div>
           <div

@@ -42,6 +42,34 @@ export const ATTACKER_NEGATIVE_NATURE = "__ATTACKER_NEGATIVE__";
 export const DEFENDER_POSITIVE_NATURE = "__DEFENDER_POSITIVE__";
 export const DEFENDER_NEGATIVE_NATURE = "__DEFENDER_NEGATIVE__";
 
+const EXPLICIT_NATURES = [
+  "Hardy",
+  "Lonely",
+  "Brave",
+  "Adamant",
+  "Naughty",
+  "Bold",
+  "Docile",
+  "Relaxed",
+  "Impish",
+  "Lax",
+  "Timid",
+  "Hasty",
+  "Serious",
+  "Jolly",
+  "Naive",
+  "Modest",
+  "Mild",
+  "Quiet",
+  "Bashful",
+  "Rash",
+  "Calm",
+  "Gentle",
+  "Sassy",
+  "Careful",
+  "Quirky",
+] as const;
+
 const MODIFIER_ALIASES = new Map<string, string>([
   ["positive-nature", "+nature"],
   ["pos-nature", "+nature"],
@@ -133,6 +161,17 @@ function buildStageDefinitions(scope: "attacker" | "defender") {
   return stages;
 }
 
+function buildExplicitNatureDefinitions(scope: "attacker" | "defender") {
+  return EXPLICIT_NATURES.map((nature) => ({
+    scope,
+    token: slugifySymbolValue(nature),
+    label: nature,
+    section: "stats",
+    kind: "nature",
+    nature,
+  })) satisfies ModifierDefinition[];
+}
+
 function buildSpeedStageDefinitions(scope: "attacker" | "defender") {
   const stages: ModifierDefinition[] = [];
 
@@ -192,6 +231,7 @@ const ATTACKER_MODIFIERS: ModifierDefinition[] = [
     kind: "nature",
     nature: ATTACKER_NEGATIVE_NATURE,
   },
+  ...buildExplicitNatureDefinitions("attacker"),
   {
     scope: "attacker",
     token: "helping-hand",
@@ -262,6 +302,7 @@ const DEFENDER_MODIFIERS: ModifierDefinition[] = [
     kind: "nature",
     nature: DEFENDER_NEGATIVE_NATURE,
   },
+  ...buildExplicitNatureDefinitions("defender"),
   {
     scope: "defender",
     token: "reflect",
@@ -405,8 +446,14 @@ export const GLOBAL_MODIFIER_MAP = new Map(
   GLOBAL_MODIFIERS.map((definition) => [definition.token, definition]),
 );
 
-export const ATTACKER_CHIP_DEFINITIONS = ATTACKER_MODIFIERS;
-export const DEFENDER_CHIP_DEFINITIONS = DEFENDER_MODIFIERS;
+export const ATTACKER_CHIP_DEFINITIONS = ATTACKER_MODIFIERS.filter(
+  (definition) =>
+    !(definition.kind === "nature" && definition.nature && definition.nature[0] !== "_"),
+);
+export const DEFENDER_CHIP_DEFINITIONS = DEFENDER_MODIFIERS.filter(
+  (definition) =>
+    !(definition.kind === "nature" && definition.nature && definition.nature[0] !== "_"),
+);
 export const GLOBAL_CHIP_DEFINITIONS = GLOBAL_MODIFIERS;
 
 export function slugifySymbolValue(value: string) {

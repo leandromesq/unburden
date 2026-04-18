@@ -339,7 +339,7 @@ Quatro `let` no escopo do módulo:
 
 Encapsular no scheduler do Tópico 1. Adicionar reset do scheduler ao reset do store.
 
-## Tópico 9 — Comparação de Múltiplos Matchups (UX)
+## Tópico 9 — Meta Benchmark / Team Builder (UX)
 
 **Área:** nova funcionalidade com débito de arquitetura
 
@@ -353,19 +353,26 @@ Encapsular no scheduler do Tópico 1. Adicionar reset do scheduler ao reset do s
 
 ### Problema
 
-Store atual = máquina singleton. Um input. Um resultado. Para comparar múltiplos matchups, modelo mental do store precisaria mudar.
+Direção futura mudou.
 
-### Plano
+Melhor oportunidade não é um compare mode genérico.
+Melhor oportunidade é:
 
-#### Opção A — Store com abas
+1. `Meta Benchmark`
+2. `Speed Tiers`
+3. `Team Builder`
 
-`tabs[]` + `activeTabId`.
+Motivo:
 
-#### Opção B — Muitos atacantes, um defensor
-
-`defender` fixo + `attackers[]`.
+- projeto já tem `vgc-meta.json`
+- usuário quer medir set contra o field
+- store atual segue melhor como fluxo singleton para cálculo único
 
 **Recomendação:** fazer Tópicos 1 e 2 antes. Sem isso, Tópico 9 só criaria mais débito.
+
+Plano detalhado:
+
+- [docs/meta-benchmark-team-builder-plan.md](C:\Users\leand\Documents\GitHub\omniboost\docs\meta-benchmark-team-builder-plan.md)
 
 ## Roadmap Consolidado
 
@@ -394,7 +401,7 @@ SPRINT 4
   [P2] Separar fetch/transform + CI mensal
 
 FUTURO
-  [P3] Múltiplos matchups
+  [P3] Meta Benchmark / Team Builder
 ```
 
 ## Impacto Agregado Esperado

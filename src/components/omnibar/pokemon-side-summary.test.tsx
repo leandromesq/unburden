@@ -173,6 +173,23 @@ describe("PokemonSideSummary nature marker synchronization", () => {
     expect(summary).toHaveTextContent("Modest (+SpA/-Atk)");
   });
 
+  test("explicit prompt natures show on the identity card without custom SPs", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore
+        .getState()
+        .setInput("politoed !muddy-water timid x incineroar calm");
+    });
+
+    expect(screen.getByTestId("attacker-summary")).toHaveTextContent(
+      "Timid (+Spe/-Atk)",
+    );
+    expect(screen.getByTestId("defender-summary")).toHaveTextContent(
+      "Calm (+SpD/-Atk)",
+    );
+  });
+
   test("plain species prompts do not implicitly adopt a saved attacker set", () => {
     useTeamStore.getState().saveSet(
       createImportedSet({

@@ -1,8 +1,8 @@
 import { normalizeAlias } from "@/lib/data/loaders";
 import {
-  ATTACKER_CHIP_DEFINITIONS,
-  DEFENDER_CHIP_DEFINITIONS,
-  GLOBAL_CHIP_DEFINITIONS,
+  ATTACKER_MODIFIER_MAP,
+  DEFENDER_MODIFIER_MAP,
+  GLOBAL_MODIFIER_MAP,
   formatAbilityToken,
   formatModifierToken,
   slugifySymbolValue,
@@ -190,10 +190,10 @@ export function getModifierOptions(
 ) {
   const catalog =
     scope === "attacker"
-      ? ATTACKER_CHIP_DEFINITIONS
+      ? Array.from(ATTACKER_MODIFIER_MAP.values())
       : scope === "defender"
-        ? DEFENDER_CHIP_DEFINITIONS
-        : GLOBAL_CHIP_DEFINITIONS;
+        ? Array.from(DEFENDER_MODIFIER_MAP.values())
+        : Array.from(GLOBAL_MODIFIER_MAP.values());
   const normalizedQuery = slugifySymbolValue(query);
   const labelQuery =
     normalizedQuery.includes("+") || normalizedQuery.includes("-")

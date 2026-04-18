@@ -128,7 +128,11 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
         item={summary.item}
         move={summary.move}
         side={side}
-        displayNature={summary.isBaseStats ? null : summary.nature}
+        displayNature={
+          !summary.isBaseStats || summary.nature !== "Hardy"
+            ? summary.nature
+            : null
+        }
       />
 
       {importedSet && (

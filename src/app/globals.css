@@ -108,10 +108,21 @@ button {
 /* ── Page ─────────────────────────────────────────────────── */
 
 .theme-page {
+    isolation: isolate;
+    background: var(--bg);
+    color: var(--text);
+}
+
+.theme-page::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
     background:
         radial-gradient(
             circle at 50% -8%,
-            color-mix(in srgb, var(--accent) 6%, transparent),
+            color-mix(in srgb, var(--accent) 4%, transparent),
             transparent 34%
         ),
         radial-gradient(
@@ -131,16 +142,14 @@ button {
         ),
         linear-gradient(
             180deg,
-            color-mix(in srgb, var(--bg-elevated) 82%, transparent) 0%,
-            var(--bg) 38%,
-            color-mix(in srgb, var(--bg) 96%, black) 100%
-        ),
-        var(--bg);
-    color: var(--text);
+            color-mix(in srgb, var(--bg-elevated) 68%, black) 0%,
+            color-mix(in srgb, var(--bg) 88%, black) 38%,
+            color-mix(in srgb, var(--bg) 84%, black) 100%
+        );
 }
 
 .theme-page-grid {
-    position: absolute;
+    position: fixed;
     inset: 0;
     z-index: 0;
     overflow: hidden;
@@ -163,6 +172,7 @@ button {
         transparent 100%
     );
     opacity: 0.58;
+    will-change: transform;
 }
 
 .theme-page-grid::before,
