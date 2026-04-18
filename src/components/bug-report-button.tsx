@@ -1,6 +1,12 @@
 "use client";
 
-import { startTransition, useActionState, useEffect, useRef, useState } from "react";
+import {
+  startTransition,
+  useActionState,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { reportBug } from "@/app/actions/report-bug";
 import { useOmniStore } from "@/store/use-omni-store";
@@ -36,8 +42,7 @@ export function BugReportButton() {
   const titleId = "bug-report-title";
   const descriptionId = "bug-report-description";
   const statusId = "bug-report-status";
-  const pageUrl =
-    typeof window === "undefined" ? "" : window.location.href;
+  const pageUrl = typeof window === "undefined" ? "" : window.location.href;
   const userAgent =
     typeof window === "undefined" ? "" : window.navigator.userAgent;
 
@@ -103,7 +108,10 @@ export function BugReportButton() {
           aria-labelledby={titleId}
           aria-describedby={descriptionId}
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: "rgba(0,0,0,0.65)", backdropFilter: "blur(6px)" }}
+          style={{
+            background: "rgba(0,0,0,0.65)",
+            backdropFilter: "blur(6px)",
+          }}
           onClick={(event) => {
             if (event.target === event.currentTarget) {
               close();
@@ -121,11 +129,8 @@ export function BugReportButton() {
                 <h2 id={titleId} className="text-base font-semibold">
                   Report a bug
                 </h2>
-                <p
-                  id={descriptionId}
-                  className="theme-text-dim mt-1 text-sm"
-                >
-                  Create a GitHub issue from the current prompt and context.
+                <p id={descriptionId} className="theme-text-dim mt-1 text-sm">
+                  Describe what went wrong with your current prompt and context.
                 </p>
               </div>
               <button
@@ -138,7 +143,10 @@ export function BugReportButton() {
               </button>
             </div>
 
-            <form action={formAction} className="max-h-[70vh] overflow-y-auto px-6 pb-6 scrollbar-none">
+            <form
+              action={formAction}
+              className="max-h-[70vh] overflow-y-auto px-6 pb-6 scrollbar-none"
+            >
               <input
                 type="text"
                 name="teamName"
@@ -147,7 +155,10 @@ export function BugReportButton() {
                 className="sr-only"
                 aria-hidden="true"
               />
-              <label htmlFor="bug-report-description" className="theme-text-dim mb-2 block text-sm">
+              <label
+                htmlFor="bug-report-description"
+                className="theme-text-dim mb-2 block text-sm"
+              >
                 What broke?
               </label>
               <textarea
@@ -165,7 +176,11 @@ export function BugReportButton() {
               <input type="hidden" name="prompt" value={input} />
               <input type="hidden" name="pageUrl" value={pageUrl} />
               <input type="hidden" name="userAgent" value={userAgent} />
-              <input type="hidden" name="strictMode" value={strictMode ? "on" : "off"} />
+              <input
+                type="hidden"
+                name="strictMode"
+                value={strictMode ? "on" : "off"}
+              />
 
               <div className="theme-subpanel mt-4 rounded-2xl p-3">
                 <div className="theme-text-faint text-[11px] font-semibold uppercase tracking-[0.22em]">
@@ -173,7 +188,10 @@ export function BugReportButton() {
                 </div>
                 <div className="theme-text-dim mt-2 text-xs">
                   Current prompt:{" "}
-                  <span className="font-mono" style={{ color: "var(--text-muted)" }}>
+                  <span
+                    className="font-mono"
+                    style={{ color: "var(--text-muted)" }}
+                  >
                     {input || "n/a"}
                   </span>
                 </div>
@@ -198,7 +216,7 @@ export function BugReportButton() {
                 }`}
               >
                 {state.message ||
-                  "Reports become GitHub issues and then flow to Discord."}
+                  "Your bug reports and feedback are turned into GitHub issues."}
               </p>
               {state.status === "success" && state.issueUrl ? (
                 <a
