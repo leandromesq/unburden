@@ -21,7 +21,6 @@ jobs:
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_URL: ${{ github.event.issue.html_url }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          ISSUE_BODY: ${{ github.event.issue.body }}
         shell: bash
         run: |
           if [ -z "${DISCORD_WEBHOOK_URL}" ]; then
@@ -33,18 +32,11 @@ jobs:
           import json
           import os
 
-          body = os.environ.get("ISSUE_BODY", "")
-          marker = "<!-- source: app-bug-report -->"
-          body = body.replace(marker, "").strip()
-          if len(body) > 1500:
-              body = body[:1499] + "…"
-
           payload = {
               "content": (
                   f"New Omniboost bug report: issue #{os.environ['ISSUE_NUMBER']}\n"
                   f"**{os.environ['ISSUE_TITLE']}**\n"
-                  f"{os.environ['ISSUE_URL']}\n\n"
-                  f"{body}"
+                  f"{os.environ['ISSUE_URL']}"
               )
           }
 

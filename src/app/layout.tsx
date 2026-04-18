@@ -16,7 +16,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: "Omniboost",
-  description: "Fast Gen 9 VGC damage calculation in a chat-like composer.",
+  description: "Fast VGC damage calculation in a chat-like composer.",
 };
 
 export default function RootLayout({
