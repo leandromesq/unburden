@@ -14,6 +14,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  qlty:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install Qlty CLI
+        uses: qltysh/qlty-action/install@a19242102d17e497f437d7466aa01b528537e899
+
+      - name: Run Qlty checks
+        run: qlty check --all
+
+      - name: Report Qlty smells
+        run: qlty smells --all
+
   validation:
     runs-on: ubuntu-latest
     timeout-minutes: 20
