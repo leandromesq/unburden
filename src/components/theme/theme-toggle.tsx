@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Moon, SunMedium } from "lucide-react";
 
 import { useI18n } from "@/i18n/I18nProvider";
@@ -17,6 +17,17 @@ function getThemeSnapshot(): ThemeMode {
   return document.documentElement.dataset.theme === "light" ? "light" : "dark";
 }
 
+function readStoredTheme(): ThemeMode | null {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const storedTheme = window.localStorage.getItem(STORAGE_KEY);
+  return storedTheme === "light" || storedTheme === "dark"
+    ? storedTheme
+    : null;
+}
+
 function applyTheme(nextTheme: ThemeMode) {
   document.documentElement.dataset.theme = nextTheme;
   document.documentElement.style.colorScheme = nextTheme;
@@ -28,16 +39,40 @@ export function ThemeToggle() {
   const { dictionary } = useI18n();
   const [theme, setTheme] = useState<ThemeMode>(getThemeSnapshot);
 
+  useLayoutEffect(() => {
+    const storedTheme = readStoredTheme();
+
+    if (!storedTheme) {
+      return;
+    }
+
+    applyTheme(storedTheme);
+    setTheme(storedTheme);
+  }, []);
+
   useEffect(() => {
-    const syncTheme = () => {
-      setTheme(getThemeSnapshot());
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== STORAGE_KEY) {
+        return;
+      }
+
+      const nextTheme =
+        event.newValue === "light" || event.newValue === "dark"
+          ? event.newValue
+          : null;
+
+      if (!nextTheme) {
+        return;
+      }
+
+      applyTheme(nextTheme);
+      setTheme(nextTheme);
     };
 
-    syncTheme();
-    window.addEventListener("storage", syncTheme);
+    window.addEventListener("storage", handleStorage);
 
     return () => {
-      window.removeEventListener("storage", syncTheme);
+      window.removeEventListener("storage", handleStorage);
     };
   }, []);
 

@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import { getDictionary } from "@/i18n/messages";
 import {
@@ -18,14 +25,14 @@ interface I18nContextValue {
 }
 
 const I18nContext = createContext<I18nContextValue>({
-  locale: "en",
-  dictionary: getDictionary("en"),
+  locale: DEFAULT_APP_LOCALE,
+  dictionary: getDictionary(DEFAULT_APP_LOCALE),
   setLocale: () => {},
 });
 
-function getInitialLocale(initialLocale: AppLocale): AppLocale {
+function readLocaleSnapshot(fallbackLocale: AppLocale): AppLocale {
   if (typeof document === "undefined") {
-    return initialLocale;
+    return fallbackLocale;
   }
 
   return coerceLocale(
@@ -41,9 +48,16 @@ export function I18nProvider({
   children: React.ReactNode;
   initialLocale?: AppLocale;
 }) {
-  const [locale, setLocaleState] = useState<AppLocale>(() =>
-    getInitialLocale(initialLocale),
-  );
+  const [locale, setLocaleState] = useState<AppLocale>(initialLocale);
+
+  useLayoutEffect(() => {
+    const nextLocale = readLocaleSnapshot(initialLocale);
+
+    document.documentElement.lang = nextLocale;
+    setLocaleState((currentLocale) =>
+      currentLocale === nextLocale ? currentLocale : nextLocale,
+    );
+  }, [initialLocale]);
 
   useEffect(() => {
     document.documentElement.lang = locale;
