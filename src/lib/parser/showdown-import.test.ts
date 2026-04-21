@@ -96,4 +96,50 @@ Jolly Nature
     expect(set.speciesId).toBe("meowscarada");
     expect(set.gender).toBe("F");
   });
+
+  test("parses nickname, tera type, IVs, aliases, fuzzy matches, and skips invalid sets", () => {
+    const sets = parseShowdownSets(`Pivot Bird (Landorus-Therian) @ Choice Scarf
+Ability: Intimidate
+Level: 50
+Tera Type: Flying
+IVs: 31 HP / 0 Atk / 30 Def / 29 SpA / 28 SpD / 27 Spe
+Jolly Nature
+- Earthquake
+- Rock Slide
+- U-turn
+- Protect
+
+Lando T @ Sitrus Berry
+Ability: Intimidate
+Level: 50
+- Stomping Tantrum
+
+Incineroa @ Safety Goggles
+Ability: Intimidate
+Level: 50
+- Fake Out
+
+NotAPokemon @ Leftovers
+Ability: Pressure
+- Protect`);
+
+    expect(sets).toHaveLength(3);
+
+    expect(sets[0]).toMatchObject({
+      speciesId: "landorustherian",
+      nickname: "Pivot Bird",
+      teraType: "Flying",
+      ivs: {
+        hp: 31,
+        atk: 0,
+        def: 30,
+        spa: 29,
+        spd: 28,
+        spe: 27,
+      },
+    });
+
+    expect(sets[1].speciesId).toBe("landorustherian");
+    expect(sets[2].speciesId).toBe("incineroar");
+  });
 });

@@ -100,6 +100,17 @@ describe("inline suggestions", () => {
     expect(result.activeSuggestion?.completionText).toBe("#raintoed !muddy-water");
   });
 
+  test("uses saved set references as the resolved attacker for contextual move suggestions", () => {
+    const result = getContextualMoveSuggestions("#raintoed x incineroar", referencedSets);
+
+    expect(result).toContain("!muddy-water");
+    expect(result).toContain("!weather-ball");
+  });
+
+  test("returns no contextual move suggestions when the attacker cannot be resolved", () => {
+    expect(getContextualMoveSuggestions("notapokemon x incineroar")).toEqual([]);
+  });
+
   test("prioritizes common negative multipliers over extreme values", () => {
     const result = getAutocompleteState("politoed !muddy-water -");
 

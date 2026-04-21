@@ -24,8 +24,8 @@ interface I18nContextValue {
 }
 
 const I18nContext = createContext<I18nContextValue>({
-  locale: DEFAULT_APP_LOCALE,
-  dictionary: getDictionary(DEFAULT_APP_LOCALE),
+  locale: "en",
+  dictionary: getDictionary("en"),
   setLocale: () => {},
 });
 

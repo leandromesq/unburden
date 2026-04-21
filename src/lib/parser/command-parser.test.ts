@@ -102,6 +102,55 @@ describe("parseCommand", () => {
     expect(result.issues).toHaveLength(0);
   });
 
+  test("reports unknown items on both sides without dropping the resolved command", () => {
+    const result = parseCommand(
+      "politoed qqqqq !muddy-water @fake-item x incineroar @fake-item",
+    );
+
+    expect(result.parsed).toMatchObject({
+      attacker: "Politoed",
+      move: "Muddy Water",
+      defender: "Incineroar",
+      attackerItem: undefined,
+      defenderItem: undefined,
+    });
+    expect(result.issues).toEqual(
+      expect.arrayContaining([
+        { id: "parser.unknown_attacker_item", values: { token: "@fake-item" } },
+        { id: "parser.unknown_defender_item", values: { token: "@fake-item" } },
+      ]),
+    );
+  });
+
+  test("reports invalid multi-hit counts on explicit move tokens", () => {
+    const result = parseCommand("maushold !population-bomb(12) x incineroar");
+
+    expect(result.parsed).toBeNull();
+    expect(result.issues).toContainEqual({
+      id: "parser.invalid_move_hit_count",
+    });
+  });
+
+  test("keeps the command but flags abilities that are invalid for each side", () => {
+    const result = parseCommand(
+      "politoed !muddy-water [Intimidate] x incineroar [Drizzle]",
+    );
+
+    expect(result.parsed).toMatchObject({
+      attacker: "Politoed",
+      move: "Muddy Water",
+      defender: "Incineroar",
+      attackerAbility: undefined,
+      defenderAbility: undefined,
+    });
+    expect(result.issues).toEqual(
+      expect.arrayContaining([
+        { id: "parser.could_not_resolve_attacker_ability" },
+        { id: "parser.could_not_resolve_defender_ability" },
+      ]),
+    );
+  });
+
   test("accepts fuzzy pokemon and move resolution inside symbolic grammar", () => {
     const result = parseCommand("politoe !mudy-water x incineroar");
 
