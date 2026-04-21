@@ -78,7 +78,7 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
         eyebrow: "Fluxo de Trabalho",
         title: "Editor Orientado por Prompt",
         description:
-          "O Omniboost foi desenhado para reduzir atrito durante testes de matchup e iterações de sets, mantendo o foco em velocidade e clareza.",
+          "O Omniboost foi projetado para reduzir atrito durante testes de matchup e criação de sets, mantendo o foco em velocidade e clareza.",
         bullets: [
           "Autocomplete e edição rápida para espécies, itens, abilities, golpes e spreads.",
           "Resumo lateral para ajustar set, stats, forma e contexto de batalha sem trocar de tela.",
@@ -91,7 +91,7 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
       eyebrow: "Suporte e Comunidade",
       title: "Contribua com o Projeto",
       description:
-        "O Omniboost e um projeto em progresso. Se voce encontrou bugs ou tem sugestões para a gramática de prompt, seu feedback é fundamental.",
+        "O Omniboost é um projeto em progresso. Se você encontrou bugs ou tem sugestões para a gramática de prompt, seu feedback é fundamental.",
       notes: [
         "Reporte problemas ou sugira features via GitHub Issues.",
         "Acompanhe o roadmap de atualizacoes do projeto.",
@@ -146,7 +146,7 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
         eyebrow: "Workflow",
         title: "Prompt-First Editing",
         description:
-          "Omniboost is built to cut friction while testing matchups and iterating on sets, with the interface staying focused on speed and readability.",
+          "Omniboost is built to cut friction while testing matchups and creating sets, with the interface staying focused on speed and readability.",
         bullets: [
           "Fast autocomplete and editing for species, items, abilities, moves, and spreads.",
           "Side summaries let you tune set, stats, form, and battle context without leaving the calc flow.",
@@ -159,7 +159,7 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
       eyebrow: "Support and Community",
       title: "Help Grow the Ecosystem",
       description:
-        "Omniboost is project in progress. If you found bugs or have ideas for the prompt grammar, your feedback matters.",
+        "Omniboost is a project in progress. If you found bugs or have ideas for the prompt grammar, your feedback matters.",
       notes: [
         "Report problems or suggest features through GitHub Issues.",
         "Follow the project roadmap updates.",
