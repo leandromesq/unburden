@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Check, FileText, Link2 } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
-import { buildCalculationContext } from "@/lib/calc/damage-engine";
+import { useI18n } from "@/i18n/I18nProvider";
 import { koTextTone } from "@/lib/calc/ko-text";
 import { serializeShareState } from "@/lib/share/serialize-share-state";
 import { resolveReferencedImportedSet } from "@/lib/team/set-references";
@@ -13,9 +14,15 @@ import { useTeamStore } from "@/store/use-team-store";
 function BlockTitle({
   archetype,
   label,
+  fallbackLabels,
 }: {
   archetype: string;
   label?: string;
+  fallbackLabels: {
+    minBulk: string;
+    midBulk: string;
+    maxBulk: string;
+  };
 }) {
   return (
     <div className="mb-2 flex items-center gap-2">
@@ -27,86 +34,12 @@ function BlockTitle({
       <div className="theme-text-dim text-xs font-semibold uppercase tracking-[0.24em]">
         {label ??
           (archetype === "glass"
-            ? "Min Bulk"
+            ? fallbackLabels.minBulk
             : archetype === "mid"
-              ? "Mid Bulk"
-              : "Max Bulk")}
+              ? fallbackLabels.midBulk
+              : fallbackLabels.maxBulk)}
       </div>
     </div>
-  );
-}
-
-function CopyIcon({ copied }: { copied: boolean }) {
-  if (copied) {
-    return (
-      <svg
-        aria-hidden
-        viewBox="0 0 16 16"
-        className="h-3.5 w-3.5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M3.5 8.5l2.5 2.5 6-6" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg
-      aria-hidden
-      viewBox="0 0 16 16"
-      className="h-3.5 w-3.5"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="5.25" y="3.25" width="7.5" height="9" rx="1.5" />
-      <path d="M3.25 10.5V5.75A1.5 1.5 0 0 1 4.75 4.25H9.5" />
-    </svg>
-  );
-}
-
-function LinkIcon() {
-  return (
-    <svg
-      aria-hidden
-      viewBox="0 0 16 16"
-      className="h-3.5 w-3.5"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M6.25 9.75l3.5-3.5" />
-      <path d="M5.1 6.9l-1.15 1.15a2.12 2.12 0 1 0 3 3l1.15-1.15" />
-      <path d="M10.9 9.1l1.15-1.15a2.12 2.12 0 1 0-3-3L7.9 6.1" />
-    </svg>
-  );
-}
-
-function TextIcon() {
-  return (
-    <svg
-      aria-hidden
-      viewBox="0 0 16 16"
-      className="h-3.5 w-3.5"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3 4.5h10" />
-      <path d="M5.5 4.5v7" />
-      <path d="M10.5 4.5v7" />
-      <path d="M4 11.5h8" />
-    </svg>
   );
 }
 
@@ -123,6 +56,7 @@ function fallbackCopyText(text: string) {
 }
 
 export function ResultsPanel() {
+  const { dictionary } = useI18n();
   const { results, parsed, strictMode } = useOmniStore(
     useShallow((state) => ({
       results: state.results,
@@ -142,19 +76,7 @@ export function ResultsPanel() {
     };
   }, []);
 
-  const context = useMemo(
-    () =>
-      parsed
-        ? buildCalculationContext(parsed, importedSets, { strictMode })
-        : null,
-    [parsed, importedSets, strictMode],
-  );
-
   if (!parsed || !results.length) {
-    return null;
-  }
-
-  if (!context) {
     return null;
   }
 
@@ -249,17 +171,16 @@ export function ResultsPanel() {
       role="status"
       aria-live="polite"
       aria-atomic="true"
-      aria-label="Calculation results"
+      aria-label={dictionary.resultsPanel.ariaLabel}
     >
-      {results.map((result, index) => {
-        const archetype = context.archetypes[index];
+      {results.map((result) => {
         const resultLabel =
-          archetype.label ??
+          result.label ??
           (result.archetype === "glass"
-            ? "Min Bulk"
+            ? dictionary.resultsPanel.minBulk
             : result.archetype === "mid"
-              ? "Mid Bulk"
-              : "Max Bulk");
+              ? dictionary.resultsPanel.midBulk
+              : dictionary.resultsPanel.maxBulk);
 
         return (
           <article
@@ -270,12 +191,11 @@ export function ResultsPanel() {
             <div className="mb-2.5">
               <BlockTitle
                 archetype={result.archetype}
-                label={archetype.label}
+                label={result.label}
+                fallbackLabels={dictionary.resultsPanel}
               />
               <div className="flex items-center justify-between gap-3">
-                <div className="theme-text-dim text-[13px]">
-                  {archetype.summary}
-                </div>
+                <div className="theme-text-dim text-[13px]">{result.summary}</div>
                 <div
                   className={`shrink-0 text-[13px] font-semibold tabular-nums ${koTextTone(result.koChanceText)}`}
                 >
@@ -320,17 +240,17 @@ export function ResultsPanel() {
                       ? "theme-icon-button-active"
                       : ""
                   }`}
-                  aria-label={`Copy result text for ${resultLabel}`}
+                  aria-label={dictionary.resultsPanel.copyResultText(resultLabel)}
                   title={
                     copiedAction === `text:${result.archetype}`
-                      ? "Copied text"
-                      : "Copy result text"
+                      ? dictionary.resultsPanel.copiedText
+                      : dictionary.resultsPanel.copyResultText(resultLabel)
                   }
                 >
                   {copiedAction === `text:${result.archetype}` ? (
-                    <CopyIcon copied />
+                    <Check aria-hidden="true" size={15} strokeWidth={2.2} />
                   ) : (
-                    <TextIcon />
+                    <FileText aria-hidden="true" size={15} strokeWidth={1.9} />
                   )}
                 </button>
                 <button
@@ -341,17 +261,17 @@ export function ResultsPanel() {
                       ? "theme-icon-button-active"
                       : ""
                   }`}
-                  aria-label={`Copy share URL for ${resultLabel}`}
+                  aria-label={dictionary.resultsPanel.copyShareUrl(resultLabel)}
                   title={
                     copiedAction === `url:${result.archetype}`
-                      ? "Copied URL"
-                      : "Copy share URL"
+                      ? dictionary.resultsPanel.copiedUrl
+                      : dictionary.resultsPanel.copyShareUrl(resultLabel)
                   }
                 >
                   {copiedAction === `url:${result.archetype}` ? (
-                    <CopyIcon copied />
+                    <Check aria-hidden="true" size={15} strokeWidth={2.2} />
                   ) : (
-                    <LinkIcon />
+                    <Link2 aria-hidden="true" size={15} strokeWidth={1.9} />
                   )}
                 </button>
               </div>

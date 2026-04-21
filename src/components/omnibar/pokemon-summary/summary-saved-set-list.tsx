@@ -1,3 +1,5 @@
+import { X } from "lucide-react";
+
 import type { ImportedSet } from "@/lib/types";
 
 interface SummarySavedSetListProps {
@@ -44,7 +46,7 @@ function SavedSetListItem({
         onClick={onRemove}
         className="theme-icon-button absolute right-2 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full text-sm opacity-0 transition-opacity group-hover:opacity-100"
       >
-        ×
+        <X aria-hidden="true" size={12} strokeWidth={2.2} />
       </button>
     </div>
   );

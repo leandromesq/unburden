@@ -4,7 +4,9 @@ import { searchSetReferences } from "@/lib/team/set-references";
 import type { SuggestionOption } from "@/lib/types";
 import {
   buildActiveSuggestion,
+  buildFullText,
   formatSpeciesText,
+  getMergedTokenSuffixTokens,
   replaceRangeWithCursor,
 } from "@/lib/parser/resolvers/shared";
 import type { SlotResolver } from "@/lib/parser/resolvers/types";
@@ -18,6 +20,10 @@ export const resolveAttackerSpeciesSuggestion: SlotResolver = (context) => {
   if (query.startsWith("#")) {
     const options = searchSetReferences(query, context.importedSets, 6).map(
       ({ set, canonicalToken }) => {
+        const mergedSuffixTokens =
+          context.cursorIndex === context.input.length
+            ? []
+            : getMergedTokenSuffixTokens(context.activeToken, context.cursorIndex);
         const [applyText, cursorOffset] =
           context.cursorIndex === context.input.length || !context.activeToken
             ? (() => {
@@ -31,6 +37,24 @@ export const resolveAttackerSpeciesSuggestion: SlotResolver = (context) => {
                 );
                 return [text, canonicalToken.length] as const;
               })()
+            : mergedSuffixTokens.length
+              ? (() => {
+                  const text = buildFullText(
+                    context.fullStructure,
+                    [
+                      canonicalToken,
+                      ...mergedSuffixTokens,
+                      ...context.fullStructure.attacker.rawTokens
+                        .slice(context.fullStructure.attacker.leadingFreeTokens.length)
+                        .map((token) => token.raw),
+                    ],
+                    context.fullStructure.lexed.hasDelimiter
+                      ? context.fullStructure.defender.rawTokens.map((token) => token.raw)
+                      : undefined,
+                    context.fullStructure.lexed.hasDelimiter,
+                  );
+                  return [text, canonicalToken.length] as const;
+                })()
             : replaceRangeWithCursor(
                 context.input,
                 context.fullStructure.attacker.rawTokens[0]?.start ?? 0,
@@ -65,6 +89,10 @@ export const resolveAttackerSpeciesSuggestion: SlotResolver = (context) => {
   const options: SuggestionOption[] = searchPokemonEntities(query, 6).map(
     (match) => {
       const speciesText = formatSpeciesText(match.entry.name);
+      const mergedSuffixTokens =
+        context.cursorIndex === context.input.length
+          ? []
+          : getMergedTokenSuffixTokens(context.activeToken, context.cursorIndex);
       const [applyText, cursorOffset] =
         context.cursorIndex === context.input.length || !context.activeToken
           ? (() => {
@@ -81,6 +109,24 @@ export const resolveAttackerSpeciesSuggestion: SlotResolver = (context) => {
                 speciesText.length + (text.length > speciesText.length ? 1 : 0),
               ] as const;
             })()
+          : mergedSuffixTokens.length
+            ? (() => {
+                const text = buildFullText(
+                  context.fullStructure,
+                  [
+                    speciesText,
+                    ...mergedSuffixTokens,
+                    ...context.fullStructure.attacker.rawTokens
+                      .slice(context.fullStructure.attacker.leadingFreeTokens.length)
+                      .map((token) => token.raw),
+                  ],
+                  context.fullStructure.lexed.hasDelimiter
+                    ? context.fullStructure.defender.rawTokens.map((token) => token.raw)
+                    : undefined,
+                  context.fullStructure.lexed.hasDelimiter,
+                );
+                return [text, speciesText.length] as const;
+              })()
           : replaceRangeWithCursor(
               context.input,
               context.fullStructure.attacker.rawTokens[0]?.start ?? 0,

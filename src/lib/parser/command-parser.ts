@@ -21,11 +21,13 @@ import {
 } from "@/lib/parser/grammar";
 import { resolveMoveEntity } from "@/lib/parser/fuse-indexes";
 import { resolveSetReferenceToken } from "@/lib/team/set-references";
-import type { ImportedSet, ParsedCommand, PokemonEntry } from "@/lib/types";
-
-function unique<T>(values: T[]) {
-  return Array.from(new Set(values));
-}
+import { createIssue, uniqueIssues } from "@/lib/issues";
+import type {
+  ImportedSet,
+  OmniIssue,
+  ParsedCommand,
+  PokemonEntry,
+} from "@/lib/types";
 
 function resolveParsedSpecies(
   segment: ReturnType<typeof analyzeCommandStructure>["attacker"],
@@ -244,7 +246,7 @@ function resolveAegislashCalcFormId(speciesText: string) {
 
 interface CommandParseResult {
   parsed: ParsedCommand | null;
-  issues: string[];
+  issues: OmniIssue[];
 }
 
 function isLegacyScopedToken(token: string) {
@@ -256,7 +258,7 @@ export function parseCommand(
   importedSets: Record<string, ImportedSet> = {},
 ): CommandParseResult {
   const structure = analyzeCommandStructure(input);
-  const issues: string[] = [];
+  const issues: OmniIssue[] = [];
   const attackerReferenceSet = resolveSetReferenceToken(
     structure.attacker.leadingFreeTokens[0]?.raw,
     importedSets,
@@ -286,63 +288,65 @@ export function parseCommand(
   const defenderItem = resolveItemDisplay(structure.defender.itemToken?.value);
 
   if (!structure.lexed.hasDelimiter) {
-    issues.push("Use x to split attacker and defender.");
+    issues.push(createIssue("parser.use_separator"));
   }
 
   if (structure.attacker.leadingFreeTokens[0]?.raw.startsWith("#") && !attackerReferenceSet) {
-    issues.push(`Unknown saved set reference: ${structure.attacker.leadingFreeTokens[0]?.raw}`);
+    issues.push(
+      createIssue("parser.unknown_saved_set_reference", {
+        reference: structure.attacker.leadingFreeTokens[0]?.raw,
+      }),
+    );
   }
 
   if (structure.defender.leadingFreeTokens[0]?.raw.startsWith("#") && !defenderReferenceSet) {
-    issues.push(`Unknown saved set reference: ${structure.defender.leadingFreeTokens[0]?.raw}`);
+    issues.push(
+      createIssue("parser.unknown_saved_set_reference", {
+        reference: structure.defender.leadingFreeTokens[0]?.raw,
+      }),
+    );
   }
 
   if (attackerReferenceSet && structure.attacker.leadingFreeTokens.length > 1) {
-    issues.push("Saved set references must occupy the attacker pokemon slot alone.");
+    issues.push(createIssue("parser.saved_set_reference_attacker_slot_only"));
   }
 
   if (defenderReferenceSet && structure.defender.leadingFreeTokens.length > 1) {
-    issues.push("Saved set references must occupy the defender pokemon slot alone.");
+    issues.push(createIssue("parser.saved_set_reference_defender_slot_only"));
   }
 
   if (!attackerEntry) {
-    issues.push("Could not resolve attacker.");
+    issues.push(createIssue("parser.could_not_resolve_attacker"));
   }
 
   if (structure.lexed.hasDelimiter && !defenderEntry) {
-    issues.push("Could not resolve defender.");
+    issues.push(createIssue("parser.could_not_resolve_defender"));
   }
 
   if (structure.attacker.postExplicitFreeTokens.length) {
-    issues.push(
-      "Attacker tokens after !move must use known segment-scoped forms like @item, %75, sp:32/0/0/0/0/0, [Ability], +1, +nature, timid, or helping-hand.",
-    );
+    issues.push(createIssue("parser.invalid_attacker_post_move_tokens"));
   }
 
   if (structure.defender.postExplicitFreeTokens.length) {
-    issues.push(
-      "Defender tokens must use known segment-scoped forms like @item, %75, sp:32/0/0/0/0/0, [Ability], +1, +nature, calm, or reflect.",
-    );
+    issues.push(createIssue("parser.invalid_defender_post_move_tokens"));
   }
 
   if (structure.attacker.leadingRemainderTokens.length && !moveToken) {
-    issues.push("Use !<move> for the attacker move.");
+    issues.push(createIssue("parser.use_explicit_move_token"));
   }
 
   if (!moveToken && !referencedMove) {
-    issues.push("Add an explicit attacker move with !<move>.");
+    issues.push(createIssue("parser.add_attacker_move"));
   } else if ((moveToken || referencedMove) && !move) {
-    issues.push("Could not resolve attacker move.");
+    issues.push(createIssue("parser.could_not_resolve_move"));
   }
 
   if (moveToken?.hitCountInvalid) {
-    issues.push("Move hit count must be between 1 and 10.");
+    issues.push(createIssue("parser.invalid_move_hit_count"));
   }
 
   if (structure.defender.leadingRemainderTokens.length) {
-    issues.push(
-      "Unrecognized defender token. Use segment-scoped tokens like @item, %75, sp:32/0/0/0/0/0, [Ability], +nature, calm, reflect, or ~rain.",
-    );
+    issues.push(createIssue("parser.invalid_defender_token"));
   }
 
   const invalidExplicitTokens = [
@@ -351,13 +355,11 @@ export function parseCommand(
   ];
 
   if (invalidExplicitTokens.some((token) => token.normalized.startsWith("sp:"))) {
-    issues.push(
-      "SP spreads must use sp:hp/atk/def/spa/spd/spe with six values, max 32 each and 66 total.",
-    );
+    issues.push(createIssue("parser.invalid_spread"));
   }
 
   if (structure.attacker.misplacedTokens.length || structure.defender.misplacedTokens.length) {
-    issues.push("Some tokens were placed on the wrong side of the separator.");
+    issues.push(createIssue("parser.tokens_wrong_side"));
   }
 
   const unknownTokens = [
@@ -373,15 +375,27 @@ export function parseCommand(
   ];
 
   if (unknownTokens.length) {
-    issues.push(`Unknown modifier token: ${unknownTokens[0].raw}`);
+    issues.push(
+      createIssue("parser.unknown_modifier", {
+        token: unknownTokens[0].raw,
+      }),
+    );
   }
 
   if (structure.attacker.itemToken && !attackerItem) {
-    issues.push(`Unknown attacker item: ${structure.attacker.itemToken.raw}`);
+    issues.push(
+      createIssue("parser.unknown_attacker_item", {
+        token: structure.attacker.itemToken.raw,
+      }),
+    );
   }
 
   if (structure.defender.itemToken && !defenderItem) {
-    issues.push(`Unknown defender item: ${structure.defender.itemToken.raw}`);
+    issues.push(
+      createIssue("parser.unknown_defender_item", {
+        token: structure.defender.itemToken.raw,
+      }),
+    );
   }
 
   const legacyTokens = [
@@ -392,7 +406,7 @@ export function parseCommand(
   ].filter((token) => isLegacyScopedToken(token.raw));
 
   if (legacyTokens.length) {
-    issues.push("Legacy prefixes >, <, a:, d:, and g: are no longer supported.");
+    issues.push(createIssue("parser.legacy_prefixes_removed"));
   }
 
   if (
@@ -403,7 +417,7 @@ export function parseCommand(
     moveToken?.hitCountInvalid ||
     invalidExplicitTokens.length
   ) {
-    return { parsed: null, issues: unique(issues) };
+    return { parsed: null, issues: uniqueIssues(issues) };
   }
 
   const attackerAbility = resolveAbilityName(
@@ -421,11 +435,11 @@ export function parseCommand(
   );
 
   if (structure.attacker.abilityToken && !attackerAbility) {
-    issues.push("Could not resolve attacker ability.");
+    issues.push(createIssue("parser.could_not_resolve_attacker_ability"));
   }
 
   if (structure.defender.abilityToken && !defenderAbility) {
-    issues.push("Could not resolve defender ability.");
+    issues.push(createIssue("parser.could_not_resolve_defender_ability"));
   }
 
   const modifiers = parseModifierCollections(
@@ -474,6 +488,6 @@ export function parseCommand(
       defenderSideEffects: modifiers.defenderSideEffects,
       isDoubleTarget: move.isSpread,
     },
-    issues: unique(issues),
+    issues: uniqueIssues(issues),
   };
 }

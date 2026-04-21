@@ -34,7 +34,7 @@ describe("parseCommand", () => {
     const result = parseCommand("politoed x incineroar");
 
     expect(result.parsed).toBeNull();
-    expect(result.issues).toContain("Add an explicit attacker move with !<move>.");
+    expect(result.issues).toContainEqual({ id: "parser.add_attacker_move" });
   });
 
   test("parses compact attacker, defender and global modifiers", () => {
@@ -116,14 +116,18 @@ describe("parseCommand", () => {
     const result = parseCommand("zzzzzz !muddy-water x incineroar");
 
     expect(result.parsed).toBeNull();
-    expect(result.issues).toContain("Could not resolve attacker.");
+    expect(result.issues).toContainEqual({
+      id: "parser.could_not_resolve_attacker",
+    });
   });
 
   test("does not resolve incomplete defender prompts", () => {
     const result = parseCommand("aegislash !poltergeist x ");
 
     expect(result.parsed).toBeNull();
-    expect(result.issues).toContain("Could not resolve defender.");
+    expect(result.issues).toContainEqual({
+      id: "parser.could_not_resolve_defender",
+    });
   });
 
   test("accepts legacy nature aliases and normalizes them", () => {
@@ -238,9 +242,7 @@ describe("parseCommand", () => {
     const result = parseCommand("politoed !muddy-water sp:32/0/1 x incineroar");
 
     expect(result.parsed).toBeNull();
-    expect(result.issues).toContain(
-      "SP spreads must use sp:hp/atk/def/spa/spd/spe with six values, max 32 each and 66 total.",
-    );
+    expect(result.issues).toContainEqual({ id: "parser.invalid_spread" });
   });
 
   test("parses attacker and defender status conditions by segment", () => {
@@ -300,9 +302,9 @@ describe("parseCommand", () => {
     const result = parseCommand("politoed !muddy-water >+1 x incineroar");
 
     expect(result.parsed).toBeNull();
-    expect(result.issues).toContain(
-      "Legacy prefixes >, <, a:, d:, and g: are no longer supported.",
-    );
+    expect(result.issues).toContainEqual({
+      id: "parser.legacy_prefixes_removed",
+    });
   });
 
   test("does not treat the x in mega x as the attacker-defender separator", () => {
@@ -329,6 +331,9 @@ describe("parseCommand", () => {
     const result = parseCommand("#missing-set x incineroar", referencedSets);
 
     expect(result.parsed).toBeNull();
-    expect(result.issues).toContain("Unknown saved set reference: #missing-set");
+    expect(result.issues).toContainEqual({
+      id: "parser.unknown_saved_set_reference",
+      values: { reference: "#missing-set" },
+    });
   });
 });

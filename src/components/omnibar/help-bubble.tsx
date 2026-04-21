@@ -7,117 +7,8 @@ import {
   useRef,
   useState,
 } from "react";
-
-interface HotkeyRow {
-  keys: string[];
-  description: string;
-}
-
-interface SyntaxRow {
-  token: string;
-  description: string;
-  example: string;
-}
-
-const HOTKEYS: HotkeyRow[] = [
-  { keys: ["↑", "↓"], description: "Navigate autocomplete suggestions" },
-  { keys: ["Tab"], description: "Accept suggestion / complete token" },
-  { keys: ["Enter"], description: "Scroll to results (when ready)" },
-  { keys: ["Alt", "K"], description: "Focus the main prompt textarea" },
-  { keys: ["Esc"], description: "Close this help dialog" },
-];
-
-const SYNTAX_ROWS: SyntaxRow[] = [
-  {
-    token: "!move",
-    description: "Attacker move",
-    example: "!muddy-water",
-  },
-  {
-    token: "#set",
-    description: "Saved set reference for the current segment",
-    example: "#raintoed  #avincin",
-  },
-  {
-    token: "@item",
-    description: "Held item for the current segment",
-    example: "@mystic-water  @occa-berry",
-  },
-  {
-    token: "segment token",
-    description: "Stage, nature, spread, or side effect in the current segment",
-    example: "+1  +nature  reflect",
-  },
-  {
-    token: "[Ability]",
-    description: "Ability override for the current segment",
-    example: "[Drizzle]  [Intimidate]",
-  },
-  {
-    token: "~effect",
-    description: "Global weather / terrain / field",
-    example: "~rain  ~trick-room",
-  },
-  {
-    token: "%N",
-    description: "Current HP percentage (1–100)",
-    example: "%75  %50",
-  },
-  {
-    token: "sp:...",
-    description: "Six-value Champions SP spread for the current segment",
-    example: "sp:32/0/1/13/1/19",
-  },
-  {
-    token: "*",
-    description: "Critical hit",
-    example: "*",
-  },
-];
-
-const ATTACKER_MODIFIERS: Array<{ token: string; label: string }> = [
-  { token: "+1 … +6", label: "Atk / SpA stage boost" },
-  { token: "-1 … -6", label: "Atk / SpA stage drop" },
-  { token: "spe+1 … spe+6", label: "Speed stage boost" },
-  { token: "spe-1 … spe-6", label: "Speed stage drop" },
-  { token: "+nature", label: "Positive offensive nature" },
-  { token: "-nature", label: "Negative offensive nature" },
-  { token: "max-atk", label: "Max physical attack investment" },
-  { token: "max-spa", label: "Max special attack investment" },
-  { token: "helping-hand", label: "Helping Hand boost" },
-  { token: "tailwind", label: "Attacker has Tailwind" },
-  { token: "battery", label: "Battery boost" },
-  { token: "power-spot", label: "Power Spot boost" },
-];
-
-const DEFENDER_MODIFIERS: Array<{ token: string; label: string }> = [
-  { token: "+1 … +6", label: "Def / SpD stage boost" },
-  { token: "-1 … -6", label: "Def / SpD stage drop" },
-  { token: "spe+1 … spe+6", label: "Speed stage boost" },
-  { token: "spe-1 … spe-6", label: "Speed stage drop" },
-  { token: "+nature", label: "Positive defensive nature" },
-  { token: "-nature", label: "Negative defensive nature" },
-  { token: "max-def", label: "Max physical defense investment" },
-  { token: "max-spd", label: "Max special defense investment" },
-  { token: "reflect", label: "Reflect is up" },
-  { token: "light-screen", label: "Light Screen is up" },
-  { token: "aurora-veil", label: "Aurora Veil is up" },
-  { token: "protect", label: "Defender behind Protect" },
-  { token: "friend-guard", label: "Friend Guard active" },
-  { token: "tailwind", label: "Defender has Tailwind" },
-];
-
-const TIPS = [
-  "Only the attacker takes !move, but both sides can use @item, %HP, and [Ability] based on which segment they are in.",
-  "Use #set-name to reference a saved or shared set by nickname or species id. Explicit prompt tokens still override the referenced set.",
-  "Modifiers can also be toggled via the panel below the input.",
-  "Weather and terrain abilities surface the matching ~token as an opt-in suggestion after both sides resolve.",
-  "Use the side sliders for stage control, including dedicated Speed stages for Electro Ball and Gyro Ball.",
-  "Use sp:hp/atk/def/spa/spd/spe to override summary and calc spreads directly from the prompt.",
-  "Fast mode allows competitive defaults. Strict mode blocks inferred abilities and other hidden assumptions.",
-  "Speed-sensitive moves now surface effective Spe values and the speed ratio directly in the result assumptions.",
-  "Autocomplete works on Pokémon names, moves, and modifier tokens.",
-];
+import { CircleHelp, X } from "lucide-react";
+import { useI18n } from "@/i18n/I18nProvider";
 
 function Kbd({ children }: { children: string }) {
   return (
@@ -150,7 +41,10 @@ function Divider() {
 }
 
 export function HelpBubble() {
+  const { dictionary } = useI18n();
   const [open, setOpen] = useState(false);
+  const [canScrollUp, setCanScrollUp] = useState(false);
+  const [canScrollDown, setCanScrollDown] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -174,6 +68,22 @@ export function HelpBubble() {
       });
     }
   });
+  const updateScrollIndicators = () => {
+    const dialog = dialogRef.current;
+
+    if (!dialog) {
+      setCanScrollUp(false);
+      setCanScrollDown(false);
+      return;
+    }
+
+    const { scrollTop, clientHeight, scrollHeight } = dialog;
+    const maxScrollTop = scrollHeight - clientHeight;
+    const threshold = 6;
+
+    setCanScrollUp(scrollTop > threshold);
+    setCanScrollDown(maxScrollTop - scrollTop > threshold);
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -194,6 +104,7 @@ export function HelpBubble() {
       hasOpenedRef.current = true;
       requestAnimationFrame(() => {
         dialogRef.current?.focus();
+        updateScrollIndicators();
       });
       return;
     }
@@ -206,6 +117,13 @@ export function HelpBubble() {
     hasOpenedRef.current = false;
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return;
+
+    window.addEventListener("resize", updateScrollIndicators);
+    return () => window.removeEventListener("resize", updateScrollIndicators);
+  }, [open]);
+
   return (
     <div ref={containerRef} className="relative z-30">
       <button
@@ -214,7 +132,7 @@ export function HelpBubble() {
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-controls="help-bubble-dialog"
-        aria-label="Show syntax and hotkey reference"
+        aria-label={dictionary.helpBubble.triggerAria}
         onClick={() => {
           startTransition(() => {
             setOpen((prev) => !prev);
@@ -224,33 +142,45 @@ export function HelpBubble() {
           open ? "theme-icon-button-active" : "theme-icon-button"
         }`}
       >
-        ?
+        <CircleHelp aria-hidden="true" size={15} strokeWidth={1.9} />
       </button>
 
       {open && (
         <div
           id="help-bubble-dialog"
-          ref={dialogRef}
           role="dialog"
           aria-modal="false"
           aria-labelledby={titleId}
           aria-describedby={descriptionId}
           tabIndex={-1}
-          className="theme-panel scrollbar-none absolute right-0 top-full z-50 mt-2 max-h-[80vh] w-[24rem] overflow-y-auto rounded-3xl p-4 text-left outline-none"
+          className="theme-panel absolute right-0 top-full z-50 mt-2 w-[24rem] overflow-hidden rounded-3xl text-left outline-none"
           style={{ boxShadow: "var(--shadow-overlay)" }}
         >
+          <div
+            aria-hidden="true"
+            className={`pointer-events-none absolute inset-x-0 top-0 z-10 h-6 transition-opacity ${
+              canScrollUp ? "opacity-100" : "opacity-0"
+            }`}
+            style={{
+              background:
+                "linear-gradient(180deg, color-mix(in srgb, var(--surface-2) 98%, transparent) 0%, transparent 100%)",
+            }}
+          />
+          <div
+            ref={dialogRef}
+            className="scrollbar-none max-h-[80vh] overflow-y-auto p-4"
+            onScroll={updateScrollIndicators}
+          >
           <div className="mb-3 flex items-start justify-between gap-3">
             <div>
               <h2 id={titleId} className="text-sm font-semibold">
-                Syntax and hotkey reference
+                {dictionary.helpBubble.title}
               </h2>
               <p
                 id={descriptionId}
                 className="theme-text-muted mt-1 text-[13px] leading-5"
               >
-                Reference for prompt structure, supported tokens, and keyboard
-                shortcuts including the shortcut for returning focus to the main
-                textarea.
+                {dictionary.helpBubble.description}
               </p>
             </div>
             <button
@@ -260,14 +190,14 @@ export function HelpBubble() {
                   setOpen(false);
                 });
               }}
-              aria-label="Close help dialog"
+              aria-label={dictionary.helpBubble.closeAria}
               className="theme-icon-button flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm"
             >
-              ×
+              <X aria-hidden="true" size={15} strokeWidth={2.1} />
             </button>
           </div>
           <section>
-            <SectionHeading>Structure</SectionHeading>
+            <SectionHeading>{dictionary.helpBubble.structure}</SectionHeading>
             <div className="theme-subpanel-strong rounded-2xl px-3 py-3">
               <div
                 className="font-mono text-sm"
@@ -277,9 +207,7 @@ export function HelpBubble() {
                 [global tokens]
               </div>
               <div className="theme-text-muted mt-2 text-[12px]">
-                Use <span className="font-mono">x</span> or{" "}
-                <span className="font-mono">vs</span> to split attacker and
-                defender.
+                {dictionary.helpBubble.structureDescription}
               </div>
             </div>
           </section>
@@ -287,67 +215,73 @@ export function HelpBubble() {
           <Divider />
 
           <section>
-            <SectionHeading>Core Tokens</SectionHeading>
+            <SectionHeading>{dictionary.helpBubble.coreTokens}</SectionHeading>
             <div className="grid gap-2 sm:grid-cols-2">
-              {SYNTAX_ROWS.map(({ token, description, example }) => (
-                <div
-                  key={token}
-                  className="theme-subpanel rounded-2xl px-3 py-2.5"
-                >
-                  <code className="theme-badge mb-1 inline-block rounded px-1.5 py-0.5 font-mono text-[11px]">
-                    {token}
-                  </code>
-                  <div className="theme-text-muted text-[12px] leading-snug">
-                    {description}
-                  </div>
+              {dictionary.helpBubble.syntaxRows.map(
+                ({ token, description, example }) => (
                   <div
-                    className="mt-2 font-mono text-[11px]"
-                    style={{ color: "var(--text-faint)" }}
+                    key={token}
+                    className="theme-subpanel rounded-2xl px-3 py-2.5"
                   >
-                    {example}
+                    <code className="theme-badge mb-1 inline-block rounded px-1.5 py-0.5 font-mono text-[11px]">
+                      {token}
+                    </code>
+                    <div className="theme-text-muted text-[12px] leading-snug">
+                      {description}
+                    </div>
+                    <div
+                      className="mt-2 font-mono text-[11px]"
+                      style={{ color: "var(--text-faint)" }}
+                    >
+                      {example}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ),
+              )}
             </div>
           </section>
 
           <Divider />
 
           <section>
-            <SectionHeading>Segment Tokens</SectionHeading>
+            <SectionHeading>{dictionary.helpBubble.segmentTokens}</SectionHeading>
             <div className="space-y-3">
               <div className="theme-subpanel rounded-2xl p-3">
                 <div className="theme-text-dim mb-2 text-[11px] font-semibold uppercase tracking-[0.22em]">
-                  Attacker
+                  {dictionary.helpBubble.attacker}
                 </div>
                 <div className="space-y-1">
-                  {ATTACKER_MODIFIERS.map(({ token, label }) => (
-                    <div key={token} className="flex items-baseline gap-2">
-                      <code className="theme-pill-muted shrink-0 rounded px-1.5 py-0.5 font-mono text-[11px]">
-                        {token}
-                      </code>
-                      <span className="theme-text-dim text-[12px]">
-                        {label}
-                      </span>
-                    </div>
-                  ))}
+                  {dictionary.helpBubble.attackerModifiers.map(
+                    ({ token, label }) => (
+                      <div key={token} className="flex items-baseline gap-2">
+                        <code className="theme-pill-muted shrink-0 rounded px-1.5 py-0.5 font-mono text-[11px]">
+                          {token}
+                        </code>
+                        <span className="theme-text-dim text-[12px]">
+                          {label}
+                        </span>
+                      </div>
+                    ),
+                  )}
                 </div>
               </div>
               <div className="theme-subpanel rounded-2xl p-3">
                 <div className="theme-text-dim mb-2 text-[11px] font-semibold uppercase tracking-[0.22em]">
-                  Defender
+                  {dictionary.helpBubble.defender}
                 </div>
                 <div className="space-y-1">
-                  {DEFENDER_MODIFIERS.map(({ token, label }) => (
-                    <div key={token} className="flex items-baseline gap-2">
-                      <code className="theme-pill-muted shrink-0 rounded px-1.5 py-0.5 font-mono text-[11px]">
-                        {token}
-                      </code>
-                      <span className="theme-text-dim text-[12px]">
-                        {label}
-                      </span>
-                    </div>
-                  ))}
+                  {dictionary.helpBubble.defenderModifiers.map(
+                    ({ token, label }) => (
+                      <div key={token} className="flex items-baseline gap-2">
+                        <code className="theme-pill-muted shrink-0 rounded px-1.5 py-0.5 font-mono text-[11px]">
+                          {token}
+                        </code>
+                        <span className="theme-text-dim text-[12px]">
+                          {label}
+                        </span>
+                      </div>
+                    ),
+                  )}
                 </div>
               </div>
             </div>
@@ -356,9 +290,9 @@ export function HelpBubble() {
           <Divider />
 
           <section>
-            <SectionHeading>Hotkeys</SectionHeading>
+            <SectionHeading>{dictionary.helpBubble.hotkeys}</SectionHeading>
             <div className="grid gap-2 sm:grid-cols-2">
-              {HOTKEYS.map(({ keys, description }) => (
+              {dictionary.helpBubble.hotkeyRows.map(({ keys, description }) => (
                 <div
                   key={description}
                   className="theme-subpanel rounded-2xl px-3 py-2.5"
@@ -378,9 +312,9 @@ export function HelpBubble() {
 
           <Divider />
           <section>
-            <SectionHeading>Tips</SectionHeading>
+            <SectionHeading>{dictionary.helpBubble.tips}</SectionHeading>
             <ul className="space-y-1.5">
-              {TIPS.map((tip) => (
+              {dictionary.helpBubble.tipsList.map((tip) => (
                 <li key={tip} className="flex items-start gap-2">
                   <span
                     className="mt-0.75 shrink-0 text-[9px]"
@@ -394,6 +328,18 @@ export function HelpBubble() {
               ))}
             </ul>
           </section>
+          </div>
+
+          <div
+            aria-hidden="true"
+            className={`pointer-events-none absolute inset-x-0 bottom-0 z-10 h-6 transition-opacity ${
+              canScrollDown ? "opacity-100" : "opacity-0"
+            }`}
+            style={{
+              background:
+                "linear-gradient(0deg, color-mix(in srgb, var(--surface-2) 98%, transparent) 0%, transparent 100%)",
+            }}
+          />
         </div>
       )}
     </div>

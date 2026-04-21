@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
+import { unstable_batchedUpdates } from "react-dom";
 import { useShallow } from "zustand/react/shallow";
 
 import { EMPTY_STAT_SPREAD } from "@/lib/calc/stat-calc";
@@ -124,6 +125,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     parsedCommand,
     setAttackerMove,
     setInput,
+    setInputImmediately,
     recompute,
   } = useOmniStore(
     useShallow((state) => ({
@@ -131,13 +133,15 @@ export function usePokemonSideSummaryController(side: SummarySide) {
       parsedCommand: state.parsed,
       setAttackerMove: state.setAttackerMove,
       setInput: state.setInput,
+      setInputImmediately: state.setInputImmediately,
       recompute: state.recompute,
     })),
   );
-  const { importedSets, removeSet, saveSet } = useTeamStore(
+  const { importedSets, removeSet, replaceSet, saveSet } = useTeamStore(
     useShallow((state) => ({
       importedSets: state.importedSets,
       removeSet: state.removeSet,
+      replaceSet: state.replaceSet,
       saveSet: state.saveSet,
     })),
   );
@@ -262,7 +266,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
             ...globalTokens,
           ].join(" ")
         : "";
-      setInput((referenceToken + defenderPart).trim());
+      setInputImmediately((referenceToken + defenderPart).trim());
     } else {
       const attackerPart = structure.attacker.rawTokens
         .map((token) => token.raw)
@@ -270,14 +274,14 @@ export function usePokemonSideSummaryController(side: SummarySide) {
         .trim();
 
       if (attackerPart) {
-        setInput(
+        setInputImmediately(
           [attackerPart, "x", referenceToken, ...globalTokens]
             .filter(Boolean)
             .join(" ")
             .trim(),
         );
       } else {
-        setInput(referenceToken);
+        setInputImmediately(referenceToken);
       }
     }
 
@@ -289,6 +293,22 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     if (nextSet) {
       handleSelectSet(nextSet);
     }
+  };
+
+  const syncPromptToSavedSet = (nextSet: ImportedSet) => {
+    const input = useOmniStore.getState().input;
+    const nextInput = rebuildInputWithSetReference(
+      input,
+      side,
+      getCanonicalSetReferenceToken(nextSet),
+    );
+
+    if (nextInput !== input) {
+      setInputImmediately(nextInput);
+      return;
+    }
+
+    recompute();
   };
 
   const handleRemoveSet = (speciesId: string) => {
@@ -316,22 +336,24 @@ export function usePokemonSideSummaryController(side: SummarySide) {
         teraType: summary.importedSet.teraType,
       });
 
-      if (summary.importedSet.speciesId !== nextSet.speciesId) {
-        removeSet(summary.importedSet.speciesId);
-      }
-
-      saveSet(nextSet);
-      setInput(
-        rebuildInputWithSetReference(
-          input,
-          side,
-          getCanonicalSetReferenceToken(nextSet),
-        ),
+      const nextInput = rebuildInputWithSetReference(
+        input,
+        side,
+        getCanonicalSetReferenceToken(nextSet),
       );
+
+      unstable_batchedUpdates(() => {
+        if (summary.importedSet.speciesId !== nextSet.speciesId) {
+          replaceSet(summary.importedSet.speciesId, nextSet);
+        } else {
+          saveSet(nextSet);
+        }
+        setInputImmediately(nextInput);
+      });
       return;
     }
 
-    setInput(rebuildInputWithSpecies(input, side, targetPokemon));
+    setInputImmediately(rebuildInputWithSpecies(input, side, targetPokemon));
   };
 
   const handleInlineStatPointChange = (
@@ -468,35 +490,34 @@ export function usePokemonSideSummaryController(side: SummarySide) {
   };
 
   const handleSaveCurrentSet = () => {
-    if (!editorInitialSet) {
+    if (!summary || !editorInitialSet) {
       return;
     }
 
-    saveSet(editorInitialSet);
-    recompute();
+    unstable_batchedUpdates(() => {
+      saveSet(editorInitialSet);
+      syncPromptToSavedSet(editorInitialSet);
+    });
   };
 
   const handleEditorSave = (nextSet: ImportedSet) => {
-    if (!editorInitialSet) {
+    if (!summary || !editorInitialSet) {
       return;
     }
 
-    const speciesChanged = editorInitialSet.speciesId !== nextSet.speciesId;
-    if (speciesChanged) {
-      removeSet(editorInitialSet.speciesId);
-    }
-
-    saveSet(nextSet);
-
-    if (speciesChanged) {
-      const targetPokemon = pokemonById.get(nextSet.speciesId);
-      if (targetPokemon) {
-        const input = useOmniStore.getState().input;
-        setInput(rebuildInputWithSpecies(input, side, targetPokemon));
+    const previousSavedSpeciesId = summary.importedSet?.speciesId ?? null;
+    unstable_batchedUpdates(() => {
+      if (
+        previousSavedSpeciesId &&
+        previousSavedSpeciesId !== nextSet.speciesId
+      ) {
+        replaceSet(previousSavedSpeciesId, nextSet);
+      } else {
+        saveSet(nextSet);
       }
-    }
 
-    recompute();
+      syncPromptToSavedSet(nextSet);
+    });
     setEditorOpen(false);
   };
 

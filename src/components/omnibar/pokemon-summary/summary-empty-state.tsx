@@ -1,5 +1,8 @@
+"use client";
+
 import type { ImportedSet } from "@/lib/types";
 
+import { useI18n } from "@/i18n/I18nProvider";
 import { SummarySavedSetList } from "@/components/omnibar/pokemon-summary/summary-saved-set-list";
 
 interface SummaryEmptyStateProps {
@@ -19,6 +22,8 @@ export function SummaryEmptyState({
   onRemoveSet,
   onOpenImport,
 }: SummaryEmptyStateProps) {
+  const { dictionary } = useI18n();
+
   return (
     <aside
       data-testid={`${side}-summary`}
@@ -37,8 +42,7 @@ export function SummaryEmptyState({
         <div className="min-w-0">
           <div className="text-lg font-medium capitalize">{side}</div>
           <div className="theme-text-dim mt-1 text-sm">
-            Resolve this Pokémon to show ability, item, move context, and battle
-            stats.
+            {dictionary.summary.resolvePokemon}
           </div>
         </div>
       </div>
@@ -53,14 +57,14 @@ export function SummaryEmptyState({
       ) : (
         <>
           <div className="theme-text-dim mt-3 text-sm">
-            Resolve the {side} Pokémon to show a quick summary.
+            {dictionary.summary.resolveQuickSummary(side)}
           </div>
           <button
             type="button"
             onClick={onOpenImport}
             className="theme-chip mt-4 w-full rounded-2xl py-2.5 text-xs"
           >
-            Import
+            {dictionary.summary.import}
           </button>
         </>
       )}

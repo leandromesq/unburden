@@ -7,9 +7,11 @@ import { parseCommand } from "@/lib/parser/command-parser";
 import { getAutocompleteState } from "@/lib/parser/inline-suggestions";
 import { buildActiveChipTokens } from "@/lib/parser/input-mutations";
 import { prioritizeRecommendedGlobals } from "@/lib/omni/auto-global-tokens";
+import { uniqueIssues } from "@/lib/issues";
 import type {
   ActiveChipTokens,
   DamageResult,
+  OmniIssue,
   ImportedSet,
   ParsedCommand,
   SuggestionOption,
@@ -54,7 +56,7 @@ interface ComputedOmniState {
   dismissedAutoGlobalContextKey: string | null;
   activeChipTokens: ActiveChipTokens;
   results: DamageResult[];
-  issues: string[];
+  issues: OmniIssue[];
 }
 
 export function computeOmniState({
@@ -82,9 +84,7 @@ export function computeOmniState({
   const calculationIssues = parsedResult.parsed
     ? getCalculationIssues(parsedResult.parsed, importedSets, { strictMode })
     : [];
-  const issues = Array.from(
-    new Set([...parsedResult.issues, ...calculationIssues]),
-  );
+  const issues = uniqueIssues([...parsedResult.issues, ...calculationIssues]);
   const nextCursorIndex = Math.min(cursorIndex, withAutoTokens.input.length);
   const autocomplete = getAutocompleteState(
     withAutoTokens.input,

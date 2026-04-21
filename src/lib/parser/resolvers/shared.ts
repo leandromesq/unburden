@@ -42,7 +42,7 @@ export function appendTokenWithCursor(
   const next = base ? `${base} ${token}` : token;
   const final = addTrailingSpace ? `${next} ` : next;
 
-  const cursorOffset = next.length;
+  const cursorOffset = final.length;
   return [final, cursorOffset];
 }
 
@@ -59,6 +59,27 @@ export function replaceRangeWithCursor(
 
   const cursorOffset = beforeRange.length + replacement.length;
   return [postCompact, cursorOffset];
+}
+
+export function getMergedTokenSuffixTokens(
+  token: LexToken | null,
+  cursorIndex: number,
+) {
+  if (!token) {
+    return [];
+  }
+
+  const offset = cursorIndex - token.start;
+  if (offset <= 0 || offset >= token.raw.length) {
+    return [];
+  }
+
+  const suffix = token.raw.slice(offset);
+  if (!suffix) {
+    return [];
+  }
+
+  return /^(?:[^a-z0-9]|sp:)/i.test(suffix) ? [suffix] : [];
 }
 
 export function formatSpeciesText(name: string) {

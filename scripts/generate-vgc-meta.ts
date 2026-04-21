@@ -5,9 +5,8 @@ import type { ActiveRegulationConfig } from "../src/lib/types";
 import {
   extractMarkdownSection,
   fetchPikalyticsFormatIndex,
-  fetchPikalyticsHomePage,
-  parseCurrentFormatCode,
   parseFormatDataDate,
+  parseFormatMetadata,
   parseIndexEntries,
   parseUsageEntries,
   resolvePikalyticsAiMarkdown,
@@ -130,6 +129,7 @@ async function main() {
       overrides.commonItemLimit ??
       DEFAULT_COMMON_ITEM_LIMIT,
   );
+  const requestedFormat = args.get("--format") ?? overrides.format;
   const activeRegulationConfig =
     await readJson<ActiveRegulationConfig>(activeRegulationPath);
   const regulationPath = path.join(
@@ -178,15 +178,17 @@ async function main() {
     );
   }
 
-  const pikalyticsHomePage = await fetchPikalyticsHomePage();
-  const resolvedFormat = parseCurrentFormatCode(pikalyticsHomePage);
+  const indexMarkdown = await fetchPikalyticsFormatIndex(requestedFormat);
+  const formatMetadata = parseFormatMetadata(indexMarkdown);
+  const resolvedFormat = formatMetadata?.formatCode ?? null;
 
   if (!resolvedFormat) {
-    throw new Error("Unable to determine current Pikalytics format code.");
+    throw new Error(
+      "Unable to determine the current Pikalytics format code from the AI index.",
+    );
   }
 
-  const indexMarkdown = await fetchPikalyticsFormatIndex(resolvedFormat);
-  const dataDate = parseFormatDataDate(indexMarkdown);
+  const dataDate = formatMetadata?.dataDate ?? parseFormatDataDate(indexMarkdown);
   const indexEntries = parseIndexEntries(indexMarkdown);
 
   if (!indexEntries.length) {
@@ -232,6 +234,7 @@ async function main() {
         const resolvedMarkdown = await resolvePikalyticsAiMarkdown(
           resolvedFormat,
           candidateSpeciesNames,
+          indexEntry?.aiUrl ?? null,
         );
 
         if (!resolvedMarkdown.markdown) {

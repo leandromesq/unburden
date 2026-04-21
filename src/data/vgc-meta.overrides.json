@@ -1,4 +1,5 @@
 {
+  "format": "championstournaments",
   "commonMoveLimit": 15,
   "commonAbilityLimit": 3,
   "commonItemLimit": 10,

@@ -1,6 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
+import { X } from "lucide-react";
 
 import {
   MAX_STAT_POINTS,
@@ -19,6 +21,7 @@ import {
 import { resolveExactPokemonEntity } from "@/lib/parser/fuse-indexes";
 import { buildCommonAbilities } from "@/lib/parser/grammar";
 import { SearchableCombobox } from "@/components/omnibar/searchable-combobox";
+import { MoveTypeIcon } from "@/components/omnibar/move-type-icon";
 import { createImportedSet } from "@/lib/team/imported-set-utils";
 import type { ImportedSet, StatSpread } from "@/lib/types";
 
@@ -260,6 +263,11 @@ function buildMovesDraft(moves: string[]) {
   return next.slice(0, 4);
 }
 
+function resolveExactMoveType(moveName: string) {
+  const normalizedMove = normalizeId(moveName);
+  return moveById.get(normalizedMove)?.type ?? null;
+}
+
 export function PokemonSetEditorModal({
   initialSet,
   onClose,
@@ -352,6 +360,10 @@ export function PokemonSetEditorModal({
     () => Array.from(new Set([...moveOptions, ...moves.filter(Boolean)])),
     [moveOptions, moves],
   );
+  const selectedMoveTypes = useMemo(
+    () => moves.map((move) => resolveExactMoveType(move)),
+    [moves],
+  );
 
   const updateStatPoint = (key: keyof StatSpread, rawValue: string) => {
     setStatInputDrafts((current) => ({
@@ -414,6 +426,21 @@ export function PokemonSetEditorModal({
     setStatInputDrafts(buildStatInputDrafts(statPoints, nextMarkers));
   };
 
+  const renderMoveOption = (option: string) => {
+    const moveType = resolveExactMoveType(option);
+
+    return (
+      <div className="flex items-center justify-between gap-3">
+        <span className="min-w-0 truncate">{option}</span>
+        <MoveTypeIcon
+          type={moveType}
+          size={15}
+          className="shrink-0 opacity-90"
+        />
+      </div>
+    );
+  };
+
   const handleSave = () => {
     if (!pokemon) {
       return;
@@ -436,7 +463,23 @@ export function PokemonSetEditorModal({
     onSave(nextSet);
   };
 
-  return (
+  useEffect(() => {
+    const { body } = document;
+    const previousOverflow = body.style.overflow;
+    body.style.overflow = "hidden";
+
+    return () => {
+      body.style.overflow = previousOverflow;
+    };
+  }, []);
+
+  const portalTarget = typeof document === "undefined" ? null : document.body;
+
+  if (!portalTarget) {
+    return null;
+  }
+
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -466,9 +509,9 @@ export function PokemonSetEditorModal({
             type="button"
             aria-label="Close"
             onClick={onClose}
-            className="theme-icon-button -mr-1 flex h-8 w-8 items-center justify-center rounded-full text-xl font-light leading-none"
+            className="theme-icon-button -mr-1 flex h-8 w-8 items-center justify-center rounded-full"
           >
-            ×
+            <X aria-hidden="true" size={15} strokeWidth={2.1} />
           </button>
         </div>
 
@@ -562,6 +605,14 @@ export function PokemonSetEditorModal({
                     options={moveComboboxOptions}
                     placeholder={`Move ${index + 1}`}
                     onChange={(value) => updateMove(index, value)}
+                    renderOption={renderMoveOption}
+                    endAdornment={
+                      <MoveTypeIcon
+                        type={selectedMoveTypes[index]}
+                        size={15}
+                        className="shrink-0 opacity-90"
+                      />
+                    }
                   />
                 ))}
               </div>
@@ -674,6 +725,7 @@ export function PokemonSetEditorModal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    portalTarget,
   );
 }

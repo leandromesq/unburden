@@ -14,6 +14,8 @@ import { OmniTextarea } from "@/components/omnibar/omni-textarea";
 import { SearchableCombobox } from "@/components/omnibar/searchable-combobox";
 import { QuickSuggestions } from "@/components/omnibar/quick-suggestions";
 import { ResultsPanel } from "@/components/omnibar/results-panel";
+import { calculateDamageResults } from "@/lib/calc/damage-engine";
+import { parseCommand } from "@/lib/parser/command-parser";
 import { parseShareState } from "@/lib/share/parse-share-state";
 import { resetOmniStore, useOmniStore } from "@/store/use-omni-store";
 import { useTeamStore } from "@/store/use-team-store";
@@ -240,7 +242,9 @@ describe("omnibar components", () => {
     });
 
     expect(useOmniStore.getState().calculationReady).toBe(false);
-    expect(useOmniStore.getState().issues[0]).toContain("Strict mode:");
+    expect(useOmniStore.getState().issues[0]).toEqual({
+      id: "calc.strict_attacker_ability_required",
+    });
     expect(screen.queryByTestId("results-panel")).not.toBeInTheDocument();
   });
 
@@ -257,6 +261,48 @@ describe("omnibar components", () => {
     expect(resultsPanel).toHaveTextContent("32 SpA");
     expect(resultsPanel).not.toHaveTextContent("252 HP");
     expect(resultsPanel).not.toHaveTextContent("252 SpA");
+  });
+
+  test("results panel survives stale results when the latest parsed command has fewer archetypes", () => {
+    act(() => {
+      useTeamStore.getState().saveSet({
+        speciesId: "incineroar",
+        speciesName: "Incineroar",
+        item: "Leftovers",
+        ability: "Intimidate",
+        level: 50,
+        nature: "Careful",
+        statPoints: { hp: 32, atk: 0, def: 8, spa: 0, spd: 16, spe: 10 },
+        evs: { hp: 252, atk: 0, def: 108, spa: 0, spd: 148, spe: 0 },
+        ivs: { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 },
+        moves: ["Flare Blitz", "Knock Off", "Parting Shot", "Fake Out"],
+      });
+
+      const importedSets = useTeamStore.getState().importedSets;
+      const previousParsed = parseCommand(
+        "politoed !muddy-water x incineroar",
+        importedSets,
+      ).parsed;
+      const nextParsed = parseCommand(
+        "politoed !muddy-water x #incineroar",
+        importedSets,
+      ).parsed;
+
+      useOmniStore.setState((state) => ({
+        ...state,
+        parsed: nextParsed,
+        results: calculateDamageResults(previousParsed!, importedSets),
+      }));
+    });
+
+    render(<ResultsPanel />);
+
+    const resultsPanel = screen.getByTestId("results-panel");
+
+    expect(resultsPanel).toBeInTheDocument();
+    expect(resultsPanel).toHaveTextContent("Hardy | 1 HP");
+    expect(resultsPanel).toHaveTextContent("Hardy | 32 HP");
+    expect(resultsPanel).toHaveTextContent("Calm | 32 HP");
   });
 
   test("copy button copies a share URL with the current prompt", async () => {
@@ -508,9 +554,43 @@ describe("omnibar components", () => {
     expect(screen.getByTestId("attacker-summary")).toHaveTextContent(
       "Muddy Water",
     );
+    expect(
+      within(screen.getByTestId("attacker-summary")).getAllByRole("img", {
+        name: "Water type",
+      }).length,
+    ).toBeGreaterThanOrEqual(1);
     expect(screen.getByTestId("defender-summary")).toHaveTextContent(
       "Incineroar",
     );
+  });
+
+  test("renders move type icons in the attacker summary", () => {
+    act(() => {
+      useTeamStore.getState().saveSet({
+        speciesId: "politoed",
+        speciesName: "Politoed",
+        item: "Mystic Water",
+        ability: "Drizzle",
+        level: 50,
+        nature: "Modest",
+        statPoints: { hp: 32, atk: 0, def: 1, spa: 13, spd: 1, spe: 19 },
+        evs: { hp: 252, atk: 0, def: 8, spa: 104, spd: 8, spe: 152 },
+        ivs: { hp: 31, atk: 0, def: 31, spa: 31, spd: 31, spe: 31 },
+        moves: ["Muddy Water", "Ice Beam", "Protect", "Helping Hand"],
+      });
+    });
+
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("#politoed !muddy-water x incineroar");
+    });
+
+    expect(
+      within(screen.getByTestId("attacker-summary")).getAllByRole("img", {
+        name: "Water type",
+      }).length,
+    ).toBeGreaterThanOrEqual(2);
   });
 
   test("saved set cards insert canonical #set references into the prompt", () => {
@@ -595,11 +675,12 @@ describe("omnibar components", () => {
     expect(useTeamStore.getState().importedSets.politoed.item).toBe(
       "Mystic Water",
     );
-
-    act(() => {
-      useOmniStore.getState().setInput("#politoed !muddy-water x incineroar");
-    });
-
+    expect(useOmniStore.getState().input).toBe("#politoed !muddy-water x incineroar");
+    expect(
+      within(screen.getByTestId("attacker-summary")).getByRole("button", {
+        name: /remove politoed set/i,
+      }),
+    ).toBeInTheDocument();
     expect(
       within(screen.getByTestId("attacker-summary")).getByRole("textbox", {
         name: "HP SP",
@@ -666,12 +747,60 @@ describe("omnibar components", () => {
 
     expect(useTeamStore.getState().importedSets.incineroar).toBeDefined();
     expect(useTeamStore.getState().importedSets.politoed).toBeUndefined();
-    expect(useOmniStore.getState().input).toBe(
-      "incineroar !muddy-water x incineroar",
-    );
+    expect(useOmniStore.getState().input).toBe("#incineroar !muddy-water x incineroar");
   });
 
-  test("summary exposes a mega switch when the held item is a mega stone", () => {
+  test("saving an inline-edited summary promotes it to saved-set UI", () => {
+    act(() => {
+      useTeamStore.getState().saveSet({
+        speciesId: "incineroar",
+        speciesName: "Incineroar",
+        level: 50,
+        nature: "Careful",
+        statPoints: { hp: 32, atk: 0, def: 8, spa: 0, spd: 16, spe: 10 },
+        evs: { hp: 252, atk: 0, def: 108, spa: 0, spd: 148, spe: 0 },
+        ivs: { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 },
+        moves: ["Fake Out", "Flare Blitz", "Knock Off", "Parting Shot"],
+      });
+    });
+
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    fireEvent.change(
+      within(screen.getByTestId("attacker-summary")).getByRole("textbox", {
+        name: "HP SP",
+      }),
+      {
+        target: { value: "32" },
+      },
+    );
+    fireEvent.click(
+      within(screen.getByTestId("attacker-summary")).getByRole("button", {
+        name: "Save",
+      }),
+    );
+
+    expect(useTeamStore.getState().importedSets.politoed).toBeDefined();
+    expect(useOmniStore.getState().input).toBe(
+      "#politoed !muddy-water sp:32/0/0/0/0/0 x incineroar",
+    );
+    expect(
+      within(screen.getByTestId("attacker-summary")).getByRole("button", {
+        name: /remove politoed set/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      within(screen.getByTestId("attacker-summary")).getByRole("button", {
+        name: "Switch",
+      }),
+    ).toBeInTheDocument();
+  });
+
+  test("summary mega switch reflects active state and toggles both directions", () => {
     act(() => {
       useTeamStore.getState().saveSet({
         speciesId: "charizard",
@@ -693,15 +822,49 @@ describe("omnibar components", () => {
       useOmniStore.getState().setInput("#charizard !heat-wave x tinkaton");
     });
 
-    fireEvent.click(
-      within(screen.getByTestId("attacker-summary")).getByRole("button", {
+    let megaButton = within(screen.getByTestId("attacker-summary")).getByRole(
+      "button",
+      {
         name: /switch to mega form/i,
-      }),
+      },
     );
 
-    expect(useOmniStore.getState().input).toBe("#charizardmegay !heat-wave x tinkaton");
+    expect(megaButton).toHaveAttribute("aria-pressed", "false");
+    expect(megaButton).toHaveClass("theme-icon-button-mega-inactive");
+
+    fireEvent.click(megaButton);
+
+    expect(useOmniStore.getState().input).toBe(
+      "#charizardmegay !heat-wave x tinkaton",
+    );
     expect(useTeamStore.getState().importedSets.charizard).toBeUndefined();
     expect(useTeamStore.getState().importedSets.charizardmegay).toBeDefined();
+
+    megaButton = within(screen.getByTestId("attacker-summary")).getByRole(
+      "button",
+      {
+        name: /switch to base form/i,
+      },
+    );
+
+    expect(megaButton).toHaveAttribute("aria-pressed", "true");
+    expect(megaButton).toHaveClass("theme-icon-button-mega-active");
+
+    fireEvent.click(megaButton);
+
+    expect(useOmniStore.getState().input).toBe("#charizard !heat-wave x tinkaton");
+    expect(useTeamStore.getState().importedSets.charizard).toBeDefined();
+    expect(useTeamStore.getState().importedSets.charizardmegay).toBeUndefined();
+
+    megaButton = within(screen.getByTestId("attacker-summary")).getByRole(
+      "button",
+      {
+        name: /switch to mega form/i,
+      },
+    );
+
+    expect(megaButton).toHaveAttribute("aria-pressed", "false");
+    expect(megaButton).toHaveClass("theme-icon-button-mega-inactive");
   });
 
   test("does not auto-add weather before the defender side is resolved", () => {

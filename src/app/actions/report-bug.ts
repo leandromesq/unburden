@@ -7,6 +7,8 @@ import {
   consumeBugReportRateLimit,
   registerBugReportSignature,
 } from "@/lib/bug-report/abuse-guard";
+import { getDictionary } from "@/i18n/messages";
+import { coerceLocale } from "@/i18n/locales";
 
 interface ReportBugState {
   status: "idle" | "success" | "error";
@@ -15,7 +17,7 @@ interface ReportBugState {
 }
 
 const APP_BUG_REPORT_MARKER = "<!-- source: app-bug-report -->";
-const DEFAULT_GITHUB_BUG_REPORT_REPO = "leandromesq/omniboost";
+const DEFAULT_GITHUB_BUG_REPORT_REPO = "leandromesq/omniboost-issues";
 const HONEYPOT_FIELD_NAME = "teamName";
 
 function getClientAddressKey(headersList: Headers) {
@@ -114,6 +116,8 @@ export async function reportBug(
   _prevState: ReportBugState,
   formData: FormData,
 ): Promise<ReportBugState> {
+  const locale = coerceLocale(readTrimmedString(formData.get("locale")));
+  const messages = getDictionary(locale).bugReport.server;
   const token = process.env.GITHUB_BUG_REPORT_TOKEN?.trim();
   const repo =
     process.env.GITHUB_BUG_REPORT_REPO?.trim() ??
@@ -122,7 +126,7 @@ export async function reportBug(
   if (!token || !repo) {
     return {
       status: "error",
-      message: "Bug reporting is not configured yet.",
+      message: messages.notConfigured,
     };
   }
 
@@ -138,14 +142,14 @@ export async function reportBug(
   if (description.length < 10) {
     return {
       status: "error",
-      message: "Add a bit more detail so the report is actionable.",
+      message: messages.tooShort,
     };
   }
 
   if (description.length > 4000) {
     return {
       status: "error",
-      message: "Bug report is too long. Keep it under 4000 characters.",
+      message: messages.tooLong,
     };
   }
 
@@ -156,7 +160,7 @@ export async function reportBug(
     });
     return {
       status: "success",
-      message: "Bug report filed successfully.",
+      message: messages.honeypotSuccess,
     };
   }
 
@@ -174,7 +178,7 @@ export async function reportBug(
 
     return {
       status: "error",
-      message: `Too many reports from this connection. Try again in about ${retryAfterMinutes} minute${retryAfterMinutes === 1 ? "" : "s"}.`,
+      message: messages.rateLimit(retryAfterMinutes),
     };
   }
 
@@ -188,7 +192,7 @@ export async function reportBug(
   if (!duplicateCheck.accepted) {
     return {
       status: "error",
-      message: "That report looks like a recent duplicate.",
+      message: messages.duplicate,
     };
   }
 
@@ -226,8 +230,8 @@ export async function reportBug(
         status: "error",
         message:
           response.status === 401 || response.status === 403
-            ? "Bug reporting is temporarily misconfigured."
-            : "GitHub issue creation failed.",
+            ? messages.misconfigured
+            : messages.createFailed,
       };
     }
 
@@ -239,15 +243,15 @@ export async function reportBug(
     return {
       status: "success",
       message: issue.number
-        ? `Bug report filed as issue #${issue.number}.`
-        : "Bug report filed successfully.",
+        ? messages.filedWithNumber(issue.number)
+        : messages.filedSuccess,
       issueUrl: issue.html_url,
     };
   } catch {
     console.error("GitHub issue creation threw an unexpected error.");
     return {
       status: "error",
-      message: "Could not send the report right now.",
+      message: messages.unexpected,
     };
   }
 }

@@ -7,8 +7,10 @@ import {
   useRef,
   useState,
 } from "react";
+import { Bug, X } from "lucide-react";
 
 import { reportBug } from "@/app/actions/report-bug";
+import { useI18n } from "@/i18n/I18nProvider";
 import { useOmniStore } from "@/store/use-omni-store";
 
 const initialReportBugState = {
@@ -16,19 +18,28 @@ const initialReportBugState = {
   message: "",
 };
 
-function SubmitButton({ pending }: { pending: boolean }) {
+function SubmitButton({
+  pending,
+  idleLabel,
+  pendingLabel,
+}: {
+  pending: boolean;
+  idleLabel: string;
+  pendingLabel: string;
+}) {
   return (
     <button
       type="submit"
       disabled={pending}
       className="theme-chip-active rounded-full px-4 py-1.5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
     >
-      {pending ? "Sending..." : "Send report"}
+      {pending ? pendingLabel : idleLabel}
     </button>
   );
 }
 
 export function BugReportButton() {
+  const { locale, dictionary } = useI18n();
   const [open, setOpen] = useState(false);
   const [state, formAction, pending] = useActionState(
     reportBug,
@@ -96,9 +107,10 @@ export function BugReportButton() {
             setOpen(true);
           });
         }}
-        className="theme-icon-button flex h-8 items-center justify-center rounded-full px-3 text-sm font-medium"
+        className="theme-icon-button flex h-8 items-center justify-center gap-1.5 rounded-full px-3 text-sm font-medium"
       >
-        Report bug
+        <Bug aria-hidden="true" size={14} strokeWidth={1.9} />
+        <span>{dictionary.bugReport.openButton}</span>
       </button>
 
       {open ? (
@@ -127,19 +139,19 @@ export function BugReportButton() {
             <div className="flex items-center justify-between px-6 pt-5 pb-4">
               <div>
                 <h2 id={titleId} className="text-base font-semibold">
-                  Report a bug
+                  {dictionary.bugReport.title}
                 </h2>
                 <p id={descriptionId} className="theme-text-dim mt-1 text-sm">
-                  Describe what went wrong with your current prompt and context.
+                  {dictionary.bugReport.description}
                 </p>
               </div>
               <button
                 type="button"
-                aria-label="Close"
+                aria-label={dictionary.bugReport.closeAria}
                 onClick={() => close()}
-                className="theme-icon-button -mr-1 flex h-8 w-8 items-center justify-center rounded-full text-xl font-light leading-none"
+                className="theme-icon-button -mr-1 flex h-8 w-8 items-center justify-center rounded-full"
               >
-                ×
+                <X aria-hidden="true" size={15} strokeWidth={2.1} />
               </button>
             </div>
 
@@ -159,7 +171,7 @@ export function BugReportButton() {
                 htmlFor="bug-report-description"
                 className="theme-text-dim mb-2 block text-sm"
               >
-                What broke?
+                {dictionary.bugReport.questionLabel}
               </label>
               <textarea
                 id="bug-report-description"
@@ -170,10 +182,11 @@ export function BugReportButton() {
                 maxLength={4000}
                 rows={7}
                 className="theme-control theme-input w-full resize-none rounded-2xl p-3 text-sm outline-none"
-                placeholder="What were you trying to do, what happened instead, and how can I reproduce it?"
+                placeholder={dictionary.bugReport.placeholder}
               />
 
               <input type="hidden" name="prompt" value={input} />
+              <input type="hidden" name="locale" value={locale} />
               <input type="hidden" name="pageUrl" value={pageUrl} />
               <input type="hidden" name="userAgent" value={userAgent} />
               <input
@@ -184,10 +197,10 @@ export function BugReportButton() {
 
               <div className="theme-subpanel mt-4 rounded-2xl p-3">
                 <div className="theme-text-faint text-[11px] font-semibold uppercase tracking-[0.22em]">
-                  Attached context
+                  {dictionary.bugReport.attachedContext}
                 </div>
                 <div className="theme-text-dim mt-2 text-xs">
-                  Current prompt:{" "}
+                  {dictionary.bugReport.currentPrompt}:{" "}
                   <span
                     className="font-mono"
                     style={{ color: "var(--text-muted)" }}
@@ -196,13 +209,15 @@ export function BugReportButton() {
                   </span>
                 </div>
                 <div className="theme-text-dim mt-1 text-xs">
-                  Strict mode: {strictMode ? "on" : "off"}
+                  {dictionary.bugReport.strictMode}:{" "}
+                  {strictMode
+                    ? dictionary.bugReport.on
+                    : dictionary.bugReport.off}
                 </div>
               </div>
 
               <p className="theme-text-dim mt-3 text-xs leading-5">
-                Privacy: this sends your description, current prompt, page URL,
-                browser user agent, and strict-mode setting.
+                {dictionary.bugReport.privacy}
               </p>
 
               <p
@@ -217,7 +232,7 @@ export function BugReportButton() {
                 }`}
               >
                 {state.message ||
-                  "Your bug reports and feedback are turned into GitHub issues."}
+                  dictionary.bugReport.idleMessage}
               </p>
               {state.status === "success" && state.issueUrl ? (
                 <a
@@ -226,18 +241,22 @@ export function BugReportButton() {
                   rel="noreferrer"
                   className="theme-text-muted mt-2 inline-flex text-sm underline underline-offset-4"
                 >
-                  View GitHub issue
+                  {dictionary.bugReport.viewIssue}
                 </a>
               ) : null}
 
               <div className="mt-4 flex flex-wrap items-center gap-2">
-                <SubmitButton pending={pending} />
+                <SubmitButton
+                  pending={pending}
+                  idleLabel={dictionary.bugReport.send}
+                  pendingLabel={dictionary.bugReport.sending}
+                />
                 <button
                   type="button"
                   onClick={() => close()}
                   className="theme-chip rounded-full px-4 py-1.5 text-sm"
                 >
-                  Cancel
+                  {dictionary.bugReport.cancel}
                 </button>
               </div>
             </form>

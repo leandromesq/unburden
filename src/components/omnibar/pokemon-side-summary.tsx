@@ -1,5 +1,7 @@
 "use client";
 
+import { Trash2 } from "lucide-react";
+
 import type { SummarySide } from "@/lib/parser/input-mutations";
 import { ImportSetModal } from "@/components/omnibar/import-set-modal";
 import { PokemonSetEditorModal } from "@/components/omnibar/pokemon-set-editor-modal";
@@ -64,6 +66,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
   }
 
   const { importedSet, stageBoosts, itemBoosts } = summary;
+  const isMegaActive = summary.isMega;
 
   return (
     <aside
@@ -83,22 +86,31 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
                 }
               }}
               aria-label={
-                summary.pokemonId === summary.megaTarget.id
-                  ? "Switch to base form"
-                  : "Switch to mega form"
+                isMegaActive ? "Switch to base form" : "Switch to mega form"
               }
-              title={
-                summary.pokemonId === summary.megaTarget.id
-                  ? "Base form"
-                  : "Mega form"
-              }
-              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full p-0 text-[11px] font-bold uppercase tracking-[0.08em] ${
-                summary.pokemonId === summary.megaTarget.id
-                  ? "theme-icon-button-active"
-                  : "theme-icon-button"
+              title={isMegaActive ? "Mega form active" : "Mega form"}
+              aria-pressed={isMegaActive}
+              className={`theme-icon-button theme-icon-button-mega flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full p-0 ${
+                isMegaActive
+                  ? "theme-icon-button-mega-active"
+                  : "theme-icon-button-mega-inactive"
               }`}
             >
-              M
+              <span
+                aria-hidden="true"
+                className="block h-6.5 w-6.5 shrink-0"
+                style={{
+                  backgroundColor: "var(--mega-icon-color)",
+                  maskImage: "url('/icons/mega-icon.svg')",
+                  maskRepeat: "no-repeat",
+                  maskPosition: "center",
+                  maskSize: "100% 100%",
+                  WebkitMaskImage: "url('/icons/mega-icon.svg')",
+                  WebkitMaskRepeat: "no-repeat",
+                  WebkitMaskPosition: "center",
+                  WebkitMaskSize: "100% 100%",
+                }}
+              />
             </button>
           ) : null
         }
@@ -114,7 +126,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
               className="theme-icon-button flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm"
               style={{ color: "var(--accent-text-mid)" }}
             >
-              ×
+              <Trash2 aria-hidden="true" size={15} strokeWidth={1.9} />
             </button>
           ) : null
         }
@@ -127,6 +139,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
         ability={summary.ability}
         item={summary.item}
         move={summary.move}
+        moveType={summary.activeMoveEntry?.type ?? null}
         side={side}
         displayNature={
           !summary.isBaseStats || summary.nature !== "Hardy"

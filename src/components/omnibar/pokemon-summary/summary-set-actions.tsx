@@ -1,4 +1,9 @@
+"use client";
+
+import { ChevronDown, ChevronUp } from "lucide-react";
+
 import type { ImportedSet } from "@/lib/types";
+import { useI18n } from "@/i18n/I18nProvider";
 
 interface SummarySetActionsProps {
   importedSet: ImportedSet | null;
@@ -25,6 +30,8 @@ export function SummarySetActions({
   onImport,
   canSave,
 }: SummarySetActionsProps) {
+  const { dictionary } = useI18n();
+
   if (importedSet) {
     return (
       <div className="theme-divider mt-3 border-t pt-3">
@@ -36,10 +43,16 @@ export function SummarySetActions({
                 onClick={onToggleSwitch}
                 className="theme-chip flex items-center gap-1 rounded-full px-3 py-1 text-xs"
               >
-                Switch
-                <span className="text-[9px] leading-none">
-                  {switchOpen ? "▲" : "▼"}
-                </span>
+                {dictionary.summary.switch}
+                {switchOpen ? (
+                  <ChevronUp aria-hidden="true" size={12} strokeWidth={2.2} />
+                ) : (
+                  <ChevronDown
+                    aria-hidden="true"
+                    size={12}
+                    strokeWidth={2.2}
+                  />
+                )}
               </button>
               {switchOpen && (
                 <div className="theme-menu absolute right-0 bottom-full z-30 mb-1.5 min-w-40 overflow-hidden rounded-2xl p-1">
@@ -78,7 +91,7 @@ export function SummarySetActions({
                 onClick={onSave}
                 className="theme-chip rounded-full px-3 py-1 text-xs"
               >
-                Save
+                {dictionary.summary.save}
               </button>
             )}
             <button
@@ -86,7 +99,7 @@ export function SummarySetActions({
               onClick={onEdit}
               className="theme-chip rounded-full px-3 py-1 text-xs"
             >
-              Edit
+              {dictionary.summary.edit}
             </button>
           </div>
         </div>
@@ -103,7 +116,7 @@ export function SummarySetActions({
             onClick={onSave}
             className="theme-chip w-full rounded-2xl py-2 text-xs"
           >
-            Save
+            {dictionary.summary.save}
           </button>
         )}
         <button
@@ -111,14 +124,14 @@ export function SummarySetActions({
           onClick={onEdit}
           className="theme-chip w-full rounded-2xl py-2 text-xs"
         >
-          Edit
+          {dictionary.summary.edit}
         </button>
         <button
           type="button"
           onClick={onImport}
           className="theme-chip w-full rounded-2xl py-2 text-xs"
         >
-          Import
+          {dictionary.summary.import}
         </button>
       </div>
     </div>

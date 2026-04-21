@@ -13,6 +13,28 @@ interface OmniTextareaProps {
 
 const MAX_TEXTAREA_HEIGHT = 176;
 
+function trimSingleTokenSelectionEnd(
+  value: string,
+  selectionStart: number,
+  selectionEnd: number,
+) {
+  if (selectionStart >= selectionEnd) {
+    return selectionEnd;
+  }
+
+  const selectedText = value.slice(selectionStart, selectionEnd);
+  const trimmedSelectedText = selectedText.replace(/\s+$/u, "");
+  if (
+    trimmedSelectedText.length === selectedText.length ||
+    !trimmedSelectedText ||
+    /\s/u.test(trimmedSelectedText)
+  ) {
+    return selectionEnd;
+  }
+
+  return selectionStart + trimmedSelectedText.length;
+}
+
 export function OmniTextarea({
   textareaRef,
   onSubmitReady,
@@ -163,17 +185,11 @@ export function OmniTextarea({
             event.preventDefault();
             if (activeSuggestion || suggestionOptions.length) {
               applySuggestion();
-              requestAnimationFrame(() => {
-                const element = ref.current;
-                if (!element) {
-                  return;
-                }
-
-                const cursor = useOmniStore.getState().cursorIndex;
-                element.focus();
-                element.setSelectionRange(cursor, cursor);
-                setCaretAtEnd(cursor === element.value.length);
-              });
+              const nextState = useOmniStore.getState();
+              pendingSelectionRef.current = nextState.cursorIndex;
+              setCaretAtEnd(
+                nextState.cursorIndex === nextState.input.length,
+              );
             }
             return;
           }
@@ -187,9 +203,21 @@ export function OmniTextarea({
         }}
         onSelect={(event) => {
           const element = event.currentTarget;
-          const cursorIndex = element.selectionEnd ?? element.value.length;
+          const selectionStart = element.selectionStart ?? element.value.length;
+          const trimmedSelectionEnd = trimSingleTokenSelectionEnd(
+            element.value,
+            selectionStart,
+            element.selectionEnd ?? selectionStart,
+          );
+          if (
+            trimmedSelectionEnd !== (element.selectionEnd ?? selectionStart)
+          ) {
+            element.setSelectionRange(selectionStart, trimmedSelectionEnd);
+          }
+
+          const cursorIndex = trimmedSelectionEnd;
           const nextCaretAtEnd =
-            element.selectionStart === element.selectionEnd &&
+            selectionStart === trimmedSelectionEnd &&
             cursorIndex === element.value.length;
 
           setCursorIndex(cursorIndex);

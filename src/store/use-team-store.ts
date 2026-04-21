@@ -90,6 +90,7 @@ interface TeamStore {
   clearSharedSets: () => void;
   saveSet: (set: ImportedSet) => void;
   saveSets: (sets: ImportedSet[]) => void;
+  replaceSet: (previousSpeciesId: string, set: ImportedSet) => void;
   removeSet: (speciesId: string) => void;
   clearSets: () => void;
 }
@@ -168,6 +169,27 @@ export const useTeamStore = create<TeamStore>()((set, get) => ({
       nextLocalSets[normalized.speciesId] = normalized;
       delete nextSharedSets[normalized.speciesId];
     }
+
+    set({
+      localSets: nextLocalSets,
+      sharedSets: nextSharedSets,
+      importedSets: mergeImportedSets(nextLocalSets, nextSharedSets),
+    });
+    writeStorage(nextLocalSets);
+  },
+
+  replaceSet: (previousSpeciesId, imported) => {
+    const normalized = normalizeImportedSet(imported);
+    const nextLocalSets = { ...get().localSets };
+    const nextSharedSets = { ...get().sharedSets };
+
+    if (previousSpeciesId !== normalized.speciesId) {
+      delete nextLocalSets[previousSpeciesId];
+      delete nextSharedSets[previousSpeciesId];
+    }
+
+    nextLocalSets[normalized.speciesId] = normalized;
+    delete nextSharedSets[normalized.speciesId];
 
     set({
       localSets: nextLocalSets,

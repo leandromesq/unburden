@@ -41,6 +41,7 @@ export function SummaryMoves({
             <MoveChip
               key={moveName}
               moveName={moveName}
+              moveType={resolvedEntry?.type ?? null}
               isActive={isActive}
               disabled={side !== "attacker"}
               onClick={

@@ -1,7 +1,13 @@
+"use client";
+
+import { useI18n } from "@/i18n/I18nProvider";
+
 const discordInviteUrl = process.env.NEXT_PUBLIC_DISCORD_INVITE_URL?.trim();
 const feedbackUrl = process.env.NEXT_PUBLIC_FEEDBACK_URL?.trim();
 
 export function TesterLinks() {
+  const { dictionary } = useI18n();
+
   if (!discordInviteUrl && !feedbackUrl) {
     return null;
   }
@@ -15,7 +21,7 @@ export function TesterLinks() {
           rel="noreferrer"
           className="underline underline-offset-4"
         >
-          Join Discord
+          {dictionary.testerLinks.joinDiscord}
         </a>
       ) : null}
       {feedbackUrl ? (
@@ -25,7 +31,7 @@ export function TesterLinks() {
           rel="noreferrer"
           className="underline underline-offset-4"
         >
-          Give feedback
+          {dictionary.testerLinks.giveFeedback}
         </a>
       ) : null}
     </div>

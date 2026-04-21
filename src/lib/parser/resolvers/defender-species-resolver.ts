@@ -6,6 +6,7 @@ import {
   buildActiveSuggestion,
   buildFullText,
   formatSpeciesText,
+  getMergedTokenSuffixTokens,
   replaceRangeWithCursor,
 } from "@/lib/parser/resolvers/shared";
 import type { SlotResolver } from "@/lib/parser/resolvers/types";
@@ -23,6 +24,10 @@ export const resolveDefenderSpeciesSuggestion: SlotResolver = (context) => {
   if (query.startsWith("#")) {
     const options = searchSetReferences(query, context.importedSets, 6).map(
       ({ set, canonicalToken }) => {
+        const mergedSuffixTokens =
+          context.cursorIndex === context.input.length
+            ? []
+            : getMergedTokenSuffixTokens(context.activeToken, context.cursorIndex);
         const [applyText, cursorOffset] =
           context.cursorIndex === context.input.length || !context.activeToken
             ? (() => {
@@ -39,6 +44,28 @@ export const resolveDefenderSpeciesSuggestion: SlotResolver = (context) => {
                 );
                 return [text, text.length] as const;
               })()
+            : mergedSuffixTokens.length
+              ? (() => {
+                  const text = buildFullText(
+                    context.fullStructure,
+                    attackerTokens,
+                    [
+                      canonicalToken,
+                      ...mergedSuffixTokens,
+                      ...context.fullStructure.defender.rawTokens
+                        .slice(context.fullStructure.defender.leadingFreeTokens.length)
+                        .map((token) => token.raw),
+                    ].filter(Boolean),
+                    true,
+                  );
+                  const cursorText = buildFullText(
+                    context.fullStructure,
+                    attackerTokens,
+                    [canonicalToken],
+                    true,
+                  );
+                  return [text, cursorText.length] as const;
+                })()
             : replaceRangeWithCursor(
                 context.input,
                 context.fullStructure.defender.rawTokens[0]?.start ??
@@ -74,6 +101,10 @@ export const resolveDefenderSpeciesSuggestion: SlotResolver = (context) => {
   const options: SuggestionOption[] = searchPokemonEntities(query, 6).map(
     (match) => {
       const speciesText = formatSpeciesText(match.entry.name);
+      const mergedSuffixTokens =
+        context.cursorIndex === context.input.length
+          ? []
+          : getMergedTokenSuffixTokens(context.activeToken, context.cursorIndex);
       const [applyText, cursorOffset] =
         context.cursorIndex === context.input.length || !context.activeToken
           ? (() => {
@@ -87,9 +118,31 @@ export const resolveDefenderSpeciesSuggestion: SlotResolver = (context) => {
                     .map((token) => token.raw),
                 ].filter(Boolean),
                 true,
-              );
-              return [text, text.length] as const;
-            })()
+                );
+                return [text, text.length] as const;
+              })()
+          : mergedSuffixTokens.length
+            ? (() => {
+                const text = buildFullText(
+                  context.fullStructure,
+                  attackerTokens,
+                  [
+                    speciesText,
+                    ...mergedSuffixTokens,
+                    ...context.fullStructure.defender.rawTokens
+                      .slice(context.fullStructure.defender.leadingFreeTokens.length)
+                      .map((token) => token.raw),
+                  ].filter(Boolean),
+                  true,
+                );
+                const cursorText = buildFullText(
+                  context.fullStructure,
+                  attackerTokens,
+                  [speciesText],
+                  true,
+                );
+                return [text, cursorText.length] as const;
+              })()
           : replaceRangeWithCursor(
               context.input,
               context.fullStructure.defender.rawTokens[0]?.start ??

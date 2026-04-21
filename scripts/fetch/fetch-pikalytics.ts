@@ -10,20 +10,15 @@ export type PikalyticsIndexEntry = {
   webUrl: string;
 };
 
+export type PikalyticsFormatMetadata = {
+  formatName: string;
+  formatCode: string;
+  game: string | null;
+  dataDate: string | null;
+  standardUiUrl: string | null;
+};
+
 const PIKALYTICS_AI_BASE_URL = "https://www.pikalytics.com/ai/pokedex";
-const PIKALYTICS_WEB_BASE_URL = "https://www.pikalytics.com/pokedex";
-
-function normalizeAlias(value: string) {
-  return value
-    .toLowerCase()
-    .replace(/['.:]/g, "")
-    .replace(/[^a-z0-9]+/g, " ")
-    .trim();
-}
-
-function compactAlias(value: string) {
-  return normalizeAlias(value).replace(/\s+/g, "");
-}
 
 function dedupeStrings(values: Array<string | null | undefined>) {
   return Array.from(new Set(values.filter(Boolean) as string[]));
@@ -48,6 +43,39 @@ async function fetchText(url: string): Promise<string> {
   }
 
   return response.text();
+}
+
+function extractSpeciesNameFromAiUrl(aiUrl: string) {
+  const match = aiUrl.match(/\/ai\/pokedex\/[^/]+\/([^/?#]+)/);
+
+  if (!match?.[1]) {
+    return null;
+  }
+
+  try {
+    return decodeURIComponent(match[1]);
+  } catch {
+    return match[1];
+  }
+}
+
+function buildAiSpeciesPathCandidates(speciesName: string) {
+  const normalized = speciesName.trim().replace(/\s+/g, " ");
+
+  if (!normalized) {
+    return [];
+  }
+
+  return dedupeStrings([
+    normalized,
+    normalized.replace(/\s*-\s*/g, "-"),
+    normalized.includes("-") ? normalized.replace(/-/g, " ") : null,
+    normalized.includes(" ") ? normalized.replace(/\s+/g, "-") : null,
+  ]);
+}
+
+function buildPikalyticsAiUrl(formatCode: string, speciesName: string) {
+  return `${PIKALYTICS_AI_BASE_URL}/${encodeURIComponent(formatCode)}/${encodeURIComponent(speciesName)}`;
 }
 
 export function parseIndexSpeciesNames(markdown: string) {
@@ -103,74 +131,95 @@ export function parseIndexEntries(markdown: string) {
   return entries;
 }
 
+export function parseFormatMetadata(markdown: string) {
+  const formatName =
+    markdown.match(/- \*\*Format\*\*: (.+)/)?.[1]?.trim() ?? null;
+  const formatCode = markdown.match(/- \*\*Format Code\*\*: `([^`]+)`/)?.[1];
+  const game = markdown.match(/- \*\*Game\*\*: (.+)/)?.[1]?.trim() ?? null;
+  const dataDate = markdown.match(/- \*\*Data Date\*\*: ([\d-]+)/)?.[1] ?? null;
+  const standardUiUrl =
+    markdown.match(/- \*\*Standard UI\*\*: \[.+?\]\((.+?)\)/)?.[1] ?? null;
+
+  if (!formatName || !formatCode) {
+    return null;
+  }
+
+  return {
+    formatName,
+    formatCode,
+    game,
+    dataDate,
+    standardUiUrl,
+  } satisfies PikalyticsFormatMetadata;
+}
+
 export function parseFormatDataDate(markdown: string) {
-  const match = markdown.match(/- \*\*Data Date\*\*: ([\d-]+)/);
-  return match?.[1] ?? null;
+  return parseFormatMetadata(markdown)?.dataDate ?? null;
 }
 
-export function parseCurrentFormatCode(pageContent: string) {
-  const markdownMatch = pageContent.match(/- \*\*Format Code\*\*: `([^`]+)`/);
-
-  if (markdownMatch?.[1]) {
-    return markdownMatch[1];
-  }
-
-  const aiUrlMatch = pageContent.match(
-    /"contentUrl":"https:\/\/www\.pikalytics\.com\/ai\/pokedex\/([^/"\\]+)\//,
+export async function fetchPikalyticsFormatIndex(formatCode?: string) {
+  return fetchText(
+    formatCode
+      ? `${PIKALYTICS_AI_BASE_URL}/${encodeURIComponent(formatCode)}`
+      : PIKALYTICS_AI_BASE_URL,
   );
-
-  if (aiUrlMatch?.[1]) {
-    return aiUrlMatch[1];
-  }
-
-  const canonicalMatch = pageContent.match(
-    /<link rel="canonical" href="https:\/\/www\.pikalytics\.com\/pokedex\/([^/"?#]+)/,
-  );
-
-  if (canonicalMatch?.[1]) {
-    return canonicalMatch[1];
-  }
-
-  return null;
-}
-
-export async function fetchPikalyticsHomePage() {
-  return fetchText(`${PIKALYTICS_WEB_BASE_URL}/`);
-}
-
-export async function fetchPikalyticsFormatIndex(formatCode: string) {
-  return fetchText(`${PIKALYTICS_AI_BASE_URL}/${formatCode}`);
 }
 
 export async function resolvePikalyticsAiMarkdown(
   formatCode: string,
   candidateSpeciesNames: string[],
+  preferredAiUrl?: string | null,
 ) {
   const candidates = dedupeStrings(candidateSpeciesNames);
+  const attemptedUrls = new Set<string>();
 
-  for (const speciesName of candidates) {
-    const speciesSlug = compactAlias(speciesName);
+  const preferredUrls = dedupeStrings([preferredAiUrl]);
 
-    if (!speciesSlug) {
-      continue;
-    }
-
-    const markdownUrl = `${PIKALYTICS_AI_BASE_URL}/${formatCode}/${speciesSlug}`;
+  for (const aiUrl of preferredUrls) {
+    attemptedUrls.add(aiUrl);
 
     try {
-      const markdown = await fetchText(markdownUrl);
+      const markdown = await fetchText(aiUrl);
 
       if (!markdown.trim()) {
         continue;
       }
 
       return {
-        speciesName,
+        speciesName: extractSpeciesNameFromAiUrl(aiUrl),
         markdown,
         error: null,
       };
     } catch {
       continue;
+    }
+  }
+
+  for (const speciesName of candidates) {
+    for (const speciesPath of buildAiSpeciesPathCandidates(speciesName)) {
+      const markdownUrl = buildPikalyticsAiUrl(formatCode, speciesPath);
+
+      if (attemptedUrls.has(markdownUrl)) {
+        continue;
+      }
+
+      attemptedUrls.add(markdownUrl);
+
+      try {
+        const markdown = await fetchText(markdownUrl);
+
+        if (!markdown.trim()) {
+          continue;
+        }
+
+        return {
+          speciesName,
+          markdown,
+          error: null,
+        };
+      } catch {
+        continue;
+      }
     }
   }
 

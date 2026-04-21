@@ -3,6 +3,7 @@
 import { type ReactNode, useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 
+import { useI18n } from "@/i18n/I18nProvider";
 import {
   ATTACKER_MODIFIER_MAP,
   ATTACKER_CHIP_DEFINITIONS,
@@ -19,7 +20,7 @@ import { useOmniStore } from "@/store/use-omni-store";
 
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
-    <div className="theme-text-dim mb-3 text-[10px] font-semibold uppercase tracking-[0.24em]">
+    <div className="theme-text-dim mb-3 text-[10px] font-semibold uppercase tracking-[0.24em] leading-relaxed">
       {children}
     </div>
   );
@@ -27,7 +28,7 @@ function SectionLabel({ children }: { children: ReactNode }) {
 
 function GroupLabel({ children }: { children: ReactNode }) {
   return (
-    <div className="theme-text-dim mb-2 text-[8px] font-semibold uppercase tracking-[0.22em]">
+    <div className="theme-text-dim mb-2 min-w-0 break-words text-[8px] font-semibold uppercase tracking-[0.22em] leading-relaxed">
       {children}
     </div>
   );
@@ -50,7 +51,7 @@ function ModifierButton({
       aria-pressed={active}
       disabled={disabled}
       onClick={onClick}
-      className={`rounded-full px-3 py-1.5 text-sm ${
+      className={`max-w-full rounded-full px-3 py-1.5 text-left text-sm leading-4 whitespace-normal break-words ${
         active
           ? "theme-chip-active"
           : disabled
@@ -70,6 +71,7 @@ function TokenGroup({
   disabled,
   onInsert,
   emptyText,
+  fallbackEmptyText,
 }: {
   title: string;
   tokens: Array<{ token: string; label: string }>;
@@ -77,12 +79,13 @@ function TokenGroup({
   disabled?: boolean;
   onInsert: (token: string) => void;
   emptyText?: string;
+  fallbackEmptyText: string;
 }) {
   return (
-    <section className="theme-subpanel-strong rounded-2xl p-3">
+    <section className="theme-subpanel-strong min-w-0 rounded-2xl p-3">
       <GroupLabel>{title}</GroupLabel>
       {tokens.length ? (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-start gap-2">
           {tokens.map((definition) => {
             const active = activeTokens.includes(definition.token);
 
@@ -99,7 +102,7 @@ function TokenGroup({
         </div>
       ) : (
         <div className="theme-text-faint text-sm">
-          {emptyText ?? "No options yet."}
+          {emptyText ?? fallbackEmptyText}
         </div>
       )}
     </section>
@@ -110,17 +113,24 @@ function HpPercentageControl({
   value,
   disabled,
   onChange,
+  labels,
 }: {
   value: number | null;
   disabled?: boolean;
   onChange: (value: number | null) => void;
+  labels: {
+    currentHp: string;
+    reset: string;
+    defaultFullHp: string;
+    usingCurrentHp: (value: number) => string;
+  };
 }) {
   const options = [25, 50, 75];
 
   return (
-    <section className="theme-subpanel-strong rounded-2xl p-3">
-      <GroupLabel>Current HP</GroupLabel>
-      <div className="flex flex-wrap gap-2">
+    <section className="theme-subpanel-strong min-w-0 rounded-2xl p-3">
+      <GroupLabel>{labels.currentHp}</GroupLabel>
+      <div className="flex flex-wrap items-start gap-2">
         {options.map((percent) => (
           <ModifierButton
             key={percent}
@@ -134,17 +144,19 @@ function HpPercentageControl({
           type="button"
           disabled={disabled || value === null}
           onClick={() => onChange(null)}
-          className={`rounded-full px-3 py-1.5 text-sm ${
+          className={`shrink-0 rounded-full px-3 py-1.5 text-sm ${
             disabled || value === null
               ? "theme-chip-disabled cursor-not-allowed"
               : "theme-chip"
           }`}
         >
-          Reset
+          {labels.reset}
         </button>
       </div>
-      <div className="theme-text-dim mt-2 text-sm">
-        {value === null ? "Default: full HP" : `Using ${value}% current HP`}
+      <div className="theme-text-dim mt-2 text-sm leading-5">
+        {value === null
+          ? labels.defaultFullHp
+          : labels.usingCurrentHp(value)}
       </div>
     </section>
   );
@@ -157,6 +169,7 @@ function StageControl({
   value,
   disabled = false,
   onChange,
+  resetLabel,
 }: {
   title: string;
   ariaLabel: string;
@@ -164,16 +177,19 @@ function StageControl({
   value: number;
   disabled?: boolean;
   onChange: (value: number) => void;
+  resetLabel: string;
 }) {
   const decrementDisabled = disabled || value <= -6;
   const incrementDisabled = disabled || value >= 6;
   const resetDisabled = disabled || value === 0;
 
   return (
-    <section className="theme-subpanel rounded-2xl p-3">
-      <div className="mb-2 flex items-center justify-between gap-3">
-        <GroupLabel>{title}</GroupLabel>
-        <div className="theme-badge rounded-full px-2.5 py-1 font-mono text-xs">
+    <section className="theme-subpanel min-w-0 rounded-2xl p-3">
+      <div className="mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2">
+        <div className="min-w-0">
+          <GroupLabel>{title}</GroupLabel>
+        </div>
+        <div className="theme-badge shrink-0 rounded-full px-2.5 py-1 font-mono text-xs">
           {value > 0 ? `+${value}` : value}
         </div>
       </div>
@@ -181,7 +197,7 @@ function StageControl({
         <button
           type="button"
           disabled={decrementDisabled}
-          className={`h-9 w-9 rounded-full ${
+          className={`h-9 w-9 shrink-0 rounded-full ${
             decrementDisabled
               ? "theme-chip-disabled cursor-not-allowed"
               : "theme-chip"
@@ -190,7 +206,7 @@ function StageControl({
         >
           -
         </button>
-        <div className="flex-1">
+        <div className="min-w-0 flex-1">
           <input
             aria-label={ariaLabel}
             type="range"
@@ -215,7 +231,7 @@ function StageControl({
         <button
           type="button"
           disabled={incrementDisabled}
-          className={`h-9 w-9 rounded-full ${
+          className={`h-9 w-9 shrink-0 rounded-full ${
             incrementDisabled
               ? "theme-chip-disabled cursor-not-allowed"
               : "theme-chip"
@@ -225,19 +241,21 @@ function StageControl({
           +
         </button>
       </div>
-      <div className="mt-3 flex items-center justify-between gap-3">
-        <div className="theme-text-dim text-sm">{summary}</div>
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+        <div className="theme-text-dim min-w-0 flex-1 text-sm leading-5">
+          {summary}
+        </div>
         <button
           type="button"
           disabled={resetDisabled}
-          className={`rounded-full px-3 py-1.5 text-xs ${
+          className={`shrink-0 rounded-full px-3 py-1.5 text-xs ${
             resetDisabled
               ? "theme-chip-disabled cursor-not-allowed"
               : "theme-chip"
           }`}
           onClick={() => onChange(0)}
         >
-          Reset
+          {resetLabel}
         </button>
       </div>
     </section>
@@ -245,6 +263,7 @@ function StageControl({
 }
 
 function SideColumn({
+  side,
   title,
   activeTokens,
   disabled = false,
@@ -258,7 +277,9 @@ function SideColumn({
   onStageChange,
   onSpeedChange,
   onHpChange,
+  labels,
 }: {
+  side: "attacker" | "defender";
   title: string;
   activeTokens: string[];
   disabled?: boolean;
@@ -272,69 +293,99 @@ function SideColumn({
   onStageChange: (value: number) => void;
   onSpeedChange: (value: number) => void;
   onHpChange: (value: number | null) => void;
+  labels: {
+    primaryControls: string;
+    multipliers: string;
+    attackerStageSummary: string;
+    defenderStageSummary: string;
+    speed: string;
+    speedSummary: string;
+    currentHp: string;
+    reset: string;
+    defaultFullHp: string;
+    usingCurrentHp: (value: number) => string;
+    toggles: string;
+    stats: string;
+    battleEffects: string;
+    abilities: string;
+    resolveThisSideFirst: string;
+    noAbilitySuggestions: string;
+    noOptionsYet: string;
+  };
 }) {
-  const lowerTitle = title.toLowerCase() as "attacker" | "defender";
-
   return (
-    <section className="theme-panel rounded-[28px] p-4">
+    <section className="theme-panel min-w-0 rounded-[28px] p-4">
       <SectionLabel>{title}</SectionLabel>
       <div className="grid gap-3">
         <div className="theme-text-faint text-[10px] font-semibold uppercase tracking-[0.22em]">
-          Primary Controls
+          {labels.primaryControls}
         </div>
         <StageControl
-          title="Multipliers"
-          ariaLabel={`${lowerTitle} stage slider`}
+          title={labels.multipliers}
+          ariaLabel={`${side} stage slider`}
           summary={
-            lowerTitle === "attacker" ? "Atk / SpA stage" : "Def / SpD stage"
+            side === "attacker"
+              ? labels.attackerStageSummary
+              : labels.defenderStageSummary
           }
           value={stageValue}
           disabled={disabled}
           onChange={onStageChange}
+          resetLabel={labels.reset}
         />
         <StageControl
-          title="Speed"
-          ariaLabel={`${lowerTitle} speed slider`}
-          summary="Spe stage"
+          title={labels.speed}
+          ariaLabel={`${side} speed slider`}
+          summary={labels.speedSummary}
           value={speedValue}
           disabled={disabled}
           onChange={onSpeedChange}
+          resetLabel={labels.reset}
         />
         <HpPercentageControl
           value={hpPercent}
           disabled={disabled}
           onChange={onHpChange}
+          labels={{
+            currentHp: labels.currentHp,
+            reset: labels.reset,
+            defaultFullHp: labels.defaultFullHp,
+            usingCurrentHp: labels.usingCurrentHp,
+          }}
         />
         <div className="theme-divider mt-1 border-t pt-3">
           <div className="theme-text-faint mb-3 text-[10px] font-semibold uppercase tracking-[0.22em]">
-            Toggles
+            {labels.toggles}
           </div>
           <div className="grid gap-3">
             <TokenGroup
-              title="Stats"
+              title={labels.stats}
               tokens={statTokens}
               activeTokens={activeTokens}
               disabled={disabled}
               onInsert={onInsert}
+              fallbackEmptyText={labels.noOptionsYet}
             />
             <TokenGroup
-              title="Battle Effects"
+              title={labels.battleEffects}
               tokens={effectTokens}
               activeTokens={activeTokens}
               disabled={disabled}
               onInsert={onInsert}
+              fallbackEmptyText={labels.noOptionsYet}
             />
             <TokenGroup
-              title="Abilities"
+              title={labels.abilities}
               tokens={abilityTokens}
               activeTokens={activeTokens}
               disabled={disabled}
               onInsert={onInsert}
               emptyText={
                 disabled
-                  ? "Resolve this side first."
-                  : "No ability suggestions."
+                  ? labels.resolveThisSideFirst
+                  : labels.noAbilitySuggestions
               }
+              fallbackEmptyText={labels.noOptionsYet}
             />
           </div>
         </div>
@@ -394,6 +445,7 @@ const DEFENDER_EFFECT_TOKENS = toGroupTokens(
 );
 
 export function ModifierSwitches() {
+  const { dictionary } = useI18n();
   const {
     commandStructure,
     activeChipTokens,
@@ -525,31 +577,35 @@ export function ModifierSwitches() {
   return (
     <div className="px-5 py-5">
       <section className="theme-panel mb-5 rounded-[28px] p-4">
-        <SectionLabel>Global</SectionLabel>
+        <SectionLabel>{dictionary.modifierSwitches.global}</SectionLabel>
         <div className="grid gap-3 md:grid-cols-3">
           <TokenGroup
-            title="Weather"
+            title={dictionary.modifierSwitches.weather}
             tokens={GLOBAL_WEATHER_TOKENS}
             activeTokens={activeChipTokens.global}
             onInsert={(token) => handleInsert("global", token)}
+            fallbackEmptyText={dictionary.modifierSwitches.noOptionsYet}
           />
           <TokenGroup
-            title="Terrain"
+            title={dictionary.modifierSwitches.terrain}
             tokens={GLOBAL_TERRAIN_TOKENS}
             activeTokens={activeChipTokens.global}
             onInsert={(token) => handleInsert("global", token)}
+            fallbackEmptyText={dictionary.modifierSwitches.noOptionsYet}
           />
           <TokenGroup
-            title="Field Effects"
+            title={dictionary.modifierSwitches.fieldEffects}
             tokens={GLOBAL_FIELD_TOKENS}
             activeTokens={activeChipTokens.global}
             onInsert={(token) => handleInsert("global", token)}
+            fallbackEmptyText={dictionary.modifierSwitches.noOptionsYet}
           />
         </div>
       </section>
-      <div className="grid gap-5 md:grid-cols-2">
+      <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <SideColumn
-          title="Attacker"
+          side="attacker"
+          title={dictionary.modifierSwitches.attacker}
           activeTokens={activeChipTokens.attacker}
           stageValue={attackerStage}
           speedValue={attackerSpeedStage}
@@ -561,9 +617,11 @@ export function ModifierSwitches() {
           onStageChange={(value) => handleStageChange("attacker", value)}
           onSpeedChange={(value) => handleSpeedChange("attacker", value)}
           onHpChange={(value) => handleHpChange("attacker", value)}
+          labels={dictionary.modifierSwitches}
         />
         <SideColumn
-          title="Defender"
+          side="defender"
+          title={dictionary.modifierSwitches.defender}
           activeTokens={activeChipTokens.defender}
           disabled={!defenderReady}
           stageValue={defenderStage}
@@ -576,6 +634,7 @@ export function ModifierSwitches() {
           onStageChange={(value) => handleStageChange("defender", value)}
           onSpeedChange={(value) => handleSpeedChange("defender", value)}
           onHpChange={(value) => handleHpChange("defender", value)}
+          labels={dictionary.modifierSwitches}
         />
       </div>
     </div>

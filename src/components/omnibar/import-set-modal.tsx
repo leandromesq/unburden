@@ -1,7 +1,10 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
+import { X } from "lucide-react";
 
+import { useI18n } from "@/i18n/I18nProvider";
 import { formatStatPointSpread } from "@/lib/calc/stat-calc";
 import { parseShowdownSets } from "@/lib/parser/showdown-import";
 import { useOmniStore } from "@/store/use-omni-store";
@@ -48,11 +51,22 @@ function SetPreviewCard({ set }: { set: ImportedSet }) {
 }
 
 export function ImportSetModal({ onClose }: ImportSetModalProps) {
+  const { dictionary } = useI18n();
   const [text, setText] = useState("");
   const [parsed, setParsed] = useState<ImportedSet[]>([]);
   const [parseError, setParseError] = useState<string | null>(null);
   const saveSets = useTeamStore((state) => state.saveSets);
   const recompute = useOmniStore((state) => state.recompute);
+
+  useEffect(() => {
+    const { body } = document;
+    const previousOverflow = body.style.overflow;
+    body.style.overflow = "hidden";
+
+    return () => {
+      body.style.overflow = previousOverflow;
+    };
+  }, []);
 
   const handleParse = useCallback(() => {
     const trimmed = text.trim();
@@ -60,15 +74,13 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
 
     const sets = parseShowdownSets(trimmed);
     if (sets.length === 0) {
-      setParseError(
-        "No valid Pokémon sets found. Make sure you used Showdown export format.",
-      );
+      setParseError(dictionary.importSetModal.parseError);
       setParsed([]);
     } else {
       setParseError(null);
       setParsed(sets);
     }
-  }, [text]);
+  }, [dictionary.importSetModal.parseError, text]);
 
   const handleSave = useCallback(() => {
     if (parsed.length > 0) {
@@ -85,11 +97,17 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
     [onClose],
   );
 
-  return (
+  const portalTarget = typeof document === "undefined" ? null : document.body;
+
+  if (!portalTarget) {
+    return null;
+  }
+
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Import Pokémon Set"
+      aria-label={dictionary.importSetModal.dialogAria}
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       style={{ background: "rgba(0,0,0,0.65)", backdropFilter: "blur(6px)" }}
       onClick={handleBackdropClick}
@@ -101,21 +119,22 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 pt-5 pb-4">
-          <h2 className="text-base font-semibold">Import Pokémon Set</h2>
+          <h2 className="text-base font-semibold">
+            {dictionary.importSetModal.title}
+          </h2>
           <button
             type="button"
-            aria-label="Close"
+            aria-label={dictionary.importSetModal.closeAria}
             onClick={onClose}
-            className="theme-icon-button -mr-1 flex h-8 w-8 items-center justify-center rounded-full text-xl font-light leading-none"
+            className="theme-icon-button -mr-1 flex h-8 w-8 items-center justify-center rounded-full"
           >
-            ×
+            <X aria-hidden="true" size={15} strokeWidth={2.1} />
           </button>
         </div>
 
         <div className="max-h-[70vh] overflow-y-auto px-6 pb-6 scrollbar-none">
           <p className="theme-text-dim mb-3 text-sm">
-            Paste a Showdown export below. Full teams are supported, and EV
-            spreads are read as Champions SPs automatically.
+            {dictionary.importSetModal.description}
           </p>
 
           <textarea
@@ -151,7 +170,7 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
               disabled={!text.trim()}
               className="theme-chip rounded-full px-4 py-1.5 text-sm disabled:cursor-not-allowed disabled:opacity-40"
             >
-              Parse
+              {dictionary.importSetModal.parse}
             </button>
             {parsed.length > 0 && (
               <button
@@ -159,7 +178,7 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
                 onClick={handleSave}
                 className="theme-chip-active rounded-full px-4 py-1.5 text-sm font-medium"
               >
-                Save {parsed.length} set{parsed.length !== 1 ? "s" : ""}
+                {dictionary.importSetModal.saveSets(parsed.length)}
               </button>
             )}
             <button
@@ -167,15 +186,14 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
               onClick={onClose}
               className="theme-chip ml-auto rounded-full px-4 py-1.5 text-sm"
             >
-              Cancel
+              {dictionary.importSetModal.cancel}
             </button>
           </div>
 
           {parsed.length > 0 && (
             <div className="theme-divider mt-5 border-t pt-4">
               <div className="theme-text-dim mb-3 text-[11px] font-semibold uppercase tracking-[0.22em]">
-                Preview — {parsed.length} set{parsed.length !== 1 ? "s" : ""}{" "}
-                found
+                {dictionary.importSetModal.preview(parsed.length)}
               </div>
               <ul className="space-y-2">
                 {parsed.map((set, index) => (
@@ -189,6 +207,7 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    portalTarget,
   );
 }

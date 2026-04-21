@@ -1,0 +1,271 @@
+import type { AppDictionary } from "@/i18n/types";
+
+export const ptBRDictionary: AppDictionary = {
+  metadata: {
+    description:
+      "Calculo de dano VGC em alta velocidade com um composer estilo chat.",
+  },
+  localeToggle: {
+    label: "Idioma da UI",
+    options: {
+      en: "Inglês",
+      "pt-BR": "Português (BR)",
+    },
+  },
+  themeToggle: {
+    moon: "Escuro",
+    sun: "Claro",
+  },
+  home: {
+    kicker: "Calculadora de Dano para VGC",
+    about: "Sobre",
+    heroDescription:
+      "Digite uma matchup como um prompt de chat. Aceite entre sugestões com Tab e Setas do Teclado. Compare bulk Min, Mid e Max instantaneamente.",
+    toggleModifiers: "Alternar painel de modificadores",
+    modifiers: "Modificadores",
+    noIssues: "Sem avisos.",
+    resultsUpdated: "Resultados atualizados.",
+    resultsNotReady: "Resultados ainda não estão prontos.",
+  },
+  testerLinks: {
+    joinDiscord: "Entrar no Discord",
+    giveFeedback: "Enviar feedback",
+  },
+  aboutSection: {
+    highlight: "Destaque",
+    actions: "Acões",
+    actionsDescription: "Deseja enviar feedback ou se juntar a comunidade?",
+    emptyActions:
+      "Adicione um link de feedback, Discord ou apoio quando quiser expor ações reais neste card.",
+    feedback: "Enviar feedback",
+    discord: "Entrar no Discord",
+    donate: "Apoiar",
+  },
+  legalFooter: {
+    eyebrow: "Aviso Legal",
+    title: "Software Proprietario",
+    copyright: "Copyright © Leandro Mesquita. Todos os direitos reservados.",
+    proprietary:
+      "O Omniboost e software proprietario e nao e open source. Fora da funcionalidade padrao da plataforma do GitHub e dos termos aplicaveis da plataforma, nao ha permissao para copiar, redistribuir, sublicenciar ou criar derivados sem autorizacao previa por escrito.",
+    thirdParty:
+      "Pokemon, Pokemon Champions e nomes, dados e artes relacionados pertencem aos seus respectivos titulares. Materiais de terceiros continuam sujeitos aos seus proprios direitos e termos.",
+  },
+  helpBubble: {
+    triggerAria: "Mostrar referência de sintaxe e atalhos",
+    title: "Referência de sintaxe, atalhos e dicas",
+    description:
+      "Referência da estrutura do prompt, tokens suportados e atalhos de teclado.",
+    closeAria: "Fechar ajuda",
+    structure: "Estrutura",
+    structureDescription: "Use x ou vs para separar atacante e defensor.",
+    coreTokens: "Tokens Principais",
+    segmentTokens: "Tokens por Segmento",
+    attacker: "Atacante",
+    defender: "Defensor",
+    hotkeys: "Atalhos",
+    tips: "Dicas",
+    hotkeyRows: [
+      {
+        keys: ["↑", "↓"],
+        description: "Navegar pelas sugestões do autocomplete",
+      },
+      { keys: ["Tab"], description: "Aceitar sugestão / completar token" },
+      {
+        keys: ["Enter"],
+        description: "Ir para resultados (quando pronto)",
+      },
+      { keys: ["Alt", "K"], description: "Focar o chat principal" },
+      { keys: ["Esc"], description: "Fechar esta janela de ajuda" },
+    ],
+    syntaxRows: [
+      {
+        token: "!move",
+        description: "Golpe do atacante",
+        example: "!muddy-water",
+      },
+      {
+        token: "#set",
+        description: "Referencia de set salvo",
+        example: "#raintoed  #avincin",
+      },
+      {
+        token: "@item",
+        description: "Item no lado atual",
+        example: "@mystic-water  @occa-berry",
+      },
+      {
+        token: "segment token",
+        description: "Estágio, nature, spread ou efeito no lado atual",
+        example: "+1  +nature  reflect",
+      },
+      {
+        token: "[Ability]",
+        description: "Ability no lado atual",
+        example: "[Drizzle]  [Intimidate]",
+      },
+      {
+        token: "~effect",
+        description: "Clima / terreno / efeito global",
+        example: "~rain  ~trick-room",
+      },
+      {
+        token: "%N",
+        description: "Porcentagem de HP atual (1-100)",
+        example: "%75  %50",
+      },
+      {
+        token: "sp:...",
+        description: "Spread de SP em seis valores no lado atual",
+        example: "sp:32/0/1/13/1/19",
+      },
+      { token: "*", description: "Critico", example: "*" },
+    ],
+    attackerModifiers: [
+      { token: "+1 … +6", label: "Boost de Atk / SpA" },
+      { token: "-1 … -6", label: "Drop de Atk / SpA" },
+      { token: "spe+1 … spe+6", label: "Boost de Speed" },
+      { token: "spe-1 … spe-6", label: "Drop de Speed" },
+      { token: "+nature", label: "Nature positiva" },
+      { token: "-nature", label: "Nature negativa" },
+      { token: "max-atk", label: "SP máximo em ataque físico" },
+      { token: "max-spa", label: "SP máximo em ataque especial" },
+      { token: "helping-hand", label: "Helping Hand" },
+      { token: "tailwind", label: "Tailwind" },
+      { token: "battery", label: "Battery" },
+      { token: "power-spot", label: "Power Spot" },
+    ],
+    defenderModifiers: [
+      { token: "+1 … +6", label: "Boost de Def / SpD" },
+      { token: "-1 … -6", label: "Drop de Def / SpD" },
+      { token: "spe+1 … spe+6", label: "Boost de Speed" },
+      { token: "spe-1 … spe-6", label: "Drop de Speed" },
+      { token: "+nature", label: "Nature positiva" },
+      { token: "-nature", label: "Nature negativa" },
+      { token: "max-def", label: "SP máximo em defesa física" },
+      { token: "max-spd", label: "SP máximo em defesa especial" },
+      { token: "reflect", label: "Reflect ativo" },
+      { token: "light-screen", label: "Light Screen ativo" },
+      { token: "aurora-veil", label: "Aurora Veil ativo" },
+      { token: "protect", label: "Protect ativo" },
+      { token: "friend-guard", label: "Friend Guard ativo" },
+      { token: "tailwind", label: "Tailwind" },
+    ],
+    tipsList: [
+      "Somente o atacante aceita !move, mas ambos os lados podem usar @item, %HP e [Ability] conforme o segmento.",
+      "Use #set-name para referenciar um set salvo ou compartilhado pelo nickname ou nome da espécie. Tokens explícitos do prompt ainda sobrescrevem o set referenciado.",
+      "Modificadores tambem podem ser alternados pelo painel abaixo do input.",
+      "Abilities de clima e terreno sugerem o ~token correspondente depois que os dois lados sao determinados.",
+      "Use os sliders laterais para controlar estágios de stats.",
+      "Use sp:hp/atk/def/spa/spd/spe para sobrescrever spreads do resumo e do calc diretamente pelo prompt.",
+      "O modo Fast permite defaults competitivos. O modo Strict bloqueia abilities inferidas e outras suposições.",
+      "O autocomplete funciona para nomes de Pokemon, golpes e tokens de modificador.",
+    ],
+  },
+  bugReport: {
+    openButton: "Reportar bug",
+    title: "Reportar um bug",
+    description:
+      "Descreva o que deu errado com o seu prompt e contexto atuais.",
+    closeAria: "Fechar",
+    questionLabel: "O que deu errado?",
+    placeholder:
+      "O que voce tentou fazer, o que aconteceu e como eu posso reproduzir?",
+    attachedContext: "Contexto anexado",
+    currentPrompt: "Prompt atual",
+    strictMode: "Modo strict",
+    on: "ativo",
+    off: "desativado",
+    privacy:
+      "Privacidade: isso envia sua descricao, prompt atual, URL da pagina, user agent do navegador e estado do modo strict para uma issue no GitHub que pode ficar publicamente visivel.",
+    idleMessage:
+      "Seus bugs e feedbacks se tornam issues no GitHub que podem ficar publicamente visiveis.",
+    viewIssue: "Ver issue no GitHub",
+    cancel: "Cancelar",
+    send: "Enviar report",
+    sending: "Enviando...",
+    server: {
+      notConfigured: "O envio de bugs ainda não esta configurado.",
+      tooShort:
+        "Adicione um pouco mais de detalhe para o report ser acionável.",
+      tooLong:
+        "O report esta longo demais. Mantenha abaixo de 4000 caracteres.",
+      honeypotSuccess: "Report enviado com sucesso.",
+      duplicate: "Esse report parece um duplicado recente.",
+      misconfigured: "O envio de bugs esta temporariamente mal configurado.",
+      createFailed: "Falha ao criar a issue no GitHub.",
+      unexpected: "Nao foi possivel enviar o report agora.",
+      rateLimit: (minutes) =>
+        `Reports demais vindos desta conexao. Tente novamente em cerca de ${minutes} minuto${minutes === 1 ? "" : "s"}.`,
+      filedWithNumber: (number) => `Report enviado como issue #${number}.`,
+      filedSuccess: "Report enviado com sucesso.",
+    },
+  },
+  importSetModal: {
+    dialogAria: "Importar set de Pokemon",
+    title: "Importar set de Pokemon",
+    closeAria: "Fechar",
+    description:
+      "Cole abaixo um export de time. Formato Showdown/Pokepaste suportado.",
+    parseError:
+      "Nenhum set de Pokemon válido encontrado. Verifique se voce usou um formato de export válido.",
+    parse: "Analisar",
+    saveSets: (count) => `Salvar ${count} set${count === 1 ? "" : "s"}`,
+    cancel: "Cancelar",
+    preview: (count) =>
+      `Prévia - ${count} set${count === 1 ? "" : "s"} encontrado${count === 1 ? "" : "s"}`,
+  },
+  strictMode: {
+    groupLabel: "Modo de cálculo",
+    fast: "Fast",
+    strict: "Strict",
+    optionAria: (label) => `Modo de cálculo ${label}`,
+  },
+  summary: {
+    resolvePokemon:
+      "Determine este Pokemon para mostrar ability, item, contexto do golpe e stats de batalha.",
+    resolveQuickSummary: (side) =>
+      `Determine o Pokemon do lado ${side} para mostrar um resumo rapido.`,
+    import: "Importar",
+    switch: "Trocar",
+    save: "Salvar",
+    edit: "Editar",
+  },
+  modifierSwitches: {
+    noOptionsYet: "Nenhuma opção ainda.",
+    currentHp: "HP Atual",
+    reset: "Resetar",
+    defaultFullHp: "Padrão: HP cheio",
+    usingCurrentHp: (value) => `Usando ${value}% de HP atual`,
+    primaryControls: "Controles Principais",
+    multipliers: "Multiplicadores",
+    attackerStageSummary: "Estágio de Atk / SpA",
+    defenderStageSummary: "Estágio de Def / SpD",
+    speed: "Speed",
+    speedSummary: "Estágio de Speed",
+    toggles: "Toggles",
+    stats: "Stats",
+    battleEffects: "Efeitos de Batalha",
+    abilities: "Abilities",
+    resolveThisSideFirst: "Determine este lado primeiro.",
+    noAbilitySuggestions: "Sem sugestões de ability.",
+    global: "Global",
+    weather: "Clima",
+    terrain: "Terreno",
+    fieldEffects: "Efeitos de Campo",
+    attacker: "Atacante",
+    defender: "Defensor",
+  },
+  combobox: {
+    selectValue: "Selecionar valor",
+  },
+  resultsPanel: {
+    ariaLabel: "Resultados do cálculo",
+    minBulk: "Bulk Min",
+    midBulk: "Bulk Mid",
+    maxBulk: "Bulk Max",
+    copyResultText: (label) => `Copiar texto do resultado para ${label}`,
+    copiedText: "Texto copiado",
+    copyShareUrl: (label) => `Copiar URL de compartilhamento para ${label}`,
+    copiedUrl: "URL copiada",
+  },
+};

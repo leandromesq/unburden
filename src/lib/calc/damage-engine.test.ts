@@ -193,9 +193,11 @@ describe("damage engine", () => {
   test("strict mode blocks calculations that rely on inferred abilities", () => {
     const parsed = parseCommand("politoed !muddy-water x incineroar").parsed;
 
-    expect(getCalculationIssues(parsed!, {}, { strictMode: true })).toContain(
-      "Strict mode: add an explicit attacker ability or use a set with an ability.",
-    );
+    expect(
+      getCalculationIssues(parsed!, {}, { strictMode: true }),
+    ).toContainEqual({
+      id: "calc.strict_attacker_ability_required",
+    });
     expect(
       calculateDamageResults(parsed!, {}, { strictMode: true }),
     ).toHaveLength(0);

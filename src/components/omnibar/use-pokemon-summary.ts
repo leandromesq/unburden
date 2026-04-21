@@ -59,6 +59,7 @@ interface PokemonSummaryData {
   title: "Attacker" | "Defender";
   name: string;
   pokemonId: string;
+  isMega: boolean;
   promptPokemonId: string;
   spriteSources: string[];
   primaryType: string | null;
@@ -413,6 +414,7 @@ export function usePokemonSummary({
         title: "Attacker",
         name: attacker.name,
         pokemonId: attacker.id,
+        isMega: attacker.isMega,
         promptPokemonId: attackerPromptSpecies?.id ?? attacker.id,
         spriteSources: getPokemonSpriteSources(attacker),
         primaryType: attacker.types[0] ?? null,
@@ -498,6 +500,7 @@ export function usePokemonSummary({
       title: "Defender",
       name: defender.name,
       pokemonId: defender.id,
+      isMega: defender.isMega,
       promptPokemonId: defenderPromptSpecies?.id ?? defender.id,
       spriteSources: getPokemonSpriteSources(defender),
       primaryType: defender.types[0] ?? null,

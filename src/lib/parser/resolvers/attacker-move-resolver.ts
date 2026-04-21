@@ -79,24 +79,26 @@ export const resolveAttackerMoveSuggestion: SlotResolver = (context) => {
     8,
   ).map((move) => {
     const token = formatMoveToken(move.name);
-    const [applyText, cursorOffset] =
-      context.cursorIndex === context.input.length || !context.activeToken
-        ? (() => {
-            const text = buildFullText(
-              context.structure,
-              buildAttackerSideTokens(
-                context.structure,
-                token,
-                context.attackerReferenceToken,
-              ),
-              context.structure.lexed.hasDelimiter
-                ? context.structure.defender.rawTokens.map((entry) => entry.raw)
-                : undefined,
-              context.structure.lexed.hasDelimiter,
-            );
-            return [text, text.length] as const;
-          })()
-        : replaceLastTokenWithCursor(context.input, context.activeToken, token);
+    const attackerTokens = buildAttackerSideTokens(
+      context.fullStructure,
+      token,
+      context.attackerReferenceToken,
+    );
+    const [applyText, cursorOffset] = (() => {
+      const text = buildFullText(
+        context.fullStructure,
+        attackerTokens,
+        context.fullStructure.lexed.hasDelimiter
+          ? context.fullStructure.defender.rawTokens.map((entry) => entry.raw)
+          : undefined,
+        context.fullStructure.lexed.hasDelimiter,
+      );
+      const cursorText = buildFullText(
+        context.fullStructure,
+        attackerTokens.slice(0, 2),
+      );
+      return [text, cursorText.length] as const;
+    })();
 
     return {
       type: "move" as const,

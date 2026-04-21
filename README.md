@@ -2,6 +2,16 @@
 
 Web damage calc workspace for Pokemon Champions / VGC-style doubles. Prompt-first. Client-side calc. UI act more like editor, less like old-school form.
 
+## License and Usage
+
+Omniboost is proprietary software and is not open source.
+
+This repository contains proprietary software and no open-source license is granted. Outside GitHub's standard platform functionality and applicable GitHub Terms, you may not copy, modify, distribute, sublicense, sell, host, deploy for third parties, or create derivative works from this codebase without prior written permission from the copyright holder.
+
+See [LICENSE.md](./LICENSE.md) for the full proprietary notice.
+
+Third-party trademarks, gameplay data sources, and artwork referenced by this project remain the property of their respective owners and are not licensed to you by this repository.
+
 ## What It Does
 
 - Parse compact matchup prompts like:
@@ -118,7 +128,7 @@ cp .env.example .env.local
 
 Set `GITHUB_BUG_REPORT_TOKEN` in `.env.local` to enable the in-app `Report bug` form. The token needs issue creation access for the target repo.
 
-Set `GITHUB_BUG_REPORT_REPO` if you want reports to land somewhere other than `leandromesq/omniboost`.
+Set `GITHUB_BUG_REPORT_REPO` if you want reports to land somewhere other than `leandromesq/omniboost-issues`.
 
 Set the repository secret `DISCORD_BUG_REPORT_WEBHOOK_URL` in GitHub Actions so new app-created issues are forwarded to Discord.
 
@@ -126,6 +136,7 @@ Optional public tester links:
 
 - `NEXT_PUBLIC_DISCORD_INVITE_URL`
 - `NEXT_PUBLIC_FEEDBACK_URL`
+- `NEXT_PUBLIC_DONATE_URL`
 
 These are public by design and safe to expose to the browser.
 
@@ -172,7 +183,7 @@ GitHub Actions:
 
 - `.github/workflows/validation.yml` runs lint, coverage tests, dead-code check, production build on push to `main`
 - `.github/workflows/data-freshness.yml` runs snapshot freshness check on demand and monthly
-- `.github/workflows/issues-to-discord.yml` forwards app-created GitHub bug reports to Discord when new issues open
+- `leandromesq/omniboost-issues/.github/workflows/issues-to-discord.yml` forwards app-created GitHub bug reports to Discord when new issues open
 
 ## Data Generation
 

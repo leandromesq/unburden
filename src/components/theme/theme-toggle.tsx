@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Moon, SunMedium } from "lucide-react";
+
+import { useI18n } from "@/i18n/I18nProvider";
 
 type ThemeMode = "dark" | "light";
 
@@ -22,6 +25,7 @@ function applyTheme(nextTheme: ThemeMode) {
 }
 
 export function ThemeToggle() {
+  const { dictionary } = useI18n();
   const [theme, setTheme] = useState<ThemeMode>(getThemeSnapshot);
 
   useEffect(() => {
@@ -52,12 +56,26 @@ export function ThemeToggle() {
             key={option}
             type="button"
             aria-pressed={active}
-            className={`theme-toggle-option rounded-full px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.16em] ${
+            aria-label={
+              option === "dark"
+                ? dictionary.themeToggle.moon
+                : dictionary.themeToggle.sun
+            }
+            title={
+              option === "dark"
+                ? dictionary.themeToggle.moon
+                : dictionary.themeToggle.sun
+            }
+            className={`theme-toggle-option flex h-8 w-8 items-center justify-center rounded-full ${
               active ? "theme-toggle-option-active" : ""
             }`}
             onClick={() => handleThemeChange(option)}
           >
-            {option === "dark" ? "Dark" : "Light"}
+            {option === "dark" ? (
+              <Moon aria-hidden="true" size={15} strokeWidth={1.8} />
+            ) : (
+              <SunMedium aria-hidden="true" size={15} strokeWidth={1.8} />
+            )}
           </button>
         );
       })}

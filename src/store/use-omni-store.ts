@@ -19,6 +19,7 @@ import { computeOmniState } from "@/lib/omni/compute-state";
 import type {
   ActiveChipTokens,
   DamageResult,
+  OmniIssue,
   ParsedCommand,
   SuggestionOption,
   SuggestionState,
@@ -41,8 +42,9 @@ interface OmniStore {
   dismissedAutoGlobalContextKey: string | null;
   activeChipTokens: ActiveChipTokens;
   results: DamageResult[];
-  issues: string[];
+  issues: OmniIssue[];
   setInput: (input: string, cursorIndex?: number) => void;
+  setInputImmediately: (input: string, cursorIndex?: number) => void;
   setCursorIndex: (cursorIndex: number) => void;
   moveSuggestionSelection: (delta: number) => void;
   applySuggestion: () => void;
@@ -74,7 +76,7 @@ const initialState = {
   dismissedAutoGlobalContextKey: null as string | null,
   activeChipTokens: buildInitialChipState(),
   results: [] as DamageResult[],
-  issues: [] as string[],
+  issues: [] as OmniIssue[],
 };
 
 const TYPING_PREVIEW_DEBOUNCE_MS = 72;
@@ -84,7 +86,7 @@ export const useOmniStore = create<OmniStore>((set, get) => {
     nextInput: string,
     nextCursorIndex: number,
     nextStrictMode: boolean,
-    options?: { debounceMs?: number },
+    options?: { debounceMs?: number; syncPreview?: boolean },
   ) => {
     const currentState = get();
 
@@ -119,6 +121,87 @@ export const useOmniStore = create<OmniStore>((set, get) => {
       return;
     }
 
+    const applyPreviewState = (
+      stateSnapshot: typeof currentState,
+      input: string,
+      cursorIndex: number,
+      strictMode: boolean,
+    ) => {
+      const previewState = computeOmniState({
+        input,
+        importedSets: useTeamStore.getState().importedSets,
+        previousAutoTokens: stateSnapshot.autoAppliedGlobalTokens,
+        previousContextKey: stateSnapshot.autoGlobalContextKey,
+        previousDismissedContextKey: stateSnapshot.dismissedAutoGlobalContextKey,
+        cursorIndex,
+        strictMode,
+        includeResults: false,
+        applyAutoGlobalTokens,
+      });
+      const previewParsed = previewState.parsed;
+      const keepPreviousResults =
+        Boolean(previewParsed) &&
+        previewState.issues.length === 0 &&
+        stateSnapshot.calculationReady &&
+        stateSnapshot.results.length > 0;
+
+      set({
+        ...previewState,
+        calculationReady: keepPreviousResults
+          ? stateSnapshot.calculationReady
+          : previewState.calculationReady,
+        results: keepPreviousResults ? stateSnapshot.results : previewState.results,
+      });
+
+      return previewState;
+    };
+
+    const scheduleResultCalculation = (
+      version: number,
+      parsed: ParsedCommand,
+      strictMode: boolean,
+    ) => {
+      omniScheduler.scheduleCalculation(version, () => {
+        const results = calculateDamageResults(
+          parsed,
+          useTeamStore.getState().importedSets,
+          { strictMode },
+        );
+
+        if (version !== omniScheduler.getVersion()) {
+          return;
+        }
+
+        set({
+          results,
+          calculationReady: true,
+        });
+      });
+    };
+
+    if (options?.syncPreview) {
+      omniScheduler.cancelPreview();
+
+      const version = omniScheduler.bumpVersion();
+      const previewState = applyPreviewState(
+        currentState,
+        nextInput,
+        nextCursorIndex,
+        nextStrictMode,
+      );
+
+      if (!previewState.parsed || previewState.issues.length > 0) {
+        return;
+      }
+
+      scheduleResultCalculation(
+        version,
+        previewState.parsed,
+        previewState.strictMode,
+      );
+      return;
+    }
+
     set({
       input: nextInput,
       cursorIndex: nextCursorIndex,
@@ -131,42 +214,23 @@ export const useOmniStore = create<OmniStore>((set, get) => {
       version,
       () => {
         const state = get();
-        const previewState = computeOmniState({
-          input: state.input,
-          importedSets: useTeamStore.getState().importedSets,
-          previousAutoTokens: state.autoAppliedGlobalTokens,
-          previousContextKey: state.autoGlobalContextKey,
-          previousDismissedContextKey: state.dismissedAutoGlobalContextKey,
-          cursorIndex: state.cursorIndex,
-          strictMode: state.strictMode,
-          includeResults: false,
-          applyAutoGlobalTokens,
-        });
-
-        set(previewState);
-
+        const previewState = applyPreviewState(
+          state,
+          state.input,
+          state.cursorIndex,
+          state.strictMode,
+        );
         const previewParsed = previewState.parsed;
 
         if (!previewParsed || previewState.issues.length > 0) {
           return;
         }
 
-        omniScheduler.scheduleCalculation(version, () => {
-          const results = calculateDamageResults(
-            previewParsed,
-            useTeamStore.getState().importedSets,
-            { strictMode: previewState.strictMode },
-          );
-
-          if (version !== omniScheduler.getVersion()) {
-            return;
-          }
-
-          set({
-            results,
-            calculationReady: true,
-          });
-        });
+        scheduleResultCalculation(
+          version,
+          previewParsed,
+          previewState.strictMode,
+        );
       },
       options?.debounceMs ?? 0,
     );
@@ -178,6 +242,12 @@ export const useOmniStore = create<OmniStore>((set, get) => {
       const nextCursorIndex = cursorIndex ?? input.length;
       commitState(input, nextCursorIndex, get().strictMode, {
         debounceMs: TYPING_PREVIEW_DEBOUNCE_MS,
+      });
+    },
+    setInputImmediately: (input, cursorIndex) => {
+      const nextCursorIndex = cursorIndex ?? input.length;
+      commitState(input, nextCursorIndex, get().strictMode, {
+        syncPreview: true,
       });
     },
     setCursorIndex: (cursorIndex) => {

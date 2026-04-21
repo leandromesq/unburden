@@ -403,6 +403,11 @@ button {
     outline: none;
 }
 
+.theme-control option {
+    background: var(--surface);
+    color: var(--text);
+}
+
 .theme-menu {
     border: 1px solid var(--line-strong);
     background: var(--surface);
@@ -465,7 +470,8 @@ button {
     transition:
         border-color 140ms ease,
         background 140ms ease,
-        color 140ms ease;
+        color 140ms ease,
+        box-shadow 140ms ease;
 }
 
 .theme-icon-button:hover {
@@ -478,6 +484,36 @@ button {
     border: 1px solid var(--accent-border);
     background: var(--accent-soft);
     color: var(--accent-strong);
+}
+
+.theme-icon-button-mega {
+    --mega-icon-color: var(--text-dim);
+}
+
+.theme-icon-button-mega-inactive {
+    background: var(--surface-3);
+    color: var(--text-muted);
+}
+
+.theme-icon-button-mega-inactive:hover {
+    background: var(--surface-4);
+    color: var(--text);
+    --mega-icon-color: var(--text);
+}
+
+.theme-icon-button-mega-active {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--surface-3);
+    --mega-icon-color: var(--surface-3);
+    box-shadow: none;
+}
+
+.theme-icon-button-mega-active:hover {
+    border-color: var(--accent-strong);
+    background: var(--accent-strong);
+    color: var(--surface-3);
+    --mega-icon-color: var(--surface-3);
 }
 
 /* ── KO text tones ────────────────────────────────────────── */

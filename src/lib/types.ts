@@ -14,6 +14,36 @@ export interface ActiveRegulationConfig {
 
 export type BulkArchetype = "glass" | "mid" | "tank";
 export type PokemonStatus = "brn" | "par" | "psn" | "slp" | "frz";
+export type OmniIssueId =
+  | "parser.use_separator"
+  | "parser.unknown_saved_set_reference"
+  | "parser.saved_set_reference_attacker_slot_only"
+  | "parser.saved_set_reference_defender_slot_only"
+  | "parser.could_not_resolve_attacker"
+  | "parser.could_not_resolve_defender"
+  | "parser.invalid_attacker_post_move_tokens"
+  | "parser.invalid_defender_post_move_tokens"
+  | "parser.use_explicit_move_token"
+  | "parser.add_attacker_move"
+  | "parser.could_not_resolve_move"
+  | "parser.invalid_move_hit_count"
+  | "parser.invalid_defender_token"
+  | "parser.invalid_spread"
+  | "parser.tokens_wrong_side"
+  | "parser.unknown_modifier"
+  | "parser.unknown_attacker_item"
+  | "parser.unknown_defender_item"
+  | "parser.legacy_prefixes_removed"
+  | "parser.could_not_resolve_attacker_ability"
+  | "parser.could_not_resolve_defender_ability"
+  | "calc.strict_attacker_ability_required"
+  | "calc.strict_defender_ability_required"
+  | "calc.strict_poltergeist_item_required";
+
+export interface OmniIssue {
+  id: OmniIssueId;
+  values?: Record<string, number | string>;
+}
 
 export type GlobalEffect =
   | "rain"
@@ -93,6 +123,8 @@ export interface ParsedCommand {
 
 export interface DamageResult {
   archetype: BulkArchetype;
+  label?: string;
+  summary: string;
   minPercentage: number;
   maxPercentage: number;
   koChanceText: string;

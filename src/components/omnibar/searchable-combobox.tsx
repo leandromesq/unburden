@@ -10,6 +10,7 @@ import {
   useState,
 } from "react";
 
+import { useI18n } from "@/i18n/I18nProvider";
 import { normalizeAlias } from "@/lib/data/loaders";
 
 interface SearchableComboboxProps {
@@ -19,6 +20,7 @@ interface SearchableComboboxProps {
   placeholder?: string;
   onChange: (value: string) => void;
   renderOption?: (option: string) => React.ReactNode;
+  endAdornment?: React.ReactNode;
   hideLabel?: boolean;
 }
 
@@ -80,8 +82,10 @@ export function SearchableCombobox({
   placeholder,
   onChange,
   renderOption,
+  endAdornment,
   hideLabel = false,
 }: SearchableComboboxProps) {
+  const { dictionary } = useI18n();
   const listboxId = useId();
   const optionIdBase = useId();
   const [open, setOpen] = useState(false);
@@ -143,7 +147,9 @@ export function SearchableCombobox({
           aria-expanded={open}
           aria-autocomplete="list"
           aria-activedescendant={activeOptionId}
-          aria-label={label || placeholder || "Select value"}
+          aria-label={
+            label || placeholder || dictionary.combobox.selectValue
+          }
           onFocus={() => setOpen(true)}
           onChange={(event) => {
             const nextValue = event.currentTarget.value;
@@ -201,9 +207,16 @@ export function SearchableCombobox({
               setOpen(false);
             }
           }}
-          className="theme-control theme-input w-full rounded-xl px-3 py-2"
+          className={`theme-control theme-input w-full rounded-xl px-3 py-2 ${
+            endAdornment ? "pr-10" : ""
+          }`}
           placeholder={placeholder}
         />
+        {endAdornment ? (
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+            {endAdornment}
+          </div>
+        ) : null}
         {open && filteredOptions.length > 0 ? (
           <div
             id={listboxId}

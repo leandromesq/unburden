@@ -207,4 +207,31 @@ describe("PokemonSetEditorModal nature marker synchronization", () => {
     expect(within(dialog).getByLabelText("SpA")).toHaveValue("0-");
     expect(within(dialog).getByLabelText("Spe")).toHaveValue("20");
   });
+
+  test("shows move type icons in the selected fields and move options", () => {
+    const handleSave = jest.fn();
+
+    render(
+      <PokemonSetEditorModal
+        initialSet={createInitialSet()}
+        onClose={() => {}}
+        onSave={handleSave}
+      />,
+    );
+
+    const dialog = screen.getByRole("dialog", { name: /edit politoed set/i });
+    const moveOneCombobox = within(dialog).getByRole("combobox", {
+      name: "Move 1",
+    });
+
+    expect(
+      within(dialog).getAllByRole("img", { name: "Water type" }),
+    ).toHaveLength(1);
+
+    fireEvent.focus(moveOneCombobox);
+
+    expect(
+      within(dialog).getAllByRole("img", { name: "Water type" }),
+    ).toHaveLength(2);
+  });
 });

@@ -35,7 +35,14 @@ describe("resolver pipeline", () => {
     }));
     const third = jest.fn(() => ({
       activeSuggestion: null,
-      suggestionOptions: [{ value: "unexpected" }],
+      suggestionOptions: [
+        {
+          type: "modifier" as const,
+          value: "unexpected",
+          label: "unexpected",
+          applyText: "unexpected",
+        },
+      ],
     }));
 
     const result = runResolverPipeline(context, [first, second, third]);
@@ -99,4 +106,3 @@ describe("resolver units", () => {
     expect(result?.activeSuggestion?.completionText).toContain("~rain");
   });
 });
-

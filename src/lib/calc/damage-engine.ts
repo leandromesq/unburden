@@ -13,11 +13,13 @@ import {
 } from "@/lib/calc/stat-calc";
 import { normalizeKoText } from "@/lib/calc/ko-text";
 import { moveById, normalizeId, pokemonById } from "@/lib/data/loaders";
+import { createIssue } from "@/lib/issues";
 import { inferDefaultAbility, inferDefaultItem } from "@/lib/parser/inference";
 import { resolveReferencedImportedSet } from "@/lib/team/set-references";
 import type {
   DamageResult,
   ImportedSet,
+  OmniIssue,
   ParsedCommand,
   PokemonStatus,
   StatSpread,
@@ -886,14 +888,14 @@ export function getCalculationIssues(
     parsed.defenderSetReferenceId,
     importedSets,
   );
-  const issues: string[] = [];
+  const issues: OmniIssue[] = [];
 
   if (!parsed.attackerAbility && !parsedAttackerSet?.ability) {
-    issues.push("Strict mode: add an explicit attacker ability or use a set with an ability.");
+    issues.push(createIssue("calc.strict_attacker_ability_required"));
   }
 
   if (!parsed.defenderAbility && !parsedDefenderSet?.ability) {
-    issues.push("Strict mode: add an explicit defender ability or use a set with an ability.");
+    issues.push(createIssue("calc.strict_defender_ability_required"));
   }
 
   if (
@@ -901,7 +903,7 @@ export function getCalculationIssues(
     !parsed.defenderItem &&
     !parsedDefenderSet?.item
   ) {
-    issues.push("Strict mode: Poltergeist requires an explicit defender item or a set with an item.");
+    issues.push(createIssue("calc.strict_poltergeist_item_required"));
   }
 
   return issues;
@@ -1280,6 +1282,8 @@ export function calculateDamageResults(
 
     return {
       archetype: archetype.archetype,
+      label: archetype.label,
+      summary: archetype.summary,
       minPercentage: roundPercent((minDamage / maxHP) * 100),
       maxPercentage: roundPercent((maxDamage / maxHP) * 100),
       koChanceText: description.koChanceText,
