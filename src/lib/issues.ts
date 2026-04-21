@@ -7,7 +7,7 @@ export function createIssue(
   return values ? { id, values } : { id };
 }
 
-export function issueKey(issue: OmniIssue) {
+function issueKey(issue: OmniIssue) {
   return `${issue.id}:${JSON.stringify(issue.values ?? {})}`;
 }
 

@@ -25,7 +25,7 @@ function formatTypeLabel(type: string) {
   return `${type.slice(0, 1).toUpperCase()}${type.slice(1)} type`;
 }
 
-export function resolveMoveTypeIconKey(type: string | null | undefined) {
+function resolveMoveTypeIconKey(type: string | null | undefined) {
   const normalizedType = type?.trim().toLowerCase() ?? "";
   return AVAILABLE_MOVE_TYPE_ICONS.has(normalizedType) ? normalizedType : null;
 }

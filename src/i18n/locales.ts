@@ -4,7 +4,7 @@ export type AppLocale = (typeof APP_LOCALES)[number];
 export const DEFAULT_APP_LOCALE: AppLocale = "pt-BR";
 export const LOCALE_STORAGE_KEY = "omniboost-locale";
 
-export function isAppLocale(
+function isAppLocale(
   value: string | null | undefined,
 ): value is AppLocale {
   return (

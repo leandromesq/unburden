@@ -10,7 +10,7 @@ export type PikalyticsIndexEntry = {
   webUrl: string;
 };
 
-export type PikalyticsFormatMetadata = {
+type PikalyticsFormatMetadata = {
   formatName: string;
   formatCode: string;
   game: string | null;
