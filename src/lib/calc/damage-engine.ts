@@ -1206,7 +1206,7 @@ export function calculateDamageResults(
     return [];
   }
 
-  return context.archetypes.map((archetype) => {
+  return context.archetypes.flatMap((archetype): DamageResult[] => {
     const defenderLevel = context.defenderSet?.level ?? 50;
     const defenderNature = context.defenderSet
       ? parsed.defenderNature ?? context.defenderSet.nature
@@ -1238,7 +1238,7 @@ export function calculateDamageResults(
     );
 
     if (!defenderPreviewResult || !context.defenderCalcSpeciesName) {
-      return null;
+      return [];
     }
 
     const defenderPokemonResult = createCalcPokemon(context.defender, "defender", {
@@ -1250,7 +1250,7 @@ export function calculateDamageResults(
     }, parsed.defenderCalcFormId);
 
     if (!defenderPokemonResult) {
-      return null;
+      return [];
     }
 
     const defenderPokemon = defenderPokemonResult.pokemon;
@@ -1280,9 +1280,10 @@ export function calculateDamageResults(
       maxHP,
     );
 
-    return {
+    return [
+      {
       archetype: archetype.archetype,
-      label: archetype.label,
+      ...(archetype.label !== undefined ? { label: archetype.label } : {}),
       summary: archetype.summary,
       minPercentage: roundPercent((minDamage / maxHP) * 100),
       maxPercentage: roundPercent((maxDamage / maxHP) * 100),
@@ -1291,6 +1292,7 @@ export function calculateDamageResults(
       contextText: description.contextText,
       damageText: description.damageText,
       assumptions: context.assumptions,
-    };
-  }).filter((result): result is DamageResult => result !== null);
+      },
+    ];
+  });
 }

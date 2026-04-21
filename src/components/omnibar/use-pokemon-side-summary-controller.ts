@@ -319,21 +319,22 @@ export function usePokemonSideSummaryController(side: SummarySide) {
   const handleSwitchToMegaForm = (targetPokemon: PokemonEntry) => {
     const input = useOmniStore.getState().input;
     if (summary?.importedSet) {
+      const importedSet = summary.importedSet;
       const nextSet = createImportedSet({
         speciesId: targetPokemon.id,
         speciesName: targetPokemon.name,
-        nickname: summary.importedSet.nickname,
-        item: summary.importedSet.item ?? summary.item ?? undefined,
-        ability: summary.importedSet.ability &&
-          targetPokemon.abilities.includes(summary.importedSet.ability)
-          ? summary.importedSet.ability
+        nickname: importedSet.nickname,
+        item: importedSet.item ?? summary.item ?? undefined,
+        ability: importedSet.ability &&
+          targetPokemon.abilities.includes(importedSet.ability)
+          ? importedSet.ability
           : undefined,
-        level: summary.importedSet.level,
-        nature: summary.importedSet.nature,
-        statPoints: summary.importedSet.statPoints,
-        ivs: summary.importedSet.ivs,
-        moves: summary.importedSet.moves,
-        teraType: summary.importedSet.teraType,
+        level: importedSet.level,
+        nature: importedSet.nature,
+        statPoints: importedSet.statPoints,
+        ivs: importedSet.ivs,
+        moves: importedSet.moves,
+        teraType: importedSet.teraType,
       });
 
       const nextInput = rebuildInputWithSetReference(
@@ -343,8 +344,8 @@ export function usePokemonSideSummaryController(side: SummarySide) {
       );
 
       unstable_batchedUpdates(() => {
-        if (summary.importedSet.speciesId !== nextSet.speciesId) {
-          replaceSet(summary.importedSet.speciesId, nextSet);
+        if (importedSet.speciesId !== nextSet.speciesId) {
+          replaceSet(importedSet.speciesId, nextSet);
         } else {
           saveSet(nextSet);
         }
