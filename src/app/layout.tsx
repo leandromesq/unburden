@@ -32,7 +32,11 @@ export default function RootLayout({
       data-theme="dark"
       className={`${spaceGrotesk.variable} ${ibmPlexMono.variable} h-full antialiased`}
     >
-      <body data-theme="dark" className="min-h-full flex flex-col">
+      <body
+        suppressHydrationWarning
+        data-theme="dark"
+        className="min-h-full flex flex-col"
+      >
         <I18nProvider initialLocale={DEFAULT_APP_LOCALE}>{children}</I18nProvider>
         <DeferredVercelInsights />
       </body>
