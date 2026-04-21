@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useSyncExternalStore } from "react";
 import { Moon, SunMedium } from "lucide-react";
 
 import { useI18n } from "@/i18n/I18nProvider";
@@ -8,24 +8,27 @@ import { useI18n } from "@/i18n/I18nProvider";
 type ThemeMode = "dark" | "light";
 
 const STORAGE_KEY = "omniboost-theme";
+const themeListeners = new Set<() => void>();
+
+function emitThemeChange() {
+  themeListeners.forEach((listener) => {
+    listener();
+  });
+}
 
 function getThemeSnapshot(): ThemeMode {
   if (typeof document === "undefined") {
     return "dark";
   }
 
-  return document.documentElement.dataset.theme === "light" ? "light" : "dark";
-}
-
-function readStoredTheme(): ThemeMode | null {
-  if (typeof window === "undefined") {
-    return null;
+  if (typeof window !== "undefined") {
+    const storedTheme = window.localStorage.getItem(STORAGE_KEY);
+    if (storedTheme === "light" || storedTheme === "dark") {
+      return storedTheme;
+    }
   }
 
-  const storedTheme = window.localStorage.getItem(STORAGE_KEY);
-  return storedTheme === "light" || storedTheme === "dark"
-    ? storedTheme
-    : null;
+  return document.documentElement.dataset.theme === "light" ? "light" : "dark";
 }
 
 function applyTheme(nextTheme: ThemeMode) {
@@ -35,50 +38,44 @@ function applyTheme(nextTheme: ThemeMode) {
   window.localStorage.setItem(STORAGE_KEY, nextTheme);
 }
 
-export function ThemeToggle() {
-  const { dictionary } = useI18n();
-  const [theme, setTheme] = useState<ThemeMode>(getThemeSnapshot);
+function subscribeToTheme(listener: () => void) {
+  themeListeners.add(listener);
 
-  useLayoutEffect(() => {
-    const storedTheme = readStoredTheme();
-
-    if (!storedTheme) {
+  const handleStorage = (event: StorageEvent) => {
+    if (event.key !== STORAGE_KEY) {
       return;
     }
 
-    applyTheme(storedTheme);
-    setTheme(storedTheme);
-  }, []);
+    listener();
+  };
 
-  useEffect(() => {
-    const handleStorage = (event: StorageEvent) => {
-      if (event.key !== STORAGE_KEY) {
-        return;
-      }
+  window.addEventListener("storage", handleStorage);
 
-      const nextTheme =
-        event.newValue === "light" || event.newValue === "dark"
-          ? event.newValue
-          : null;
+  return () => {
+    themeListeners.delete(listener);
+    window.removeEventListener("storage", handleStorage);
+  };
+}
 
-      if (!nextTheme) {
-        return;
-      }
+function setThemePreference(nextTheme: ThemeMode) {
+  applyTheme(nextTheme);
+  emitThemeChange();
+}
 
-      applyTheme(nextTheme);
-      setTheme(nextTheme);
-    };
+export function ThemeToggle() {
+  const { dictionary } = useI18n();
+  const theme = useSyncExternalStore<ThemeMode>(
+    subscribeToTheme,
+    getThemeSnapshot,
+    () => "dark" as ThemeMode,
+  );
 
-    window.addEventListener("storage", handleStorage);
-
-    return () => {
-      window.removeEventListener("storage", handleStorage);
-    };
-  }, []);
+  useLayoutEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
 
   const handleThemeChange = (nextTheme: ThemeMode) => {
-    applyTheme(nextTheme);
-    setTheme(nextTheme);
+    setThemePreference(nextTheme);
   };
 
   return (

@@ -3,10 +3,9 @@
 import {
   createContext,
   useContext,
-  useEffect,
   useLayoutEffect,
   useMemo,
-  useState,
+  useSyncExternalStore,
 } from "react";
 
 import { getDictionary } from "@/i18n/messages";
@@ -30,6 +29,24 @@ const I18nContext = createContext<I18nContextValue>({
   setLocale: () => {},
 });
 
+const localeListeners = new Set<() => void>();
+
+function emitLocaleChange() {
+  localeListeners.forEach((listener) => {
+    listener();
+  });
+}
+
+function syncLocale(locale: AppLocale) {
+  if (typeof document !== "undefined") {
+    document.documentElement.lang = locale;
+  }
+
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+  }
+}
+
 function readLocaleSnapshot(fallbackLocale: AppLocale): AppLocale {
   if (typeof document === "undefined") {
     return fallbackLocale;
@@ -41,6 +58,30 @@ function readLocaleSnapshot(fallbackLocale: AppLocale): AppLocale {
   );
 }
 
+function subscribeToLocale(listener: () => void) {
+  localeListeners.add(listener);
+
+  const handleStorage = (event: StorageEvent) => {
+    if (event.key !== LOCALE_STORAGE_KEY) {
+      return;
+    }
+
+    listener();
+  };
+
+  window.addEventListener("storage", handleStorage);
+
+  return () => {
+    localeListeners.delete(listener);
+    window.removeEventListener("storage", handleStorage);
+  };
+}
+
+function setLocalePreference(nextLocale: AppLocale) {
+  syncLocale(nextLocale);
+  emitLocaleChange();
+}
+
 export function I18nProvider({
   children,
   initialLocale = DEFAULT_APP_LOCALE,
@@ -48,40 +89,21 @@ export function I18nProvider({
   children: React.ReactNode;
   initialLocale?: AppLocale;
 }) {
-  const [locale, setLocaleState] = useState<AppLocale>(initialLocale);
+  const locale = useSyncExternalStore(
+    subscribeToLocale,
+    () => readLocaleSnapshot(initialLocale),
+    () => initialLocale,
+  );
 
   useLayoutEffect(() => {
-    const nextLocale = readLocaleSnapshot(initialLocale);
-
-    document.documentElement.lang = nextLocale;
-    setLocaleState((currentLocale) =>
-      currentLocale === nextLocale ? currentLocale : nextLocale,
-    );
-  }, [initialLocale]);
-
-  useEffect(() => {
-    document.documentElement.lang = locale;
-    window.localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+    syncLocale(locale);
   }, [locale]);
-
-  useEffect(() => {
-    const handleStorage = (event: StorageEvent) => {
-      if (event.key !== LOCALE_STORAGE_KEY) {
-        return;
-      }
-
-      setLocaleState(coerceLocale(event.newValue));
-    };
-
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
-  }, []);
 
   const value = useMemo(
     () => ({
       locale,
       dictionary: getDictionary(locale),
-      setLocale: setLocaleState,
+      setLocale: setLocalePreference,
     }),
     [locale],
   );
