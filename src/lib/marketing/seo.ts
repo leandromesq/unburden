@@ -10,10 +10,10 @@ export const SITE_SHARE_IMAGE_ALT =
   "Unburden VGC share image with a dark tactical grid background, the app name, and a short subtitle about fast VGC damage calculation.";
 export const SITE_AUTHOR_NAME = "Leandro Mesquita";
 export const SITE_X_HANDLE = "@lelezonio";
-export const SITE_X_URL = "https://x.com/lelezonio";
+const SITE_X_URL = "https://x.com/lelezonio";
 export const SITE_OG_IMAGE_PATH = "/opengraph-image";
 export const SITE_TWITTER_IMAGE_PATH = "/twitter-image";
-export const SITE_LOCALES = ["en", "pt-BR"] as const;
+const SITE_LOCALES = ["en", "pt-BR"] as const;
 export const SITE_THEME_COLOR_DARK = "#060608";
 export const SITE_THEME_COLOR_LIGHT = "#edf4fb";
 export const SITE_KEYWORDS = [

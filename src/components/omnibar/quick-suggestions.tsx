@@ -24,13 +24,13 @@ export function QuickSuggestions({ textareaRef }: QuickSuggestionsProps) {
   }
 
   return (
-    <div className="flex flex-wrap gap-2 px-5 pb-4">
+    <div className="flex flex-wrap gap-2 px-4 pb-4 md:px-5">
       {suggestionOptions.slice(0, 6).map((option, index) => (
         <button
           key={`${option.value}-${index}`}
           type="button"
           aria-pressed={highlightedSuggestionIndex === index}
-          className={`rounded-full px-3 py-1.5 text-sm ${
+          className={`inline-flex max-w-full min-w-0 items-center overflow-hidden rounded-full px-3 py-1.5 text-sm ${
             highlightedSuggestionIndex === index
               ? "theme-chip-active"
               : "theme-pill-muted"
@@ -50,13 +50,13 @@ export function QuickSuggestions({ textareaRef }: QuickSuggestionsProps) {
           }}
         >
           <span
-            className="font-mono text-[13px]"
+            className="min-w-0 truncate font-mono text-[13px]"
             style={{ color: "var(--text)" }}
           >
             {option.value}
           </span>
           {option.label !== option.value ? (
-            <span className="theme-text-dim ml-2 text-[12px]">
+            <span className="theme-text-dim ml-2 truncate text-[12px]">
               {option.label}
             </span>
           ) : null}

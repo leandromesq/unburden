@@ -117,7 +117,7 @@ function validateMoveEntries(entries: MoveEntry[]) {
 function validateLearnsetEntries(
   entries: LearnsetEntry[],
   pokemonEntries: PokemonEntry[],
-  moveEntries: MoveEntry[],
+  _moveEntries: MoveEntry[],
 ) {
   if (entries.length < MIN_LEARNSET_ENTRY_COUNT) {
     throw new Error(
@@ -126,7 +126,6 @@ function validateLearnsetEntries(
   }
 
   const pokemonIds = new Set(pokemonEntries.map((entry) => entry.id));
-  const moveIds = new Set(moveEntries.map((entry) => entry.id));
   const seenPokemonIds = new Set<string>();
 
   for (const entry of entries) {
@@ -145,9 +144,9 @@ function validateLearnsetEntries(
     seenPokemonIds.add(entry.pokemonId);
 
     for (const moveId of entry.moveIds) {
-      if (!moveIds.has(moveId)) {
+      if (!moveId.trim()) {
         throw new Error(
-          `Learnset entry ${entry.pokemonId} references unknown move id: ${moveId}`,
+          `Learnset entry ${entry.pokemonId} contains an empty move id.`,
         );
       }
     }

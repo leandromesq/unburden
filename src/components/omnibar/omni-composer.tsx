@@ -112,24 +112,24 @@ export function OmniComposer() {
   }, [calculationReady]);
 
   return (
-    <section className="mx-auto w-full max-w-7xl text-left">
-      <div className="grid gap-4 xl:grid-cols-[310px_minmax(0,1fr)_310px] xl:items-start">
-        <div className="order-2 xl:order-1">
+    <section className="mx-auto w-full min-w-0 max-w-7xl text-left">
+      <div className="grid min-w-0 gap-4 xl:grid-cols-[310px_minmax(0,1fr)_310px] xl:items-start">
+        <div className="order-2 min-w-0 xl:order-1">
           <PokemonSideSummary side="attacker" />
         </div>
-        <div className="order-1 xl:order-2">
-          <div className="mb-2 flex items-center justify-between gap-3">
-            <div className="flex items-center">
+        <div className="order-1 min-w-0 xl:order-2">
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-2 sm:gap-3">
+            <div className="flex min-w-0 items-center">
               <BugReportButton />
             </div>
-            <div className="flex items-center justify-end gap-1.5">
+            <div className="flex flex-wrap items-center justify-end gap-1.5">
               <button
                 type="button"
                 aria-expanded={modifiersOpen}
                 aria-controls={modifiersSectionId}
                 aria-label={dictionary.home.toggleModifiers}
                 onClick={() => setModifiersOpen((current) => !current)}
-                className={`flex h-8 items-center justify-center gap-1.5 rounded-full px-3 text-sm font-medium transition-all ${
+                className={`flex min-h-8 items-center justify-center gap-1 rounded-full px-2.5 py-1 text-[13px] leading-none font-medium whitespace-nowrap transition-all sm:gap-1.5 sm:px-3 sm:text-sm ${
                   modifiersOpen
                     ? "theme-icon-button-active"
                     : "theme-icon-button"
@@ -142,8 +142,8 @@ export function OmniComposer() {
               <HelpBubble />
             </div>
           </div>
-          <div className="relative">
-            <div className="theme-composer rounded-4xl">
+          <div className="relative min-w-0">
+            <div className="theme-composer min-w-0 rounded-4xl">
               <div className="theme-composer-top relative">
                 <OmniTextarea
                   textareaRef={textareaRef}
@@ -193,7 +193,7 @@ export function OmniComposer() {
             </div>
           ) : null}
         </div>
-        <div className="order-3 xl:order-3">
+        <div className="order-3 min-w-0 xl:order-3">
           <PokemonSideSummary side="defender" />
         </div>
       </div>

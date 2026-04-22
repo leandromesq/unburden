@@ -31,14 +31,14 @@ export function SummaryEmptyState({
   return (
     <aside
       data-testid={`${side}-summary`}
-      className="theme-panel rounded-[28px] p-5"
+      className="theme-panel min-w-0 overflow-hidden rounded-[28px] p-4 sm:p-5"
     >
       <div className="theme-text-faint text-xs font-semibold uppercase tracking-[0.24em]">
         {sideLabel}
       </div>
 
-      <div className="mt-3 flex items-center gap-3">
-        <div className="theme-subpanel-strong flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl p-2">
+      <div className="mt-3 flex min-w-0 items-start gap-3 sm:items-center">
+        <div className="theme-subpanel-strong flex h-18 w-18 shrink-0 items-center justify-center rounded-2xl p-2 sm:h-20 sm:w-20">
           <div className="theme-text-faint font-mono text-xs uppercase tracking-[0.2em]">
             —
           </div>

@@ -35,13 +35,13 @@ export function SummarySetActions({
   if (importedSet) {
     return (
       <div className="theme-divider mt-3 border-t pt-3">
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           {otherSets.length > 0 ? (
-            <div className="relative" ref={switchRef}>
+            <div className="relative max-w-full" ref={switchRef}>
               <button
                 type="button"
                 onClick={onToggleSwitch}
-                className="theme-chip flex items-center gap-1 rounded-full px-3 py-1 text-xs"
+                className="theme-chip inline-flex max-w-full items-center gap-1 rounded-full px-3 py-1 text-xs"
               >
                 {dictionary.summary.switch}
                 {switchOpen ? (
@@ -55,7 +55,7 @@ export function SummarySetActions({
                 )}
               </button>
               {switchOpen && (
-                <div className="theme-menu absolute right-0 bottom-full z-30 mb-1.5 min-w-40 overflow-hidden rounded-2xl p-1">
+                <div className="theme-menu absolute right-0 bottom-full z-30 mb-1.5 min-w-40 max-w-[calc(100vw-3rem)] overflow-hidden rounded-2xl p-1">
                   {otherSets.map((set) => (
                     <button
                       key={set.speciesId}
@@ -81,10 +81,8 @@ export function SummarySetActions({
                 </div>
               )}
             </div>
-          ) : (
-            <div />
-          )}
-          <div className="flex items-center gap-2">
+          ) : null}
+          <div className="flex flex-wrap items-center gap-2 sm:ml-auto sm:justify-end">
             {canSave && (
               <button
                 type="button"

@@ -52,7 +52,7 @@ function StatItem({
     natureEffect === "boost" ? "var(--accent-strong)" : "var(--text-dim)";
 
   return (
-    <div className="flex items-baseline gap-1.5">
+    <div className="flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
       <span className="theme-text-faint text-[10px] font-semibold uppercase tracking-[0.18em]">
         {label}
       </span>
@@ -134,7 +134,7 @@ export function SummaryStatsGrid({
           {showLevelLabel ? `Stats · Lv. ${level}` : "Base Stats"}
         </span>
       </div>
-      <div className="grid grid-cols-3 gap-x-2 gap-y-2.5">
+      <div className="grid grid-cols-2 gap-x-3 gap-y-2.5 sm:grid-cols-3">
         <StatItem label="HP" value={stats.hp} stage={stageBoosts.hp} />
         <StatItem
           label="Atk"

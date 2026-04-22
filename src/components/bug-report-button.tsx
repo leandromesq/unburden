@@ -107,7 +107,7 @@ export function BugReportButton() {
             setOpen(true);
           });
         }}
-        className="theme-icon-button flex h-8 items-center justify-center gap-1.5 rounded-full px-3 text-sm font-medium"
+        className="theme-icon-button flex min-h-8 items-center justify-center gap-1 rounded-full px-2.5 py-1 text-[13px] leading-none font-medium whitespace-nowrap sm:gap-1.5 sm:px-3 sm:text-sm"
       >
         <Bug aria-hidden="true" size={14} strokeWidth={1.9} />
         <span>{dictionary.bugReport.openButton}</span>

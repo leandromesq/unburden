@@ -1340,6 +1340,30 @@
     }
   },
   {
+    "id": "aromatisse",
+    "name": "Aromatisse",
+    "aliases": [
+      "aromatisse"
+    ],
+    "types": [
+      "Fairy"
+    ],
+    "abilities": [
+      "Healer",
+      "Aroma Veil"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "aromatisse",
+    "baseStats": {
+      "hp": 101,
+      "atk": 72,
+      "def": 72,
+      "spa": 99,
+      "spd": 89,
+      "spe": 29
+    }
+  },
+  {
     "id": "arrokuda",
     "name": "Arrokuda",
     "aliases": [
@@ -1470,6 +1494,31 @@
       "spe": 50
     },
     "defaultFormOf": "audino"
+  },
+  {
+    "id": "aurorus",
+    "name": "Aurorus",
+    "aliases": [
+      "aurorus"
+    ],
+    "types": [
+      "Rock",
+      "Ice"
+    ],
+    "abilities": [
+      "Refrigerate",
+      "Snow Warning"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "aurorus",
+    "baseStats": {
+      "hp": 123,
+      "atk": 77,
+      "def": 72,
+      "spa": 99,
+      "spd": 92,
+      "spe": 58
+    }
   },
   {
     "id": "avalugg",
@@ -3088,6 +3137,29 @@
     }
   },
   {
+    "id": "castform",
+    "name": "Castform",
+    "aliases": [
+      "castform"
+    ],
+    "types": [
+      "Normal"
+    ],
+    "abilities": [
+      "Forecast"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "castform",
+    "baseStats": {
+      "hp": 70,
+      "atk": 70,
+      "def": 70,
+      "spa": 70,
+      "spd": 70,
+      "spe": 70
+    }
+  },
+  {
     "id": "ceruledge",
     "name": "Ceruledge",
     "aliases": [
@@ -4030,6 +4102,29 @@
       "spa": 90,
       "spd": 72,
       "spe": 108
+    }
+  },
+  {
+    "id": "cofagrigus",
+    "name": "Cofagrigus",
+    "aliases": [
+      "cofagrigus"
+    ],
+    "types": [
+      "Ghost"
+    ],
+    "abilities": [
+      "Mummy"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "cofagrigus",
+    "baseStats": {
+      "hp": 58,
+      "atk": 50,
+      "def": 145,
+      "spa": 95,
+      "spd": 105,
+      "spe": 30
     }
   },
   {
@@ -5390,6 +5485,32 @@
     "defaultFormOf": "diancie"
   },
   {
+    "id": "diggersby",
+    "name": "Diggersby",
+    "aliases": [
+      "diggersby"
+    ],
+    "types": [
+      "Normal",
+      "Ground"
+    ],
+    "abilities": [
+      "Pickup",
+      "Cheek Pouch",
+      "Huge Power"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "diggersby",
+    "baseStats": {
+      "hp": 85,
+      "atk": 56,
+      "def": 77,
+      "spa": 50,
+      "spd": 77,
+      "spe": 78
+    }
+  },
+  {
     "id": "diglett",
     "name": "Diglett",
     "aliases": [
@@ -6708,6 +6829,31 @@
     "defaultFormOf": "emboar"
   },
   {
+    "id": "emolga",
+    "name": "Emolga",
+    "aliases": [
+      "emolga"
+    ],
+    "types": [
+      "Electric",
+      "Flying"
+    ],
+    "abilities": [
+      "Static",
+      "Motor Drive"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "emolga",
+    "baseStats": {
+      "hp": 55,
+      "atk": 75,
+      "def": 60,
+      "spa": 75,
+      "spd": 60,
+      "spe": 103
+    }
+  },
+  {
     "id": "empoleon",
     "name": "Empoleon",
     "aliases": [
@@ -8007,6 +8153,29 @@
     }
   },
   {
+    "id": "furfrou",
+    "name": "Furfrou",
+    "aliases": [
+      "furfrou"
+    ],
+    "types": [
+      "Normal"
+    ],
+    "abilities": [
+      "Fur Coat"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "furfrou",
+    "baseStats": {
+      "hp": 75,
+      "atk": 80,
+      "def": 60,
+      "spa": 65,
+      "spd": 90,
+      "spe": 102
+    }
+  },
+  {
     "id": "furret",
     "name": "Furret",
     "aliases": [
@@ -8136,6 +8305,31 @@
       "spa": 97,
       "spd": 60,
       "spe": 108
+    }
+  },
+  {
+    "id": "garbodor",
+    "name": "Garbodor",
+    "aliases": [
+      "garbodor"
+    ],
+    "types": [
+      "Poison"
+    ],
+    "abilities": [
+      "Stench",
+      "Weak Armor",
+      "Aftermath"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "garbodor",
+    "baseStats": {
+      "hp": 80,
+      "atk": 95,
+      "def": 82,
+      "spa": 60,
+      "spd": 82,
+      "spe": 75
     }
   },
   {
@@ -9269,6 +9463,32 @@
     }
   },
   {
+    "id": "gourgeist",
+    "name": "Gourgeist",
+    "aliases": [
+      "gourgeist"
+    ],
+    "types": [
+      "Ghost",
+      "Grass"
+    ],
+    "abilities": [
+      "Pickup",
+      "Frisk",
+      "Insomnia"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "gourgeist",
+    "baseStats": {
+      "hp": 65,
+      "atk": 90,
+      "def": 122,
+      "spa": 58,
+      "spd": 75,
+      "spe": 84
+    }
+  },
+  {
     "id": "grafaiai",
     "name": "Grafaiai",
     "aliases": [
@@ -10255,6 +10475,32 @@
       "spe": 67
     },
     "defaultFormOf": "heatran"
+  },
+  {
+    "id": "heliolisk",
+    "name": "Heliolisk",
+    "aliases": [
+      "heliolisk"
+    ],
+    "types": [
+      "Electric",
+      "Normal"
+    ],
+    "abilities": [
+      "Dry Skin",
+      "Sand Veil",
+      "Solar Power"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "heliolisk",
+    "baseStats": {
+      "hp": 62,
+      "atk": 55,
+      "def": 52,
+      "spa": 109,
+      "spd": 94,
+      "spe": 109
+    }
   },
   {
     "id": "heracross",
@@ -12436,6 +12682,31 @@
     }
   },
   {
+    "id": "liepard",
+    "name": "Liepard",
+    "aliases": [
+      "liepard"
+    ],
+    "types": [
+      "Dark"
+    ],
+    "abilities": [
+      "Limber",
+      "Unburden",
+      "Prankster"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "liepard",
+    "baseStats": {
+      "hp": 64,
+      "atk": 88,
+      "def": 50,
+      "spa": 88,
+      "spd": 50,
+      "spe": 106
+    }
+  },
+  {
     "id": "lilligant",
     "name": "Lilligant",
     "aliases": [
@@ -13059,6 +13330,31 @@
     }
   },
   {
+    "id": "machamp",
+    "name": "Machamp",
+    "aliases": [
+      "machamp"
+    ],
+    "types": [
+      "Fighting"
+    ],
+    "abilities": [
+      "Guts",
+      "No Guard",
+      "Steadfast"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "machamp",
+    "baseStats": {
+      "hp": 90,
+      "atk": 130,
+      "def": 80,
+      "spa": 65,
+      "spd": 85,
+      "spe": 55
+    }
+  },
+  {
     "id": "magby",
     "name": "Magby",
     "aliases": [
@@ -13187,6 +13483,38 @@
       "spa": 130,
       "spd": 115,
       "spe": 65
+    },
+    "defaultFormOf": "magearna"
+  },
+  {
+    "id": "magearnaoriginalmega",
+    "name": "Magearna-Original-Mega",
+    "aliases": [
+      "magearna mega original mega",
+      "magearna original mega",
+      "magearna-original-mega",
+      "magearnamegaoriginalmega",
+      "magearnaoriginalmega",
+      "mega magearna original mega",
+      "megamagearnaoriginalmega"
+    ],
+    "types": [
+      "Steel",
+      "Fairy"
+    ],
+    "abilities": [
+      "Soul-Heart"
+    ],
+    "isMega": true,
+    "requiredItem": "Magearnite",
+    "baseSpeciesId": "magearna",
+    "baseStats": {
+      "hp": 80,
+      "atk": 125,
+      "def": 115,
+      "spa": 170,
+      "spd": 115,
+      "spe": 95
     },
     "defaultFormOf": "magearna"
   },
@@ -14078,6 +14406,70 @@
     "defaultFormOf": "meowstic"
   },
   {
+    "id": "meowsticfmega",
+    "name": "Meowstic-F-Mega",
+    "aliases": [
+      "mega meowstic f mega",
+      "megameowsticfmega",
+      "meowstic f mega",
+      "meowstic mega f mega",
+      "meowstic-f-mega",
+      "meowsticfmega",
+      "meowsticmegafmega"
+    ],
+    "types": [
+      "Psychic"
+    ],
+    "abilities": [
+      "Keen Eye",
+      "Infiltrator",
+      "Competitive"
+    ],
+    "isMega": true,
+    "requiredItem": "Meowsticite",
+    "baseSpeciesId": "meowstic",
+    "baseStats": {
+      "hp": 74,
+      "atk": 48,
+      "def": 76,
+      "spa": 143,
+      "spd": 101,
+      "spe": 124
+    },
+    "defaultFormOf": "meowstic"
+  },
+  {
+    "id": "meowsticmmega",
+    "name": "Meowstic-M-Mega",
+    "aliases": [
+      "mega meowstic m mega",
+      "megameowsticmmega",
+      "meowstic m mega",
+      "meowstic mega m mega",
+      "meowstic-m-mega",
+      "meowsticmegammega",
+      "meowsticmmega"
+    ],
+    "types": [
+      "Psychic"
+    ],
+    "abilities": [
+      "Trace"
+    ],
+    "isMega": true,
+    "requiredItem": "Meowsticite",
+    "baseSpeciesId": "meowstic",
+    "baseStats": {
+      "hp": 74,
+      "atk": 48,
+      "def": 76,
+      "spa": 143,
+      "spd": 101,
+      "spe": 124
+    },
+    "defaultFormOf": "meowstic"
+  },
+  {
     "id": "meowth",
     "name": "Meowth",
     "aliases": [
@@ -14871,6 +15263,34 @@
       "spe": 97
     },
     "defaultFormOf": "morpeko"
+  },
+  {
+    "id": "mrrime",
+    "name": "Mr. Rime",
+    "aliases": [
+      "mr rime",
+      "mr. rime",
+      "mrrime"
+    ],
+    "types": [
+      "Ice",
+      "Psychic"
+    ],
+    "abilities": [
+      "Tangled Feet",
+      "Screen Cleaner",
+      "Ice Body"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "mrrime",
+    "baseStats": {
+      "hp": 80,
+      "atk": 85,
+      "def": 75,
+      "spa": 110,
+      "spd": 100,
+      "spe": 70
+    }
   },
   {
     "id": "mudbray",
@@ -16130,6 +16550,32 @@
     }
   },
   {
+    "id": "pangoro",
+    "name": "Pangoro",
+    "aliases": [
+      "pangoro"
+    ],
+    "types": [
+      "Fighting",
+      "Dark"
+    ],
+    "abilities": [
+      "Iron Fist",
+      "Mold Breaker",
+      "Scrappy"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "pangoro",
+    "baseStats": {
+      "hp": 95,
+      "atk": 124,
+      "def": 78,
+      "spa": 69,
+      "spd": 71,
+      "spe": 58
+    }
+  },
+  {
     "id": "passimian",
     "name": "Passimian",
     "aliases": [
@@ -16151,6 +16597,31 @@
       "spa": 40,
       "spd": 60,
       "spe": 80
+    }
+  },
+  {
+    "id": "patrat",
+    "name": "Patrat",
+    "aliases": [
+      "patrat"
+    ],
+    "types": [
+      "Normal"
+    ],
+    "abilities": [
+      "Run Away",
+      "Keen Eye",
+      "Analytic"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "patrat",
+    "baseStats": {
+      "hp": 45,
+      "atk": 55,
+      "def": 39,
+      "spa": 35,
+      "spd": 39,
+      "spe": 42
     }
   },
   {
@@ -17166,6 +17637,35 @@
     }
   },
   {
+    "id": "poltchageistartisan",
+    "name": "Poltchageist-Artisan",
+    "aliases": [
+      "poltchageist",
+      "poltchageist artisan",
+      "poltchageist-artisan",
+      "poltchageistartisan"
+    ],
+    "types": [
+      "Grass",
+      "Ghost"
+    ],
+    "abilities": [
+      "Hospitality",
+      "Heatproof"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "poltchageist",
+    "baseStats": {
+      "hp": 40,
+      "atk": 45,
+      "def": 45,
+      "spa": 74,
+      "spd": 54,
+      "spe": 50
+    },
+    "defaultFormOf": "poltchageist"
+  },
+  {
     "id": "polteageist",
     "name": "Polteageist",
     "aliases": [
@@ -17188,6 +17688,34 @@
       "spd": 114,
       "spe": 70
     }
+  },
+  {
+    "id": "polteageistantique",
+    "name": "Polteageist-Antique",
+    "aliases": [
+      "polteageist",
+      "polteageist antique",
+      "polteageist-antique",
+      "polteageistantique"
+    ],
+    "types": [
+      "Ghost"
+    ],
+    "abilities": [
+      "Weak Armor",
+      "Cursed Body"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "polteageist",
+    "baseStats": {
+      "hp": 60,
+      "atk": 65,
+      "def": 65,
+      "spa": 134,
+      "spd": 114,
+      "spe": 70
+    },
+    "defaultFormOf": "polteageist"
   },
   {
     "id": "poochyena",
@@ -18557,6 +19085,32 @@
     }
   },
   {
+    "id": "roserade",
+    "name": "Roserade",
+    "aliases": [
+      "roserade"
+    ],
+    "types": [
+      "Grass",
+      "Poison"
+    ],
+    "abilities": [
+      "Natural Cure",
+      "Poison Point",
+      "Technician"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "roserade",
+    "baseStats": {
+      "hp": 60,
+      "atk": 70,
+      "def": 65,
+      "spa": 125,
+      "spd": 105,
+      "spe": 90
+    }
+  },
+  {
     "id": "rotom",
     "name": "Rotom",
     "aliases": [
@@ -18769,6 +19323,30 @@
       "spa": 37,
       "spd": 50,
       "spe": 60
+    }
+  },
+  {
+    "id": "runerigus",
+    "name": "Runerigus",
+    "aliases": [
+      "runerigus"
+    ],
+    "types": [
+      "Ground",
+      "Ghost"
+    ],
+    "abilities": [
+      "Wandering Spirit"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "runerigus",
+    "baseStats": {
+      "hp": 58,
+      "atk": 95,
+      "def": 145,
+      "spa": 50,
+      "spd": 105,
+      "spe": 30
     }
   },
   {
@@ -20156,6 +20734,78 @@
     }
   },
   {
+    "id": "simipour",
+    "name": "Simipour",
+    "aliases": [
+      "simipour"
+    ],
+    "types": [
+      "Water"
+    ],
+    "abilities": [
+      "Gluttony",
+      "Torrent"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "simipour",
+    "baseStats": {
+      "hp": 75,
+      "atk": 98,
+      "def": 63,
+      "spa": 98,
+      "spd": 63,
+      "spe": 101
+    }
+  },
+  {
+    "id": "simisage",
+    "name": "Simisage",
+    "aliases": [
+      "simisage"
+    ],
+    "types": [
+      "Grass"
+    ],
+    "abilities": [
+      "Gluttony",
+      "Overgrow"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "simisage",
+    "baseStats": {
+      "hp": 75,
+      "atk": 98,
+      "def": 63,
+      "spa": 98,
+      "spd": 63,
+      "spe": 101
+    }
+  },
+  {
+    "id": "simisear",
+    "name": "Simisear",
+    "aliases": [
+      "simisear"
+    ],
+    "types": [
+      "Fire"
+    ],
+    "abilities": [
+      "Gluttony",
+      "Blaze"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "simisear",
+    "baseStats": {
+      "hp": 75,
+      "atk": 98,
+      "def": 63,
+      "spa": 98,
+      "spd": 63,
+      "spe": 101
+    }
+  },
+  {
     "id": "sinistcha",
     "name": "Sinistcha",
     "aliases": [
@@ -20181,6 +20831,35 @@
     }
   },
   {
+    "id": "sinistchamasterpiece",
+    "name": "Sinistcha-Masterpiece",
+    "aliases": [
+      "sinistcha",
+      "sinistcha masterpiece",
+      "sinistcha-masterpiece",
+      "sinistchamasterpiece"
+    ],
+    "types": [
+      "Grass",
+      "Ghost"
+    ],
+    "abilities": [
+      "Hospitality",
+      "Heatproof"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "sinistcha",
+    "baseStats": {
+      "hp": 71,
+      "atk": 60,
+      "def": 106,
+      "spa": 121,
+      "spd": 80,
+      "spe": 70
+    },
+    "defaultFormOf": "sinistcha"
+  },
+  {
     "id": "sinistea",
     "name": "Sinistea",
     "aliases": [
@@ -20203,6 +20882,34 @@
       "spd": 54,
       "spe": 50
     }
+  },
+  {
+    "id": "sinisteaantique",
+    "name": "Sinistea-Antique",
+    "aliases": [
+      "sinistea",
+      "sinistea antique",
+      "sinistea-antique",
+      "sinisteaantique"
+    ],
+    "types": [
+      "Ghost"
+    ],
+    "abilities": [
+      "Weak Armor",
+      "Cursed Body"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "sinistea",
+    "baseStats": {
+      "hp": 40,
+      "atk": 45,
+      "def": 45,
+      "spa": 74,
+      "spd": 54,
+      "spe": 50
+    },
+    "defaultFormOf": "sinistea"
   },
   {
     "id": "skarmory",
@@ -20757,6 +21464,30 @@
       "spa": 70,
       "spd": 40,
       "spe": 20
+    }
+  },
+  {
+    "id": "slurpuff",
+    "name": "Slurpuff",
+    "aliases": [
+      "slurpuff"
+    ],
+    "types": [
+      "Fairy"
+    ],
+    "abilities": [
+      "Sweet Veil",
+      "Unburden"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "slurpuff",
+    "baseStats": {
+      "hp": 82,
+      "atk": 80,
+      "def": 86,
+      "spa": 85,
+      "spd": 75,
+      "spe": 72
     }
   },
   {
@@ -21716,6 +22447,32 @@
     }
   },
   {
+    "id": "stunfisk",
+    "name": "Stunfisk",
+    "aliases": [
+      "stunfisk"
+    ],
+    "types": [
+      "Ground",
+      "Electric"
+    ],
+    "abilities": [
+      "Static",
+      "Limber",
+      "Sand Veil"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "stunfisk",
+    "baseStats": {
+      "hp": 109,
+      "atk": 66,
+      "def": 84,
+      "spa": 81,
+      "spd": 99,
+      "spe": 32
+    }
+  },
+  {
     "id": "stunky",
     "name": "Stunky",
     "aliases": [
@@ -22197,6 +22954,39 @@
     }
   },
   {
+    "id": "tatsugiricurlymega",
+    "name": "Tatsugiri-Curly-Mega",
+    "aliases": [
+      "mega tatsugiri curly mega",
+      "megatatsugiricurlymega",
+      "tatsugiri curly mega",
+      "tatsugiri mega curly mega",
+      "tatsugiri-curly-mega",
+      "tatsugiricurlymega",
+      "tatsugirimegacurlymega"
+    ],
+    "types": [
+      "Dragon",
+      "Water"
+    ],
+    "abilities": [
+      "Commander",
+      "Storm Drain"
+    ],
+    "isMega": true,
+    "requiredItem": "Tatsugirinite",
+    "baseSpeciesId": "tatsugiri",
+    "baseStats": {
+      "hp": 68,
+      "atk": 65,
+      "def": 90,
+      "spa": 135,
+      "spd": 125,
+      "spe": 92
+    },
+    "defaultFormOf": "tatsugiri"
+  },
+  {
     "id": "tatsugiridroopy",
     "name": "Tatsugiri-Droopy",
     "aliases": [
@@ -22226,6 +23016,39 @@
     "defaultFormOf": "tatsugiri"
   },
   {
+    "id": "tatsugiridroopymega",
+    "name": "Tatsugiri-Droopy-Mega",
+    "aliases": [
+      "mega tatsugiri droopy mega",
+      "megatatsugiridroopymega",
+      "tatsugiri droopy mega",
+      "tatsugiri mega droopy mega",
+      "tatsugiri-droopy-mega",
+      "tatsugiridroopymega",
+      "tatsugirimegadroopymega"
+    ],
+    "types": [
+      "Dragon",
+      "Water"
+    ],
+    "abilities": [
+      "Commander",
+      "Storm Drain"
+    ],
+    "isMega": true,
+    "requiredItem": "Tatsugirinite",
+    "baseSpeciesId": "tatsugiri",
+    "baseStats": {
+      "hp": 68,
+      "atk": 65,
+      "def": 90,
+      "spa": 135,
+      "spd": 125,
+      "spe": 92
+    },
+    "defaultFormOf": "tatsugiri"
+  },
+  {
     "id": "tatsugiristretchy",
     "name": "Tatsugiri-Stretchy",
     "aliases": [
@@ -22251,6 +23074,39 @@
       "spa": 120,
       "spd": 95,
       "spe": 82
+    },
+    "defaultFormOf": "tatsugiri"
+  },
+  {
+    "id": "tatsugiristretchymega",
+    "name": "Tatsugiri-Stretchy-Mega",
+    "aliases": [
+      "mega tatsugiri stretchy mega",
+      "megatatsugiristretchymega",
+      "tatsugiri mega stretchy mega",
+      "tatsugiri stretchy mega",
+      "tatsugiri-stretchy-mega",
+      "tatsugirimegastretchymega",
+      "tatsugiristretchymega"
+    ],
+    "types": [
+      "Dragon",
+      "Water"
+    ],
+    "abilities": [
+      "Commander",
+      "Storm Drain"
+    ],
+    "isMega": true,
+    "requiredItem": "Tatsugirinite",
+    "baseSpeciesId": "tatsugiri",
+    "baseStats": {
+      "hp": 68,
+      "atk": 65,
+      "def": 90,
+      "spa": 135,
+      "spd": 125,
+      "spe": 92
     },
     "defaultFormOf": "tatsugiri"
   },
@@ -23465,6 +24321,31 @@
     "defaultFormOf": "tyranitar"
   },
   {
+    "id": "tyrantrum",
+    "name": "Tyrantrum",
+    "aliases": [
+      "tyrantrum"
+    ],
+    "types": [
+      "Rock",
+      "Dragon"
+    ],
+    "abilities": [
+      "Strong Jaw",
+      "Rock Head"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "tyrantrum",
+    "baseStats": {
+      "hp": 82,
+      "atk": 121,
+      "def": 119,
+      "spa": 69,
+      "spd": 59,
+      "spe": 71
+    }
+  },
+  {
     "id": "tyrogue",
     "name": "Tyrogue",
     "aliases": [
@@ -23665,6 +24546,31 @@
       "spa": 75,
       "spd": 130,
       "spe": 95
+    }
+  },
+  {
+    "id": "vanilluxe",
+    "name": "Vanilluxe",
+    "aliases": [
+      "vanilluxe"
+    ],
+    "types": [
+      "Ice"
+    ],
+    "abilities": [
+      "Ice Body",
+      "Snow Warning",
+      "Weak Armor"
+    ],
+    "isMega": false,
+    "baseSpeciesId": "vanilluxe",
+    "baseStats": {
+      "hp": 71,
+      "atk": 95,
+      "def": 85,
+      "spa": 110,
+      "spd": 95,
+      "spe": 79
     }
   },
   {
@@ -24813,7 +25719,11 @@
     "id": "yanmega",
     "name": "Yanmega",
     "aliases": [
-      "yanmega"
+      "mega yanmega",
+      "megayanmega",
+      "yanmega",
+      "yanmega mega",
+      "yanmegamega"
     ],
     "types": [
       "Bug",
@@ -24824,7 +25734,7 @@
       "Tinted Lens",
       "Frisk"
     ],
-    "isMega": false,
+    "isMega": true,
     "baseSpeciesId": "yanmega",
     "baseStats": {
       "hp": 86,

@@ -128,7 +128,7 @@ export function OmniTextarea({
   }, [activeSuggestion, caretAtEnd]);
 
   return (
-    <div className="relative text-left">
+    <div className="relative min-w-0 text-left">
       <textarea
         ref={ref}
         autoFocus
@@ -138,7 +138,7 @@ export function OmniTextarea({
         spellCheck={false}
         placeholder="politoed !muddy-water @mystic-water x incineroar ~rain"
         aria-keyshortcuts="Alt+K"
-        className="theme-input relative z-10 block min-h-22 w-full resize-none border-0 bg-transparent px-5 py-4 text-left font-mono text-lg leading-8 tracking-[-0.02em] outline-none md:text-xl"
+        className="theme-input relative z-10 block min-h-20 w-full min-w-0 resize-none border-0 bg-transparent px-4 py-3 text-left font-mono text-base leading-7 tracking-[-0.02em] outline-none md:min-h-22 md:px-5 md:py-4 md:text-xl md:leading-8"
         onChange={(event) =>
           setInput(
             event.target.value,

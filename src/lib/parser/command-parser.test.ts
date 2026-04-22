@@ -161,6 +161,17 @@ describe("parseCommand", () => {
     });
   });
 
+  test("parses legal live-roster species like Heliolisk", () => {
+    const result = parseCommand("heliolisk !thunderbolt x incineroar");
+
+    expect(result.parsed).toMatchObject({
+      attacker: "Heliolisk",
+      move: "Thunderbolt",
+      defender: "Incineroar",
+    });
+    expect(result.issues).toHaveLength(0);
+  });
+
   test("rejects low-confidence unresolved inputs", () => {
     const result = parseCommand("zzzzzz !muddy-water x incineroar");
 

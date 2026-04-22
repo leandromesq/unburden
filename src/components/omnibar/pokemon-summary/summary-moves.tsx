@@ -26,7 +26,7 @@ export function SummaryMoves({
       <div className="theme-text-faint mb-1.5 text-[10px] font-semibold uppercase tracking-[0.18em]">
         Moves
       </div>
-      <div className="grid grid-cols-2 gap-1.5">
+      <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
         {(importedSet.moves ?? []).map((moveName) => {
           const resolvedEntry =
             moveById.get(normalizeId(moveName)) ??

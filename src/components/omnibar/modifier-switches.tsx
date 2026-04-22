@@ -193,11 +193,11 @@ function StageControl({
           {value > 0 ? `+${value}` : value}
         </div>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex min-w-0 items-center gap-2 sm:gap-3">
         <button
           type="button"
           disabled={decrementDisabled}
-          className={`h-9 w-9 shrink-0 rounded-full ${
+          className={`h-8 w-8 shrink-0 rounded-full sm:h-9 sm:w-9 ${
             decrementDisabled
               ? "theme-chip-disabled cursor-not-allowed"
               : "theme-chip"
@@ -222,7 +222,7 @@ function StageControl({
               accentColor: "var(--accent)",
             }}
           />
-          <div className="theme-text-dim mt-2 flex justify-between font-mono text-[11px]">
+          <div className="theme-text-dim mt-2 flex justify-between font-mono text-[10px] sm:text-[11px]">
             <span>-6</span>
             <span>0</span>
             <span>+6</span>
@@ -231,7 +231,7 @@ function StageControl({
         <button
           type="button"
           disabled={incrementDisabled}
-          className={`h-9 w-9 shrink-0 rounded-full ${
+          className={`h-8 w-8 shrink-0 rounded-full sm:h-9 sm:w-9 ${
             incrementDisabled
               ? "theme-chip-disabled cursor-not-allowed"
               : "theme-chip"
@@ -241,7 +241,7 @@ function StageControl({
           +
         </button>
       </div>
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+      <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="theme-text-dim min-w-0 flex-1 text-sm leading-5">
           {summary}
         </div>
@@ -575,8 +575,8 @@ export function ModifierSwitches() {
   };
 
   return (
-    <div className="px-5 py-5">
-      <section className="theme-panel mb-5 rounded-[28px] p-4">
+    <div className="min-w-0 px-4 py-4 md:px-5 md:py-5">
+      <section className="theme-panel mb-5 min-w-0 rounded-[28px] p-4">
         <SectionLabel>{dictionary.modifierSwitches.global}</SectionLabel>
         <div className="grid gap-3 md:grid-cols-3">
           <TokenGroup
@@ -602,7 +602,7 @@ export function ModifierSwitches() {
           />
         </div>
       </section>
-      <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <div className="grid min-w-0 gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <SideColumn
           side="attacker"
           title={dictionary.modifierSwitches.attacker}

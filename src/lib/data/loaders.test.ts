@@ -26,6 +26,13 @@ describe("champions species data", () => {
     expect(legalIds.has("alakazam")).toBe(true);
   });
 
+  test("includes live Regulation M-A additions like Heliolisk in legal species data", () => {
+    const legalIds = new Set(legalPokemonData.map((pokemon) => pokemon.id));
+
+    expect(pokemonById.get("heliolisk")?.name).toBe("Heliolisk");
+    expect(legalIds.has("heliolisk")).toBe(true);
+  });
+
   test("includes the full legal Champions item pool instead of only meta items", () => {
     expect(itemDisplayById.get("softsand")).toBe("Soft Sand");
     expect(itemDisplayById.get("occaberry")).toBe("Occa Berry");
