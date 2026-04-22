@@ -24,21 +24,21 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://unburdenvgc.com"),
-  title: "Unburden",
+  title: "Unburden VGC",
   description: "Fast VGC damage calculation in a chat-like composer.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Unburden",
+    title: "Unburden VGC",
     description: "Fast VGC damage calculation in a chat-like composer.",
     url: "https://unburdenvgc.com",
-    siteName: "Unburden",
+    siteName: "Unburden VGC",
     type: "website",
   },
   twitter: {
-    card: "summary",
-    title: "Unburden",
+    card: "summary_large_image",
+    title: "Unburden VGC",
     description: "Fast VGC damage calculation in a chat-like composer.",
   },
 };
