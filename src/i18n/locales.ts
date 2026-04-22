@@ -2,7 +2,10 @@ export const APP_LOCALES = ["en", "pt-BR"] as const;
 export type AppLocale = (typeof APP_LOCALES)[number];
 
 export const DEFAULT_APP_LOCALE: AppLocale = "pt-BR";
-export const LOCALE_STORAGE_KEY = "omniboost-locale";
+export {
+  LOCALE_STORAGE_KEY,
+  LEGACY_LOCALE_STORAGE_KEYS,
+} from "@/lib/persistence/storage-keys";
 
 function isAppLocale(
   value: string | null | undefined,

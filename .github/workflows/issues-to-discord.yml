@@ -34,7 +34,7 @@ jobs:
 
           payload = {
               "content": (
-                  f"New Omniboost bug report: issue #{os.environ['ISSUE_NUMBER']}\n"
+                  f"New Unburden bug report: issue #{os.environ['ISSUE_NUMBER']}\n"
                   f"**{os.environ['ISSUE_TITLE']}**\n"
                   f"{os.environ['ISSUE_URL']}"
               )

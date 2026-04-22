@@ -21,13 +21,13 @@ describe("reportBug", () => {
 
   beforeEach(() => {
     process.env.GITHUB_BUG_REPORT_TOKEN = "github-token";
-    process.env.GITHUB_BUG_REPORT_REPO = "leandromesq/omniboost-issues";
+    process.env.GITHUB_BUG_REPORT_REPO = "leandromesq/unburden-issues";
     resetBugReportAbuseGuard();
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
       json: jest.fn().mockResolvedValue({
         number: 42,
-        html_url: "https://github.com/leandromesq/omniboost-issues/issues/42",
+        html_url: "https://github.com/leandromesq/unburden-issues/issues/42",
       }),
     } as unknown as Response);
   });
@@ -74,7 +74,7 @@ describe("reportBug", () => {
       "Mega toggle flickers the summary sprite when I switch forms quickly.",
     );
     formData.set("prompt", "charizard-mega-y !heat-wave x tinkaton");
-    formData.set("pageUrl", "https://omniboost.app/");
+    formData.set("pageUrl", "https://unburdenvgc.com/");
     formData.set("userAgent", "Jest Browser");
     formData.set("strictMode", "off");
     formData.set("locale", "en");
@@ -84,10 +84,10 @@ describe("reportBug", () => {
     expect(result).toEqual({
       status: "success",
       message: "Bug report filed as issue #42.",
-      issueUrl: "https://github.com/leandromesq/omniboost-issues/issues/42",
+      issueUrl: "https://github.com/leandromesq/unburden-issues/issues/42",
     });
     expect(global.fetch).toHaveBeenCalledWith(
-      "https://api.github.com/repos/leandromesq/omniboost-issues/issues",
+      "https://api.github.com/repos/leandromesq/unburden-issues/issues",
       expect.objectContaining({
         method: "POST",
         headers: expect.objectContaining({

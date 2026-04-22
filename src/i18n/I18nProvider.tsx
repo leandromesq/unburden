@@ -12,9 +12,14 @@ import { getDictionary } from "@/i18n/messages";
 import {
   coerceLocale,
   DEFAULT_APP_LOCALE,
+  LEGACY_LOCALE_STORAGE_KEYS,
   LOCALE_STORAGE_KEY,
   type AppLocale,
 } from "@/i18n/locales";
+import {
+  matchesStorageKey,
+  readStorageValue,
+} from "@/lib/persistence/storage-keys";
 import type { AppDictionary } from "@/i18n/types";
 
 interface I18nContextValue {
@@ -53,7 +58,7 @@ function readLocaleSnapshot(fallbackLocale: AppLocale): AppLocale {
   }
 
   return coerceLocale(
-    window.localStorage.getItem(LOCALE_STORAGE_KEY) ??
+    readStorageValue(LOCALE_STORAGE_KEY, LEGACY_LOCALE_STORAGE_KEYS) ??
       document.documentElement.lang,
   );
 }
@@ -62,7 +67,13 @@ function subscribeToLocale(listener: () => void) {
   localeListeners.add(listener);
 
   const handleStorage = (event: StorageEvent) => {
-    if (event.key !== LOCALE_STORAGE_KEY) {
+    if (
+      !matchesStorageKey(
+        event.key,
+        LOCALE_STORAGE_KEY,
+        LEGACY_LOCALE_STORAGE_KEYS,
+      )
+    ) {
       return;
     }
 

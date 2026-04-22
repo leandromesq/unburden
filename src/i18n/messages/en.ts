@@ -45,7 +45,7 @@ export const enDictionary: AppDictionary = {
     title: "Proprietary Software",
     copyright: "Copyright © Leandro Mesquita. All rights reserved.",
     proprietary:
-      "Omniboost is proprietary software and is not open source. Outside GitHub's standard platform functionality and applicable platform terms, no permission is granted to copy, redistribute, sublicense, or create derivative works without prior written approval.",
+      "Unburden is proprietary software and is not open source. Outside GitHub's standard platform functionality and applicable platform terms, no permission is granted to copy, redistribute, sublicense, or create derivative works without prior written approval.",
     thirdParty:
       "Pokemon, Pokemon Champions, and related names, data, and artwork belong to their respective owners. Third-party materials remain subject to their own rights and terms.",
   },

@@ -17,7 +17,7 @@ interface ReportBugState {
 }
 
 const APP_BUG_REPORT_MARKER = "<!-- source: app-bug-report -->";
-const DEFAULT_GITHUB_BUG_REPORT_REPO = "leandromesq/omniboost-issues";
+const DEFAULT_GITHUB_BUG_REPORT_REPO = "leandromesq/unburden-issues";
 const HONEYPOT_FIELD_NAME = "teamName";
 
 function getClientAddressKey(headersList: Headers) {

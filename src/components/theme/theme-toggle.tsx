@@ -4,10 +4,14 @@ import { useLayoutEffect, useSyncExternalStore } from "react";
 import { Moon, SunMedium } from "lucide-react";
 
 import { useI18n } from "@/i18n/I18nProvider";
+import {
+  LEGACY_THEME_STORAGE_KEYS,
+  matchesStorageKey,
+  readStorageValue,
+  THEME_STORAGE_KEY,
+} from "@/lib/persistence/storage-keys";
 
 type ThemeMode = "dark" | "light";
-
-const STORAGE_KEY = "omniboost-theme";
 const themeListeners = new Set<() => void>();
 
 function emitThemeChange() {
@@ -22,7 +26,10 @@ function getThemeSnapshot(): ThemeMode {
   }
 
   if (typeof window !== "undefined") {
-    const storedTheme = window.localStorage.getItem(STORAGE_KEY);
+    const storedTheme = readStorageValue(
+      THEME_STORAGE_KEY,
+      LEGACY_THEME_STORAGE_KEYS,
+    );
     if (storedTheme === "light" || storedTheme === "dark") {
       return storedTheme;
     }
@@ -35,14 +42,20 @@ function applyTheme(nextTheme: ThemeMode) {
   document.documentElement.dataset.theme = nextTheme;
   document.documentElement.style.colorScheme = nextTheme;
   document.body.dataset.theme = nextTheme;
-  window.localStorage.setItem(STORAGE_KEY, nextTheme);
+  window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
 }
 
 function subscribeToTheme(listener: () => void) {
   themeListeners.add(listener);
 
   const handleStorage = (event: StorageEvent) => {
-    if (event.key !== STORAGE_KEY) {
+    if (
+      !matchesStorageKey(
+        event.key,
+        THEME_STORAGE_KEY,
+        LEGACY_THEME_STORAGE_KEYS,
+      )
+    ) {
       return;
     }
 

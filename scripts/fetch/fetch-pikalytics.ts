@@ -32,7 +32,7 @@ async function fetchText(url: string): Promise<string> {
   const response = await fetch(url, {
     headers: {
       Accept: "text/markdown, text/plain;q=0.9, */*;q=0.1",
-      "User-Agent": "omniboost-pikalytics-fetcher/1.0",
+      "User-Agent": "unburden-pikalytics-fetcher/1.0",
     },
   });
 
@@ -229,3 +229,4 @@ export async function resolvePikalyticsAiMarkdown(
     error: `No Pikalytics AI page resolved from candidates ${candidates.join(", ")}`,
   };
 }
+

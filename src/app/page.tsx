@@ -31,7 +31,7 @@ export default function Home() {
           <ThemeToggle />
         </div>
         <h1 className="max-w-4xl font-sans text-5xl leading-none tracking-[-0.05em] md:text-7xl">
-          Omniboost
+          Unburden
         </h1>
         <p className="theme-text-muted mt-4 max-w-2xl text-base leading-7 md:text-lg">
           {dictionary.home.heroDescription}

@@ -1,10 +1,10 @@
-# Sintaxe do Prompt do Omniboost
+# Sintaxe do Prompt do Unburden
 
-Este doc define sintaxe canônica do prompt do Omniboost.
+Este doc define sintaxe canônica do prompt do Unburden.
 
 ## Visão Geral
 
-Omniboost usa gramática compacta, separada por lados:
+Unburden usa gramática compacta, separada por lados:
 
 - tudo antes de `x` ou `vs` = atacante
 - tudo depois de `x` ou `vs` = defensor
@@ -638,3 +638,4 @@ Forma recomendada:
 ```txt
 politoed !muddy-water @mystic-water x incineroar @assault-vest %75 ~rain
 ```
+

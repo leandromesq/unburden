@@ -1,5 +1,5 @@
 {
-  "name": "omniboost",
+  "name": "unburden",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "private": true,
@@ -47,3 +47,4 @@
     "typescript": "^5"
   }
 }
+

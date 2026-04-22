@@ -46,7 +46,7 @@ export const ptBRDictionary: AppDictionary = {
     title: "Software Proprietário",
     copyright: "Copyright © Leandro Mesquita. Todos os direitos reservados.",
     proprietary:
-      "O Omniboost é software proprietario e não é open source. Fora da funcionalidade padrao da plataforma do GitHub e dos termos aplicaveis da plataforma, não há permissão para copiar, redistribuir, sublicenciar ou criar derivados sem autorização prévia por escrito.",
+      "O Unburden é software proprietario e não é open source. Fora da funcionalidade padrao da plataforma do GitHub e dos termos aplicaveis da plataforma, não há permissão para copiar, redistribuir, sublicenciar ou criar derivados sem autorização prévia por escrito.",
     thirdParty:
       "Pokemon, Pokemon Champions e nomes, dados e artes relacionados pertencem aos seus respectivos titulares. Materiais de terceiros continuam sujeitos aos seus proprios direitos e termos.",
   },

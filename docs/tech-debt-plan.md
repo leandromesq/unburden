@@ -2,7 +2,7 @@
 
 > Status note (2026-04-17): historical planning doc now. Core refactors from topics 1-8 landed. Final paths and final file sizes differ from original guess. Current notable modules: `src/lib/omni/auto-global-tokens.ts`, `src/lib/omni/compute-state.ts`, `src/store/omni-scheduler.ts`. Topic 9 still future work.
 
-# Plano de Desenvolvimento — Redução de Débito Técnico · Omniboost
+# Plano de Desenvolvimento — Redução de Débito Técnico · Unburden
 
 ## Legenda
 
@@ -372,7 +372,7 @@ Motivo:
 
 Plano detalhado:
 
-- [docs/meta-benchmark-team-builder-plan.md](C:\Users\leand\Documents\GitHub\omniboost\docs\meta-benchmark-team-builder-plan.md)
+- [docs/meta-benchmark-team-builder-plan.md](C:\Users\leand\Documents\GitHub\unburden\docs\meta-benchmark-team-builder-plan.md)
 
 ## Roadmap Consolidado
 
@@ -416,3 +416,5 @@ FUTURO
 | Testabilidade do scheduler | Impossível | Mockável |
 
 Plano foi desenhado para entregar valor por sprint. Mesmo parando cedo, projeto já melhora. Extrações do Tópico 1 eram principal desbloqueador porque abriam caminho para teste unitário de código que antes só vivia em teste de integração.
+
+

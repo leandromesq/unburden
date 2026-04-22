@@ -34,7 +34,7 @@ async function fetchText(url: string) {
   const response = await fetch(url, {
     headers: {
       Accept: "text/markdown, text/plain;q=0.9, */*;q=0.1",
-      "User-Agent": "omniboost-serebii-fetcher/1.0",
+      "User-Agent": "unburden-serebii-fetcher/1.0",
     },
   });
 
@@ -98,3 +98,4 @@ export async function fetchRegulationMARosterNames() {
   const html = await fetchText(SEREBII_CHAMPIONS_REGULATION_MA_URL);
   return parseSerebiiRegulationRosterNames(html);
 }
+

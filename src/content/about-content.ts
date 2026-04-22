@@ -36,7 +36,7 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
       title:
         "Uma plataforma de calculadora de dano otimizada e veloz para Pokemon Champions.",
       description:
-        "O Omniboost foi projetado para agilizar o processo de teambuilding, permitindo que você simule cenarios de uma partida rapidamente por meio de cálculos rapidos e simples na forma de texto.",
+        "O Unburden foi projetado para agilizar o processo de teambuilding, permitindo que você simule cenarios de uma partida rapidamente por meio de cálculos rapidos e simples na forma de texto.",
       highlights: [
         "Gramática de prompt simples e intuitiva para matchups rápidos.",
         "Cálculo de dano comparando Min, Mid e Max bulk simultaneamente.",
@@ -67,7 +67,7 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
         eyebrow: "O App",
         title: "Cálculos em Tempo Real",
         description:
-          "O Omniboost utiliza o motor de cálculos do Showdown para garantir precisão, enquanto a interface age como um editor de texto inteligente.",
+          "O Unburden utiliza o motor de cálculos do Showdown para garantir precisão, enquanto a interface age como um editor de texto inteligente.",
         bullets: [
           "Fuzzy matching para Pokemon e golpes, reduzindo erros de digitação.",
           "Suporte para Mega Evoluções e estados de campo como Weather, Terrain etc.",
@@ -78,7 +78,7 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
         eyebrow: "Fluxo de Trabalho",
         title: "Editor Orientado por Prompt",
         description:
-          "O Omniboost foi projetado para reduzir atrito durante testes de matchup e criação de sets, mantendo o foco em velocidade e clareza.",
+          "O Unburden foi projetado para reduzir atrito durante testes de matchup e criação de sets, mantendo o foco em velocidade e clareza.",
         bullets: [
           "Autocomplete e edição rápida para espécies, itens, abilities, golpes e spreads.",
           "Resumo lateral para ajustar set, stats, forma e contexto de batalha sem trocar de tela.",
@@ -91,11 +91,11 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
       eyebrow: "Suporte e Comunidade",
       title: "Contribua com o Projeto",
       description:
-        "O Omniboost é um projeto em progresso. Se você encontrou bugs ou tem sugestões para a gramática de prompt, seu feedback é fundamental.",
+        "O Unburden é um projeto em progresso. Se você encontrou bugs ou tem sugestões para a gramática de prompt, seu feedback é fundamental.",
       notes: [
         "Reporte problemas ou sugira features via GitHub Issues.",
         "Acompanhe o roadmap de atualizacoes do projeto.",
-        "O Omniboost continua proprietario e nao open source.",
+        "O Unburden continua proprietario e nao open source.",
       ],
     },
   },
@@ -104,7 +104,7 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
       eyebrow: "About the Project",
       title: "A damage-calculation workspace optimized for Pokemon Champions.",
       description:
-        "Omniboost is designed to speed up the teambuilding workflow. Instead of filling long forms, you use a fast prompt grammar to simulate VGC-style doubles scenarios in seconds.",
+        "Unburden is designed to speed up the teambuilding workflow. Instead of filling long forms, you use a fast prompt grammar to simulate VGC-style doubles scenarios in seconds.",
       highlights: [
         "High-speed prompt grammar for rapid matchup checks.",
         "Client-side damage calculation comparing Min, Mid, and Max bulk at the same time.",
@@ -135,7 +135,7 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
         eyebrow: "The App",
         title: "Real-Time Calculations",
         description:
-          "Omniboost utilizes the Showdown calculator for accuracy while the interface behaves like an intelligent text editor.",
+          "Unburden utilizes the Showdown calculator for accuracy while the interface behaves like an intelligent text editor.",
         bullets: [
           "Fuzzy matching for Pokemon and moves to reduce typing errors.",
           "Native support for Mega Evolutions and field states like Weather, Terrain, etc.",
@@ -146,7 +146,7 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
         eyebrow: "Workflow",
         title: "Prompt-First Editing",
         description:
-          "Omniboost is built to cut friction while testing matchups and creating sets, with the interface staying focused on speed and readability.",
+          "Unburden is built to cut friction while testing matchups and creating sets, with the interface staying focused on speed and readability.",
         bullets: [
           "Fast autocomplete and editing for species, items, abilities, moves, and spreads.",
           "Side summaries let you tune set, stats, form, and battle context without leaving the calc flow.",
@@ -159,11 +159,11 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
       eyebrow: "Support and Community",
       title: "Help Grow the Ecosystem",
       description:
-        "Omniboost is a project in progress. If you found bugs or have ideas for the prompt grammar, your feedback matters.",
+        "Unburden is a project in progress. If you found bugs or have ideas for the prompt grammar, your feedback matters.",
       notes: [
         "Report problems or suggest features through GitHub Issues.",
         "Follow the project roadmap updates.",
-        "Omniboost remains proprietary and is not open source.",
+        "Unburden remains proprietary and is not open source.",
       ],
     },
   },

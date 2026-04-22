@@ -1,6 +1,6 @@
-# Omniboost Data Sources
+# Unburden Data Sources
 
-This doc list every data source Omniboost use, what each source own, where app consume it.
+This doc list every data source Unburden use, what each source own, where app consume it.
 
 ## Source-Of-Truth Diagram
 
@@ -96,13 +96,13 @@ Purpose:
 
 Used in:
 
-- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\omniboost\scripts\generate-static-data.ts)
+- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-static-data.ts)
 
 Outputs:
 
-- [src/data/pokemon.gen9.json](C:\Users\leand\Documents\GitHub\omniboost\src\data\pokemon.gen9.json)
-- [src/data/moves.gen9.json](C:\Users\leand\Documents\GitHub\omniboost\src\data\moves.gen9.json)
-- [src/data/learnsets.gen9.json](C:\Users\leand\Documents\GitHub\omniboost\src\data\learnsets.gen9.json)
+- [src/data/pokemon.gen9.json](C:\Users\leand\Documents\GitHub\unburden\src\data\pokemon.gen9.json)
+- [src/data/moves.gen9.json](C:\Users\leand\Documents\GitHub\unburden\src\data\moves.gen9.json)
+- [src/data/learnsets.gen9.json](C:\Users\leand\Documents\GitHub\unburden\src\data\learnsets.gen9.json)
 
 Why:
 
@@ -126,17 +126,17 @@ Purpose:
 
 Used in:
 
-- [scripts/generate-vgc-meta.ts](C:\Users\leand\Documents\GitHub\omniboost\scripts\generate-vgc-meta.ts)
-- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\omniboost\scripts\generate-static-data.ts)
+- [scripts/generate-vgc-meta.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-vgc-meta.ts)
+- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-static-data.ts)
 
 Outputs:
 
-- [src/data/vgc-meta.json](C:\Users\leand\Documents\GitHub\omniboost\src\data\vgc-meta.json)
-- extra Champions species coverage in [src/data/pokemon.gen9.json](C:\Users\leand\Documents\GitHub\omniboost\src\data\pokemon.gen9.json)
+- [src/data/vgc-meta.json](C:\Users\leand\Documents\GitHub\unburden\src\data\vgc-meta.json)
+- extra Champions species coverage in [src/data/pokemon.gen9.json](C:\Users\leand\Documents\GitHub\unburden\src\data\pokemon.gen9.json)
 
 Why:
 
-- Omniboost need competitive meta layer on top of structural Dex data
+- Unburden need competitive meta layer on top of structural Dex data
 
 ### 3. Serebii Champions mega abilities
 
@@ -150,11 +150,11 @@ Purpose:
 
 Used in:
 
-- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\omniboost\scripts\generate-static-data.ts)
+- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-static-data.ts)
 
 Outputs affected:
 
-- [src/data/pokemon.gen9.json](C:\Users\leand\Documents\GitHub\omniboost\src\data\pokemon.gen9.json)
+- [src/data/pokemon.gen9.json](C:\Users\leand\Documents\GitHub\unburden\src\data\pokemon.gen9.json)
 
 Why:
 
@@ -173,12 +173,12 @@ Purpose:
 
 Used in:
 
-- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\omniboost\scripts\generate-static-data.ts)
+- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-static-data.ts)
 
 Outputs affected:
 
-- [src/data/champions-items.json](C:\Users\leand\Documents\GitHub\omniboost\src\data\champions-items.json)
-- indirect legal-item constraint for [src/data/vgc-meta.json](C:\Users\leand\Documents\GitHub\omniboost\src\data\vgc-meta.json)
+- [src/data/champions-items.json](C:\Users\leand\Documents\GitHub\unburden\src\data\champions-items.json)
+- indirect legal-item constraint for [src/data/vgc-meta.json](C:\Users\leand\Documents\GitHub\unburden\src\data\vgc-meta.json)
 
 Why:
 
@@ -196,8 +196,8 @@ Purpose:
 
 Used in:
 
-- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\omniboost\scripts\generate-static-data.ts)
-- compared against [src/data/regulations/regulation-m-a.json](C:\Users\leand\Documents\GitHub\omniboost\src\data\regulations\regulation-m-a.json)
+- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-static-data.ts)
+- compared against [src/data/regulations/regulation-m-a.json](C:\Users\leand\Documents\GitHub\unburden\src\data\regulations\regulation-m-a.json)
 
 Why:
 
@@ -220,7 +220,7 @@ Purpose:
 
 Used in:
 
-- [src/components/omnibar/pokemon-side-summary.tsx](C:\Users\leand\Documents\GitHub\omniboost\src\components\omnibar\pokemon-side-summary.tsx)
+- [src/components/omnibar/pokemon-side-summary.tsx](C:\Users\leand\Documents\GitHub\unburden\src\components\omnibar\pokemon-side-summary.tsx)
 
 Why:
 
@@ -236,7 +236,7 @@ Purpose:
 
 Used in:
 
-- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\data\loaders.ts)
+- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\data\loaders.ts)
 
 Effects:
 
@@ -251,8 +251,8 @@ Purpose:
 
 Used in:
 
-- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\data\loaders.ts)
-- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\omniboost\scripts\generate-static-data.ts)
+- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\data\loaders.ts)
+- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-static-data.ts)
 
 Effects:
 
@@ -267,10 +267,10 @@ Purpose:
 
 Used in:
 
-- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\data\loaders.ts)
-- [src/lib/parser/fuse-indexes.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\parser\fuse-indexes.ts)
-- [src/lib/parser/showdown-import.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\parser\showdown-import.ts)
-- [scripts/generate-vgc-meta.ts](C:\Users\leand\Documents\GitHub\omniboost\scripts\generate-vgc-meta.ts)
+- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\data\loaders.ts)
+- [src/lib/parser/fuse-indexes.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\fuse-indexes.ts)
+- [src/lib/parser/showdown-import.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\showdown-import.ts)
+- [scripts/generate-vgc-meta.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-vgc-meta.ts)
 
 ### 10. `src/data/vgc-meta.overrides.json`
 
@@ -280,7 +280,7 @@ Purpose:
 
 Used in:
 
-- [scripts/generate-vgc-meta.ts](C:\Users\leand\Documents\GitHub\omniboost\scripts\generate-vgc-meta.ts)
+- [scripts/generate-vgc-meta.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-vgc-meta.ts)
 
 Effects:
 
@@ -298,18 +298,18 @@ Purpose:
 
 Loaded in:
 
-- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\data\loaders.ts)
+- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\data\loaders.ts)
 
 Consumed by:
 
-- [src/lib/calc/damage-engine.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\calc\damage-engine.ts)
-- [src/lib/parser/fuse-indexes.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\parser\fuse-indexes.ts)
-- [src/lib/parser/command-parser.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\parser\command-parser.ts)
-- [src/lib/parser/inference.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\parser\inference.ts)
-- [src/lib/parser/showdown-import.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\parser\showdown-import.ts)
-- [src/store/use-omni-store.ts](C:\Users\leand\Documents\GitHub\omniboost\src\store\use-omni-store.ts)
-- [src/components/omnibar/pokemon-set-editor-modal.tsx](C:\Users\leand\Documents\GitHub\omniboost\src\components\omnibar\pokemon-set-editor-modal.tsx)
-- [src/components/omnibar/pokemon-side-summary.tsx](C:\Users\leand\Documents\GitHub\omniboost\src\components\omnibar\pokemon-side-summary.tsx)
+- [src/lib/calc/damage-engine.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\calc\damage-engine.ts)
+- [src/lib/parser/fuse-indexes.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\fuse-indexes.ts)
+- [src/lib/parser/command-parser.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\command-parser.ts)
+- [src/lib/parser/inference.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\inference.ts)
+- [src/lib/parser/showdown-import.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\showdown-import.ts)
+- [src/store/use-omni-store.ts](C:\Users\leand\Documents\GitHub\unburden\src\store\use-omni-store.ts)
+- [src/components/omnibar/pokemon-set-editor-modal.tsx](C:\Users\leand\Documents\GitHub\unburden\src\components\omnibar\pokemon-set-editor-modal.tsx)
+- [src/components/omnibar/pokemon-side-summary.tsx](C:\Users\leand\Documents\GitHub\unburden\src\components\omnibar\pokemon-side-summary.tsx)
 
 ### 12. `src/data/moves.gen9.json`
 
@@ -319,15 +319,15 @@ Purpose:
 
 Loaded in:
 
-- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\data\loaders.ts)
+- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\data\loaders.ts)
 
 Consumed by:
 
-- [src/lib/calc/damage-engine.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\calc\damage-engine.ts)
-- [src/lib/parser/command-parser.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\parser\command-parser.ts)
-- [src/lib/parser/inference.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\parser\inference.ts)
-- [src/components/omnibar/pokemon-set-editor-modal.tsx](C:\Users\leand\Documents\GitHub\omniboost\src\components\omnibar\pokemon-set-editor-modal.tsx)
-- [src/components/omnibar/pokemon-side-summary.tsx](C:\Users\leand\Documents\GitHub\omniboost\src\components\omnibar\pokemon-side-summary.tsx)
+- [src/lib/calc/damage-engine.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\calc\damage-engine.ts)
+- [src/lib/parser/command-parser.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\command-parser.ts)
+- [src/lib/parser/inference.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\inference.ts)
+- [src/components/omnibar/pokemon-set-editor-modal.tsx](C:\Users\leand\Documents\GitHub\unburden\src\components\omnibar\pokemon-set-editor-modal.tsx)
+- [src/components/omnibar/pokemon-side-summary.tsx](C:\Users\leand\Documents\GitHub\unburden\src\components\omnibar\pokemon-side-summary.tsx)
 
 ### 13. `src/data/learnsets.gen9.json`
 
@@ -337,12 +337,12 @@ Purpose:
 
 Loaded in:
 
-- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\data\loaders.ts)
+- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\data\loaders.ts)
 
 Consumed by:
 
-- [src/lib/parser/inference.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\parser\inference.ts)
-- [src/components/omnibar/pokemon-set-editor-modal.tsx](C:\Users\leand\Documents\GitHub\omniboost\src\components\omnibar\pokemon-set-editor-modal.tsx)
+- [src/lib/parser/inference.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\inference.ts)
+- [src/components/omnibar/pokemon-set-editor-modal.tsx](C:\Users\leand\Documents\GitHub\unburden\src\components\omnibar\pokemon-set-editor-modal.tsx)
 
 ### 14. `src/data/champions-items.json`
 
@@ -352,14 +352,14 @@ Purpose:
 
 Loaded in:
 
-- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\data\loaders.ts)
+- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\data\loaders.ts)
 
 Consumed by:
 
-- [src/lib/parser/command-parser.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\parser\command-parser.ts)
-- [src/lib/parser/inference.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\parser\inference.ts)
-- [src/components/omnibar/pokemon-set-editor-modal.tsx](C:\Users\leand\Documents\GitHub\omniboost\src\components\omnibar\pokemon-set-editor-modal.tsx)
-- [src/components/omnibar/pokemon-side-summary.tsx](C:\Users\leand\Documents\GitHub\omniboost\src\components\omnibar\pokemon-side-summary.tsx)
+- [src/lib/parser/command-parser.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\command-parser.ts)
+- [src/lib/parser/inference.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\inference.ts)
+- [src/components/omnibar/pokemon-set-editor-modal.tsx](C:\Users\leand\Documents\GitHub\unburden\src\components\omnibar\pokemon-set-editor-modal.tsx)
+- [src/components/omnibar/pokemon-side-summary.tsx](C:\Users\leand\Documents\GitHub\unburden\src\components\omnibar\pokemon-side-summary.tsx)
 
 ### 15. `src/data/vgc-meta.json`
 
@@ -369,14 +369,14 @@ Purpose:
 
 Loaded in:
 
-- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\data\loaders.ts)
+- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\data\loaders.ts)
 
 Consumed by:
 
-- [src/lib/parser/command-parser.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\parser\command-parser.ts)
-- [src/lib/parser/inference.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\parser\inference.ts)
-- [src/store/use-omni-store.ts](C:\Users\leand\Documents\GitHub\omniboost\src\store\use-omni-store.ts)
-- [src/components/omnibar/pokemon-set-editor-modal.tsx](C:\Users\leand\Documents\GitHub\omniboost\src\components\omnibar\pokemon-set-editor-modal.tsx)
+- [src/lib/parser/command-parser.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\command-parser.ts)
+- [src/lib/parser/inference.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\inference.ts)
+- [src/store/use-omni-store.ts](C:\Users\leand\Documents\GitHub\unburden\src\store\use-omni-store.ts)
+- [src/components/omnibar/pokemon-set-editor-modal.tsx](C:\Users\leand\Documents\GitHub\unburden\src\components\omnibar\pokemon-set-editor-modal.tsx)
 
 ## Runtime Loader Layer
 
@@ -414,13 +414,13 @@ This file = effective runtime source-of-truth layer for app code.
 
 ### Build time
 
-1. [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\omniboost\scripts\generate-static-data.ts) pull structural species/move/learnset data and write local JSON snapshots
-2. [scripts/generate-vgc-meta.ts](C:\Users\leand\Documents\GitHub\omniboost\scripts\generate-vgc-meta.ts) pull Champions usage/meta data and write `vgc-meta.json`
+1. [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-static-data.ts) pull structural species/move/learnset data and write local JSON snapshots
+2. [scripts/generate-vgc-meta.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-vgc-meta.ts) pull Champions usage/meta data and write `vgc-meta.json`
 3. Generated files get committed under `src/data/`
 
 ### Runtime
 
-1. [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\omniboost\src\lib\data\loaders.ts) load committed JSON snapshots
+1. [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\data\loaders.ts) load committed JSON snapshots
 2. Parser, autocomplete, calc, UI consume in-memory maps
 3. No live meta/gameplay fetch during normal app usage
 4. Images = only runtime network dependency
@@ -429,9 +429,11 @@ This file = effective runtime source-of-truth layer for app code.
 
 App look stale or miss legal species. First place to inspect not runtime code. Inspect one of these:
 
-- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\omniboost\scripts\generate-static-data.ts)
-- [scripts/generate-vgc-meta.ts](C:\Users\leand\Documents\GitHub\omniboost\scripts\generate-vgc-meta.ts)
-- [src/data/regulations/regulation-m-a.json](C:\Users\leand\Documents\GitHub\omniboost\src\data\regulations\regulation-m-a.json)
-- [src/data/vgc-meta.overrides.json](C:\Users\leand\Documents\GitHub\omniboost\src\data\vgc-meta.overrides.json)
+- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-static-data.ts)
+- [scripts/generate-vgc-meta.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-vgc-meta.ts)
+- [src/data/regulations/regulation-m-a.json](C:\Users\leand\Documents\GitHub\unburden\src\data\regulations\regulation-m-a.json)
+- [src/data/vgc-meta.overrides.json](C:\Users\leand\Documents\GitHub\unburden\src\data\vgc-meta.overrides.json)
 
 Source accuracy decided there.
+
+

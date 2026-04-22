@@ -7,10 +7,13 @@ import {
   evsToStatPoints,
   statPointsToCalcEvs,
 } from "@/lib/calc/stat-calc";
+import {
+  LEGACY_TEAM_STORAGE_KEYS,
+  readStorageValue,
+  TEAM_STORAGE_KEY,
+} from "@/lib/persistence/storage-keys";
 import { normalizeImportedSet } from "@/lib/team/imported-set-utils";
 import type { ImportedSet } from "@/lib/types";
-
-const STORAGE_KEY = "omniboost-team";
 
 function sanitizeSet(raw: unknown): ImportedSet | null {
   if (!raw || typeof raw !== "object") return null;
@@ -58,7 +61,7 @@ function sanitizeSet(raw: unknown): ImportedSet | null {
 function readStorage(): Record<string, ImportedSet> {
   if (typeof window === "undefined") return {};
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = readStorageValue(TEAM_STORAGE_KEY, LEGACY_TEAM_STORAGE_KEYS);
     if (!raw) return {};
     const parsed = JSON.parse(raw);
     if (typeof parsed !== "object" || parsed === null) return {};
@@ -77,7 +80,7 @@ function readStorage(): Record<string, ImportedSet> {
 function writeStorage(sets: Record<string, ImportedSet>): void {
   if (typeof window === "undefined") return;
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(sets));
+    localStorage.setItem(TEAM_STORAGE_KEY, JSON.stringify(sets));
   } catch { }
 }
 

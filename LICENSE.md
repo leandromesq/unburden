@@ -1,8 +1,8 @@
-# Omniboost Proprietary Software Notice
+# Unburden Proprietary Software Notice
 
 Copyright (c) 2026 Leandro Mesquita. All rights reserved.
 
-Omniboost, this repository, and the application-specific source code, UI, and content contained here are proprietary software.
+Unburden, this repository, and the application-specific source code, UI, and content contained here are proprietary software.
 
 This repository may be made publicly viewable for reference, discussion, and issue reporting, but it is not open source.
 

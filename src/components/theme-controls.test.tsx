@@ -3,6 +3,10 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { LocaleToggle } from "@/components/locale-toggle";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { I18nProvider, useI18n } from "@/i18n/I18nProvider";
+import {
+  LOCALE_STORAGE_KEY,
+  THEME_STORAGE_KEY,
+} from "@/lib/persistence/storage-keys";
 
 function LocaleProbe() {
   const { locale } = useI18n();
@@ -54,12 +58,12 @@ describe("theme and locale controls", () => {
     );
 
     await waitFor(() => {
-      expect(window.localStorage.getItem("omniboost-locale")).toBe("pt-BR");
+      expect(window.localStorage.getItem(LOCALE_STORAGE_KEY)).toBe("pt-BR");
       expect(document.documentElement.lang).toBe("pt-BR");
     });
   });
 
-  test("hydrates locale from persisted storage", async () => {
+  test("hydrates locale from the legacy persisted storage key", async () => {
     window.localStorage.setItem("omniboost-locale", "en");
     document.documentElement.lang = "pt-BR";
 
@@ -88,6 +92,7 @@ describe("theme and locale controls", () => {
     renderControls();
 
     await waitFor(() => {
+      expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBe("light");
       expect(document.documentElement.dataset.theme).toBe("light");
       expect(document.body.dataset.theme).toBe("light");
     });

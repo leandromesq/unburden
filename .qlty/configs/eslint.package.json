@@ -1,5 +1,5 @@
 {
-  "name": "omniboost-qlty-eslint",
+  "name": "unburden-qlty-eslint",
   "private": true,
   "devDependencies": {
     "eslint": "9.39.4",
@@ -8,3 +8,4 @@
     "typescript": "5.9.3"
   }
 }
+

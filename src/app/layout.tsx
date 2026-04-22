@@ -17,8 +17,24 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Omniboost",
-  description: "Calculo de dano VGC em alta velocidade com um composer estilo chat.",
+  metadataBase: new URL("https://unburdenvgc.com"),
+  title: "Unburden",
+  description: "Fast VGC damage calculation in a chat-like composer.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Unburden",
+    description: "Fast VGC damage calculation in a chat-like composer.",
+    url: "https://unburdenvgc.com",
+    siteName: "Unburden",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Unburden",
+    description: "Fast VGC damage calculation in a chat-like composer.",
+  },
 };
 
 export default function RootLayout({

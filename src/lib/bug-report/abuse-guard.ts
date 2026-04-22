@@ -10,10 +10,17 @@ interface AbuseGuardStore {
 }
 
 function getStore(): AbuseGuardStore {
-  const globalKey = "__omniboostBugReportAbuseGuard";
+  const globalKey = "__unburdenBugReportAbuseGuard";
+  const legacyGlobalKey = "__omniboostBugReportAbuseGuard";
   const globalStore = globalThis as typeof globalThis & {
     [globalKey]?: AbuseGuardStore;
+    [legacyGlobalKey]?: AbuseGuardStore;
   };
+
+  if (!globalStore[globalKey] && globalStore[legacyGlobalKey]) {
+    globalStore[globalKey] = globalStore[legacyGlobalKey];
+    delete globalStore[legacyGlobalKey];
+  }
 
   if (!globalStore[globalKey]) {
     globalStore[globalKey] = {
