@@ -1,4 +1,10 @@
 import { ImageResponse } from "next/og";
+import {
+  SITE_NAME,
+  SITE_SHARE_IMAGE_ALT,
+  SITE_SHARE_IMAGE_SUBTITLE,
+  SITE_URL,
+} from "@/lib/marketing/seo";
 
 export const shareImageSize = {
   width: 1200,
@@ -7,8 +13,7 @@ export const shareImageSize = {
 
 export const shareImageContentType = "image/png";
 
-export const shareImageAlt =
-  "Unburden VGC share image with a dark tactical grid background, the app name, and a short subtitle about fast VGC damage calculation.";
+export const shareImageAlt = SITE_SHARE_IMAGE_ALT;
 
 const BG_TOP = "#0b101a";
 const BG_BOTTOM = "#070b13";
@@ -24,9 +29,9 @@ const TEXT = "#f8fbff";
 const TEXT_MUTED = "#c7d2e3";
 const TEXT_DIM = "#8ea2bc";
 
-const TITLE = "Unburden VGC";
-const SUBTITLE =
-  "Fast VGC damage calculation in a chat-like composer for testing matchups, bulk ranges, and competitive assumptions.";
+const TITLE = SITE_NAME;
+const SUBTITLE = SITE_SHARE_IMAGE_SUBTITLE;
+const DOMAIN = new URL(SITE_URL).host;
 
 export function generateShareImage() {
   return new ImageResponse(
@@ -132,7 +137,7 @@ export function generateShareImage() {
                 fontWeight: 700,
               }}
             >
-              unburdenvgc.com
+              {DOMAIN}
             </div>
           </div>
 
