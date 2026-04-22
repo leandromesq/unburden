@@ -24,22 +24,39 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://unburdenvgc.com"),
-  title: "Unburden VGC",
-  description: "Fast VGC damage calculation in a chat-like composer.",
+  title: "Unburden VGC | Fast damage calc for doubles",
+  description:
+    "Fast VGC damage calculation in a chat-like composer for testing matchups, bulk ranges, and competitive assumptions in seconds.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Unburden VGC",
-    description: "Fast VGC damage calculation in a chat-like composer.",
+    title: "Unburden VGC | Fast damage calc for doubles",
+    description:
+      "Fast VGC damage calculation in a chat-like composer for testing matchups, bulk ranges, and competitive assumptions in seconds.",
     url: "https://unburdenvgc.com",
     siteName: "Unburden VGC",
     type: "website",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Unburden VGC social share image",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Unburden VGC",
-    description: "Fast VGC damage calculation in a chat-like composer.",
+    title: "Unburden VGC | Fast damage calc for doubles",
+    description:
+      "Fast VGC damage calculation in a chat-like composer for testing matchups, bulk ranges, and competitive assumptions in seconds.",
+    images: [
+      {
+        url: "/twitter-image",
+        alt: "Unburden VGC social share image",
+      },
+    ],
   },
 };
 
