@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 
+import { useI18n } from "@/i18n/I18nProvider";
 import {
   itemDisplayById,
   moveById,
@@ -56,7 +57,7 @@ interface ItemStatBoosts {
 
 interface PokemonSummaryData {
   contextKey: string;
-  title: "Attacker" | "Defender";
+  title: string;
   name: string;
   pokemonId: string;
   isMega: boolean;
@@ -270,6 +271,8 @@ export function usePokemonSummary({
   pendingContextKey,
   pendingNature,
 }: UsePokemonSummaryOptions): PokemonSummaryData | null {
+  const { dictionary } = useI18n();
+
   return useMemo(() => {
     const structure = commandStructure;
 
@@ -411,7 +414,7 @@ export function usePokemonSummary({
 
       return {
         contextKey,
-        title: "Attacker",
+        title: dictionary.modifierSwitches.attacker,
         name: attacker.name,
         pokemonId: attacker.id,
         isMega: Boolean(attacker.isMega),
@@ -497,7 +500,7 @@ export function usePokemonSummary({
 
     return {
       contextKey,
-      title: "Defender",
+      title: dictionary.modifierSwitches.defender,
       name: defender.name,
       pokemonId: defender.id,
       isMega: Boolean(defender.isMega),
@@ -533,6 +536,8 @@ export function usePokemonSummary({
     };
   }, [
     commandStructure,
+    dictionary.modifierSwitches.attacker,
+    dictionary.modifierSwitches.defender,
     importedSets,
     parsedCommand,
     pendingContextKey,

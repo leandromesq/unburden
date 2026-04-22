@@ -23,6 +23,10 @@ export function SummaryEmptyState({
   onOpenImport,
 }: SummaryEmptyStateProps) {
   const { dictionary } = useI18n();
+  const sideLabel =
+    side === "attacker"
+      ? dictionary.modifierSwitches.attacker
+      : dictionary.modifierSwitches.defender;
 
   return (
     <aside
@@ -30,7 +34,7 @@ export function SummaryEmptyState({
       className="theme-panel rounded-[28px] p-5"
     >
       <div className="theme-text-faint text-xs font-semibold uppercase tracking-[0.24em]">
-        {side}
+        {sideLabel}
       </div>
 
       <div className="mt-3 flex items-center gap-3">
@@ -40,7 +44,7 @@ export function SummaryEmptyState({
           </div>
         </div>
         <div className="min-w-0">
-          <div className="text-lg font-medium capitalize">{side}</div>
+          <div className="text-lg font-medium">{sideLabel}</div>
           <div className="theme-text-dim mt-1 text-sm">
             {dictionary.summary.resolvePokemon}
           </div>
@@ -57,7 +61,7 @@ export function SummaryEmptyState({
       ) : (
         <>
           <div className="theme-text-dim mt-3 text-sm">
-            {dictionary.summary.resolveQuickSummary(side)}
+            {dictionary.summary.resolveQuickSummary(sideLabel)}
           </div>
           <button
             type="button"

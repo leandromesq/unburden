@@ -8,98 +8,52 @@ export const shareImageSize = {
 export const shareImageContentType = "image/png";
 
 export const shareImageAlt =
-  "Unburden VGC share image with a blue tactical grid background and the tagline Fast VGC damage calculation in a chat-like composer.";
+  "Unburden VGC share image with a tactical blue grid background and a composer-style panel for fast VGC damage calculation.";
 
-const PANEL_BORDER = "rgba(96, 165, 250, 0.28)";
-const PANEL_FILL = "rgba(8, 14, 28, 0.86)";
-const GRID_MINOR = "rgba(148, 163, 184, 0.10)";
-const GRID_MAJOR = "rgba(96, 165, 250, 0.22)";
-const TEXT_DIM = "#9fb0c7";
-const TEXT_MUTED = "#cbd5e1";
-const TEXT_BRIGHT = "#f8fbff";
+const BG_TOP = "#0b101a";
+const BG_BOTTOM = "#070b13";
+const SURFACE = "rgba(11, 18, 30, 0.92)";
+const SURFACE_STRONG = "rgba(8, 14, 24, 0.96)";
+const LINE = "rgba(255, 255, 255, 0.08)";
+const LINE_STRONG = "rgba(96, 165, 250, 0.28)";
+const GRID_MINOR = "rgba(255, 255, 255, 0.05)";
+const GRID_MAJOR = "rgba(96, 165, 250, 0.14)";
 const ACCENT = "#60a5fa";
-const HERO_DESCRIPTION =
-  "Type a matchup like a chat prompt. Accept suggestions with Tab. Compare Min, Mid, and Max bulk instantly.";
+const ACCENT_SOFT = "rgba(96, 165, 250, 0.12)";
+const TEXT = "#f8fbff";
+const TEXT_MUTED = "#c7d2e3";
+const TEXT_DIM = "#8ea2bc";
+
+const HERO_COPY =
+  "Type a matchup like a chat prompt. Accept suggestions with Tab and compare Min, Mid, and Max bulk instantly.";
 const PROMPT_EXAMPLE =
-  "Kyogre !water-spout\n%100 x Rillaboom @assault-vest\n[Grassy Surge] sp:236/0/4/0/132/132";
+  "Kyogre !water-spout x Rillaboom @assault-vest [Grassy Surge]";
 
-function AccentChip({ label }: { label: string }) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        padding: "10px 18px",
-        borderRadius: 999,
-        border: `1px solid ${PANEL_BORDER}`,
-        background: "rgba(96, 165, 250, 0.10)",
-        color: ACCENT,
-        fontSize: 22,
-        letterSpacing: "0.22em",
-        textTransform: "uppercase",
-        fontWeight: 700,
-      }}
-    >
-      {label}
-    </div>
-  );
-}
-
-function StatCard({
-  eyebrow,
-  value,
-  description,
+function Pill({
+  label,
+  active = false,
 }: {
-  eyebrow: string;
-  value: string;
-  description: string;
+  label: string;
+  active?: boolean;
 }) {
   return (
     <div
       style={{
         display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        flex: 1,
-        minWidth: 0,
-        padding: "28px 28px 24px",
-        borderRadius: 28,
-        border: `1px solid ${PANEL_BORDER}`,
-        background: "rgba(10, 18, 34, 0.92)",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "10px 18px",
+        borderRadius: 999,
+        border: `1px solid ${active ? LINE_STRONG : LINE}`,
+        background: active ? ACCENT_SOFT : "rgba(255, 255, 255, 0.03)",
+        color: active ? ACCENT : TEXT_MUTED,
+        fontSize: 20,
+        fontWeight: 700,
+        letterSpacing: active ? "0.14em" : "0",
+        textTransform: active ? "uppercase" : "none",
       }}
     >
-      <div
-        style={{
-          color: TEXT_DIM,
-          fontSize: 16,
-          letterSpacing: "0.18em",
-          textTransform: "uppercase",
-          fontWeight: 700,
-        }}
-      >
-        {eyebrow}
-      </div>
-      <div
-        style={{
-          marginTop: 18,
-          color: TEXT_BRIGHT,
-          fontSize: 48,
-          fontWeight: 700,
-          lineHeight: 1,
-        }}
-      >
-        {value}
-      </div>
-      <div
-        style={{
-          marginTop: 14,
-          color: TEXT_DIM,
-          fontSize: 18,
-          lineHeight: 1.45,
-        }}
-      >
-        {description}
-      </div>
+      {label}
     </div>
   );
 }
@@ -113,10 +67,9 @@ export function generateShareImage() {
           height: "100%",
           display: "flex",
           position: "relative",
-          background:
-            "radial-gradient(circle at 78% 16%, rgba(96, 165, 250, 0.26), transparent 28%), radial-gradient(circle at 12% 18%, rgba(14, 165, 233, 0.18), transparent 26%), linear-gradient(180deg, #0a0f1b 0%, #070b13 100%)",
-          color: TEXT_BRIGHT,
           overflow: "hidden",
+          color: TEXT,
+          background: `radial-gradient(circle at 82% 14%, rgba(96, 165, 250, 0.22), transparent 26%), radial-gradient(circle at 14% 18%, rgba(14, 165, 233, 0.12), transparent 24%), linear-gradient(180deg, ${BG_TOP} 0%, ${BG_BOTTOM} 100%)`,
           fontFamily:
             "Inter, Space Grotesk, ui-sans-serif, system-ui, sans-serif",
         }}
@@ -132,8 +85,8 @@ export function generateShareImage() {
               linear-gradient(${GRID_MAJOR} 1px, transparent 1px),
               linear-gradient(90deg, ${GRID_MAJOR} 1px, transparent 1px)
             `,
-            backgroundSize: "40px 40px, 40px 40px, 160px 160px, 160px 160px",
-            opacity: 0.92,
+            backgroundSize: "44px 44px, 44px 44px, 176px 176px, 176px 176px",
+            opacity: 0.9,
           }}
         />
 
@@ -143,148 +96,181 @@ export function generateShareImage() {
             inset: 0,
             display: "flex",
             background:
-              "linear-gradient(180deg, rgba(6, 10, 18, 0.12) 0%, rgba(6, 10, 18, 0.42) 100%)",
+              "linear-gradient(180deg, rgba(4, 8, 14, 0.04) 0%, rgba(4, 8, 14, 0.42) 100%)",
           }}
         />
 
         <div
           style={{
             position: "relative",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
             width: "100%",
-            padding: "52px 56px 46px",
+            height: "100%",
+            display: "flex",
+            padding: "54px",
           }}
         >
           <div
             style={{
+              width: "100%",
               display: "flex",
-              alignItems: "center",
+              flexDirection: "column",
               justifyContent: "space-between",
-              gap: 20,
+              padding: "38px 40px 34px",
+              borderRadius: 36,
+              border: `1px solid ${LINE_STRONG}`,
+              background: SURFACE,
+              boxShadow: "0 22px 60px rgba(0, 0, 0, 0.28)",
             }}
           >
-            <AccentChip label="Unburden VGC" />
             <div
               style={{
+                width: "100%",
                 display: "flex",
                 alignItems: "center",
-                gap: 14,
-                padding: "10px 16px",
-                borderRadius: 999,
-                border: `1px solid ${PANEL_BORDER}`,
-                background: "rgba(7, 12, 22, 0.78)",
+                justifyContent: "space-between",
               }}
             >
+              <Pill label="Unburden VGC" active />
               <div
                 style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: 999,
-                  background: ACCENT,
-                  boxShadow: "0 0 20px rgba(96, 165, 250, 0.75)",
-                }}
-              />
-              <div
-                style={{
-                  color: TEXT_MUTED,
+                  display: "flex",
+                  alignItems: "center",
+                  color: TEXT_DIM,
                   fontSize: 20,
                   letterSpacing: "0.14em",
                   textTransform: "uppercase",
                   fontWeight: 700,
                 }}
               >
-                Competitive Damage Workflow
+                Chat-like damage workflow
               </div>
             </div>
-          </div>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-              maxWidth: 980,
-            }}
-          >
             <div
               style={{
-                fontSize: 98,
-                fontWeight: 700,
-                letterSpacing: "-0.055em",
-                lineHeight: 0.95,
-              }}
-            >
-              Fast VGC damage calculation
-            </div>
-            <div
-              style={{
-                marginTop: 20,
-                color: TEXT_MUTED,
-                fontSize: 34,
-                lineHeight: 1.3,
-                maxWidth: 920,
-              }}
-            >
-              {HERO_DESCRIPTION}
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "stretch",
-              gap: 18,
-            }}
-          >
-            <div
-              style={{
+                width: "100%",
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "space-between",
-                width: 370,
-                padding: "28px 30px",
-                borderRadius: 32,
-                border: `1px solid ${PANEL_BORDER}`,
-                background: PANEL_FILL,
-                boxShadow: "0 20px 48px rgba(0, 0, 0, 0.24)",
+                marginTop: 18,
               }}
             >
               <div
                 style={{
-                  color: TEXT_DIM,
-                  fontSize: 18,
-                  letterSpacing: "0.16em",
-                  textTransform: "uppercase",
+                  display: "flex",
+                  color: TEXT,
+                  fontSize: 92,
+                  lineHeight: 0.94,
+                  letterSpacing: "-0.055em",
                   fontWeight: 700,
+                  maxWidth: 920,
                 }}
               >
-                Prompt Example
+                Fast VGC damage calculation
               </div>
+
               <div
                 style={{
-                  marginTop: 18,
-                  color: TEXT_BRIGHT,
-                  fontSize: 28,
-                  lineHeight: 1.35,
-                  whiteSpace: "pre-wrap",
+                  display: "flex",
+                  marginTop: 20,
+                  maxWidth: 920,
+                  color: TEXT_MUTED,
+                  fontSize: 31,
+                  lineHeight: 1.32,
                 }}
               >
-                {PROMPT_EXAMPLE}
+                {HERO_COPY}
               </div>
             </div>
 
-            <StatCard
-              eyebrow="Input Model"
-              value="Chat-Like"
-              description="Prompt grammar built for fast matchup iteration instead of long forms."
-            />
-            <StatCard
-              eyebrow="Output Focus"
-              value="Min / Mid / Max"
-              description="Read ranges quickly and compare bulk assumptions without losing momentum."
-            />
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: 20,
+              }}
+            >
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  borderRadius: 30,
+                  border: `1px solid ${LINE}`,
+                  background: SURFACE_STRONG,
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "16px 22px",
+                    borderBottom: `1px solid ${LINE}`,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      color: TEXT_DIM,
+                      fontSize: 18,
+                      letterSpacing: "0.12em",
+                      textTransform: "uppercase",
+                      fontWeight: 700,
+                    }}
+                  >
+                    Composer
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      color: ACCENT,
+                      fontSize: 18,
+                      fontWeight: 700,
+                    }}
+                  >
+                    No issues.
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "24px 26px 28px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "100%",
+                      color: TEXT,
+                      fontSize: 29,
+                      lineHeight: 1.35,
+                    }}
+                  >
+                    {PROMPT_EXAMPLE}
+                  </div>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  gap: 14,
+                }}
+              >
+                <Pill label="Tab autocomplete" />
+                <Pill label="Min / Mid / Max bulk" />
+                <Pill label="VGC focused" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
