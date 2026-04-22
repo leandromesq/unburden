@@ -235,14 +235,13 @@ html[data-theme="light"] .theme-page::before {
 }
 
 .theme-page-grid::after {
-    background:
-        linear-gradient(
-            180deg,
-            color-mix(in srgb, var(--bg) 0%, transparent) 0%,
-            transparent 18%,
-            color-mix(in srgb, var(--bg) 8%, transparent) 52%,
-            color-mix(in srgb, var(--bg) 22%, transparent) 100%
-        );
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--bg) 0%, transparent) 0%,
+        transparent 18%,
+        color-mix(in srgb, var(--bg) 8%, transparent) 52%,
+        color-mix(in srgb, var(--bg) 22%, transparent) 100%
+    );
     opacity: 0.9;
 }
 
@@ -251,14 +250,13 @@ html[data-theme="light"] .theme-page-grid {
 }
 
 html[data-theme="light"] .theme-page-grid::after {
-    background:
-        linear-gradient(
-            180deg,
-            color-mix(in srgb, white 8%, transparent) 0%,
-            transparent 18%,
-            color-mix(in srgb, var(--bg) 6%, white) 52%,
-            color-mix(in srgb, var(--bg) 14%, white) 100%
-        );
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, white 8%, transparent) 0%,
+        transparent 18%,
+        color-mix(in srgb, var(--bg) 6%, white) 52%,
+        color-mix(in srgb, var(--bg) 14%, white) 100%
+    );
     opacity: 0.64;
 }
 
