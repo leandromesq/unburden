@@ -8,8 +8,11 @@ import {
   LEGACY_THEME_STORAGE_KEYS,
   matchesStorageKey,
   readStorageValue,
+  THEME_COOKIE_KEY,
   THEME_STORAGE_KEY,
+  writeClientPreferenceCookie,
 } from "@/lib/persistence/storage-keys";
+import { useInitialTheme } from "@/components/theme/theme-provider";
 
 type ThemeMode = "dark" | "light";
 const themeListeners = new Set<() => void>();
@@ -43,6 +46,7 @@ function applyTheme(nextTheme: ThemeMode) {
   document.documentElement.style.colorScheme = nextTheme;
   document.body.dataset.theme = nextTheme;
   window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+  writeClientPreferenceCookie(THEME_COOKIE_KEY, nextTheme);
 }
 
 function subscribeToTheme(listener: () => void) {
@@ -77,10 +81,11 @@ function setThemePreference(nextTheme: ThemeMode) {
 
 export function ThemeToggle() {
   const { dictionary } = useI18n();
+  const initialTheme = useInitialTheme();
   const theme = useSyncExternalStore<ThemeMode>(
     subscribeToTheme,
     getThemeSnapshot,
-    () => "dark" as ThemeMode,
+    () => initialTheme,
   );
 
   useLayoutEffect(() => {

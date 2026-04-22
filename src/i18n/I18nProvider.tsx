@@ -19,6 +19,8 @@ import {
 import {
   matchesStorageKey,
   readStorageValue,
+  LOCALE_COOKIE_KEY,
+  writeClientPreferenceCookie,
 } from "@/lib/persistence/storage-keys";
 import type { AppDictionary } from "@/i18n/types";
 
@@ -49,6 +51,7 @@ function syncLocale(locale: AppLocale) {
 
   if (typeof window !== "undefined") {
     window.localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+    writeClientPreferenceCookie(LOCALE_COOKIE_KEY, locale);
   }
 }
 
@@ -61,6 +64,14 @@ function readLocaleSnapshot(fallbackLocale: AppLocale): AppLocale {
     readStorageValue(LOCALE_STORAGE_KEY, LEGACY_LOCALE_STORAGE_KEYS) ??
       document.documentElement.lang,
   );
+}
+
+function readHydrationLocaleSnapshot(fallbackLocale: AppLocale): AppLocale {
+  if (typeof window === "undefined") {
+    return fallbackLocale;
+  }
+
+  return readLocaleSnapshot(fallbackLocale);
 }
 
 function subscribeToLocale(listener: () => void) {
@@ -103,7 +114,7 @@ export function I18nProvider({
   const locale = useSyncExternalStore(
     subscribeToLocale,
     () => readLocaleSnapshot(initialLocale),
-    () => initialLocale,
+    () => readHydrationLocaleSnapshot(initialLocale),
   );
 
   useLayoutEffect(() => {
