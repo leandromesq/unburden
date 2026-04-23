@@ -108,6 +108,9 @@ export const resolveAttackerMoveSuggestion: SlotResolver = (context) => {
       cursorOffset,
     };
   });
+  if (options.length === 0) {
+    return null;
+  }
   const active = options[0]
     ? buildActiveSuggestion(
         "attacker_move",

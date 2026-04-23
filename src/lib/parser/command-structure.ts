@@ -278,11 +278,11 @@ function analyzeSegment(tokens: LexToken[], side: "attacker" | "defender"): Segm
   const moveToken = side === "attacker"
     ? explicitSymbolTokens.find((token) => token.kind === "move")
     : undefined;
+  // Keep unresolved attacker tail text available for move suggestions, but
+  // peel out any known bare modifiers even before a move is declared.
   const bareTokenCandidates = [
-    ...(side === "defender" ? remainderTokens : []),
-    ...((side === "defender" || moveToken)
-      ? explicitSlice.filter((token) => !isExplicitToken(token))
-      : []),
+    ...remainderTokens,
+    ...explicitSlice.filter((token) => !isExplicitToken(token)),
   ];
   const parsedBareTokens: SymbolToken[] = [];
   const parsedBareTokenPositions = new Set<string>();
@@ -298,12 +298,9 @@ function analyzeSegment(tokens: LexToken[], side: "attacker" | "defender"): Segm
     parsedBareTokenPositions.add(`${token.start}:${token.end}`);
   }
 
-  const unresolvedRemainderTokens =
-    side === "defender"
-      ? remainderTokens.filter(
-          (token) => !parsedBareTokenPositions.has(`${token.start}:${token.end}`),
-        )
-      : remainderTokens;
+  const unresolvedRemainderTokens = remainderTokens.filter(
+    (token) => !parsedBareTokenPositions.has(`${token.start}:${token.end}`),
+  );
   const postExplicitFreeTokens = explicitSlice.filter(
     (token) =>
       !isExplicitToken(token) &&

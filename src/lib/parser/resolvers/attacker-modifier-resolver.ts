@@ -10,10 +10,8 @@ export const resolveAttackerModifierSuggestion: SlotResolver = (context) => {
     !context.activeToken ||
     !context.raw ||
     !context.activeTokenInAttacker ||
-    !context.fullStructure.attacker.moveToken ||
     context.activeTokenInAttackerSpecies ||
-    context.activeToken.start <
-      (context.fullStructure.attacker.moveToken.source.end ?? 0)
+    !context.attackerResolved
   ) {
     return null;
   }
@@ -22,6 +20,9 @@ export const resolveAttackerModifierSuggestion: SlotResolver = (context) => {
     ...getModifierOptions("attacker", context.raw, context.input, context.activeToken),
     ...getModifierOptions("global", context.raw, context.input, context.activeToken),
   ]).slice(0, 8);
+  if (options.length === 0) {
+    return null;
+  }
   const active = options[0]
     ? buildActiveSuggestion(
         "attacker_modifier_or_item_or_ability",

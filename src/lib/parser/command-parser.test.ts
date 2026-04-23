@@ -253,6 +253,21 @@ describe("parseCommand", () => {
     });
   });
 
+  test("parses attacker modifiers declared before the move token", () => {
+    const result = parseCommand(
+      "excadrill spe-1 @focus-sash !iron-head x incineroar",
+    );
+
+    expect(result.parsed).toMatchObject({
+      attacker: "Excadrill",
+      move: "Iron Head",
+      defender: "Incineroar",
+      attackerItem: "Focus Sash",
+      attackerSpeedMod: -1,
+    });
+    expect(result.issues).toHaveLength(0);
+  });
+
   test("parses attacker and defender hp percentages plus critical hit", () => {
     const result = parseCommand(
       "politoed !muddy-water %75 * x incineroar %50",

@@ -126,4 +126,24 @@ describe("inline suggestions", () => {
       "politoed !muddy-water timid",
     );
   });
+
+  test("suggests pre-move attacker modifiers after the pokemon is resolved", () => {
+    const result = getAutocompleteState("excadrill spe");
+
+    expect(result.suggestionOptions[0]?.value).toBe("spe+1");
+    expect(result.suggestionOptions).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ value: "spe-1" }),
+      ]),
+    );
+  });
+
+  test("keeps bare move suggestions working after a pre-move attacker modifier", () => {
+    const result = getAutocompleteState("excadrill spe-1 iro");
+
+    expect(result.suggestionOptions[0]?.value).toBe("!iron-head");
+    expect(result.activeSuggestion?.completionText).toBe(
+      "excadrill !iron-head spe-1",
+    );
+  });
 });
