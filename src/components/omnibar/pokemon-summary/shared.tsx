@@ -1,5 +1,5 @@
 import { NATURE_MODIFIERS } from "@/lib/calc/stat-calc";
-import type { StatSpread } from "@/lib/types";
+import type { PokemonStatus, StatSpread } from "@/lib/types";
 import { MoveTypeIcon } from "@/components/omnibar/move-type-icon";
 
 export type SummaryStatKey = keyof StatSpread;
@@ -12,6 +12,39 @@ export const SUMMARY_STAT_LABELS: Array<[SummaryStatKey, string]> = [
   ["spd", "SpD"],
   ["spe", "Spe"],
 ];
+
+export const SUMMARY_NATURES = [
+  "Hardy",
+  "Lonely",
+  "Brave",
+  "Adamant",
+  "Naughty",
+  "Bold",
+  "Relaxed",
+  "Impish",
+  "Lax",
+  "Timid",
+  "Hasty",
+  "Jolly",
+  "Naive",
+  "Modest",
+  "Mild",
+  "Quiet",
+  "Rash",
+  "Calm",
+  "Gentle",
+  "Sassy",
+  "Careful",
+] as const;
+
+export const SUMMARY_STATUS_OPTIONS = [
+  "Healthy",
+  "Burn",
+  "Para",
+  "Poison",
+  "Sleep",
+  "Freeze",
+] as const;
 
 const NATURE_STAT_LABELS: Record<string, string> = {
   atk: "Atk",
@@ -48,6 +81,23 @@ export function getNatureEffect(
   }
 
   return value > 1 ? ("boost" as const) : ("nerf" as const);
+}
+
+export function formatSummaryStatus(status: PokemonStatus | null | undefined) {
+  switch (status) {
+    case "brn":
+      return "Burn";
+    case "par":
+      return "Para";
+    case "psn":
+      return "Poison";
+    case "slp":
+      return "Sleep";
+    case "frz":
+      return "Freeze";
+    default:
+      return "Healthy";
+  }
 }
 
 interface MoveChipProps {

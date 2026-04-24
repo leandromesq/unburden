@@ -23,6 +23,7 @@ export const ptBRDictionary: AppDictionary = {
       "Digite uma matchup como um prompt de chat. Aceite entre sugestões com Tab e Setas do Teclado. Compare bulk Min, Mid e Max instantaneamente.",
     toggleModifiers: "Alternar painel de modificadores",
     modifiers: "Modificadores",
+    swapSides: "Trocar atacante e defensor",
     noIssues: "Sem avisos.",
     resultsUpdated: "Resultados atualizados.",
     resultsNotReady: "Resultados ainda não estão prontos.",
@@ -75,6 +76,7 @@ export const ptBRDictionary: AppDictionary = {
         description: "Ir para resultados (quando pronto)",
       },
       { keys: ["Alt", "K"], description: "Focar o chat principal" },
+      { keys: ["Alt", "X"], description: "Trocar atacante e defensor" },
       { keys: ["Esc"], description: "Fechar esta janela de ajuda" },
     ],
     syntaxRows: [
@@ -226,6 +228,8 @@ export const ptBRDictionary: AppDictionary = {
     resolveQuickSummary: (side) =>
       `Determine o Pokemon do lado ${side} para mostrar um resumo rapido.`,
     import: "Importar",
+    export: "Exportar",
+    copied: "Set copiado",
     switch: "Trocar",
     save: "Salvar",
     edit: "Editar",

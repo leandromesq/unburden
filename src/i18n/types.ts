@@ -34,6 +34,7 @@ export interface AppDictionary {
     heroDescription: string;
     toggleModifiers: string;
     modifiers: string;
+    swapSides: string;
     noIssues: string;
     resultsUpdated: string;
     resultsNotReady: string;
@@ -130,6 +131,8 @@ export interface AppDictionary {
     resolvePokemon: string;
     resolveQuickSummary: (side: string) => string;
     import: string;
+    export: string;
+    copied: string;
     switch: string;
     save: string;
     edit: string;

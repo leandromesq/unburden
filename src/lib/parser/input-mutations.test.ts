@@ -2,10 +2,14 @@ import {
   buildActiveChipTokens,
   insertChipToken,
   removeChipToken,
+  setAbilityToken,
+  setNamedStageModifierToken,
   setNatureModifierToken,
   setHpPercentageToken,
+  setItemToken,
   setSpeedModifierToken,
   setStatModifierToken,
+  swapPromptSides,
   stripGlobalSectionTokens,
   toCanonicalScopeToken,
 } from "@/lib/parser/input-mutations";
@@ -246,6 +250,65 @@ describe("input mutations", () => {
     });
   });
 
+  describe("setNamedStageModifierToken", () => {
+    test("sets an explicit named attacker stat stage and replaces the previous value for that stat", () => {
+      expect(
+        setNamedStageModifierToken(
+          "archaludon !body-press def+1 spa+2 x incineroar",
+          "attacker",
+          "def",
+          3,
+        ),
+      ).toBe("archaludon !body-press spa+2 def+3 x incineroar");
+    });
+
+    test("sets an explicit defender special defense stage", () => {
+      expect(
+        setNamedStageModifierToken(
+          "politoed !muddy-water x incineroar reflect",
+          "defender",
+          "spd",
+          -2,
+        ),
+      ).toBe("politoed !muddy-water x incineroar reflect spd-2");
+    });
+
+    test("delegates explicit speed stage updates to the speed token path", () => {
+      expect(
+        setNamedStageModifierToken(
+          "regieleki !electro-ball spe+1 x amoonguss",
+          "attacker",
+          "spe",
+          4,
+        ),
+      ).toBe("regieleki !electro-ball spe+4 x amoonguss");
+    });
+  });
+
+  describe("setItemToken", () => {
+    test("writes an item token for the current side and replaces the previous item", () => {
+      expect(
+        setItemToken(
+          "politoed !muddy-water @leftovers x incineroar",
+          "attacker",
+          "Mystic Water",
+        ),
+      ).toBe("politoed !muddy-water @mystic-water x incineroar");
+    });
+  });
+
+  describe("setAbilityToken", () => {
+    test("writes an ability token for the current side and replaces the previous ability", () => {
+      expect(
+        setAbilityToken(
+          "politoed !muddy-water [Water Absorb] x incineroar",
+          "attacker",
+          "Drizzle",
+        ),
+      ).toBe("politoed !muddy-water [Drizzle] x incineroar");
+    });
+  });
+
   describe("setNatureModifierToken", () => {
     test("maps defense-boosting attacker natures to +nature for body press", () => {
       expect(
@@ -325,6 +388,38 @@ describe("input mutations", () => {
       expect(
         setHpPercentageToken("politoed !muddy-water x", "defender", 50),
       ).toBe("politoed !muddy-water x");
+    });
+  });
+
+  describe("swapPromptSides", () => {
+    test("swaps both sides while keeping globals at the end", () => {
+      expect(
+        swapPromptSides("politoed !muddy-water @mystic-water x incineroar reflect ~rain"),
+      ).toBe("incineroar reflect x politoed @mystic-water ~rain");
+    });
+
+    test("uses the new attacker's referenced set move when swapping a compact defender set", () => {
+      expect(
+        swapPromptSides(
+          "politoed !muddy-water x #incineroar ~rain",
+          {
+            incineroar: {
+              speciesId: "incineroar",
+              speciesName: "Incineroar",
+              level: 50,
+              nature: "Careful",
+              statPoints: { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 },
+              evs: { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 },
+              ivs: { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 },
+              moves: ["Fake Out", "Flare Blitz"],
+            },
+          },
+        ),
+      ).toBe("#incineroar !fake-out x politoed ~rain");
+    });
+
+    test("returns the input unchanged when there is no defender side yet", () => {
+      expect(swapPromptSides("politoed !muddy-water")).toBe("politoed !muddy-water");
     });
   });
 });

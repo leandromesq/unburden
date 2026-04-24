@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
-import { Settings2 } from "lucide-react";
+import { ArrowLeftRight, Settings2 } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
 import { BugReportButton } from "@/components/bug-report-button";
@@ -38,12 +38,14 @@ export function OmniComposer() {
     getServerHydrationSnapshot,
   );
   const [modifiersOpen, setModifiersOpen] = useState(false);
-  const { issues, calculationReady, setInput, setStrictMode } = useOmniStore(
+  const { issues, calculationReady, commandStructure, setInput, setStrictMode, swapSides } = useOmniStore(
     useShallow((state) => ({
       issues: state.issues,
       calculationReady: state.calculationReady,
+      commandStructure: state.commandStructure,
       setInput: state.setInput,
       setStrictMode: state.setStrictMode,
+      swapSides: state.swapSides,
     })),
   );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -137,6 +139,19 @@ export function OmniComposer() {
               >
                 <Settings2 aria-hidden="true" size={14} strokeWidth={1.9} />
                 <span>{dictionary.home.modifiers}</span>
+              </button>
+              <button
+                type="button"
+                aria-label={dictionary.home.swapSides}
+                aria-keyshortcuts="Alt+X"
+                onClick={swapSides}
+                disabled={
+                  !commandStructure.lexed.hasDelimiter ||
+                  !commandStructure.defender.speciesTokens.length
+                }
+                className="theme-icon-button flex min-h-8 min-w-8 items-center justify-center rounded-full px-2.5 py-1 text-[13px] leading-none transition-all disabled:cursor-not-allowed disabled:opacity-50 sm:px-3 sm:text-sm"
+              >
+                <ArrowLeftRight aria-hidden="true" size={14} strokeWidth={1.9} />
               </button>
               <StrictModeToggle />
               <HelpBubble />

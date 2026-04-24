@@ -19,12 +19,25 @@ interface SearchableComboboxProps {
   options: string[];
   placeholder?: string;
   onChange: (value: string) => void;
+  onInputChange?: (value: string) => void;
+  onSelectOption?: (value: string) => void;
+  onBlur?: (value: string) => void;
   renderOption?: (option: string) => React.ReactNode;
   endAdornment?: React.ReactNode;
   hideLabel?: boolean;
+  compact?: boolean;
+  showAllOptions?: boolean;
 }
 
-function rankOptions(options: string[], query: string) {
+function rankOptions(
+  options: string[],
+  query: string,
+  showAllOptions: boolean,
+) {
+  if (showAllOptions) {
+    return options;
+  }
+
   const normalizedQuery = normalizeAlias(query);
 
   if (!normalizedQuery) {
@@ -55,24 +68,18 @@ function rankOptions(options: string[], query: string) {
     .slice(0, 10);
 }
 
-function resolveHighlightedIndex(
-  options: string[],
-  query: string,
-  highlightedIndex: number,
-) {
+function clampHighlightedIndex(options: string[], highlightedIndex: number) {
   if (options.length === 0) {
     return 0;
   }
 
-  const exactMatchIndex = options.findIndex(
+  return Math.min(highlightedIndex, options.length - 1);
+}
+
+function findExactMatchIndex(options: string[], query: string) {
+  return options.findIndex(
     (option) => normalizeAlias(option) === normalizeAlias(query),
   );
-
-  if (exactMatchIndex >= 0) {
-    return exactMatchIndex;
-  }
-
-  return Math.min(highlightedIndex, options.length - 1);
 }
 
 export function SearchableCombobox({
@@ -81,18 +88,28 @@ export function SearchableCombobox({
   options,
   placeholder,
   onChange,
+  onInputChange,
+  onSelectOption,
+  onBlur,
   renderOption,
   endAdornment,
   hideLabel = false,
+  compact = false,
+  showAllOptions = false,
 }: SearchableComboboxProps) {
   const { dictionary } = useI18n();
   const listboxId = useId();
   const optionIdBase = useId();
   const [open, setOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
+  const [inputValue, setInputValue] = useState(value);
   const rootRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
-  const deferredQuery = useDeferredValue(value);
+  const isFocusedRef = useRef(false);
+  const inputValueRef = useRef(value);
+  const committedSelectionRef = useRef<string | null>(null);
+  const deferredQuery = useDeferredValue(inputValue);
   const handlePointerDown = useEffectEvent((event: MouseEvent) => {
     if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
       setOpen(false);
@@ -109,12 +126,19 @@ export function SearchableCombobox({
   }, [open]);
 
   const filteredOptions = useMemo(
-    () => rankOptions(options, deferredQuery),
-    [deferredQuery, options],
+    () => rankOptions(options, deferredQuery, showAllOptions),
+    [deferredQuery, options, showAllOptions],
   );
   const resolvedHighlightedIndex = open
-    ? resolveHighlightedIndex(filteredOptions, value, highlightedIndex)
+    ? clampHighlightedIndex(filteredOptions, highlightedIndex)
     : highlightedIndex;
+
+  useEffect(() => {
+    if (!isFocusedRef.current && inputValue !== value) {
+      inputValueRef.current = value;
+      setInputValue(value);
+    }
+  }, [inputValue, value]);
 
   useEffect(() => {
     if (!open) {
@@ -132,8 +156,16 @@ export function SearchableCombobox({
       : undefined;
 
   const selectOption = (option: string) => {
-    onChange(option);
+    inputValueRef.current = option;
+    setInputValue(option);
+    committedSelectionRef.current = option;
+    onInputChange?.(option);
+    onSelectOption?.(option);
+    if (!onInputChange && !onSelectOption) {
+      onChange(option);
+    }
     setOpen(false);
+    inputRef.current?.blur();
   };
 
   return (
@@ -141,7 +173,8 @@ export function SearchableCombobox({
       {!hideLabel ? <span className="theme-text-dim">{label}</span> : null}
       <div className="relative">
         <input
-          value={value}
+          ref={inputRef}
+          value={inputValue}
           role="combobox"
           aria-controls={listboxId}
           aria-expanded={open}
@@ -150,12 +183,48 @@ export function SearchableCombobox({
           aria-label={
             label || placeholder || dictionary.combobox.selectValue
           }
-          onFocus={() => setOpen(true)}
+          onFocus={() => {
+            isFocusedRef.current = true;
+            const rankedOptions = rankOptions(
+              options,
+              inputValueRef.current,
+              showAllOptions,
+            );
+            const exactMatchIndex = findExactMatchIndex(
+              rankedOptions,
+              inputValueRef.current,
+            );
+            setHighlightedIndex(exactMatchIndex >= 0 ? exactMatchIndex : 0);
+            setOpen(true);
+          }}
           onChange={(event) => {
             const nextValue = event.currentTarget.value;
-            onChange(nextValue);
+            inputValueRef.current = nextValue;
+            committedSelectionRef.current = null;
+            setInputValue(nextValue);
+            if (onInputChange) {
+              onInputChange(nextValue);
+            } else {
+              onChange(nextValue);
+            }
             setOpen(true);
             setHighlightedIndex(0);
+          }}
+          onBlur={() => {
+            isFocusedRef.current = false;
+            setOpen(false);
+            const blurValue = inputValueRef.current;
+            const selectedValue = committedSelectionRef.current;
+            committedSelectionRef.current = null;
+
+            if (
+              selectedValue !== null &&
+              normalizeAlias(selectedValue) === normalizeAlias(blurValue)
+            ) {
+              return;
+            }
+
+            onBlur?.(blurValue);
           }}
           onKeyDown={(event) => {
             if (event.key === "ArrowDown") {
@@ -202,14 +271,23 @@ export function SearchableCombobox({
               return;
             }
 
+            if (
+              event.key === "Tab" &&
+              open &&
+              filteredOptions[resolvedHighlightedIndex]
+            ) {
+              selectOption(filteredOptions[resolvedHighlightedIndex]);
+              return;
+            }
+
             if (event.key === "Escape" && open) {
               event.preventDefault();
               setOpen(false);
             }
           }}
           className={`theme-control theme-input w-full rounded-xl px-3 py-2 ${
-            endAdornment ? "pr-10" : ""
-          }`}
+            compact ? "h-9 text-sm" : ""
+          } ${endAdornment ? "pr-10" : ""}`}
           placeholder={placeholder}
         />
         {endAdornment ? (
@@ -239,7 +317,9 @@ export function SearchableCombobox({
                   selectOption(option);
                 }}
                 onMouseEnter={() => setHighlightedIndex(index)}
-                className={`theme-menu-item w-full px-3 py-2.5 text-left text-sm ${
+                className={`theme-menu-item w-full text-left ${
+                  compact ? "px-3 py-2 text-[13px]" : "px-3 py-2.5 text-sm"
+                } ${
                   index === resolvedHighlightedIndex ? "theme-menu-item-active" : ""
                 }`}
               >

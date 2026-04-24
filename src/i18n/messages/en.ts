@@ -22,6 +22,7 @@ export const enDictionary: AppDictionary = {
       "Type a matchup like a chat prompt. Accept suggestions using Tab and Arrow Keys. Compare Min, Mid, and Max bulk instantly.",
     toggleModifiers: "Toggle modifiers panel",
     modifiers: "Modifiers",
+    swapSides: "Swap attacker and defender",
     noIssues: "No issues.",
     resultsUpdated: "Results updated.",
     resultsNotReady: "Results not ready yet.",
@@ -68,6 +69,7 @@ export const enDictionary: AppDictionary = {
       { keys: ["Tab"], description: "Accept suggestion / complete token" },
       { keys: ["Enter"], description: "Scroll to results (when ready)" },
       { keys: ["Alt", "K"], description: "Focus the main prompt input" },
+      { keys: ["Alt", "X"], description: "Swap attacker and defender" },
       { keys: ["Esc"], description: "Close this help dialog" },
     ],
     syntaxRows: [
@@ -212,6 +214,8 @@ export const enDictionary: AppDictionary = {
     resolveQuickSummary: (side) =>
       `Resolve the ${side} Pokemon to show a quick summary.`,
     import: "Import",
+    export: "Export",
+    copied: "Copied set",
     switch: "Switch",
     save: "Save",
     edit: "Edit",

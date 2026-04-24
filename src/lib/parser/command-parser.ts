@@ -27,7 +27,19 @@ import type {
   OmniIssue,
   ParsedCommand,
   PokemonEntry,
+  StatSpread,
 } from "@/lib/types";
+
+function buildEmptyStageMods(): StatSpread {
+  return {
+    hp: 0,
+    atk: 0,
+    def: 0,
+    spa: 0,
+    spd: 0,
+    spe: 0,
+  };
+}
 
 function resolveParsedSpecies(
   segment: ReturnType<typeof analyzeCommandStructure>["attacker"],
@@ -88,8 +100,8 @@ function parseModifierCollections(
 ) {
   let attackerStatMod = 0;
   let defenderStatMod = 0;
-  let attackerSpeedMod = 0;
-  let defenderSpeedMod = 0;
+  const attackerStageMods = buildEmptyStageMods();
+  const defenderStageMods = buildEmptyStageMods();
   let attackerRepresentativeNature: string | undefined;
   let defenderRepresentativeNature: string | undefined;
   let attackerExplicitNature: string | undefined;
@@ -110,8 +122,11 @@ function parseModifierCollections(
 
     if (definition.kind === "stat_mod") {
       attackerStatMod += definition.statMod ?? 0;
-    } else if (definition.kind === "speed_mod") {
-      attackerSpeedMod += definition.statMod ?? 0;
+    } else if (
+      (definition.kind === "stat_stage" || definition.kind === "speed_mod") &&
+      definition.statKey
+    ) {
+      attackerStageMods[definition.statKey] += definition.statMod ?? 0;
     } else if (definition.kind === "nature") {
       if (
         definition.nature === ATTACKER_POSITIVE_NATURE ||
@@ -138,8 +153,11 @@ function parseModifierCollections(
 
     if (definition.kind === "stat_mod") {
       defenderStatMod += definition.statMod ?? 0;
-    } else if (definition.kind === "speed_mod") {
-      defenderSpeedMod += definition.statMod ?? 0;
+    } else if (
+      (definition.kind === "stat_stage" || definition.kind === "speed_mod") &&
+      definition.statKey
+    ) {
+      defenderStageMods[definition.statKey] += definition.statMod ?? 0;
     } else if (definition.kind === "nature") {
       if (
         definition.nature === DEFENDER_POSITIVE_NATURE ||
@@ -168,8 +186,24 @@ function parseModifierCollections(
   return {
     attackerStatMod: Math.max(-6, Math.min(6, attackerStatMod)),
     defenderStatMod: Math.max(-6, Math.min(6, defenderStatMod)),
-    attackerSpeedMod: Math.max(-6, Math.min(6, attackerSpeedMod)),
-    defenderSpeedMod: Math.max(-6, Math.min(6, defenderSpeedMod)),
+    attackerStageMods: {
+      ...attackerStageMods,
+      atk: Math.max(-6, Math.min(6, attackerStageMods.atk)),
+      def: Math.max(-6, Math.min(6, attackerStageMods.def)),
+      spa: Math.max(-6, Math.min(6, attackerStageMods.spa)),
+      spd: Math.max(-6, Math.min(6, attackerStageMods.spd)),
+      spe: Math.max(-6, Math.min(6, attackerStageMods.spe)),
+    },
+    defenderStageMods: {
+      ...defenderStageMods,
+      atk: Math.max(-6, Math.min(6, defenderStageMods.atk)),
+      def: Math.max(-6, Math.min(6, defenderStageMods.def)),
+      spa: Math.max(-6, Math.min(6, defenderStageMods.spa)),
+      spd: Math.max(-6, Math.min(6, defenderStageMods.spd)),
+      spe: Math.max(-6, Math.min(6, defenderStageMods.spe)),
+    },
+    attackerSpeedMod: Math.max(-6, Math.min(6, attackerStageMods.spe)),
+    defenderSpeedMod: Math.max(-6, Math.min(6, defenderStageMods.spe)),
     attackerNature: attackerExplicitNature ?? attackerRepresentativeNature,
     defenderNature: defenderExplicitNature ?? defenderRepresentativeNature,
     attackerStatus,
@@ -468,6 +502,8 @@ export function parseCommand(
       defenderStatPoints: structure.defender.statPointToken?.spread,
       attackerStatMod: modifiers.attackerStatMod,
       defenderStatMod: modifiers.defenderStatMod,
+      attackerStageMods: modifiers.attackerStageMods,
+      defenderStageMods: modifiers.defenderStageMods,
       attackerSpeedMod: modifiers.attackerSpeedMod,
       defenderSpeedMod: modifiers.defenderSpeedMod,
       attackerCurrentHpPercent,

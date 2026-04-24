@@ -1,9 +1,22 @@
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
 
 import { OmniComposer } from "@/components/omnibar/omni-composer";
+import { SUMMARY_NATURES } from "@/components/omnibar/pokemon-summary/shared";
+import { pokemonById, vgcMetaByPokemonId } from "@/lib/data/loaders";
 import { createImportedSet } from "@/lib/team/imported-set-utils";
+import { buildCommonAbilities } from "@/lib/parser/grammar";
 import { useOmniStore } from "@/store/use-omni-store";
 import { useTeamStore } from "@/store/use-team-store";
+
+function readDisplayedSummaryStat(
+  summary: HTMLElement,
+  label: "Atk" | "Spe",
+) {
+  const statInput = within(summary).getByRole("spinbutton", {
+    name: `${label} stage`,
+  });
+  return statInput.previousElementSibling?.firstElementChild?.textContent;
+}
 
 describe("PokemonSideSummary nature marker synchronization", () => {
   beforeEach(() => {
@@ -112,7 +125,9 @@ describe("PokemonSideSummary nature marker synchronization", () => {
     fireEvent.change(spaInput, { target: { value: "32+" } });
 
     expect(useTeamStore.getState().importedSets.politoed.nature).toBe("Modest");
-    expect(summary).toHaveTextContent("Modest");
+    expect(within(summary).getByRole("combobox", { name: "Nature" })).toHaveValue(
+      "Modest (+SpA/-Atk)",
+    );
   });
 
   test("replacing zero with a new numeric value does not concatenate in the summary input", () => {
@@ -170,7 +185,9 @@ describe("PokemonSideSummary nature marker synchronization", () => {
     fireEvent.focus(spaInput);
     fireEvent.change(spaInput, { target: { value: "32+" } });
 
-    expect(summary).toHaveTextContent("Modest (+SpA/-Atk)");
+    expect(within(summary).getByRole("combobox", { name: "Nature" })).toHaveValue(
+      "Modest (+SpA/-Atk)",
+    );
   });
 
   test("explicit prompt natures show on the identity card without custom SPs", () => {
@@ -182,11 +199,57 @@ describe("PokemonSideSummary nature marker synchronization", () => {
         .setInput("politoed !muddy-water timid x incineroar calm");
     });
 
-    expect(screen.getByTestId("attacker-summary")).toHaveTextContent(
-      "Timid (+Spe/-Atk)",
+    expect(
+      within(screen.getByTestId("attacker-summary")).getByRole("combobox", {
+        name: "Nature",
+      }),
+    ).toHaveValue("Timid (+Spe/-Atk)");
+    expect(
+      within(screen.getByTestId("defender-summary")).getByRole("combobox", {
+        name: "Nature",
+      }),
+    ).toHaveValue("Calm (+SpD/-Atk)");
+  });
+
+  test("nature combobox shows the full fixed nature list in the summary", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    const summary = screen.getByTestId("attacker-summary");
+    const natureCombobox = within(summary).getByRole("combobox", {
+      name: "Nature",
+    });
+
+    fireEvent.focus(natureCombobox);
+
+    expect(within(screen.getByRole("listbox")).getAllByRole("option")).toHaveLength(
+      SUMMARY_NATURES.length,
     );
-    expect(screen.getByTestId("defender-summary")).toHaveTextContent(
-      "Calm (+SpD/-Atk)",
+  });
+
+  test("ability combobox shows all available abilities for the current pokemon", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    const summary = screen.getByTestId("attacker-summary");
+    const abilityCombobox = within(summary).getByRole("combobox", {
+      name: "Ability",
+    });
+    const expectedAbilities = buildCommonAbilities(
+      vgcMetaByPokemonId.get("politoed"),
+      pokemonById.get("politoed")?.abilities ?? [],
+    );
+
+    fireEvent.focus(abilityCombobox);
+
+    expect(within(screen.getByRole("listbox")).getAllByRole("option")).toHaveLength(
+      expectedAbilities.length,
     );
   });
 
@@ -372,7 +435,9 @@ describe("PokemonSideSummary nature marker synchronization", () => {
     expect(
       within(summary).getByRole("textbox", { name: "SpD SP" }),
     ).toHaveValue("0+");
-    expect(summary).toHaveTextContent("Calm");
+    expect(within(summary).getByRole("combobox", { name: "Nature" })).toHaveValue(
+      "Calm (+SpD/-Atk)",
+    );
   });
 
   test("clearing the prompt and switching to a new pokemon resets the summary SP spread", () => {
@@ -415,7 +480,9 @@ describe("PokemonSideSummary nature marker synchronization", () => {
     });
 
     summary = screen.getByTestId("attacker-summary");
-    expect(summary).toHaveTextContent("Incineroar");
+    expect(
+      within(summary).getByRole("combobox", { name: "Pokemon" }),
+    ).toHaveValue("Incineroar");
     expect(within(summary).getByRole("textbox", { name: "HP SP" })).toHaveValue(
       "0",
     );
@@ -482,7 +549,9 @@ describe("PokemonSideSummary nature marker synchronization", () => {
     });
 
     summary = screen.getByTestId("attacker-summary");
-    expect(summary).toHaveTextContent("Adamant");
+    expect(within(summary).getByRole("combobox", { name: "Nature" })).toHaveValue(
+      "Adamant (+Atk/-SpA)",
+    );
     expect(within(summary).getByRole("textbox", { name: "HP SP" })).toHaveValue(
       "12",
     );
@@ -492,5 +561,161 @@ describe("PokemonSideSummary nature marker synchronization", () => {
     expect(
       within(summary).getByRole("textbox", { name: "SpA SP" }),
     ).toHaveValue("0-");
+  });
+
+  test("attacker summary stage inputs rewrite named stat and speed tokens", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    const summary = screen.getByTestId("attacker-summary");
+
+    fireEvent.change(
+      within(summary).getByRole("spinbutton", { name: "SpA stage" }),
+      { target: { value: "1" } },
+    );
+    expect(useOmniStore.getState().input).toBe(
+      "politoed !muddy-water spa+1 x incineroar",
+    );
+
+    fireEvent.change(
+      within(summary).getByRole("spinbutton", { name: "Spe stage" }),
+      { target: { value: "-1" } },
+    );
+    expect(useOmniStore.getState().input).toBe(
+      "politoed !muddy-water spa+1 spe-1 x incineroar",
+    );
+  });
+
+  test("editing the relevant attacker stat replaces generic shorthand with an explicit stat token", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("archaludon !body-press +1 x incineroar");
+    });
+
+    const summary = screen.getByTestId("attacker-summary");
+    const defenseStageInput = within(summary).getByRole("spinbutton", {
+      name: "Def stage",
+    });
+
+    fireEvent.change(defenseStageInput, { target: { value: "3" } });
+
+    expect(useOmniStore.getState().input).toBe(
+      "archaludon !body-press def+3 x incineroar",
+    );
+  });
+
+  test("defender summary stage inputs support explicit defensive stats and speed", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("snorlax !body-slam x incineroar");
+    });
+
+    const summary = screen.getByTestId("defender-summary");
+
+    fireEvent.change(
+      within(summary).getByRole("spinbutton", { name: "Def stage" }),
+      { target: { value: "1" } },
+    );
+    expect(useOmniStore.getState().input).toBe(
+      "snorlax !body-slam x incineroar def+1",
+    );
+
+    fireEvent.change(
+      within(summary).getByRole("spinbutton", { name: "Spe stage" }),
+      { target: { value: "1" } },
+    );
+    expect(useOmniStore.getState().input).toBe(
+      "snorlax !body-slam x incineroar def+1 spe+1",
+    );
+  });
+
+  test("summary HP percent input rewrites the prompt hp token", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    const summary = screen.getByTestId("attacker-summary");
+    const hpPercentInput = within(summary).getByRole("spinbutton", {
+      name: "HP %",
+    });
+
+    fireEvent.change(hpPercentInput, { target: { value: "75" } });
+    expect(useOmniStore.getState().input).toBe(
+      "politoed !muddy-water %75 x incineroar",
+    );
+
+    fireEvent.change(hpPercentInput, { target: { value: "100" } });
+    expect(useOmniStore.getState().input).toBe(
+      "politoed !muddy-water x incineroar",
+    );
+  });
+
+  test("summary status field rewrites and clears prompt status tokens", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    const summary = screen.getByTestId("attacker-summary");
+    const statusCombobox = within(summary).getByRole("combobox", {
+      name: "Status",
+    });
+    expect(statusCombobox).toHaveValue("Healthy");
+
+    fireEvent.focus(statusCombobox);
+    fireEvent.change(statusCombobox, { target: { value: "Burn" } });
+    fireEvent.blur(statusCombobox);
+
+    expect(useOmniStore.getState().input).toBe(
+      "politoed !muddy-water burn x incineroar",
+    );
+    expect(statusCombobox).toHaveValue("Burn");
+
+    fireEvent.focus(statusCombobox);
+    fireEvent.change(statusCombobox, { target: { value: "Healthy" } });
+    fireEvent.blur(statusCombobox);
+
+    expect(useOmniStore.getState().input).toBe(
+      "politoed !muddy-water x incineroar",
+    );
+    expect(statusCombobox).toHaveValue("Healthy");
+  });
+
+  test("summary status field updates displayed attack and speed values", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("incineroar !flare-blitz x politoed");
+    });
+
+    const summary = screen.getByTestId("attacker-summary");
+    const statusCombobox = within(summary).getByRole("combobox", {
+      name: "Status",
+    });
+
+    expect(readDisplayedSummaryStat(summary, "Atk")).toBe("115");
+    expect(readDisplayedSummaryStat(summary, "Spe")).toBe("60");
+
+    fireEvent.focus(statusCombobox);
+    fireEvent.change(statusCombobox, { target: { value: "Burn" } });
+    fireEvent.blur(statusCombobox);
+
+    expect(readDisplayedSummaryStat(summary, "Atk")).toBe("57");
+    expect(readDisplayedSummaryStat(summary, "Spe")).toBe("60");
+
+    fireEvent.focus(statusCombobox);
+    fireEvent.change(statusCombobox, { target: { value: "Para" } });
+    fireEvent.blur(statusCombobox);
+
+    expect(readDisplayedSummaryStat(summary, "Atk")).toBe("115");
+    expect(readDisplayedSummaryStat(summary, "Spe")).toBe("30");
   });
 });

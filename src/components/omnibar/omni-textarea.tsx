@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
+import { X } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
 import { GhostSuggestion } from "@/components/omnibar/ghost-suggestion";
@@ -48,6 +49,7 @@ export function OmniTextarea({
     setCursorIndex,
     moveSuggestionSelection,
     applySuggestion,
+    swapSides,
   } = useOmniStore(
     useShallow((state) => ({
       input: state.input,
@@ -58,6 +60,7 @@ export function OmniTextarea({
       setCursorIndex: state.setCursorIndex,
       moveSuggestionSelection: state.moveSuggestionSelection,
       applySuggestion: state.applySuggestion,
+      swapSides: state.swapSides,
     })),
   );
   const [caretAtEnd, setCaretAtEnd] = useState(true);
@@ -70,13 +73,14 @@ export function OmniTextarea({
       if (
         event.defaultPrevented ||
         event.isComposing ||
-        event.key.toLowerCase() !== "k" ||
         !event.altKey ||
         event.ctrlKey ||
         event.metaKey
       ) {
         return;
       }
+
+      const key = event.key.toLowerCase();
 
       const target = event.target;
       if (
@@ -89,13 +93,21 @@ export function OmniTextarea({
         return;
       }
 
-      event.preventDefault();
-      ref.current?.focus();
+      if (key === "k") {
+        event.preventDefault();
+        ref.current?.focus();
+        return;
+      }
+
+      if (key === "x") {
+        event.preventDefault();
+        swapSides();
+      }
     };
 
     window.addEventListener("keydown", handleGlobalKeyDown);
     return () => window.removeEventListener("keydown", handleGlobalKeyDown);
-  }, [ref]);
+  }, [ref, swapSides]);
 
   useEffect(() => {
     const element = ref.current;
@@ -129,6 +141,21 @@ export function OmniTextarea({
 
   return (
     <div className="relative min-w-0 text-left">
+      {input ? (
+        <button
+          type="button"
+          aria-label="Clear prompt"
+          title="Clear prompt"
+          onClick={() => {
+            setInput("", 0);
+            pendingSelectionRef.current = 0;
+            setCaretAtEnd(true);
+          }}
+          className="theme-icon-button absolute right-3 top-3 z-20 flex h-8 w-8 items-center justify-center rounded-full md:right-4 md:top-4"
+        >
+          <X aria-hidden="true" size={15} strokeWidth={2} />
+        </button>
+      ) : null}
       <textarea
         ref={ref}
         autoFocus
@@ -137,8 +164,8 @@ export function OmniTextarea({
         value={input}
         spellCheck={false}
         placeholder="politoed !muddy-water @mystic-water x incineroar ~rain"
-        aria-keyshortcuts="Alt+K"
-        className="theme-input relative z-10 block min-h-20 w-full min-w-0 resize-none border-0 bg-transparent px-4 py-3 text-left font-mono text-base leading-7 tracking-[-0.02em] outline-none md:min-h-22 md:px-5 md:py-4 md:text-xl md:leading-8"
+        aria-keyshortcuts="Alt+K Alt+X"
+        className="theme-input relative z-10 block min-h-20 w-full min-w-0 resize-none border-0 bg-transparent px-4 py-3 pr-12 text-left font-mono text-base leading-7 tracking-[-0.02em] outline-none md:min-h-22 md:px-5 md:py-4 md:pr-14 md:text-xl md:leading-8"
         onChange={(event) =>
           setInput(
             event.target.value,
@@ -146,6 +173,17 @@ export function OmniTextarea({
           )
         }
         onKeyDown={(event) => {
+          if (
+            event.altKey &&
+            !event.ctrlKey &&
+            !event.metaKey &&
+            event.key.toLowerCase() === "x"
+          ) {
+            event.preventDefault();
+            swapSides();
+            return;
+          }
+
           if (
             event.key === "[" &&
             !event.altKey &&

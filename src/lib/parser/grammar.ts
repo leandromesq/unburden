@@ -3,6 +3,7 @@ import type {
   GlobalEffect,
   PokemonStatus,
   SideEffect,
+  StatSpread,
   VgcMetaProfile,
 } from "@/lib/types";
 
@@ -23,6 +24,7 @@ export interface ModifierDefinition {
   section: ModifierSection;
   kind:
     | "stat_mod"
+    | "stat_stage"
     | "speed_mod"
     | "nature"
     | "investment"
@@ -30,6 +32,7 @@ export interface ModifierDefinition {
     | "side_effect"
     | "global_effect";
   statMod?: number;
+  statKey?: Exclude<keyof StatSpread, "hp">;
   nature?: string;
   investment?: "max_atk" | "max_spa" | "max_def" | "max_spd";
   status?: PokemonStatus;
@@ -161,6 +164,37 @@ function buildStageDefinitions(scope: "attacker" | "defender") {
   return stages;
 }
 
+function buildNamedStageDefinitions(scope: "attacker" | "defender") {
+  const statDefinitions = [
+    ["atk", "Atk"],
+    ["def", "Def"],
+    ["spa", "SpA"],
+    ["spd", "SpD"],
+  ] as const;
+  const stages: ModifierDefinition[] = [];
+
+  for (const [statKey, statLabel] of statDefinitions) {
+    for (let stage = -6; stage <= 6; stage += 1) {
+      if (stage === 0) {
+        continue;
+      }
+
+      const signedStage = stage > 0 ? `+${stage}` : `${stage}`;
+      stages.push({
+        scope,
+        token: `${statKey}${signedStage}`,
+        label: `${statLabel} ${signedStage}`,
+        section: "multipliers",
+        kind: "stat_stage",
+        statKey,
+        statMod: stage,
+      });
+    }
+  }
+
+  return stages;
+}
+
 function buildExplicitNatureDefinitions(scope: "attacker" | "defender") {
   return EXPLICIT_NATURES.map((nature) => ({
     scope,
@@ -188,6 +222,7 @@ function buildSpeedStageDefinitions(scope: "attacker" | "defender") {
       label,
       section: "multipliers",
       kind: "speed_mod",
+      statKey: "spe",
       statMod: stage,
     });
   }
@@ -197,6 +232,7 @@ function buildSpeedStageDefinitions(scope: "attacker" | "defender") {
 
 const ATTACKER_MODIFIERS: ModifierDefinition[] = [
   ...buildStageDefinitions("attacker"),
+  ...buildNamedStageDefinitions("attacker"),
   ...buildSpeedStageDefinitions("attacker"),
   ...buildStatusDefinitions("attacker"),
   {
@@ -268,6 +304,7 @@ const ATTACKER_MODIFIERS: ModifierDefinition[] = [
 
 const DEFENDER_MODIFIERS: ModifierDefinition[] = [
   ...buildStageDefinitions("defender"),
+  ...buildNamedStageDefinitions("defender"),
   ...buildSpeedStageDefinitions("defender"),
   ...buildStatusDefinitions("defender"),
   {

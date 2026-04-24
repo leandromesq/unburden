@@ -100,6 +100,8 @@ export interface ParsedCommand {
   defenderStatPoints?: StatSpread;
   attackerStatMod: number;
   defenderStatMod: number;
+  attackerStageMods: StatSpread;
+  defenderStageMods: StatSpread;
   attackerSpeedMod: number;
   defenderSpeedMod: number;
   attackerCurrentHpPercent?: number;

@@ -47,6 +47,22 @@ describe("damage engine", () => {
     expect(boostedResult.assumptions).toContain("Defender stage: +6 SpD");
   });
 
+  test("applies explicit named attacker and defender stages to the calculation", () => {
+    const neutral = parseCommand("archaludon !body-press x incineroar").parsed;
+    const boosted = parseCommand(
+      "archaludon !body-press def+6 x incineroar def+4",
+    ).parsed;
+
+    const [neutralResult] = calculateDamageResults(neutral!);
+    const [boostedResult] = calculateDamageResults(boosted!);
+
+    expect(boostedResult.maxPercentage).toBeGreaterThan(
+      neutralResult.maxPercentage,
+    );
+    expect(boostedResult.assumptions).toContain("Attacker stage: +6 Def");
+    expect(boostedResult.assumptions).toContain("Defender stage: +4 Def");
+  });
+
   test("uses current hp percentages and critical hits in the calculation context", () => {
     const parsed = parseCommand(
       "politoed !muddy-water %75 * x incineroar %50",

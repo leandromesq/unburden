@@ -32,6 +32,7 @@ import type {
   ImportedSet,
   ParsedCommand,
   PokemonEntry,
+  PokemonStatus,
   StatSpread,
 } from "@/lib/types";
 
@@ -72,6 +73,7 @@ interface PokemonSummaryData {
     | (typeof moveById extends Map<string, infer T> ? T : never)
     | null;
   item: string | null;
+  status: PokemonStatus | null;
   nature: string;
   stats: {
     hp: number;
@@ -86,6 +88,7 @@ interface PokemonSummaryData {
   promptStatPoints: StatSpread | undefined;
   effectiveStatPoints: StatSpread;
   megaTarget: PokemonEntry | null;
+  currentHpPercent: number;
   stageBoosts: StatSpread;
   itemBoosts: ItemStatBoosts;
 }
@@ -159,25 +162,77 @@ function resolveAbilityDisplay(
   return inferDefaultAbility(pokemon.id);
 }
 
-function getStageValue(
+function buildEmptyStageSpread(): StatSpread {
+  return {
+    hp: 0,
+    atk: 0,
+    def: 0,
+    spa: 0,
+    spd: 0,
+    spe: 0,
+  };
+}
+
+function clampStage(value: number) {
+  return Math.max(-6, Math.min(6, value));
+}
+
+function buildStageBoosts(
   tokens: ReturnType<
     typeof analyzeCommandStructure
   >["attacker"]["modifierTokens"],
   map: typeof ATTACKER_MODIFIER_MAP,
-  kind: "stat_mod" | "speed_mod",
-): number {
-  return Math.max(
-    -6,
-    Math.min(
-      6,
-      tokens.reduce((sum, token) => {
-        const definition = map.get(token.value);
-        return definition?.kind === kind
-          ? sum + (definition.statMod ?? 0)
-          : sum;
-      }, 0),
-    ),
-  );
+  side: SummarySide,
+  moveId: string | null,
+  moveCategory: string | null,
+): StatSpread {
+  const stageBoosts = buildEmptyStageSpread();
+  let genericStage = 0;
+
+  for (const token of tokens) {
+    const definition = map.get(token.value);
+    if (!definition) {
+      continue;
+    }
+
+    if (definition.kind === "stat_mod") {
+      genericStage += definition.statMod ?? 0;
+      continue;
+    }
+
+    if (
+      (definition.kind === "stat_stage" || definition.kind === "speed_mod") &&
+      definition.statKey
+    ) {
+      stageBoosts[definition.statKey] += definition.statMod ?? 0;
+    }
+  }
+
+  const clampedGenericStage = clampStage(genericStage);
+
+  if (side === "attacker") {
+    const attackingStatKey = resolveAttackingStatKey(moveId, moveCategory);
+    stageBoosts[attackingStatKey] += clampedGenericStage;
+  } else if (moveCategory) {
+    stageBoosts[moveCategory === "Special" ? "spd" : "def"] += clampedGenericStage;
+  }
+
+  return {
+    hp: 0,
+    atk: clampStage(stageBoosts.atk),
+    def: clampStage(stageBoosts.def),
+    spa: clampStage(stageBoosts.spa),
+    spd: clampStage(stageBoosts.spd),
+    spe: clampStage(stageBoosts.spe),
+  };
+}
+
+function resolveCurrentHpPercent(value: number | undefined) {
+  if (value === undefined || !Number.isFinite(value)) {
+    return 100;
+  }
+
+  return Math.max(1, Math.min(100, Math.round(value)));
 }
 
 function getItemStatBoosts(
@@ -313,27 +368,6 @@ export function usePokemonSummary({
         ? parsedCommand?.attackerStatPoints
         : parsedCommand?.defenderStatPoints;
 
-    const attackerStatStage = getStageValue(
-      structure.attacker.modifierTokens,
-      ATTACKER_MODIFIER_MAP,
-      "stat_mod",
-    );
-    const attackerSpeedStage = getStageValue(
-      structure.attacker.modifierTokens,
-      ATTACKER_MODIFIER_MAP,
-      "speed_mod",
-    );
-    const defenderStatStage = getStageValue(
-      structure.defender.modifierTokens,
-      DEFENDER_MODIFIER_MAP,
-      "stat_mod",
-    );
-    const defenderSpeedStage = getStageValue(
-      structure.defender.modifierTokens,
-      DEFENDER_MODIFIER_MAP,
-      "speed_mod",
-    );
-
     const moveSlug = structure.attacker.moveToken?.value;
     const moveName = resolveMoveName(moveSlug);
     const moveEntry = moveSlug
@@ -343,6 +377,28 @@ export function usePokemonSummary({
       : null;
     const moveId = moveEntry?.id ?? null;
     const moveCategory = moveEntry?.category ?? null;
+    const attackerStageBoosts = buildStageBoosts(
+      structure.attacker.modifierTokens,
+      ATTACKER_MODIFIER_MAP,
+      "attacker",
+      moveId,
+      moveCategory,
+    );
+    const defenderStageBoosts = buildStageBoosts(
+      structure.defender.modifierTokens,
+      DEFENDER_MODIFIER_MAP,
+      "defender",
+      moveId,
+      moveCategory,
+    );
+    const attackerCurrentHpPercent = resolveCurrentHpPercent(
+      parsedCommand?.attackerCurrentHpPercent ??
+        (structure.attacker.hpToken ? Number(structure.attacker.hpToken.value) : undefined),
+    );
+    const defenderCurrentHpPercent = resolveCurrentHpPercent(
+      parsedCommand?.defenderCurrentHpPercent ??
+        (structure.defender.hpToken ? Number(structure.defender.hpToken.value) : undefined),
+    );
 
     const attackerItemDisplay = structure.attacker.itemToken?.value
       ? (itemDisplayById.get(normalizeId(structure.attacker.itemToken.value)) ??
@@ -404,7 +460,6 @@ export function usePokemonSummary({
           )
         : attacker.baseStats;
 
-      const attackingStatKey = resolveAttackingStatKey(moveId, moveCategory);
       const attackerChoiceBoosts = getItemStatBoosts(attackerItemName);
       const megaTarget = attacker.isMega
         ? attacker.baseSpeciesId
@@ -431,6 +486,7 @@ export function usePokemonSummary({
         moveCategory,
         activeMoveEntry: moveEntry,
         item: attackerItemName,
+        status: parsedCommand?.attackerStatus ?? null,
         nature: effectiveSet.nature,
         stats,
         isBaseStats: !hasCustomStats,
@@ -438,14 +494,8 @@ export function usePokemonSummary({
         promptStatPoints,
         effectiveStatPoints: effectiveSet.statPoints,
         megaTarget,
-        stageBoosts: {
-          hp: 0,
-          atk: attackingStatKey === "atk" ? attackerStatStage : 0,
-          def: attackingStatKey === "def" ? attackerStatStage : 0,
-          spa: attackingStatKey === "spa" ? attackerStatStage : 0,
-          spd: 0,
-          spe: attackerSpeedStage,
-        },
+        currentHpPercent: attackerCurrentHpPercent,
+        stageBoosts: attackerStageBoosts,
         itemBoosts: attackerChoiceBoosts,
       };
     }
@@ -489,8 +539,6 @@ export function usePokemonSummary({
         )
       : defender.baseStats;
 
-    const defStage = moveCategory === "Special" ? 0 : defenderStatStage;
-    const spdStage = moveCategory === "Physical" ? 0 : defenderStatStage;
     const defenderChoiceBoosts = getItemStatBoosts(defenderItemName);
     const megaTarget = defender.isMega
       ? defender.baseSpeciesId
@@ -517,6 +565,7 @@ export function usePokemonSummary({
       moveCategory,
       activeMoveEntry: null,
       item: defenderItemName,
+      status: parsedCommand?.defenderStatus ?? null,
       nature: effectiveSet.nature,
       stats,
       isBaseStats: !hasCustomStats,
@@ -524,14 +573,8 @@ export function usePokemonSummary({
       promptStatPoints,
       effectiveStatPoints: effectiveSet.statPoints,
       megaTarget,
-      stageBoosts: {
-        hp: 0,
-        atk: 0,
-        def: defStage,
-        spa: 0,
-        spd: spdStage,
-        spe: defenderSpeedStage,
-      },
+      currentHpPercent: defenderCurrentHpPercent,
+      stageBoosts: defenderStageBoosts,
       itemBoosts: defenderChoiceBoosts,
     };
   }, [

@@ -471,6 +471,40 @@ function buildAbilityFlags(attackerAbility: string | undefined, defenderAbility:
   };
 }
 
+function clampStage(value: number) {
+  return Math.max(-6, Math.min(6, value));
+}
+
+function buildAppliedStageBoosts(
+  parsed: ParsedCommand,
+  moveCategory: string,
+) {
+  const attackerBoosts: StatSpread = {
+    ...parsed.attackerStageMods,
+    hp: 0,
+  };
+  const defenderBoosts: StatSpread = {
+    ...parsed.defenderStageMods,
+    hp: 0,
+  };
+  const attackerStageStatKey = resolveAttackingStatKey(parsed.move, moveCategory);
+  const defenderStageStatKey = moveCategory === "Physical" ? "def" : "spd";
+
+  attackerBoosts[attackerStageStatKey] = clampStage(
+    attackerBoosts[attackerStageStatKey] + parsed.attackerStatMod,
+  );
+  defenderBoosts[defenderStageStatKey] = clampStage(
+    defenderBoosts[defenderStageStatKey] + parsed.defenderStatMod,
+  );
+  attackerBoosts.spe = clampStage(attackerBoosts.spe);
+  defenderBoosts.spe = clampStage(defenderBoosts.spe);
+
+  return {
+    attackerBoosts,
+    defenderBoosts,
+  };
+}
+
 function splitShowdownText(text: string) {
   const separatorIndex = text.indexOf(":");
   if (separatorIndex === -1) {
@@ -712,36 +746,42 @@ function describeAssumptions(
   const assumptions: string[] = [];
   const hasWeatherBoost = parsed.globalEffects.includes("sun");
   const hasTerrainBoost = parsed.globalEffects.includes("electric_terrain");
-  const attackerStageStatKey = resolveAttackingStatKey(parsed.move, moveCategory);
-  const attackerStageStat =
-    attackerStageStatKey === "def"
-      ? "Def"
-      : attackerStageStatKey === "spa"
-        ? "SpA"
-        : "Atk";
-  const defenderStageStat = moveCategory === "Physical" ? "Def" : "SpD";
+  const { attackerBoosts, defenderBoosts } = buildAppliedStageBoosts(
+    parsed,
+    moveCategory,
+  );
+  const statLabels = {
+    atk: "Atk",
+    def: "Def",
+    spa: "SpA",
+    spd: "SpD",
+  } as const;
 
-  if (parsed.attackerStatMod !== 0) {
+  for (const statKey of ["atk", "def", "spa", "spd"] as const) {
+    if (attackerBoosts[statKey] !== 0) {
+      assumptions.push(
+        `Attacker stage: ${attackerBoosts[statKey] > 0 ? "+" : ""}${attackerBoosts[statKey]} ${statLabels[statKey]}`,
+      );
+    }
+  }
+
+  for (const statKey of ["atk", "def", "spa", "spd"] as const) {
+    if (defenderBoosts[statKey] !== 0) {
+      assumptions.push(
+        `Defender stage: ${defenderBoosts[statKey] > 0 ? "+" : ""}${defenderBoosts[statKey]} ${statLabels[statKey]}`,
+      );
+    }
+  }
+
+  if (attackerBoosts.spe !== 0) {
     assumptions.push(
-      `Attacker stage: ${parsed.attackerStatMod > 0 ? "+" : ""}${parsed.attackerStatMod} ${attackerStageStat}`,
+      `Attacker speed stage: ${attackerBoosts.spe > 0 ? "+" : ""}${attackerBoosts.spe} Spe`,
     );
   }
 
-  if (parsed.defenderStatMod !== 0) {
+  if (defenderBoosts.spe !== 0) {
     assumptions.push(
-      `Defender stage: ${parsed.defenderStatMod > 0 ? "+" : ""}${parsed.defenderStatMod} ${defenderStageStat}`,
-    );
-  }
-
-  if (parsed.attackerSpeedMod !== 0) {
-    assumptions.push(
-      `Attacker speed stage: ${parsed.attackerSpeedMod > 0 ? "+" : ""}${parsed.attackerSpeedMod} Spe`,
-    );
-  }
-
-  if (parsed.defenderSpeedMod !== 0) {
-    assumptions.push(
-      `Defender speed stage: ${parsed.defenderSpeedMod > 0 ? "+" : ""}${parsed.defenderSpeedMod} Spe`,
+      `Defender speed stage: ${defenderBoosts.spe > 0 ? "+" : ""}${defenderBoosts.spe} Spe`,
     );
   }
 
@@ -966,6 +1006,10 @@ export function buildCalculationContext(
 
   const isPhysical = move.category === "Physical";
   const attackingStatKey = resolveAttackingStatKey(move.id, move.category);
+  const { attackerBoosts, defenderBoosts } = buildAppliedStageBoosts(
+    parsed,
+    move.category,
+  );
   const attackInvestment =
     parsed.attackerInvestment === "max_atk"
       ? "atk"
@@ -1048,10 +1092,11 @@ export function buildCalculationContext(
         spe: 0,
       }),
     boosts: {
-      atk: attackingStatKey === "atk" ? parsed.attackerStatMod : 0,
-      def: attackingStatKey === "def" ? parsed.attackerStatMod : 0,
-      spa: attackingStatKey === "spa" ? parsed.attackerStatMod : 0,
-      spe: parsed.attackerSpeedMod,
+      atk: attackerBoosts.atk,
+      def: attackerBoosts.def,
+      spa: attackerBoosts.spa,
+      spd: attackerBoosts.spd,
+      spe: attackerBoosts.spe,
     },
     status: parsed.attackerStatus,
     moves: [parsed.move],
@@ -1091,7 +1136,7 @@ export function buildCalculationContext(
     ivs: attackerBaseOptions.ivs,
     nature: attackerBaseOptions.nature,
     level: attackerBaseOptions.level,
-    speedStage: parsed.attackerSpeedMod,
+    speedStage: attackerBoosts.spe,
     status: parsed.attackerStatus,
     hasTailwind: parsed.attackerSideEffects.includes("tailwind"),
     ability: attackerAbility,
@@ -1104,7 +1149,7 @@ export function buildCalculationContext(
     ivs: defenderSpeedIvs,
     nature: defenderSpeedNature,
     level: defenderSet?.level ?? 50,
-    speedStage: parsed.defenderSpeedMod,
+    speedStage: defenderBoosts.spe,
     status: parsed.defenderStatus,
     hasTailwind: parsed.defenderSideEffects.includes("tailwind"),
     ability: defenderAbility,
@@ -1207,6 +1252,10 @@ export function calculateDamageResults(
   }
 
   return context.archetypes.flatMap((archetype): DamageResult[] => {
+    const { defenderBoosts } = buildAppliedStageBoosts(
+      parsed,
+      context.move.category,
+    );
     const defenderLevel = context.defenderSet?.level ?? 50;
     const defenderNature = context.defenderSet
       ? parsed.defenderNature ?? context.defenderSet.nature
@@ -1224,9 +1273,11 @@ export function calculateDamageResults(
       ivs: defenderIvs,
       evs: defenderEvs,
       boosts: {
-        def: context.move.category === "Physical" ? parsed.defenderStatMod : 0,
-        spd: context.move.category === "Special" ? parsed.defenderStatMod : 0,
-        spe: parsed.defenderSpeedMod,
+        atk: parsed.defenderStageMods.atk,
+        def: defenderBoosts.def,
+        spa: parsed.defenderStageMods.spa,
+        spd: defenderBoosts.spd,
+        spe: defenderBoosts.spe,
       },
       status: parsed.defenderStatus,
     };

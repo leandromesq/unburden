@@ -6,7 +6,11 @@ import {
   waitFor,
   within,
 } from "@testing-library/react";
-import { createRef } from "react";
+import {
+  createRef,
+  type ComponentType,
+  type RefObject,
+} from "react";
 
 import { ModifierSwitches } from "@/components/omnibar/modifier-switches";
 import { OmniComposer } from "@/components/omnibar/omni-composer";
@@ -19,6 +23,13 @@ import { parseCommand } from "@/lib/parser/command-parser";
 import { parseShareState } from "@/lib/share/parse-share-state";
 import { resetOmniStore, useOmniStore } from "@/store/use-omni-store";
 import { useTeamStore } from "@/store/use-team-store";
+
+const ModifierSwitchesWithRef = ModifierSwitches as ComponentType<{
+  textareaRef: RefObject<HTMLTextAreaElement | null>;
+}>;
+const OmniTextareaWithRef = OmniTextarea as ComponentType<{
+  textareaRef: RefObject<HTMLTextAreaElement | null>;
+}>;
 
 describe("omnibar components", () => {
   beforeEach(() => {
@@ -49,10 +60,77 @@ describe("omnibar components", () => {
     expect(screen.getByRole("button", { name: /^Rain$/i })).toBeInTheDocument();
   });
 
+  test("swap sides button is disabled until the defender side exists", () => {
+    render(<OmniComposer />);
+
+    expect(
+      screen.getByRole("button", { name: "Swap attacker and defender" }),
+    ).toBeDisabled();
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    expect(
+      screen.getByRole("button", { name: "Swap attacker and defender" }),
+    ).toBeEnabled();
+  });
+
+  test("swap sides flips the prompt and both summaries", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Swap attacker and defender" }),
+    );
+
+    expect(useOmniStore.getState().input).toBe("incineroar x politoed");
+    expect(
+      within(screen.getByTestId("attacker-summary")).getByRole("combobox", {
+        name: "Pokemon",
+      }),
+    ).toHaveValue("Incineroar");
+    expect(
+      within(screen.getByTestId("defender-summary")).getByRole("combobox", {
+        name: "Pokemon",
+      }),
+    ).toHaveValue("Politoed");
+  });
+
+  test("swap sides uses the defender set move when the new attacker is a compact #set", () => {
+    act(() => {
+      useTeamStore.getState().saveSet({
+        speciesId: "incineroar",
+        speciesName: "Incineroar",
+        level: 50,
+        nature: "Careful",
+        statPoints: { hp: 32, atk: 0, def: 8, spa: 0, spd: 16, spe: 10 },
+        evs: { hp: 252, atk: 0, def: 108, spa: 0, spd: 148, spe: 0 },
+        ivs: { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 },
+        moves: ["Fake Out", "Flare Blitz", "Knock Off", "Parting Shot"],
+      });
+    });
+
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x #incineroar");
+    });
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Swap attacker and defender" }),
+    );
+
+    expect(useOmniStore.getState().input).toBe("#incineroar !fake-out x politoed");
+  });
+
   test("Tab applies the active suggestion and keeps focus on the textarea", () => {
     const textareaRef = createRef<HTMLTextAreaElement>();
 
-    render(<OmniTextarea textareaRef={textareaRef} />);
+    render(<OmniTextareaWithRef textareaRef={textareaRef} />);
 
     act(() => {
       useOmniStore.getState().setInput("poli");
@@ -118,10 +196,94 @@ describe("omnibar components", () => {
     expect(handleChange).toHaveBeenLastCalledWith("Sitrus Berry");
   });
 
+  test("searchable combobox keeps arrow navigation working after typing an exact-match draft value", () => {
+    const handleInputChange = jest.fn();
+    const handleSelectOption = jest.fn();
+
+    render(
+      <SearchableCombobox
+        label="Item"
+        value=""
+        options={["my", "Mystic Water", "Sitrus Berry"]}
+        onChange={() => {}}
+        onInputChange={handleInputChange}
+        onSelectOption={handleSelectOption}
+      />,
+    );
+
+    const combobox = screen.getByRole("combobox", { name: "Item" });
+
+    fireEvent.focus(combobox);
+    fireEvent.change(combobox, { target: { value: "my" } });
+    fireEvent.keyDown(combobox, { key: "ArrowDown" });
+    fireEvent.keyDown(combobox, { key: "Enter" });
+
+    expect(handleInputChange).toHaveBeenCalledWith("my");
+    expect(handleSelectOption).toHaveBeenLastCalledWith("Mystic Water");
+  });
+
+  test("searchable combobox selects the highlighted option on Tab", () => {
+    const handleSelectOption = jest.fn();
+
+    render(
+      <SearchableCombobox
+        label="Nature"
+        value=""
+        options={["Hardy", "Modest", "Timid"]}
+        onChange={() => {}}
+        onSelectOption={handleSelectOption}
+      />,
+    );
+
+    const combobox = screen.getByRole("combobox", { name: "Nature" });
+
+    fireEvent.focus(combobox);
+    fireEvent.keyDown(combobox, { key: "ArrowDown" });
+    fireEvent.keyDown(combobox, { key: "Tab" });
+
+    expect(handleSelectOption).toHaveBeenLastCalledWith("Modest");
+  });
+
+  test("searchable combobox blurs after selecting an option", () => {
+    render(
+      <SearchableCombobox
+        label="Nature"
+        value=""
+        options={["Hardy", "Modest", "Timid"]}
+        onChange={() => {}}
+      />,
+    );
+
+    const combobox = screen.getByRole("combobox", { name: "Nature" });
+
+    act(() => {
+      combobox.focus();
+    });
+    fireEvent.keyDown(combobox, { key: "ArrowDown" });
+    fireEvent.keyDown(combobox, { key: "Enter" });
+
+    expect(combobox).not.toHaveFocus();
+  });
+
+  test("Alt+X swaps sides from the main textarea", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    fireEvent.keyDown(screen.getByTestId("omni-textarea"), {
+      key: "x",
+      altKey: true,
+    });
+
+    expect(useOmniStore.getState().input).toBe("incineroar x politoed");
+  });
+
   test("modifier chip toggles its token in the current input", () => {
     const textareaRef = createRef<HTMLTextAreaElement>();
 
-    render(<ModifierSwitches textareaRef={textareaRef} />);
+    render(<ModifierSwitchesWithRef textareaRef={textareaRef} />);
 
     act(() => {
       useOmniStore.getState().setInput("incineroar !flare-blitz x tinkaton");
@@ -142,7 +304,7 @@ describe("omnibar components", () => {
   test("stage slider rewrites attacker and defender stages intuitively", () => {
     const textareaRef = createRef<HTMLTextAreaElement>();
 
-    render(<ModifierSwitches textareaRef={textareaRef} />);
+    render(<ModifierSwitchesWithRef textareaRef={textareaRef} />);
 
     act(() => {
       useOmniStore
@@ -168,7 +330,7 @@ describe("omnibar components", () => {
   test("speed slider rewrites attacker and defender speed stages independently", () => {
     const textareaRef = createRef<HTMLTextAreaElement>();
 
-    render(<ModifierSwitches textareaRef={textareaRef} />);
+    render(<ModifierSwitchesWithRef textareaRef={textareaRef} />);
 
     act(() => {
       useOmniStore
@@ -194,7 +356,7 @@ describe("omnibar components", () => {
   test("hp percentage chips set and replace attacker and defender current hp", () => {
     const textareaRef = createRef<HTMLTextAreaElement>();
 
-    render(<ModifierSwitches textareaRef={textareaRef} />);
+    render(<ModifierSwitchesWithRef textareaRef={textareaRef} />);
 
     act(() => {
       useOmniStore.getState().setInput("incineroar !flare-blitz x tinkaton");
@@ -436,7 +598,7 @@ describe("omnibar components", () => {
   test("Tab applies the highlighted suggestion even without inline ghost text", () => {
     const textareaRef = createRef<HTMLTextAreaElement>();
 
-    render(<OmniTextarea textareaRef={textareaRef} />);
+    render(<OmniTextareaWithRef textareaRef={textareaRef} />);
 
     act(() => {
       useOmniStore.getState().setInput("politoed !muddy-water x incineroar ");
@@ -450,6 +612,19 @@ describe("omnibar components", () => {
     expect(useOmniStore.getState().input).toBe(
       "politoed !muddy-water x incineroar ~rain",
     );
+  });
+
+  test("clear prompt button resets the main textarea input", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Clear prompt" }));
+
+    expect(useOmniStore.getState().input).toBe("");
+    expect(screen.getByTestId("omni-textarea")).toHaveValue("");
   });
 
   test("Enter scrolls to the results when a calculation is ready", () => {
@@ -548,20 +723,60 @@ describe("omnibar components", () => {
       useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
     });
 
-    expect(screen.getByTestId("attacker-summary")).toHaveTextContent(
-      "Politoed",
-    );
-    expect(screen.getByTestId("attacker-summary")).toHaveTextContent(
-      "Muddy Water",
-    );
+    expect(
+      within(screen.getByTestId("attacker-summary")).getByRole("combobox", {
+        name: "Pokemon",
+      }),
+    ).toHaveValue("Politoed");
+    expect(
+      within(screen.getByTestId("attacker-summary")).getByRole("combobox", {
+        name: "Move 1",
+      }),
+    ).toHaveValue("Muddy Water");
     expect(
       within(screen.getByTestId("attacker-summary")).getAllByRole("img", {
         name: "Water type",
       }).length,
     ).toBeGreaterThanOrEqual(1);
-    expect(screen.getByTestId("defender-summary")).toHaveTextContent(
-      "Incineroar",
-    );
+    expect(
+      within(screen.getByTestId("defender-summary")).getByRole("combobox", {
+        name: "Pokemon",
+      }),
+    ).toHaveValue("Incineroar");
+  });
+
+  test("empty attacker summary can start the prompt from the species field", () => {
+    render(<OmniComposer />);
+
+    const attackerSummary = screen.getByTestId("attacker-summary");
+    const speciesCombobox = within(attackerSummary).getByRole("combobox", {
+      name: "Pokemon",
+    });
+
+    fireEvent.focus(speciesCombobox);
+    fireEvent.change(speciesCombobox, { target: { value: "Politoed" } });
+    fireEvent.blur(speciesCombobox);
+
+    expect(useOmniStore.getState().input).toBe("politoed");
+  });
+
+  test("empty defender summary inserts the delimiter when starting from the species field", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed");
+    });
+
+    const defenderSummary = screen.getByTestId("defender-summary");
+    const speciesCombobox = within(defenderSummary).getByRole("combobox", {
+      name: "Pokemon",
+    });
+
+    fireEvent.focus(speciesCombobox);
+    fireEvent.change(speciesCombobox, { target: { value: "Incineroar" } });
+    fireEvent.blur(speciesCombobox);
+
+    expect(useOmniStore.getState().input).toBe("politoed x incineroar");
   });
 
   test("renders move type icons in the attacker summary", () => {
@@ -590,7 +805,7 @@ describe("omnibar components", () => {
       within(screen.getByTestId("attacker-summary")).getAllByRole("img", {
         name: "Water type",
       }).length,
-    ).toBeGreaterThanOrEqual(2);
+    ).toBeGreaterThanOrEqual(1);
   });
 
   test("saved set cards insert canonical #set references into the prompt", () => {
@@ -630,9 +845,11 @@ describe("omnibar components", () => {
         .setInput("charizard !heat-wave x tinkaton @occa-berry");
     });
 
-    expect(screen.getByTestId("defender-summary")).toHaveTextContent(
-      "Occa Berry",
-    );
+    expect(
+      within(screen.getByTestId("defender-summary")).getByRole("combobox", {
+        name: "Item",
+      }),
+    ).toHaveValue("Occa Berry");
   });
 
   test("editing a summary set stores SPs and updates the summary card", () => {
@@ -642,28 +859,21 @@ describe("omnibar components", () => {
       useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
     });
 
-    fireEvent.click(
-      within(screen.getByTestId("attacker-summary")).getByRole("button", {
-        name: "Edit",
-      }),
-    );
-
-    const dialog = screen.getByRole("dialog", { name: /edit politoed set/i });
-    const itemCombobox = within(dialog).getByRole("combobox", { name: "Item" });
+    const summary = screen.getByTestId("attacker-summary");
+    const itemCombobox = within(summary).getByRole("combobox", { name: "Item" });
     fireEvent.focus(itemCombobox);
-    fireEvent.change(itemCombobox, { target: { value: "myst" } });
-    fireEvent.keyDown(itemCombobox, { key: "ArrowDown" });
-    fireEvent.keyDown(itemCombobox, { key: "Enter" });
-    fireEvent.change(within(dialog).getByLabelText("HP"), {
+    fireEvent.change(itemCombobox, { target: { value: "Mystic Water" } });
+    fireEvent.blur(itemCombobox);
+    fireEvent.change(within(summary).getByRole("textbox", { name: "HP SP" }), {
       target: { value: "32" },
     });
-    fireEvent.change(within(dialog).getByLabelText("SpA"), {
+    fireEvent.change(within(summary).getByRole("textbox", { name: "SpA SP" }), {
       target: { value: "13" },
     });
-    fireEvent.change(within(dialog).getByLabelText("Spe"), {
+    fireEvent.change(within(summary).getByRole("textbox", { name: "Spe SP" }), {
       target: { value: "19" },
     });
-    fireEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+    fireEvent.click(within(summary).getByRole("button", { name: "Save" }));
 
     expect(
       useTeamStore.getState().importedSets.politoed.statPoints,
@@ -692,7 +902,11 @@ describe("omnibar components", () => {
         name: "SpA SP",
       }),
     ).toHaveValue("13");
-    expect(screen.getByTestId("attacker-summary")).toHaveTextContent("SpA");
+    expect(
+      within(screen.getByTestId("attacker-summary")).getByRole("combobox", {
+        name: "Item",
+      }),
+    ).toHaveValue("Mystic Water");
   });
 
   test("editing an SP bubble inline writes a prompt sp: override", () => {
@@ -729,25 +943,41 @@ describe("omnibar components", () => {
       useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
     });
 
-    fireEvent.click(
-      within(screen.getByTestId("attacker-summary")).getByRole("button", {
-        name: "Edit",
-      }),
-    );
-
-    const dialog = screen.getByRole("dialog", { name: /edit politoed set/i });
-    const speciesCombobox = within(dialog).getByRole("combobox", {
+    const summary = screen.getByTestId("attacker-summary");
+    const speciesCombobox = within(summary).getByRole("combobox", {
       name: "Pokemon",
     });
     fireEvent.focus(speciesCombobox);
-    fireEvent.change(speciesCombobox, { target: { value: "incin" } });
-    fireEvent.keyDown(speciesCombobox, { key: "ArrowDown" });
-    fireEvent.keyDown(speciesCombobox, { key: "Enter" });
-    fireEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+    fireEvent.change(speciesCombobox, { target: { value: "Incineroar" } });
+    fireEvent.blur(speciesCombobox);
+    fireEvent.click(within(summary).getByRole("button", { name: "Save" }));
 
     expect(useTeamStore.getState().importedSets.incineroar).toBeDefined();
     expect(useTeamStore.getState().importedSets.politoed).toBeUndefined();
     expect(useOmniStore.getState().input).toBe("#incineroar !muddy-water x incineroar");
+  });
+
+  test("saving a named inline summary compacts the prompt to the new #set token", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    const summary = screen.getByTestId("attacker-summary");
+    const nicknameInput = within(summary).getByRole("textbox", {
+      name: "Set Name",
+    });
+
+    fireEvent.change(nicknameInput, { target: { value: "rain-toed" } });
+    fireEvent.click(within(summary).getByRole("button", { name: "Save" }));
+
+    expect(useTeamStore.getState().importedSets.politoed.nickname).toBe(
+      "rain-toed",
+    );
+    expect(useOmniStore.getState().input).toBe(
+      "#raintoed !muddy-water x incineroar",
+    );
   });
 
   test("saving an inline-edited summary promotes it to saved-set UI", () => {
@@ -785,9 +1015,7 @@ describe("omnibar components", () => {
     );
 
     expect(useTeamStore.getState().importedSets.politoed).toBeDefined();
-    expect(useOmniStore.getState().input).toBe(
-      "#politoed !muddy-water sp:32/0/0/0/0/0 x incineroar",
-    );
+    expect(useOmniStore.getState().input).toBe("#politoed !muddy-water x incineroar");
     expect(
       within(screen.getByTestId("attacker-summary")).getByRole("button", {
         name: /remove politoed set/i,
@@ -798,6 +1026,238 @@ describe("omnibar components", () => {
         name: "Switch",
       }),
     ).toBeInTheDocument();
+  });
+
+  test("selecting a saved summary move keeps the other move slots intact", () => {
+    act(() => {
+      useTeamStore.getState().saveSet({
+        speciesId: "politoed",
+        speciesName: "Politoed",
+        item: "Mystic Water",
+        ability: "Drizzle",
+        level: 50,
+        nature: "Modest",
+        statPoints: { hp: 32, atk: 0, def: 1, spa: 13, spd: 1, spe: 19 },
+        evs: { hp: 252, atk: 0, def: 8, spa: 104, spd: 8, spe: 152 },
+        ivs: { hp: 31, atk: 0, def: 31, spa: 31, spd: 31, spe: 31 },
+        moves: ["Muddy Water", "Ice Beam", "Protect", "Helping Hand"],
+      });
+    });
+
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("#politoed !muddy-water x incineroar");
+    });
+
+    const summary = screen.getByTestId("attacker-summary");
+
+    fireEvent.click(
+      within(summary).getByRole("button", { name: /use ice beam for calc/i }),
+    );
+
+    expect(useOmniStore.getState().input).toBe("#politoed !ice-beam x incineroar");
+    expect(
+      within(summary).getByRole("combobox", { name: "Move 1" }),
+    ).toHaveValue("Muddy Water");
+    expect(
+      within(summary).getByRole("combobox", { name: "Move 2" }),
+    ).toHaveValue("Ice Beam");
+    expect(
+      within(summary).getByRole("combobox", { name: "Move 3" }),
+    ).toHaveValue("Protect");
+    expect(
+      within(summary).getByRole("combobox", { name: "Move 4" }),
+    ).toHaveValue("Helping Hand");
+    expect(useTeamStore.getState().importedSets.politoed.moves).toEqual([
+      "Muddy Water",
+      "Ice Beam",
+      "Protect",
+      "Helping Hand",
+    ]);
+  });
+
+  test("external prompt moves replace only the selected summary slot, defaulting to the first slot", () => {
+    act(() => {
+      useTeamStore.getState().saveSet({
+        speciesId: "politoed",
+        speciesName: "Politoed",
+        item: "Mystic Water",
+        ability: "Drizzle",
+        level: 50,
+        nature: "Modest",
+        statPoints: { hp: 32, atk: 0, def: 1, spa: 13, spd: 1, spe: 19 },
+        evs: { hp: 252, atk: 0, def: 8, spa: 104, spd: 8, spe: 152 },
+        ivs: { hp: 31, atk: 0, def: 31, spa: 31, spd: 31, spe: 31 },
+        moves: ["Muddy Water", "Ice Beam", "Protect", "Helping Hand"],
+      });
+    });
+
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("#politoed !hydro-pump x incineroar");
+    });
+
+    let summary = screen.getByTestId("attacker-summary");
+    expect(
+      within(summary).getByRole("combobox", { name: "Move 1" }),
+    ).toHaveValue("Hydro Pump");
+    expect(
+      within(summary).getByRole("combobox", { name: "Move 2" }),
+    ).toHaveValue("Ice Beam");
+
+    fireEvent.click(
+      within(summary).getByRole("button", { name: /use protect for calc/i }),
+    );
+
+    act(() => {
+      useOmniStore.getState().setInput("#politoed !weather-ball x incineroar");
+    });
+
+    summary = screen.getByTestId("attacker-summary");
+    expect(
+      within(summary).getByRole("combobox", { name: "Move 1" }),
+    ).toHaveValue("Muddy Water");
+    expect(
+      within(summary).getByRole("combobox", { name: "Move 2" }),
+    ).toHaveValue("Ice Beam");
+    expect(
+      within(summary).getByRole("combobox", { name: "Move 3" }),
+    ).toHaveValue("Weather Ball");
+    expect(
+      within(summary).getByRole("combobox", { name: "Move 4" }),
+    ).toHaveValue("Helping Hand");
+    expect(useTeamStore.getState().importedSets.politoed.moves).toEqual([
+      "Muddy Water",
+      "Ice Beam",
+      "Protect",
+      "Helping Hand",
+    ]);
+  });
+
+  test("editing a saved summary set keeps the prompt compacted and preserves globals", () => {
+    act(() => {
+      useTeamStore.getState().saveSet({
+        speciesId: "politoed",
+        speciesName: "Politoed",
+        level: 50,
+        nature: "Modest",
+        statPoints: { hp: 32, atk: 0, def: 1, spa: 13, spd: 1, spe: 19 },
+        evs: { hp: 252, atk: 0, def: 8, spa: 104, spd: 8, spe: 152 },
+        ivs: { hp: 31, atk: 0, def: 31, spa: 31, spd: 31, spe: 31 },
+        moves: ["Muddy Water", "Ice Beam", "Protect", "Helping Hand"],
+      });
+    });
+
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("#politoed !muddy-water x incineroar ~rain");
+    });
+
+    const summary = screen.getByTestId("attacker-summary");
+    const itemCombobox = within(summary).getByRole("combobox", { name: "Item" });
+
+    fireEvent.change(itemCombobox, { target: { value: "Mystic Water" } });
+    fireEvent.blur(itemCombobox);
+
+    expect(useTeamStore.getState().importedSets.politoed.item).toBe(
+      "Mystic Water",
+    );
+    expect(useOmniStore.getState().input).toBe(
+      "#politoed !muddy-water x incineroar ~rain",
+    );
+  });
+
+  test("renaming a saved summary set rewrites the compact prompt reference", () => {
+    act(() => {
+      useTeamStore.getState().saveSet({
+        speciesId: "politoed",
+        speciesName: "Politoed",
+        level: 50,
+        nature: "Modest",
+        statPoints: { hp: 32, atk: 0, def: 1, spa: 13, spd: 1, spe: 19 },
+        evs: { hp: 252, atk: 0, def: 8, spa: 104, spd: 8, spe: 152 },
+        ivs: { hp: 31, atk: 0, def: 31, spa: 31, spd: 31, spe: 31 },
+        moves: ["Muddy Water", "Ice Beam", "Protect", "Helping Hand"],
+      });
+    });
+
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("#politoed !muddy-water x incineroar");
+    });
+
+    const summary = screen.getByTestId("attacker-summary");
+    const nicknameInput = within(summary).getByRole("textbox", {
+      name: "Set Name",
+    });
+
+    fireEvent.change(nicknameInput, { target: { value: "rain-toed" } });
+    fireEvent.blur(nicknameInput);
+
+    expect(useTeamStore.getState().importedSets.politoed.nickname).toBe(
+      "rain-toed",
+    );
+    expect(useOmniStore.getState().input).toBe(
+      "#raintoed !muddy-water x incineroar",
+    );
+  });
+
+  test("summary export copies the current visible set as Showdown text", async () => {
+    const writeText = jest.fn().mockResolvedValue(undefined);
+
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+
+    act(() => {
+      useTeamStore.getState().saveSet({
+        speciesId: "politoed",
+        speciesName: "Politoed",
+        item: "Mystic Water",
+        ability: "Drizzle",
+        level: 50,
+        nature: "Modest",
+        statPoints: { hp: 32, atk: 0, def: 1, spa: 13, spd: 1, spe: 19 },
+        evs: { hp: 252, atk: 0, def: 8, spa: 104, spd: 8, spe: 152 },
+        ivs: { hp: 31, atk: 0, def: 31, spa: 31, spd: 31, spe: 31 },
+        moves: ["Muddy Water", "Ice Beam", "Protect", "Helping Hand"],
+      });
+    });
+
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("#politoed !hydro-pump x incineroar");
+    });
+
+    await act(async () => {
+      fireEvent.click(
+        within(screen.getByTestId("attacker-summary")).getByRole("button", {
+          name: "Export",
+        }),
+      );
+    });
+
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringContaining("Politoed @ Mystic Water"),
+    );
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringContaining("Ability: Drizzle"),
+    );
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringContaining("Modest Nature"),
+    );
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringContaining("- Hydro Pump"),
+    );
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringContaining("- Ice Beam"),
+    );
   });
 
   test("summary mega switch reflects active state and toggles both directions", () => {
@@ -903,7 +1363,7 @@ describe("omnibar components", () => {
   test("preserves a trailing space after a resolved field setter prompt", () => {
     const textareaRef = createRef<HTMLTextAreaElement>();
 
-    render(<OmniTextarea textareaRef={textareaRef} />);
+    render(<OmniTextareaWithRef textareaRef={textareaRef} />);
 
     act(() => {
       useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
@@ -1008,7 +1468,7 @@ describe("omnibar components", () => {
   test("typing [ auto-closes brackets and keeps the caret inside", () => {
     const textareaRef = createRef<HTMLTextAreaElement>();
 
-    render(<OmniTextarea textareaRef={textareaRef} />);
+    render(<OmniTextareaWithRef textareaRef={textareaRef} />);
 
     act(() => {
       useOmniStore.getState().setInput("incineroar !flare-blitz x tinkaton ");

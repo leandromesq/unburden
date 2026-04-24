@@ -11,6 +11,7 @@ import {
   setHpPercentageToken,
   setSpeedModifierToken,
   setStatModifierToken,
+  swapPromptSides,
   type ChipScope,
 } from "@/lib/parser/input-mutations";
 import { compactWhitespace } from "@/lib/parser/tokenize";
@@ -59,6 +60,7 @@ interface OmniStore {
   setStrictMode: (strictMode: boolean) => void;
   recompute: () => void;
   setAttackerMove: (moveName: string) => void;
+  swapSides: () => void;
 }
 
 const initialState = {
@@ -343,6 +345,15 @@ export const useOmniStore = create<OmniStore>((set, get) => {
       }
 
       commitState(newInput, newInput.length, get().strictMode);
+    },
+    swapSides: () => {
+      const nextInput = swapPromptSides(
+        get().input,
+        useTeamStore.getState().importedSets,
+      );
+      commitState(nextInput, nextInput.length, get().strictMode, {
+        syncPreview: true,
+      });
     },
   };
 });

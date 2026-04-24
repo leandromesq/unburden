@@ -20,7 +20,7 @@ import { useOmniStore } from "@/store/use-omni-store";
 
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
-    <div className="theme-text-dim mb-3 text-[10px] font-semibold uppercase tracking-[0.24em] leading-relaxed">
+    <div className="theme-text-faint mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] leading-relaxed">
       {children}
     </div>
   );
@@ -28,7 +28,7 @@ function SectionLabel({ children }: { children: ReactNode }) {
 
 function GroupLabel({ children }: { children: ReactNode }) {
   return (
-    <div className="theme-text-dim mb-2 min-w-0 break-words text-[8px] font-semibold uppercase tracking-[0.22em] leading-relaxed">
+    <div className="theme-text-faint mb-2 min-w-0 break-words text-[9px] font-semibold uppercase tracking-[0.16em] leading-relaxed">
       {children}
     </div>
   );
@@ -317,7 +317,7 @@ function SideColumn({
     <section className="theme-panel min-w-0 rounded-[28px] p-4">
       <SectionLabel>{title}</SectionLabel>
       <div className="grid gap-3">
-        <div className="theme-text-faint text-[10px] font-semibold uppercase tracking-[0.22em]">
+        <div className="theme-text-faint text-[10px] font-semibold uppercase tracking-[0.18em]">
           {labels.primaryControls}
         </div>
         <StageControl
@@ -354,7 +354,7 @@ function SideColumn({
           }}
         />
         <div className="theme-divider mt-1 border-t pt-3">
-          <div className="theme-text-faint mb-3 text-[10px] font-semibold uppercase tracking-[0.22em]">
+          <div className="theme-text-faint mb-3 text-[10px] font-semibold uppercase tracking-[0.18em]">
             {labels.toggles}
           </div>
           <div className="grid gap-3">

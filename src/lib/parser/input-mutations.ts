@@ -11,14 +11,23 @@ import {
   formatModifierToken,
   normalizeModifierValue,
   parseAbilitySymbol,
+  slugifySymbolValue,
 } from "@/lib/parser/grammar";
 import { compactWhitespace, joinTokenValues } from "@/lib/parser/tokenize";
 import { getCanonicalPromptPokemonName } from "@/lib/data/loaders";
-import type { ActiveChipTokens, PokemonEntry, StatSpread } from "@/lib/types";
+import { resolveSetReferenceToken } from "@/lib/team/set-references";
+import type {
+  ActiveChipTokens,
+  ImportedSet,
+  PokemonEntry,
+  PokemonStatus,
+  StatSpread,
+} from "@/lib/types";
 
 export type ChipScope = keyof ActiveChipTokens;
 export type SummarySide = "attacker" | "defender";
 type AutoFieldCategory = "weather" | "terrain";
+type StageStatKey = Exclude<keyof StatSpread, "hp">;
 
 function isLegacyScopedToken(raw: string) {
   return /^(?:[adg]:|>|<)/i.test(raw);
@@ -225,7 +234,8 @@ export function insertChipToken(
 function stripModifierTokensByKind(
   scope: "attacker" | "defender",
   tokens: ReturnType<typeof analyzeCommandStructure>["attacker"]["rawTokens"],
-  kind: "stat_mod" | "speed_mod" | "nature",
+  kind: "stat_mod" | "stat_stage" | "speed_mod" | "nature" | "status",
+  statKey?: StageStatKey,
 ) {
   const modifierMap =
     scope === "attacker" ? ATTACKER_MODIFIER_MAP : DEFENDER_MODIFIER_MAP;
@@ -239,8 +249,92 @@ function stripModifierTokensByKind(
     const value = normalizeModifierValue(raw);
     const definition = value ? modifierMap.get(value) : undefined;
 
-    return definition?.kind !== kind;
+    if (definition?.kind !== kind) {
+      return true;
+    }
+
+    if (statKey && definition.statKey !== statKey) {
+      return true;
+    }
+
+    return false;
   });
+}
+
+function stripItemTokens(
+  tokens: ReturnType<typeof analyzeCommandStructure>["attacker"]["rawTokens"],
+) {
+  return tokens.filter((entry) => !entry.normalized.startsWith("@"));
+}
+
+function stripAbilityTokens(
+  tokens: ReturnType<typeof analyzeCommandStructure>["attacker"]["rawTokens"],
+) {
+  return tokens.filter((entry) => !/^\[.+\]$/.test(entry.raw));
+}
+
+function setScopedToken(
+  input: string,
+  scope: "attacker" | "defender",
+  token: string | null,
+  stripTokens: (
+    tokens: ReturnType<typeof analyzeCommandStructure>["attacker"]["rawTokens"],
+  ) => ReturnType<typeof analyzeCommandStructure>["attacker"]["rawTokens"],
+) {
+  const normalizedInput = compactWhitespace(input);
+  const structure = analyzeCommandStructure(normalizedInput);
+  const attackerTokens = (
+    scope === "attacker"
+      ? stripTokens(structure.attacker.rawTokens)
+      : structure.attacker.rawTokens
+  ).map((entry) => entry.raw);
+  const defenderTokens = (
+    scope === "defender"
+      ? stripTokens(structure.defender.rawTokens)
+      : structure.defender.rawTokens
+  ).map((entry) => entry.raw);
+
+  if (scope === "attacker") {
+    const nextAttackerTokens = token ? [...attackerTokens, token] : attackerTokens;
+
+    if (structure.lexed.hasDelimiter) {
+      return [...nextAttackerTokens, "x", ...defenderTokens].join(" ").trim();
+    }
+
+    return nextAttackerTokens.join(" ").trim();
+  }
+
+  if (
+    !structure.lexed.hasDelimiter ||
+    !joinTokenValues(structure.defender.speciesTokens)
+  ) {
+    return normalizedInput;
+  }
+
+  const nextDefenderTokens = token ? [...defenderTokens, token] : defenderTokens;
+  return [...attackerTokens, "x", ...nextDefenderTokens].join(" ").trim();
+}
+
+export function setItemToken(
+  input: string,
+  scope: "attacker" | "defender",
+  itemName: string | null | undefined,
+) {
+  const trimmedItem = itemName?.trim();
+  const token = trimmedItem ? `@${slugifySymbolValue(trimmedItem)}` : null;
+
+  return setScopedToken(input, scope, token, stripItemTokens);
+}
+
+export function setAbilityToken(
+  input: string,
+  scope: "attacker" | "defender",
+  abilityName: string | null | undefined,
+) {
+  const trimmedAbility = abilityName?.trim();
+  const token = trimmedAbility ? formatAbilityToken(scope, trimmedAbility) : null;
+
+  return setScopedToken(input, scope, token, stripAbilityTokens);
 }
 
 function setScopedStageToken(
@@ -325,6 +419,72 @@ export function setSpeedModifierToken(
   return setScopedStageToken(input, scope, value, "speed_mod");
 }
 
+export function setNamedStageModifierToken(
+  input: string,
+  scope: "attacker" | "defender",
+  statKey: StageStatKey,
+  value: number,
+) {
+  if (statKey === "spe") {
+    return setSpeedModifierToken(input, scope, value);
+  }
+
+  const normalizedInput = compactWhitespace(input);
+  const structure = analyzeCommandStructure(normalizedInput);
+  const attackerTokens = (
+    scope === "attacker"
+      ? stripModifierTokensByKind(
+          "attacker",
+          structure.attacker.rawTokens,
+          "stat_stage",
+          statKey,
+        )
+      : structure.attacker.rawTokens
+  ).map((entry) => entry.raw);
+  const defenderTokens = (
+    scope === "defender"
+      ? stripModifierTokensByKind(
+          "defender",
+          structure.defender.rawTokens,
+          "stat_stage",
+          statKey,
+        )
+      : structure.defender.rawTokens
+  ).map((entry) => entry.raw);
+
+  const token =
+    value === 0
+      ? null
+      : formatModifierToken(
+          scope,
+          value > 0 ? `${statKey}+${value}` : `${statKey}${value}`,
+        );
+
+  if (scope === "attacker") {
+    const nextAttackerTokens = token
+      ? [...attackerTokens, token]
+      : attackerTokens;
+
+    if (structure.lexed.hasDelimiter) {
+      return [...nextAttackerTokens, "x", ...defenderTokens].join(" ").trim();
+    }
+
+    return nextAttackerTokens.join(" ").trim();
+  }
+
+  if (
+    !structure.lexed.hasDelimiter ||
+    !joinTokenValues(structure.defender.speciesTokens)
+  ) {
+    return normalizedInput;
+  }
+
+  const nextDefenderTokens = token
+    ? [...defenderTokens, token]
+    : defenderTokens;
+  return [...attackerTokens, "x", ...nextDefenderTokens].join(" ").trim();
+}
+
 function resolveNatureModifierToken(
   scope: "attacker" | "defender",
   moveId: string | null | undefined,
@@ -407,6 +567,39 @@ export function setNatureModifierToken(
 
   const nextDefenderTokens = token ? [...defenderTokens, token] : defenderTokens;
   return [...attackerTokens, "x", ...nextDefenderTokens].join(" ").trim();
+}
+
+function resolveStatusModifierToken(status: PokemonStatus | null) {
+  switch (status) {
+    case "brn":
+      return "burn";
+    case "par":
+      return "paralysis";
+    case "psn":
+      return "poison";
+    case "slp":
+      return "sleep";
+    case "frz":
+      return "freeze";
+    default:
+      return null;
+  }
+}
+
+export function setStatusModifierToken(
+  input: string,
+  scope: "attacker" | "defender",
+  status: PokemonStatus | null,
+) {
+  const tokenValue = resolveStatusModifierToken(status);
+  const token = tokenValue ? formatModifierToken(scope, tokenValue) : null;
+
+  return setScopedToken(
+    input,
+    scope,
+    token,
+    (tokens) => stripModifierTokensByKind(scope, tokens, "status"),
+  );
 }
 
 function stripHpTokens(
@@ -564,6 +757,71 @@ export function rebuildInputWithStatPoints(
   }
 
   return [attackerTokens.join(" ").trim(), "x", defenderTokens.join(" ").trim()]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+}
+
+function stripMoveTokens(
+  tokens: ReturnType<typeof analyzeCommandStructure>["attacker"]["rawTokens"],
+) {
+  return tokens.filter((entry) => {
+    const normalized = entry.normalized;
+    return (
+      !normalized.startsWith("m:") &&
+      !normalized.startsWith("!") &&
+      !normalized.startsWith("~")
+    );
+  });
+}
+
+function getReferencedSetForSegment(
+  segment: ReturnType<typeof analyzeCommandStructure>["attacker"],
+  importedSets: Record<string, ImportedSet>,
+) {
+  return resolveSetReferenceToken(segment.leadingFreeTokens[0]?.raw, importedSets);
+}
+
+export function swapPromptSides(
+  input: string,
+  importedSets: Record<string, ImportedSet> = {},
+) {
+  const normalizedInput = compactWhitespace(input);
+  const structure = analyzeCommandStructure(normalizedInput);
+
+  if (
+    !structure.lexed.hasDelimiter ||
+    !joinTokenValues(structure.defender.speciesTokens)
+  ) {
+    return normalizedInput;
+  }
+
+  const attackerReferenceSet = getReferencedSetForSegment(
+    structure.attacker,
+    importedSets,
+  );
+  const defenderReferenceSet = getReferencedSetForSegment(
+    structure.defender,
+    importedSets,
+  );
+  const fallbackMove = defenderReferenceSet?.moves[0]?.trim();
+  const fallbackMoveToken = fallbackMove
+    ? `!${slugifySymbolValue(fallbackMove)}`
+    : null;
+  const separator = structure.separatorText ?? "x";
+  const attackerTokens = stripMoveTokens(structure.defender.rawTokens).map(
+    (entry) => entry.raw,
+  );
+  const defenderTokens = stripMoveTokens(structure.attacker.rawTokens).map(
+    (entry) => entry.raw,
+  );
+  const attackerMoveToken = structure.defender.moveToken?.raw ?? fallbackMoveToken;
+  const globalTokens = structure.globalTokens.map((token) => token.raw);
+  const nextAttackerTokens = attackerMoveToken
+    ? [...attackerTokens, attackerMoveToken]
+    : attackerTokens;
+
+  return [nextAttackerTokens.join(" ").trim(), separator, defenderTokens.join(" ").trim(), ...globalTokens]
     .filter(Boolean)
     .join(" ")
     .trim();

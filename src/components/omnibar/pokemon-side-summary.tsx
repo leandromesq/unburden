@@ -1,10 +1,18 @@
 "use client";
 
-import { Trash2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import {
+  ArrowDownToLine,
+  Check,
+  ClipboardCopy,
+  Save,
+  Trash2,
+} from "lucide-react";
 
+import { useI18n } from "@/i18n/I18nProvider";
 import type { SummarySide } from "@/lib/parser/input-mutations";
+import { formatImportedSetAsShowdown } from "@/lib/team/showdown-export";
 import { ImportSetModal } from "@/components/omnibar/import-set-modal";
-import { PokemonSetEditorModal } from "@/components/omnibar/pokemon-set-editor-modal";
 import { SummaryEmptyState } from "@/components/omnibar/pokemon-summary/summary-empty-state";
 import { SummaryHeader } from "@/components/omnibar/pokemon-summary/summary-header";
 import { SummaryIdentityCard } from "@/components/omnibar/pokemon-summary/summary-identity-card";
@@ -12,32 +20,66 @@ import { SummaryMoves } from "@/components/omnibar/pokemon-summary/summary-moves
 import { SummarySetActions } from "@/components/omnibar/pokemon-summary/summary-set-actions";
 import { SummarySpSpread } from "@/components/omnibar/pokemon-summary/summary-sp-spread";
 import { SummaryStatsGrid } from "@/components/omnibar/pokemon-summary/summary-stats-grid";
+import { SearchableCombobox } from "@/components/omnibar/searchable-combobox";
 import { getNatureEffect } from "@/components/omnibar/pokemon-summary/shared";
 import { usePokemonSideSummaryController } from "@/components/omnibar/use-pokemon-side-summary-controller";
 
+function fallbackCopyText(text: string) {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "true");
+  textarea.style.position = "absolute";
+  textarea.style.left = "-9999px";
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textarea);
+}
+
 export function PokemonSideSummary({ side }: { side: SummarySide }) {
+  const { dictionary } = useI18n();
   const {
+    abilityOptions,
+    canSaveSet,
     currentStatPoints,
-    editorInitialSet,
-    editorModalKey,
-    editorOpen,
-    handleEditorSave,
+    getCurrentExportSet,
     handleInlineStatInputChange,
     handleInlineStatPointChange,
+    handleItemInputChange,
+    handleMoveInputChange,
+    handleNicknameChange,
     handleRemoveSet,
     handleSaveCurrentSet,
+    handleStageValueChange,
     handleSelectSetBySpeciesId,
     handleSwitchToMegaForm,
     importModalOpen,
     importedSetList,
     isSpDepleted,
+    itemInput,
+    itemOptions,
+    moveInputTypes,
+    moveInputs,
+    moveOptions,
+    nicknameInput,
+    onCommitAbility,
+    onCommitItem,
+    onCommitMove,
+    onCommitNature,
+    onCommitNickname,
+    onCommitSpecies,
+    onCommitStatus,
+    onInputSpecies,
+    onInputStatus,
     onSelectMove,
-    openEditor,
     openImportModal,
     otherSets,
     resolvedSetId,
-    setEditorOpen,
     setImportModalOpen,
+    speciesInput,
+    speciesOptions,
+    statusInput,
+    statusOptions,
     spLeft,
     statInputDrafts,
     summary,
@@ -45,6 +87,16 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
     switchRef,
     toggleSwitch,
   } = usePokemonSideSummaryController(side);
+  const [copiedSet, setCopiedSet] = useState(false);
+  const copiedTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copiedTimeoutRef.current !== null) {
+        window.clearTimeout(copiedTimeoutRef.current);
+      }
+    };
+  }, []);
 
   if (!summary) {
     return (
@@ -53,8 +105,12 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
           side={side}
           hasImportedSets={importedSetList.length > 0}
           importedSetList={importedSetList}
+          speciesInput={speciesInput}
+          speciesOptions={speciesOptions}
           onSelectSet={handleSelectSetBySpeciesId}
           onRemoveSet={handleRemoveSet}
+          onInputSpecies={onInputSpecies}
+          onCommitSpecies={onCommitSpecies}
           onOpenImport={openImportModal}
         />
 
@@ -67,6 +123,67 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
 
   const { importedSet, stageBoosts, itemBoosts } = summary;
   const isMegaActive = summary.isMega;
+  const setNameField = (
+    <div className="flex min-w-0 items-center gap-2">
+      <label className="sr-only" htmlFor={`${side}-summary-set-name`}>
+        Set Name
+      </label>
+      <input
+        id={`${side}-summary-set-name`}
+        type="text"
+        aria-label="Set Name"
+        value={nicknameInput}
+        onChange={(event) => handleNicknameChange(event.currentTarget.value)}
+        onBlur={() => onCommitNickname()}
+        placeholder="set name"
+        className="theme-control theme-input h-9 w-full min-w-0 rounded-xl px-3 text-xs"
+      />
+    </div>
+  );
+  const statusField = (
+    <div className="min-w-0">
+      <SearchableCombobox
+        label="Status"
+        hideLabel
+        compact
+        value={statusInput}
+        options={statusOptions}
+        placeholder="Status"
+        onChange={onInputStatus}
+        onInputChange={onInputStatus}
+        onSelectOption={onCommitStatus}
+        onBlur={onCommitStatus}
+        showAllOptions
+      />
+    </div>
+  );
+
+  const handleExportSet = async () => {
+    const currentExportSet = getCurrentExportSet();
+    if (!currentExportSet) {
+      return;
+    }
+
+    const showdownText = formatImportedSetAsShowdown(currentExportSet);
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(showdownText);
+      } else {
+        fallbackCopyText(showdownText);
+      }
+    } catch {
+      fallbackCopyText(showdownText);
+    }
+
+    if (copiedTimeoutRef.current !== null) {
+      window.clearTimeout(copiedTimeoutRef.current);
+    }
+    setCopiedSet(true);
+    copiedTimeoutRef.current = window.setTimeout(() => {
+      setCopiedSet(false);
+    }, 1600);
+  };
 
   return (
     <aside
@@ -115,20 +232,58 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
           ) : null
         }
         removeAction={
-          importedSet && resolvedSetId ? (
+          <>
+            {canSaveSet ? (
+              <button
+                type="button"
+                aria-label="Save"
+                title="Save set"
+                onClick={handleSaveCurrentSet}
+                className="theme-icon-button flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm"
+                style={{ color: "var(--accent-text-mid)" }}
+              >
+                <Save aria-hidden="true" size={14} strokeWidth={2} />
+              </button>
+            ) : null}
             <button
               type="button"
-              aria-label={`Remove ${summary.name} set`}
-              title="Remove set"
-              onClick={() => {
-                handleRemoveSet(resolvedSetId);
-              }}
+              aria-label={dictionary.summary.import}
+              title={dictionary.summary.import}
+              onClick={openImportModal}
               className="theme-icon-button flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm"
-              style={{ color: "var(--accent-text-mid)" }}
             >
-              <Trash2 aria-hidden="true" size={15} strokeWidth={1.9} />
+              <ArrowDownToLine aria-hidden="true" size={15} strokeWidth={1.9} />
             </button>
-          ) : null
+            <button
+              type="button"
+              aria-label={dictionary.summary.export}
+              title={copiedSet ? dictionary.summary.copied : dictionary.summary.export}
+              onClick={() => void handleExportSet()}
+              className={`theme-icon-button flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm ${
+                copiedSet ? "theme-icon-button-active" : ""
+              }`}
+            >
+              {copiedSet ? (
+                <Check aria-hidden="true" size={15} strokeWidth={2.1} />
+              ) : (
+                <ClipboardCopy aria-hidden="true" size={15} strokeWidth={1.9} />
+              )}
+            </button>
+            {importedSet && resolvedSetId ? (
+              <button
+                type="button"
+                aria-label={`Remove ${summary.name} set`}
+                title="Remove set"
+                onClick={() => {
+                  handleRemoveSet(resolvedSetId);
+                }}
+                className="theme-icon-button flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm"
+                style={{ color: "var(--accent-text-mid)" }}
+              >
+                <Trash2 aria-hidden="true" size={15} strokeWidth={1.9} />
+              </button>
+            ) : null}
+          </>
         }
       />
 
@@ -136,26 +291,43 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
         name={summary.name}
         spriteSources={summary.spriteSources}
         primaryType={summary.primaryType}
+        speciesInput={speciesInput}
+        speciesOptions={speciesOptions}
         ability={summary.ability}
-        item={summary.item}
-        move={summary.move}
-        moveType={summary.activeMoveEntry?.type ?? null}
-        side={side}
-        displayNature={
-          !summary.isBaseStats || summary.nature !== "Hardy"
-            ? summary.nature
-            : null
+        abilityOptions={abilityOptions}
+        itemInput={itemInput}
+        itemOptions={itemOptions}
+        nature={summary.nature}
+        setNameField={setNameField}
+        switchAction={
+          <SummarySetActions
+            importedSet={importedSet}
+            otherSets={otherSets}
+            switchOpen={switchOpen}
+            switchRef={switchRef}
+            onToggleSwitch={toggleSwitch}
+            onSelectSet={(set) => handleSelectSetBySpeciesId(set.speciesId)}
+          />
         }
+        statusField={statusField}
+        onInputSpecies={onInputSpecies}
+        onCommitSpecies={onCommitSpecies}
+        onInputItem={handleItemInputChange}
+        onCommitItem={onCommitItem}
+        onCommitAbility={onCommitAbility}
+        onCommitNature={onCommitNature}
       />
 
-      {importedSet && (
-        <SummaryMoves
-          importedSet={importedSet}
-          activeMoveId={summary.activeMoveEntry?.id ?? null}
-          side={side}
-          onSelectMove={onSelectMove}
-        />
-      )}
+      <SummaryMoves
+        activeMoveId={summary.activeMoveEntry?.id ?? null}
+        side={side}
+        moveInputs={moveInputs}
+        moveOptions={moveOptions}
+        moveInputTypes={moveInputTypes}
+        onInputMove={handleMoveInputChange}
+        onCommitMove={onCommitMove}
+        onSelectMove={onSelectMove}
+      />
 
       <SummaryStatsGrid
         natureEffects={{
@@ -166,10 +338,14 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
           spe: getNatureEffect(summary.nature, "spe"),
         }}
         stats={summary.stats}
+        currentHpPercent={summary.currentHpPercent}
         stageBoosts={stageBoosts}
         itemBoosts={itemBoosts}
+        ability={summary.ability}
+        status={summary.status}
         showLevelLabel={Boolean(importedSet || summary.promptStatPoints)}
         level={importedSet?.level ?? 50}
+        onChangeStage={handleStageValueChange}
       />
 
       <SummarySpSpread
@@ -184,29 +360,8 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
         }}
       />
 
-      <SummarySetActions
-        importedSet={importedSet}
-        otherSets={otherSets}
-        switchOpen={switchOpen}
-        switchRef={switchRef}
-        onToggleSwitch={toggleSwitch}
-        onSelectSet={(set) => handleSelectSetBySpeciesId(set.speciesId)}
-        onSave={handleSaveCurrentSet}
-        onEdit={openEditor}
-        onImport={openImportModal}
-        canSave={Boolean(editorInitialSet)}
-      />
-
       {importModalOpen && (
         <ImportSetModal onClose={() => setImportModalOpen(false)} />
-      )}
-      {editorOpen && editorInitialSet && (
-        <PokemonSetEditorModal
-          key={editorModalKey ?? undefined}
-          initialSet={editorInitialSet}
-          onClose={() => setEditorOpen(false)}
-          onSave={handleEditorSave}
-        />
       )}
     </aside>
   );

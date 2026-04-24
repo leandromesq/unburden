@@ -253,6 +253,33 @@ describe("parseCommand", () => {
     });
   });
 
+  test("parses explicit named stage tokens for all combat stats", () => {
+    const result = parseCommand(
+      "archaludon !body-press atk-1 def+3 spa+2 spd-2 spe+1 x incineroar atk+2 def-1 spa-3 spd+4 spe-2",
+    );
+
+    expect(result.parsed).toMatchObject({
+      attackerStageMods: {
+        hp: 0,
+        atk: -1,
+        def: 3,
+        spa: 2,
+        spd: -2,
+        spe: 1,
+      },
+      defenderStageMods: {
+        hp: 0,
+        atk: 2,
+        def: -1,
+        spa: -3,
+        spd: 4,
+        spe: -2,
+      },
+      attackerSpeedMod: 1,
+      defenderSpeedMod: -2,
+    });
+  });
+
   test("parses attacker modifiers declared before the move token", () => {
     const result = parseCommand(
       "excadrill spe-1 @focus-sash !iron-head x incineroar",

@@ -3,14 +3,19 @@
 import type { ImportedSet } from "@/lib/types";
 
 import { useI18n } from "@/i18n/I18nProvider";
+import { SearchableCombobox } from "@/components/omnibar/searchable-combobox";
 import { SummarySavedSetList } from "@/components/omnibar/pokemon-summary/summary-saved-set-list";
 
 interface SummaryEmptyStateProps {
   side: "attacker" | "defender";
   hasImportedSets: boolean;
   importedSetList: ImportedSet[];
+  speciesInput: string;
+  speciesOptions: string[];
   onSelectSet: (speciesId: string) => void;
   onRemoveSet: (speciesId: string) => void;
+  onInputSpecies: (value: string) => void;
+  onCommitSpecies: (value: string) => void;
   onOpenImport: () => void;
 }
 
@@ -18,8 +23,12 @@ export function SummaryEmptyState({
   side,
   hasImportedSets,
   importedSetList,
+  speciesInput,
+  speciesOptions,
   onSelectSet,
   onRemoveSet,
+  onInputSpecies,
+  onCommitSpecies,
   onOpenImport,
 }: SummaryEmptyStateProps) {
   const { dictionary } = useI18n();
@@ -49,6 +58,21 @@ export function SummaryEmptyState({
             {dictionary.summary.resolvePokemon}
           </div>
         </div>
+      </div>
+
+      <div className="mt-3">
+        <SearchableCombobox
+          label="Pokemon"
+          hideLabel
+          compact
+          value={speciesInput}
+          options={speciesOptions}
+          placeholder="Pokemon"
+          onChange={onInputSpecies}
+          onInputChange={onInputSpecies}
+          onSelectOption={onCommitSpecies}
+          onBlur={onCommitSpecies}
+        />
       </div>
 
       {hasImportedSets ? (
