@@ -16,18 +16,18 @@ export const shareImageContentType = "image/png";
 export const shareImageAlt = SITE_SHARE_IMAGE_ALT;
 
 const BG_TOP = "#0b101a";
-const BG_BOTTOM = "#070b13";
-const SURFACE = "rgba(15, 22, 36, 0.94)";
-const SURFACE_TOP = "rgba(19, 28, 45, 0.96)";
+const BG_BOTTOM = "#11161d";
+const SURFACE = "#171c23";
+const SURFACE_MUTED = "#1d232b";
+const SURFACE_SOFT = "#202730";
 const LINE = "rgba(255, 255, 255, 0.08)";
-const LINE_STRONG = "rgba(96, 165, 250, 0.28)";
-const GRID_MINOR = "rgba(255, 255, 255, 0.045)";
-const GRID_MAJOR = "rgba(96, 165, 250, 0.12)";
-const ACCENT = "#60a5fa";
-const ACCENT_SOFT = "rgba(96, 165, 250, 0.12)";
+const LINE_STRONG = "rgba(255, 255, 255, 0.14)";
+const ACCENT = "#78a0f5";
+const ACCENT_SOFT = "rgba(79, 126, 232, 0.14)";
 const TEXT = "#f8fbff";
-const TEXT_MUTED = "#c7d2e3";
-const TEXT_DIM = "#8ea2bc";
+const TEXT_MUTED = "#c1c6cf";
+const TEXT_DIM = "#8d96a4";
+const TEXT_FAINT = "#6f7886";
 
 const TITLE = SITE_NAME;
 const SUBTITLE = SITE_SHARE_IMAGE_SUBTITLE;
@@ -43,34 +43,16 @@ export function generateShareImage() {
         position: "relative",
         overflow: "hidden",
         color: TEXT,
-        background: `radial-gradient(circle at 82% 14%, rgba(96, 165, 250, 0.18), transparent 26%), radial-gradient(circle at 14% 18%, rgba(14, 165, 233, 0.10), transparent 24%), linear-gradient(180deg, ${BG_TOP} 0%, ${BG_BOTTOM} 100%)`,
-        fontFamily:
-          "Inter, Space Grotesk, ui-sans-serif, system-ui, sans-serif",
+        background: `linear-gradient(180deg, ${BG_TOP} 0%, ${BG_BOTTOM} 100%)`,
+        fontFamily: "Space Grotesk, ui-sans-serif, sans-serif",
       }}
     >
       <div
         style={{
           position: "absolute",
           inset: 0,
-          display: "flex",
-          backgroundImage: `
-              linear-gradient(${GRID_MINOR} 1px, transparent 1px),
-              linear-gradient(90deg, ${GRID_MINOR} 1px, transparent 1px),
-              linear-gradient(${GRID_MAJOR} 1px, transparent 1px),
-              linear-gradient(90deg, ${GRID_MAJOR} 1px, transparent 1px)
-            `,
-          backgroundSize: "44px 44px, 44px 44px, 176px 176px, 176px 176px",
-          opacity: 0.88,
-        }}
-      />
-
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          display: "flex",
           background:
-            "linear-gradient(180deg, rgba(4, 8, 14, 0.05) 0%, rgba(4, 8, 14, 0.36) 100%)",
+            "linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0) 24%)",
         }}
       />
 
@@ -82,21 +64,21 @@ export function generateShareImage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "54px",
+          padding: "40px",
         }}
       >
         <div
           style={{
             width: "100%",
-            maxWidth: 1020,
+            maxWidth: 1080,
+            height: "100%",
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            padding: "38px 42px 40px",
-            borderRadius: 36,
-            border: `1px solid ${LINE_STRONG}`,
-            background: `linear-gradient(180deg, ${SURFACE_TOP} 0%, ${SURFACE} 100%)`,
-            boxShadow: "0 22px 60px rgba(0, 0, 0, 0.28)",
+            padding: "26px 28px 28px",
+            borderRadius: 12,
+            border: `1px solid ${LINE}`,
+            background: SURFACE,
           }}
         >
           <div
@@ -105,25 +87,36 @@ export function generateShareImage() {
               alignItems: "center",
               justifyContent: "space-between",
               width: "100%",
+              paddingBottom: "18px",
+              borderBottom: `1px solid ${LINE}`,
             }}
           >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
-                padding: "10px 18px",
-                borderRadius: 999,
-                border: `1px solid ${LINE_STRONG}`,
-                background: ACCENT_SOFT,
-                color: ACCENT,
-                fontSize: 22,
-                letterSpacing: "0.22em",
-                textTransform: "uppercase",
-                fontWeight: 700,
+                gap: "12px",
               }}
             >
-              VGC Damage Calculator
+              <div
+                style={{
+                  display: "flex",
+                  width: "12px",
+                  height: "12px",
+                  borderRadius: "999px",
+                  background: ACCENT,
+                }}
+              />
+              <div
+                style={{
+                  display: "flex",
+                  fontSize: 30,
+                  fontWeight: 600,
+                  letterSpacing: "-0.03em",
+                }}
+              >
+                {TITLE}
+              </div>
             </div>
 
             <div
@@ -132,9 +125,7 @@ export function generateShareImage() {
                 alignItems: "center",
                 color: TEXT_DIM,
                 fontSize: 18,
-                letterSpacing: "0.16em",
-                textTransform: "uppercase",
-                fontWeight: 700,
+                fontWeight: 500,
               }}
             >
               {DOMAIN}
@@ -144,95 +135,200 @@ export function generateShareImage() {
           <div
             style={{
               display: "flex",
-              flexDirection: "column",
+              flexDirection: "row",
+              gap: "24px",
               width: "100%",
-              marginTop: 34,
+              flex: 1,
+              marginTop: 24,
             }}
           >
             <div
               style={{
                 display: "flex",
-                fontSize: 110,
-                lineHeight: 0.92,
-                letterSpacing: "-0.06em",
-                fontWeight: 700,
-                color: TEXT,
-              }}
-            >
-              {TITLE}
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                marginTop: 24,
-                maxWidth: 860,
-                color: TEXT_MUTED,
-                fontSize: 33,
-                lineHeight: 1.32,
-              }}
-            >
-              {SUBTITLE}
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-              marginTop: 34,
-              borderRadius: 28,
-              border: `1px solid ${LINE}`,
-              background: "rgba(9, 15, 26, 0.92)",
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
+                flexDirection: "column",
                 justifyContent: "space-between",
-                width: "100%",
-                padding: "16px 22px",
-                borderBottom: `1px solid ${LINE}`,
+                width: "62%",
               }}
             >
               <div
                 style={{
                   display: "flex",
-                  color: TEXT_DIM,
-                  fontSize: 18,
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  fontWeight: 700,
+                  flexDirection: "column",
                 }}
               >
-                Composer
+                <div
+                  style={{
+                    display: "flex",
+                    fontSize: 72,
+                    lineHeight: 1,
+                    letterSpacing: "-0.055em",
+                    fontWeight: 700,
+                    color: TEXT,
+                  }}
+                >
+                  VGC damage
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    fontSize: 72,
+                    lineHeight: 1,
+                    letterSpacing: "-0.055em",
+                    fontWeight: 700,
+                    color: TEXT,
+                  }}
+                >
+                  without the clutter
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    marginTop: 24,
+                    maxWidth: 560,
+                    color: TEXT_MUTED,
+                    fontSize: 28,
+                    lineHeight: 1.35,
+                  }}
+                >
+                  {SUBTITLE}
+                </div>
               </div>
+
               <div
                 style={{
                   display: "flex",
-                  color: ACCENT,
+                  alignItems: "center",
+                  gap: "16px",
+                  color: TEXT_FAINT,
                   fontSize: 18,
-                  fontWeight: 700,
                 }}
               >
-                Fast. Focused. VGC.
+                <div
+                  style={{
+                    display: "flex",
+                    padding: "8px 12px",
+                    borderRadius: 8,
+                    border: `1px solid ${LINE}`,
+                    background: SURFACE_MUTED,
+                    color: TEXT_MUTED,
+                    fontSize: 16,
+                    fontWeight: 500,
+                  }}
+                >
+                  Tool-first UI
+                </div>
+                <div style={{ display: "flex" }}>
+                  Prompt, summaries, modifiers, results.
+                </div>
               </div>
             </div>
 
             <div
               style={{
                 display: "flex",
-                width: "100%",
-                padding: "24px 26px 26px",
-                color: TEXT,
-                fontSize: 28,
-                lineHeight: 1.35,
+                flexDirection: "column",
+                width: "38%",
+                gap: "12px",
               }}
             >
-              incineroar !flare-blitz x kingambit @occaberry [Defiant]
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  borderRadius: 10,
+                  border: `1px solid ${LINE}`,
+                  background: SURFACE_MUTED,
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "12px 14px",
+                    borderBottom: `1px solid ${LINE}`,
+                    color: TEXT_DIM,
+                    fontSize: 16,
+                  }}
+                >
+                  <div style={{ display: "flex", fontWeight: 500 }}>
+                    Composer
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      padding: "4px 8px",
+                      borderRadius: 8,
+                      background: ACCENT_SOFT,
+                      color: ACCENT,
+                      fontSize: 14,
+                      fontWeight: 600,
+                    }}
+                  >
+                    Ready
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    padding: "16px 14px",
+                    color: TEXT,
+                    fontSize: 24,
+                    lineHeight: 1.35,
+                  }}
+                >
+                  incineroar !flare-blitz x kingambit @occaberry [Defiant]
+                </div>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                }}
+              >
+                {[
+                  ["Summaries", "Inline set editing"],
+                  ["Modifiers", "Global and side controls"],
+                  ["Results", "Fast bulk reads and sharing"],
+                ].map(([label, value]) => (
+                  <div
+                    key={label}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      borderRadius: 10,
+                      border: `1px solid ${LINE}`,
+                      background: SURFACE_SOFT,
+                      padding: "12px 14px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        color: TEXT_DIM,
+                        fontSize: 16,
+                        fontWeight: 500,
+                      }}
+                    >
+                      {label}
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        color: TEXT,
+                        fontSize: 16,
+                        fontWeight: 500,
+                      }}
+                    >
+                      {value}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
