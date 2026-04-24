@@ -1,6 +1,5 @@
 import { NATURE_MODIFIERS } from "@/lib/calc/stat-calc";
 import type { PokemonStatus, StatSpread } from "@/lib/types";
-import { MoveTypeIcon } from "@/components/omnibar/move-type-icon";
 
 export type SummaryStatKey = keyof StatSpread;
 
@@ -98,43 +97,4 @@ export function formatSummaryStatus(status: PokemonStatus | null | undefined) {
     default:
       return "Healthy";
   }
-}
-
-interface MoveChipProps {
-  moveName: string;
-  moveType?: string | null;
-  isActive?: boolean;
-  onClick?: () => void;
-  disabled?: boolean;
-}
-
-function MoveChip({
-  moveName,
-  moveType,
-  isActive,
-  onClick,
-  disabled,
-}: MoveChipProps) {
-  return (
-    <button
-      type="button"
-      disabled={disabled}
-      onClick={onClick}
-      title={moveType ? `${moveName} (${moveType})` : moveName}
-      className={`flex min-w-0 items-center gap-1.5 overflow-hidden rounded-lg px-2.5 py-1 text-xs transition-colors ${
-        isActive
-          ? "theme-chip-active"
-          : disabled
-            ? "theme-chip-disabled cursor-default"
-            : "theme-pill-muted cursor-pointer"
-      }`}
-    >
-      <span className="min-w-0 flex-1 truncate">{moveName}</span>
-      <MoveTypeIcon
-        type={moveType}
-        size={15}
-        className="shrink-0 opacity-90"
-      />
-    </button>
-  );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { ArrowLeftRight, Settings2 } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
@@ -19,8 +19,12 @@ import { useTeamStore } from "@/store/use-team-store";
 
 export function OmniComposer() {
   const { dictionary } = useI18n();
-  const [isHydrated, setIsHydrated] = useState(false);
   const [modifiersOpen, setModifiersOpen] = useState(false);
+  const isHydrated = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
   const { issues, calculationReady, commandStructure, setInput, swapSides } = useOmniStore(
     useShallow((state) => ({
       issues: state.issues,
@@ -37,10 +41,6 @@ export function OmniComposer() {
   const issuesStatusId = useId();
   const resultsStatusId = useId();
   const modifiersSectionId = useId();
-
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
 
   const scrollToResults = () => {
     resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });

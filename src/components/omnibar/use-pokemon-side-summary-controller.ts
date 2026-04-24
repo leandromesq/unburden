@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 import { useShallow } from "zustand/react/shallow";
 
@@ -179,29 +179,6 @@ function syncMoveDraft(
     moveInputs,
     selectedMoveIndex: replacementIndex,
   };
-}
-
-function areStringArraysEqual(left: string[], right: string[]) {
-  return (
-    left.length === right.length &&
-    left.every((value, index) => value === right[index])
-  );
-}
-
-function isEditorStateEqual(
-  current: SummaryEditorState,
-  next: SummaryEditorState,
-) {
-  return (
-    current.syncKey === next.syncKey &&
-    current.speciesInput === next.speciesInput &&
-    current.nicknameInput === next.nicknameInput &&
-    current.itemInput === next.itemInput &&
-    current.abilityInput === next.abilityInput &&
-    current.statusInput === next.statusInput &&
-    current.selectedMoveIndex === next.selectedMoveIndex &&
-    areStringArraysEqual(current.moveInputs, next.moveInputs)
-  );
 }
 
 function buildEditorState(
@@ -543,11 +520,11 @@ export function usePokemonSideSummaryController(side: SummarySide) {
 
   const switchRef = useRef<HTMLDivElement>(null);
 
-  const handleSwitchPointerDown = useEffectEvent((event: MouseEvent) => {
+  const handleSwitchPointerDown = useCallback((event: MouseEvent) => {
     if (switchRef.current && !switchRef.current.contains(event.target as Node)) {
       setSwitchOpen(false);
     }
-  });
+  }, []);
 
   useEffect(() => {
     if (!switchOpen) {
@@ -557,7 +534,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     document.addEventListener("mousedown", handleSwitchPointerDown);
     return () =>
       document.removeEventListener("mousedown", handleSwitchPointerDown);
-  }, [switchOpen]);
+  }, [handleSwitchPointerDown, switchOpen]);
 
   const summary = usePokemonSummary({
     side,
@@ -569,14 +546,10 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     pendingStatPoints: summaryDraftState.pendingStatPoints,
   });
 
-  useEffect(() => {
-    setEditorState((current) => {
-      const nextEditorState = buildEditorState(summary, current, side);
-      return isEditorStateEqual(current, nextEditorState)
-        ? current
-        : nextEditorState;
-    });
-  }, [summary, side]);
+  const syncedEditorState = useMemo(
+    () => buildEditorState(summary, editorState, side),
+    [editorState, summary, side],
+  );
 
   const summaryContextKey = summary?.contextKey ?? "empty";
   const summaryNature = summary?.nature ?? "Hardy";
@@ -620,8 +593,8 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     [summaryPokemon],
   );
   const resolvedDraftSpecies = useMemo(
-    () => resolveExactPokemonEntity(editorState.speciesInput)?.entry ?? null,
-    [editorState.speciesInput],
+    () => resolveExactPokemonEntity(syncedEditorState.speciesInput)?.entry ?? null,
+    [syncedEditorState.speciesInput],
   );
   const resolvedSetId = summary?.importedSet?.speciesId ?? null;
   const importedSetList = useMemo(
@@ -687,7 +660,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
       profile?.defaultMove,
       ...(profile?.commonMoves ?? []),
       ...(learnset?.moveIds ?? []),
-      ...editorState.moveInputs,
+      ...syncedEditorState.moveInputs,
     ].filter(Boolean) as string[];
 
     return Array.from(
@@ -697,14 +670,14 @@ export function usePokemonSideSummaryController(side: SummarySide) {
           .filter(Boolean) as string[],
       ),
     );
-  }, [editorState.moveInputs, profile, summaryPokemon]);
+  }, [profile, summaryPokemon, syncedEditorState.moveInputs]);
   const moveInputTypes = useMemo(
-    () => editorState.moveInputs.map((move) => resolveExactMoveType(move)),
-    [editorState.moveInputs],
+    () => syncedEditorState.moveInputs.map((move) => resolveExactMoveType(move)),
+    [syncedEditorState.moveInputs],
   );
   const canSaveSet = Boolean(summary && !summary.importedSet && resolvedDraftSpecies);
 
-  const buildCurrentSet = useEffectEvent(
+  const buildCurrentSet = useCallback(
     (overrides?: {
       species?: PokemonEntry;
       nickname?: string | undefined;
@@ -739,20 +712,29 @@ export function usePokemonSideSummaryController(side: SummarySide) {
           ),
       });
     },
+    [currentStatPoints, summary, summaryPokemon],
   );
 
-  const getCurrentExportSet = useEffectEvent(() => {
+  const getCurrentExportSet = useCallback(() => {
     const resolvedItem =
-      resolveCommittedItemName(editorState.itemInput) ?? summary?.item ?? undefined;
+      resolveCommittedItemName(syncedEditorState.itemInput) ??
+      summary?.item ??
+      undefined;
 
     return buildCurrentSet({
-      nickname: editorState.nicknameInput.trim() || undefined,
+      nickname: syncedEditorState.nicknameInput.trim() || undefined,
       item: resolvedItem,
-      moves: buildSavedMoveList(editorState.moveInputs),
+      moves: buildSavedMoveList(syncedEditorState.moveInputs),
     });
-  });
+  }, [
+    buildCurrentSet,
+    summary?.item,
+    syncedEditorState.itemInput,
+    syncedEditorState.moveInputs,
+    syncedEditorState.nicknameInput,
+  ]);
 
-  const commitReferencedSet = useEffectEvent(
+  const commitReferencedSet = useCallback(
     (
       nextSet: ImportedSet,
       explicitAttackerMoveName: string | null = preservedExplicitMoveName,
@@ -783,6 +765,16 @@ export function usePokemonSideSummaryController(side: SummarySide) {
         }
       });
     },
+    [
+      input,
+      preservedExplicitMoveName,
+      recompute,
+      replaceSet,
+      saveSet,
+      setInputImmediately,
+      side,
+      summary,
+    ],
   );
 
   const handleSelectSet = (nextSet: ImportedSet) => {
@@ -815,7 +807,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     recompute();
   };
 
-  const syncDraftNature = useEffectEvent((nextNature: string) => {
+  const syncDraftNature = useCallback((nextNature: string) => {
     const nextMarkers = buildNatureMarkerState(nextNature);
     setSummaryDraftState((current) => ({
       contextKey: summaryContextKey,
@@ -827,7 +819,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
       natureMarkers: nextMarkers,
       statInputDrafts: buildStatInputDrafts(currentStatPoints, nextMarkers),
     }));
-  });
+  }, [currentStatPoints, summaryContextKey]);
 
   const handleSwitchToMegaForm = (targetPokemon: PokemonEntry) => {
     if (!summary) {
@@ -1017,7 +1009,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     }));
   };
 
-  const commitSpeciesSelection = useEffectEvent((value: string) => {
+  const commitSpeciesSelection = useCallback((value: string) => {
     const nextPokemon = resolveExactPokemonEntity(value)?.entry ?? null;
     if (!nextPokemon) {
       if (!summary) {
@@ -1040,7 +1032,15 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     }
 
     setInputImmediately(rewritePromptSpecies(input, side, nextPokemon));
-  });
+  }, [
+    buildCurrentSet,
+    commitReferencedSet,
+    input,
+    setInputImmediately,
+    side,
+    summary,
+    summaryPokemon?.name,
+  ]);
 
   const handleNicknameChange = (value: string) => {
     setEditorState((current) => ({
@@ -1049,12 +1049,12 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     }));
   };
 
-  const handleNicknameCommit = useEffectEvent(() => {
+  const handleNicknameCommit = useCallback(() => {
     if (!summary?.importedSet) {
       return;
     }
 
-    const trimmedNickname = editorState.nicknameInput.trim() || undefined;
+    const trimmedNickname = syncedEditorState.nicknameInput.trim() || undefined;
     if (trimmedNickname === summary.importedSet.nickname) {
       return;
     }
@@ -1063,7 +1063,12 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     if (nextSet) {
       commitReferencedSet(nextSet);
     }
-  });
+  }, [
+    buildCurrentSet,
+    commitReferencedSet,
+    summary,
+    syncedEditorState.nicknameInput,
+  ]);
 
   const handleItemInputChange = (value: string) => {
     setEditorState((current) => ({
@@ -1086,7 +1091,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     }));
   };
 
-  const commitItemSelection = useEffectEvent((value: string) => {
+  const commitItemSelection = useCallback((value: string) => {
     if (!summary) {
       return;
     }
@@ -1108,9 +1113,16 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     }
 
     setInputImmediately(setItemToken(input, side, nextItem));
-  });
+  }, [
+    buildCurrentSet,
+    commitReferencedSet,
+    input,
+    setInputImmediately,
+    side,
+    summary,
+  ]);
 
-  const commitAbilitySelection = useEffectEvent((value: string) => {
+  const commitAbilitySelection = useCallback((value: string) => {
     if (!summary) {
       return;
     }
@@ -1134,9 +1146,17 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     }
 
     setInputImmediately(setAbilityToken(input, side, nextAbility));
-  });
+  }, [
+    abilityOptions,
+    buildCurrentSet,
+    commitReferencedSet,
+    input,
+    setInputImmediately,
+    side,
+    summary,
+  ]);
 
-  const commitNatureSelection = useEffectEvent((value: string) => {
+  const commitNatureSelection = useCallback((value: string) => {
     if (!summary) {
       return;
     }
@@ -1166,9 +1186,17 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     if (nextInput !== input) {
       setInputImmediately(nextInput);
     }
-  });
+  }, [
+    buildCurrentSet,
+    commitReferencedSet,
+    input,
+    setInputImmediately,
+    side,
+    summary,
+    syncDraftNature,
+  ]);
 
-  const commitStatusSelection = useEffectEvent((value: string) => {
+  const commitStatusSelection = useCallback((value: string) => {
     if (!summary) {
       return;
     }
@@ -1191,7 +1219,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     if (nextInput !== input) {
       setInputImmediately(nextInput);
     }
-  });
+  }, [input, setInputImmediately, side, summary]);
 
   const handleMoveInputChange = (index: number, value: string) => {
     setEditorState((current) => {
@@ -1204,7 +1232,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     });
   };
 
-  const commitMoveSelection = useEffectEvent((index: number, value: string) => {
+  const commitMoveSelection = useCallback((index: number, value: string) => {
     if (!summary) {
       return;
     }
@@ -1223,7 +1251,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
       return;
     }
 
-    const nextMoveInputs = [...editorState.moveInputs];
+    const nextMoveInputs = [...syncedEditorState.moveInputs];
     nextMoveInputs[index] = nextMoveName;
     setEditorState((current) => ({
       ...current,
@@ -1237,7 +1265,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
       if (nextSet) {
         const nextExplicitMove =
           side === "attacker" &&
-          editorState.selectedMoveIndex === index &&
+          syncedEditorState.selectedMoveIndex === index &&
           summary.move
             ? nextMoveName || null
             : preservedExplicitMoveName;
@@ -1255,10 +1283,20 @@ export function usePokemonSideSummaryController(side: SummarySide) {
       return;
     }
 
-    if (side === "attacker" && editorState.selectedMoveIndex === index) {
+    if (side === "attacker" && syncedEditorState.selectedMoveIndex === index) {
       setInputImmediately(rewriteAttackerMove(input, nextMoveName || null));
     }
-  });
+  }, [
+    buildCurrentSet,
+    commitReferencedSet,
+    input,
+    preservedExplicitMoveName,
+    setInputImmediately,
+    side,
+    summary,
+    syncedEditorState.moveInputs,
+    syncedEditorState.selectedMoveIndex,
+  ]);
 
   const handleSelectActiveMove = (index: number, moveName: string) => {
     if (!summary || side !== "attacker") {
@@ -1338,15 +1376,15 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     const nextSet = createImportedSet({
       speciesId: resolvedDraftSpecies.id,
       speciesName: resolvedDraftSpecies.name,
-      nickname: editorState.nicknameInput.trim() || undefined,
+      nickname: syncedEditorState.nicknameInput.trim() || undefined,
       item:
-        resolveCommittedItemName(editorState.itemInput) ??
+        resolveCommittedItemName(syncedEditorState.itemInput) ??
         summary.item ??
         undefined,
       ability: summary.ability ?? undefined,
       nature: summary.nature,
       statPoints: currentStatPoints,
-      moves: buildSavedMoveList(editorState.moveInputs),
+      moves: buildSavedMoveList(syncedEditorState.moveInputs),
     });
     const nextInput = compactSideToSetReference(
       input,
@@ -1385,13 +1423,13 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     importModalOpen,
     importedSetList,
     isSpDepleted,
-    itemInput: editorState.itemInput,
-    abilityInput: editorState.abilityInput,
+    itemInput: syncedEditorState.itemInput,
+    abilityInput: syncedEditorState.abilityInput,
     itemOptions,
     moveInputTypes,
-    moveInputs: editorState.moveInputs,
+    moveInputs: syncedEditorState.moveInputs,
     moveOptions,
-    nicknameInput: editorState.nicknameInput,
+    nicknameInput: syncedEditorState.nicknameInput,
     onCommitAbility: commitAbilitySelection,
     onCommitItem: commitItemSelection,
     onCommitMove: commitMoveSelection,
@@ -1406,9 +1444,9 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     otherSets,
     resolvedSetId,
     setImportModalOpen,
-    speciesInput: editorState.speciesInput,
+    speciesInput: syncedEditorState.speciesInput,
     speciesOptions,
-    statusInput: editorState.statusInput,
+    statusInput: syncedEditorState.statusInput,
     statusOptions,
     spLeft,
     statInputDrafts,

@@ -117,7 +117,6 @@ function validateMoveEntries(entries: MoveEntry[]) {
 function validateLearnsetEntries(
   entries: LearnsetEntry[],
   pokemonEntries: PokemonEntry[],
-  _moveEntries: MoveEntry[],
 ) {
   if (entries.length < MIN_LEARNSET_ENTRY_COUNT) {
     throw new Error(
@@ -177,7 +176,7 @@ function validateGeneratedData(
 ) {
   validatePokemonEntries(pokemonEntries);
   validateMoveEntries(moveEntries);
-  validateLearnsetEntries(learnsetEntries, pokemonEntries, moveEntries);
+  validateLearnsetEntries(learnsetEntries, pokemonEntries);
   validateItemEntries(itemEntries);
 }
 

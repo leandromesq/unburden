@@ -21,7 +21,6 @@ const SURFACE = "#171c23";
 const SURFACE_MUTED = "#1d232b";
 const SURFACE_SOFT = "#202730";
 const LINE = "rgba(255, 255, 255, 0.08)";
-const LINE_STRONG = "rgba(255, 255, 255, 0.14)";
 const ACCENT = "#78a0f5";
 const ACCENT_SOFT = "rgba(79, 126, 232, 0.14)";
 const TEXT = "#f8fbff";

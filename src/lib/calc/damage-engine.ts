@@ -18,7 +18,6 @@ import { resolveReferencedImportedSet } from "@/lib/team/set-references";
 import type {
   DamageResult,
   ImportedSet,
-  OmniIssue,
   ParsedCommand,
   PokemonStatus,
   StatSpread,

@@ -14,12 +14,10 @@ import {
   slugifySymbolValue,
 } from "@/lib/parser/grammar";
 import { compactWhitespace, joinTokenValues } from "@/lib/parser/tokenize";
-import { getCanonicalPromptPokemonName } from "@/lib/data/loaders";
 import { resolveSetReferenceToken } from "@/lib/team/set-references";
 import type {
   ActiveChipTokens,
   ImportedSet,
-  PokemonEntry,
   PokemonStatus,
   StatSpread,
 } from "@/lib/types";
@@ -657,56 +655,6 @@ function buildStatPointsToken(statPoints: StatSpread) {
   return `sp:${statPoints.hp}/${statPoints.atk}/${statPoints.def}/${statPoints.spa}/${statPoints.spd}/${statPoints.spe}`;
 }
 
-function rebuildInputWithSpecies(
-  input: string,
-  side: SummarySide,
-  targetPokemon: PokemonEntry,
-) {
-  const structure = analyzeCommandStructure(input);
-  const globalTokens = structure.globalTokens.map((token) => token.raw);
-  const attackerTail = structure.attacker.rawTokens
-    .slice(structure.attacker.speciesTokens.length)
-    .map((token) => token.raw)
-    .join(" ")
-    .trim();
-  const defenderTail = structure.defender.rawTokens
-    .slice(structure.defender.speciesTokens.length)
-    .map((token) => token.raw)
-    .join(" ")
-    .trim();
-  const attackerSpecies =
-    side === "attacker"
-      ? getCanonicalPromptPokemonName(targetPokemon)
-      : (
-          structure.attacker.speciesText ||
-          joinTokenValues(structure.attacker.rawTokens)
-        ).trim();
-  const defenderSpecies =
-    side === "defender"
-      ? getCanonicalPromptPokemonName(targetPokemon)
-      : (
-          structure.defender.speciesText ||
-          joinTokenValues(structure.defender.rawTokens)
-        ).trim();
-  const attackerText = [attackerSpecies, attackerTail]
-    .filter(Boolean)
-    .join(" ")
-    .trim();
-  const defenderText = [defenderSpecies, defenderTail]
-    .filter(Boolean)
-    .join(" ")
-    .trim();
-
-  if (!structure.lexed.hasDelimiter) {
-    return attackerText;
-  }
-
-  return [attackerText, "x", defenderText, ...globalTokens]
-    .filter(Boolean)
-    .join(" ")
-    .trim();
-}
-
 export function rebuildInputWithStatPoints(
   input: string,
   side: SummarySide,
@@ -796,10 +744,6 @@ export function swapPromptSides(
     return normalizedInput;
   }
 
-  const attackerReferenceSet = getReferencedSetForSegment(
-    structure.attacker,
-    importedSets,
-  );
   const defenderReferenceSet = getReferencedSetForSegment(
     structure.defender,
     importedSets,

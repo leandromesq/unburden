@@ -15,7 +15,6 @@ interface SummaryIdentityCardProps {
   primaryType: string | null;
   speciesInput: string;
   speciesOptions: string[];
-  ability: string | null;
   abilityInput: string;
   abilityOptions: string[];
   itemInput: string;
@@ -39,7 +38,6 @@ export function SummaryIdentityCard({
   primaryType,
   speciesInput,
   speciesOptions,
-  ability,
   abilityInput,
   abilityOptions,
   itemInput,

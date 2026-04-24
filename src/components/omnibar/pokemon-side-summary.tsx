@@ -296,7 +296,6 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
         primaryType={summary.primaryType}
         speciesInput={speciesInput}
         speciesOptions={speciesOptions}
-        ability={summary.ability}
         abilityInput={abilityInput}
         abilityOptions={abilityOptions}
         itemInput={itemInput}

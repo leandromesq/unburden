@@ -2,9 +2,9 @@
 
 import {
   type HTMLAttributes,
+  useCallback,
   useDeferredValue,
   useEffect,
-  useEffectEvent,
   useId,
   useMemo,
   useRef,
@@ -110,18 +110,18 @@ export function SearchableCombobox({
   const [open, setOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [inputValue, setInputValue] = useState(value);
+  const [isFocused, setIsFocused] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
-  const isFocusedRef = useRef(false);
   const inputValueRef = useRef(value);
   const committedSelectionRef = useRef<string | null>(null);
   const deferredQuery = useDeferredValue(inputValue);
-  const handlePointerDown = useEffectEvent((event: MouseEvent) => {
+  const handlePointerDown = useCallback((event: MouseEvent) => {
     if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
       setOpen(false);
     }
-  });
+  }, []);
 
   useEffect(() => {
     if (!open) {
@@ -130,22 +130,16 @@ export function SearchableCombobox({
 
     document.addEventListener("mousedown", handlePointerDown);
     return () => document.removeEventListener("mousedown", handlePointerDown);
-  }, [open]);
+  }, [handlePointerDown, open]);
 
   const filteredOptions = useMemo(
     () => rankOptions(options, deferredQuery, showAllOptions),
     [deferredQuery, options, showAllOptions],
   );
+  const displayValue = isFocused ? inputValue : value;
   const resolvedHighlightedIndex = open
     ? clampHighlightedIndex(filteredOptions, highlightedIndex)
     : highlightedIndex;
-
-  useEffect(() => {
-    if (!isFocusedRef.current && inputValue !== value) {
-      inputValueRef.current = value;
-      setInputValue(value);
-    }
-  }, [inputValue, value]);
 
   useEffect(() => {
     if (!open) {
@@ -182,7 +176,7 @@ export function SearchableCombobox({
         <input
           ref={inputRef}
           name={name}
-          value={inputValue}
+          value={displayValue}
           role="combobox"
           aria-controls={listboxId}
           aria-expanded={open}
@@ -194,7 +188,11 @@ export function SearchableCombobox({
           autoComplete={autoComplete}
           inputMode={inputMode}
           onFocus={() => {
-            isFocusedRef.current = true;
+            setIsFocused(true);
+            if (inputValueRef.current !== value) {
+              inputValueRef.current = value;
+              setInputValue(value);
+            }
             const rankedOptions = rankOptions(
               options,
               inputValueRef.current,
@@ -221,7 +219,7 @@ export function SearchableCombobox({
             setHighlightedIndex(0);
           }}
           onBlur={() => {
-            isFocusedRef.current = false;
+            setIsFocused(false);
             setOpen(false);
             const blurValue = inputValueRef.current;
             const selectedValue = committedSelectionRef.current;
