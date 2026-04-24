@@ -76,7 +76,6 @@ describe("reportBug", () => {
     formData.set("prompt", "charizard-mega-y !heat-wave x tinkaton");
     formData.set("pageUrl", "https://unburdenvgc.com/");
     formData.set("userAgent", "Jest Browser");
-    formData.set("strictMode", "off");
     formData.set("locale", "en");
 
     const result = await reportBug(initialReportBugState, formData);

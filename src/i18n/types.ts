@@ -87,9 +87,6 @@ export interface AppDictionary {
     placeholder: string;
     attachedContext: string;
     currentPrompt: string;
-    strictMode: string;
-    on: string;
-    off: string;
     privacy: string;
     idleMessage: string;
     viewIssue: string;
@@ -120,12 +117,6 @@ export interface AppDictionary {
     saveSets: (count: number) => string;
     cancel: string;
     preview: (count: number) => string;
-  };
-  strictMode: {
-    groupLabel: string;
-    fast: string;
-    strict: string;
-    optionAria: (label: string) => string;
   };
   summary: {
     resolvePokemon: string;

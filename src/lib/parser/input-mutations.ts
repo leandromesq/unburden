@@ -657,7 +657,7 @@ function buildStatPointsToken(statPoints: StatSpread) {
   return `sp:${statPoints.hp}/${statPoints.atk}/${statPoints.def}/${statPoints.spa}/${statPoints.spd}/${statPoints.spe}`;
 }
 
-export function rebuildInputWithSpecies(
+function rebuildInputWithSpecies(
   input: string,
   side: SummarySide,
   targetPokemon: PokemonEntry,

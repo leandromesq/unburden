@@ -14,7 +14,7 @@ export function SummaryHeader({
   return (
     <div className="flex min-w-0 items-start justify-between gap-3">
       <div className="min-w-0 flex-1">
-        <div className="theme-text-faint text-xs font-semibold uppercase tracking-[0.24em]">
+        <div className="text-sm font-medium">
           {title}
         </div>
       </div>

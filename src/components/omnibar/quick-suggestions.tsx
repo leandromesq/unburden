@@ -30,7 +30,7 @@ export function QuickSuggestions({ textareaRef }: QuickSuggestionsProps) {
           key={`${option.value}-${index}`}
           type="button"
           aria-pressed={highlightedSuggestionIndex === index}
-          className={`inline-flex max-w-full min-w-0 items-center overflow-hidden rounded-full px-3 py-1.5 text-sm ${
+          className={`inline-flex max-w-full min-w-0 items-center overflow-hidden rounded-lg px-3 py-1.5 text-sm ${
             highlightedSuggestionIndex === index
               ? "theme-chip-active"
               : "theme-pill-muted"

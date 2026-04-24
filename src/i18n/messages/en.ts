@@ -19,7 +19,7 @@ export const enDictionary: AppDictionary = {
     kicker: "VGC Damage Calculator",
     about: "About",
     heroDescription:
-      "Type a matchup like a chat prompt. Accept suggestions using Tab and Arrow Keys. Compare Min, Mid, and Max bulk instantly.",
+      "Enter a prompt, adjust both sides, and compare Min, Mid, and Max bulk without leaving the editor.",
     toggleModifiers: "Toggle modifiers panel",
     modifiers: "Modifiers",
     swapSides: "Swap attacker and defender",
@@ -149,7 +149,7 @@ export const enDictionary: AppDictionary = {
       "Weather and terrain abilities surface the matching ~token as an opt-in suggestion after both sides resolve.",
       "Use the side sliders for stage control.",
       "Use sp:hp/atk/def/spa/spd/spe to override summary and calc spreads directly from the prompt.",
-      "Fast mode allows competitive defaults. Strict mode blocks inferred abilities and other hidden assumptions.",
+      "Competitive defaults stay active unless you explicitly override them in the prompt.",
       "Autocomplete works on Pokemon names, moves, and modifier tokens.",
     ],
   },
@@ -164,11 +164,8 @@ export const enDictionary: AppDictionary = {
       "What were you trying to do, what happened instead, and how can I reproduce it?",
     attachedContext: "Attached context",
     currentPrompt: "Current prompt",
-    strictMode: "Strict mode",
-    on: "on",
-    off: "off",
     privacy:
-      "Privacy: this sends your description, current prompt, page URL, browser user agent, and strict-mode setting to a GitHub issue that may be publicly visible.",
+      "Privacy: this sends your description, current prompt, page URL, and browser user agent to a GitHub issue that may be publicly visible.",
     idleMessage:
       "Your bug reports and feedback are turned into GitHub issues that may be publicly visible.",
     viewIssue: "View GitHub issue",
@@ -201,12 +198,6 @@ export const enDictionary: AppDictionary = {
     saveSets: (count) => `Save ${count} set${count === 1 ? "" : "s"}`,
     cancel: "Cancel",
     preview: (count) => `Preview - ${count} set${count === 1 ? "" : "s"} found`,
-  },
-  strictMode: {
-    groupLabel: "Calculation mode",
-    fast: "Fast",
-    strict: "Strict",
-    optionAria: (label) => `${label} calculation mode`,
   },
   summary: {
     resolvePokemon:

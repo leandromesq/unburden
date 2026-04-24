@@ -108,7 +108,7 @@ interface MoveChipProps {
   disabled?: boolean;
 }
 
-export function MoveChip({
+function MoveChip({
   moveName,
   moveType,
   isActive,

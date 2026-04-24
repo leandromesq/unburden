@@ -31,7 +31,7 @@ function SubmitButton({
     <button
       type="submit"
       disabled={pending}
-      className="theme-chip-active rounded-full px-4 py-1.5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
+      className="theme-chip-active theme-toolbar-button font-medium disabled:cursor-not-allowed disabled:opacity-50"
     >
       {pending ? pendingLabel : idleLabel}
     </button>
@@ -46,7 +46,6 @@ export function BugReportButton() {
     initialReportBugState,
   );
   const input = useOmniStore((currentState) => currentState.input);
-  const strictMode = useOmniStore((currentState) => currentState.strictMode);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const openedRef = useRef(false);
@@ -107,7 +106,7 @@ export function BugReportButton() {
             setOpen(true);
           });
         }}
-        className="theme-icon-button flex min-h-8 items-center justify-center gap-1 rounded-full px-2.5 py-1 text-[13px] leading-none font-medium whitespace-nowrap sm:gap-1.5 sm:px-3 sm:text-sm"
+        className="theme-icon-button theme-toolbar-button gap-1 text-sm whitespace-nowrap sm:gap-1.5 sm:px-3"
       >
         <Bug aria-hidden="true" size={14} strokeWidth={1.9} />
         <span>{dictionary.bugReport.openButton}</span>
@@ -132,7 +131,7 @@ export function BugReportButton() {
         >
           <div
             id="bug-report-dialog"
-            className="theme-panel w-full max-w-xl overflow-hidden rounded-3xl"
+            className="theme-panel w-full max-w-xl overflow-hidden rounded-xl"
             style={{ boxShadow: "var(--shadow-overlay)" }}
             onClick={(event) => event.stopPropagation()}
           >
@@ -149,7 +148,7 @@ export function BugReportButton() {
                 type="button"
                 aria-label={dictionary.bugReport.closeAria}
                 onClick={() => close()}
-                className="theme-icon-button -mr-1 flex h-8 w-8 items-center justify-center rounded-full"
+                className="theme-icon-button theme-icon-button-sm -mr-1"
               >
                 <X aria-hidden="true" size={15} strokeWidth={2.1} />
               </button>
@@ -181,7 +180,7 @@ export function BugReportButton() {
                 minLength={10}
                 maxLength={4000}
                 rows={7}
-                className="theme-control theme-input w-full resize-none rounded-2xl p-3 text-sm outline-none"
+                className="theme-control theme-input w-full resize-none rounded-lg p-3 text-sm outline-none"
                 placeholder={dictionary.bugReport.placeholder}
               />
 
@@ -189,14 +188,9 @@ export function BugReportButton() {
               <input type="hidden" name="locale" value={locale} />
               <input type="hidden" name="pageUrl" value={pageUrl} />
               <input type="hidden" name="userAgent" value={userAgent} />
-              <input
-                type="hidden"
-                name="strictMode"
-                value={strictMode ? "on" : "off"}
-              />
 
-              <div className="theme-subpanel mt-4 rounded-2xl p-3">
-                <div className="theme-text-faint text-[11px] font-semibold uppercase tracking-[0.22em]">
+              <div className="theme-subpanel mt-4 rounded-lg p-3">
+                <div className="theme-text-muted text-sm font-medium">
                   {dictionary.bugReport.attachedContext}
                 </div>
                 <div className="theme-text-dim mt-2 text-xs">
@@ -207,12 +201,6 @@ export function BugReportButton() {
                   >
                     {input || "n/a"}
                   </span>
-                </div>
-                <div className="theme-text-dim mt-1 text-xs">
-                  {dictionary.bugReport.strictMode}:{" "}
-                  {strictMode
-                    ? dictionary.bugReport.on
-                    : dictionary.bugReport.off}
                 </div>
               </div>
 
@@ -254,7 +242,7 @@ export function BugReportButton() {
                 <button
                   type="button"
                   onClick={() => close()}
-                  className="theme-chip rounded-full px-4 py-1.5 text-sm"
+                  className="theme-icon-button theme-toolbar-button text-sm"
                 >
                   {dictionary.bugReport.cancel}
                 </button>

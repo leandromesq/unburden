@@ -35,10 +35,7 @@ export type OmniIssueId =
   | "parser.unknown_defender_item"
   | "parser.legacy_prefixes_removed"
   | "parser.could_not_resolve_attacker_ability"
-  | "parser.could_not_resolve_defender_ability"
-  | "calc.strict_attacker_ability_required"
-  | "calc.strict_defender_ability_required"
-  | "calc.strict_poltergeist_item_required";
+  | "parser.could_not_resolve_defender_ability";
 
 export interface OmniIssue {
   id: OmniIssueId;

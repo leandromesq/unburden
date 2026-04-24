@@ -18,17 +18,31 @@ import {
 import { getSuggestedAbilities } from "@/lib/parser/inference";
 import { useOmniStore } from "@/store/use-omni-store";
 
-function SectionLabel({ children }: { children: ReactNode }) {
+function SectionLabel({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
   return (
-    <div className="theme-text-faint mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] leading-relaxed">
+    <div className={`theme-section-title ${className}`}>
       {children}
     </div>
   );
 }
 
-function GroupLabel({ children }: { children: ReactNode }) {
+function GroupLabel({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
   return (
-    <div className="theme-text-faint mb-2 min-w-0 break-words text-[9px] font-semibold uppercase tracking-[0.16em] leading-relaxed">
+    <div
+      className={`theme-text-dim min-w-0 break-words text-[13px] font-medium leading-5 ${className}`}
+    >
       {children}
     </div>
   );
@@ -51,7 +65,7 @@ function ModifierButton({
       aria-pressed={active}
       disabled={disabled}
       onClick={onClick}
-      className={`max-w-full rounded-full px-3 py-1.5 text-left text-sm leading-4 whitespace-normal break-words ${
+      className={`max-w-full rounded-md px-3 py-1.5 text-left text-sm leading-4 whitespace-normal break-words ${
         active
           ? "theme-chip-active"
           : disabled
@@ -72,6 +86,7 @@ function TokenGroup({
   onInsert,
   emptyText,
   fallbackEmptyText,
+  variant = "card",
 }: {
   title: string;
   tokens: Array<{ token: string; label: string }>;
@@ -80,10 +95,11 @@ function TokenGroup({
   onInsert: (token: string) => void;
   emptyText?: string;
   fallbackEmptyText: string;
+  variant?: "card" | "plain";
 }) {
-  return (
-    <section className="theme-subpanel-strong min-w-0 rounded-2xl p-3">
-      <GroupLabel>{title}</GroupLabel>
+  const content = (
+    <>
+      <GroupLabel className="mb-2">{title}</GroupLabel>
       {tokens.length ? (
         <div className="flex flex-wrap items-start gap-2">
           {tokens.map((definition) => {
@@ -105,6 +121,16 @@ function TokenGroup({
           {emptyText ?? fallbackEmptyText}
         </div>
       )}
+    </>
+  );
+
+  if (variant === "plain") {
+    return <section className="min-w-0">{content}</section>;
+  }
+
+  return (
+    <section className="theme-subpanel min-w-0 rounded-lg p-3">
+      {content}
     </section>
   );
 }
@@ -128,8 +154,15 @@ function HpPercentageControl({
   const options = [25, 50, 75];
 
   return (
-    <section className="theme-subpanel-strong min-w-0 rounded-2xl p-3">
-      <GroupLabel>{labels.currentHp}</GroupLabel>
+    <div className="min-w-0">
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+        <GroupLabel className="mb-0">{labels.currentHp}</GroupLabel>
+        <div className="theme-section-meta text-right">
+          {value === null
+            ? labels.defaultFullHp
+            : labels.usingCurrentHp(value)}
+        </div>
+      </div>
       <div className="flex flex-wrap items-start gap-2">
         {options.map((percent) => (
           <ModifierButton
@@ -144,7 +177,7 @@ function HpPercentageControl({
           type="button"
           disabled={disabled || value === null}
           onClick={() => onChange(null)}
-          className={`shrink-0 rounded-full px-3 py-1.5 text-sm ${
+          className={`shrink-0 rounded-md px-3 py-1.5 text-sm ${
             disabled || value === null
               ? "theme-chip-disabled cursor-not-allowed"
               : "theme-chip"
@@ -153,13 +186,12 @@ function HpPercentageControl({
           {labels.reset}
         </button>
       </div>
-      <div className="theme-text-dim mt-2 text-sm leading-5">
-        {value === null
-          ? labels.defaultFullHp
-          : labels.usingCurrentHp(value)}
-      </div>
-    </section>
+    </div>
   );
+}
+
+function clampStage(value: number) {
+  return Math.max(-6, Math.min(6, value));
 }
 
 function StageControl({
@@ -169,7 +201,6 @@ function StageControl({
   value,
   disabled = false,
   onChange,
-  resetLabel,
 }: {
   title: string;
   ariaLabel: string;
@@ -177,94 +208,75 @@ function StageControl({
   value: number;
   disabled?: boolean;
   onChange: (value: number) => void;
-  resetLabel: string;
 }) {
   const decrementDisabled = disabled || value <= -6;
   const incrementDisabled = disabled || value >= 6;
-  const resetDisabled = disabled || value === 0;
+  const handleInputChange = (nextValue: string) => {
+    const parsedValue = Number(nextValue);
+
+    if (Number.isNaN(parsedValue)) {
+      return;
+    }
+
+    onChange(clampStage(parsedValue));
+  };
 
   return (
-    <section className="theme-subpanel min-w-0 rounded-2xl p-3">
-      <div className="mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2">
-        <div className="min-w-0">
-          <GroupLabel>{title}</GroupLabel>
-        </div>
-        <div className="theme-badge shrink-0 rounded-full px-2.5 py-1 font-mono text-xs">
-          {value > 0 ? `+${value}` : value}
-        </div>
+    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+      <div className="min-w-0">
+        <GroupLabel className="mb-0">{title}</GroupLabel>
+        <div className="theme-section-meta">{summary}</div>
       </div>
-      <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+      <div className="flex shrink-0 items-center gap-1.5">
         <button
           type="button"
           disabled={decrementDisabled}
-          className={`h-8 w-8 shrink-0 rounded-full sm:h-9 sm:w-9 ${
+          aria-label={`${title} down`}
+          className={`theme-icon-button theme-icon-button-sm ${
             decrementDisabled
               ? "theme-chip-disabled cursor-not-allowed"
-              : "theme-chip"
+              : ""
           }`}
-          onClick={() => onChange(Math.max(-6, value - 1))}
+          onClick={() => onChange(clampStage(value - 1))}
         >
           -
         </button>
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0">
           <input
             aria-label={ariaLabel}
-            type="range"
+            type="number"
             min={-6}
             max={6}
             step={1}
             value={value}
             disabled={disabled}
-            onChange={(event) => onChange(Number(event.currentTarget.value))}
-            className="h-2 w-full cursor-pointer appearance-none rounded-full disabled:cursor-not-allowed"
-            style={{
-              background: "var(--line-strong)",
-              accentColor: "var(--accent)",
-            }}
+            onChange={(event) => handleInputChange(event.currentTarget.value)}
+            className="theme-control theme-field-sm theme-number-input w-14 bg-transparent px-2 text-center font-mono text-sm outline-none disabled:cursor-not-allowed"
+            style={{ appearance: "textfield", MozAppearance: "textfield" }}
           />
-          <div className="theme-text-dim mt-2 flex justify-between font-mono text-[10px] sm:text-[11px]">
-            <span>-6</span>
-            <span>0</span>
-            <span>+6</span>
-          </div>
         </div>
         <button
           type="button"
           disabled={incrementDisabled}
-          className={`h-8 w-8 shrink-0 rounded-full sm:h-9 sm:w-9 ${
+          aria-label={`${title} up`}
+          className={`theme-icon-button theme-icon-button-sm ${
             incrementDisabled
               ? "theme-chip-disabled cursor-not-allowed"
-              : "theme-chip"
+              : ""
           }`}
-          onClick={() => onChange(Math.min(6, value + 1))}
+          onClick={() => onChange(clampStage(value + 1))}
         >
           +
         </button>
       </div>
-      <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div className="theme-text-dim min-w-0 flex-1 text-sm leading-5">
-          {summary}
-        </div>
-        <button
-          type="button"
-          disabled={resetDisabled}
-          className={`shrink-0 rounded-full px-3 py-1.5 text-xs ${
-            resetDisabled
-              ? "theme-chip-disabled cursor-not-allowed"
-              : "theme-chip"
-          }`}
-          onClick={() => onChange(0)}
-        >
-          {resetLabel}
-        </button>
-      </div>
-    </section>
+    </div>
   );
 }
 
 function SideColumn({
   side,
   title,
+  subtitle,
   activeTokens,
   disabled = false,
   stageValue,
@@ -281,6 +293,7 @@ function SideColumn({
 }: {
   side: "attacker" | "defender";
   title: string;
+  subtitle?: string;
   activeTokens: string[];
   disabled?: boolean;
   stageValue: number;
@@ -294,7 +307,6 @@ function SideColumn({
   onSpeedChange: (value: number) => void;
   onHpChange: (value: number | null) => void;
   labels: {
-    primaryControls: string;
     multipliers: string;
     attackerStageSummary: string;
     defenderStageSummary: string;
@@ -304,7 +316,6 @@ function SideColumn({
     reset: string;
     defaultFullHp: string;
     usingCurrentHp: (value: number) => string;
-    toggles: string;
     stats: string;
     battleEffects: string;
     abilities: string;
@@ -314,50 +325,65 @@ function SideColumn({
   };
 }) {
   return (
-    <section className="theme-panel min-w-0 rounded-[28px] p-4">
-      <SectionLabel>{title}</SectionLabel>
-      <div className="grid gap-3">
-        <div className="theme-text-faint text-[10px] font-semibold uppercase tracking-[0.18em]">
-          {labels.primaryControls}
-        </div>
-        <StageControl
-          title={labels.multipliers}
-          ariaLabel={`${side} stage slider`}
-          summary={
-            side === "attacker"
-              ? labels.attackerStageSummary
-              : labels.defenderStageSummary
-          }
-          value={stageValue}
-          disabled={disabled}
-          onChange={onStageChange}
-          resetLabel={labels.reset}
-        />
-        <StageControl
-          title={labels.speed}
-          ariaLabel={`${side} speed slider`}
-          summary={labels.speedSummary}
-          value={speedValue}
-          disabled={disabled}
-          onChange={onSpeedChange}
-          resetLabel={labels.reset}
-        />
-        <HpPercentageControl
-          value={hpPercent}
-          disabled={disabled}
-          onChange={onHpChange}
-          labels={{
-            currentHp: labels.currentHp,
-            reset: labels.reset,
-            defaultFullHp: labels.defaultFullHp,
-            usingCurrentHp: labels.usingCurrentHp,
-          }}
-        />
-        <div className="theme-divider mt-1 border-t pt-3">
-          <div className="theme-text-faint mb-3 text-[10px] font-semibold uppercase tracking-[0.18em]">
-            {labels.toggles}
+    <section
+      className={`theme-panel min-w-0 rounded-xl p-4 ${
+        disabled ? "opacity-75" : ""
+      }`}
+    >
+      <div className="mb-3 flex min-w-0 flex-wrap items-center justify-between gap-2">
+        <SectionLabel>{title}</SectionLabel>
+        {subtitle ? (
+          <div className="theme-section-meta min-w-0 truncate">
+            {subtitle}
           </div>
+        ) : disabled ? (
+          <div className="theme-section-meta min-w-0 truncate">
+            {labels.resolveThisSideFirst}
+          </div>
+        ) : null}
+      </div>
+      <div className="grid gap-3">
+        <section className="theme-subpanel min-w-0 rounded-lg p-3">
           <div className="grid gap-3">
+            <StageControl
+              title={labels.multipliers}
+              ariaLabel={`${side} stage slider`}
+              summary={
+                side === "attacker"
+                  ? labels.attackerStageSummary
+                  : labels.defenderStageSummary
+              }
+              value={stageValue}
+              disabled={disabled}
+              onChange={onStageChange}
+            />
+            <div className="theme-divider border-t pt-3">
+              <StageControl
+                title={labels.speed}
+                ariaLabel={`${side} speed slider`}
+                summary={labels.speedSummary}
+                value={speedValue}
+                disabled={disabled}
+                onChange={onSpeedChange}
+              />
+            </div>
+            <div className="theme-divider border-t pt-3">
+              <HpPercentageControl
+                value={hpPercent}
+                disabled={disabled}
+                onChange={onHpChange}
+                labels={{
+                  currentHp: labels.currentHp,
+                  reset: labels.reset,
+                  defaultFullHp: labels.defaultFullHp,
+                  usingCurrentHp: labels.usingCurrentHp,
+                }}
+              />
+            </div>
+          </div>
+        </section>
+        <section className="theme-subpanel min-w-0 rounded-lg p-3">
+          <div className="grid gap-4">
             <TokenGroup
               title={labels.stats}
               tokens={statTokens}
@@ -365,30 +391,37 @@ function SideColumn({
               disabled={disabled}
               onInsert={onInsert}
               fallbackEmptyText={labels.noOptionsYet}
+              variant="plain"
             />
-            <TokenGroup
-              title={labels.battleEffects}
-              tokens={effectTokens}
-              activeTokens={activeTokens}
-              disabled={disabled}
-              onInsert={onInsert}
-              fallbackEmptyText={labels.noOptionsYet}
-            />
-            <TokenGroup
-              title={labels.abilities}
-              tokens={abilityTokens}
-              activeTokens={activeTokens}
-              disabled={disabled}
-              onInsert={onInsert}
-              emptyText={
-                disabled
-                  ? labels.resolveThisSideFirst
-                  : labels.noAbilitySuggestions
-              }
-              fallbackEmptyText={labels.noOptionsYet}
-            />
+            <div className="theme-divider border-t pt-4">
+              <TokenGroup
+                title={labels.battleEffects}
+                tokens={effectTokens}
+                activeTokens={activeTokens}
+                disabled={disabled}
+                onInsert={onInsert}
+                fallbackEmptyText={labels.noOptionsYet}
+                variant="plain"
+              />
+            </div>
+            <div className="theme-divider border-t pt-4">
+              <TokenGroup
+                title={labels.abilities}
+                tokens={abilityTokens}
+                activeTokens={activeTokens}
+                disabled={disabled}
+                onInsert={onInsert}
+                emptyText={
+                  disabled
+                    ? labels.resolveThisSideFirst
+                    : labels.noAbilitySuggestions
+                }
+                fallbackEmptyText={labels.noOptionsYet}
+                variant="plain"
+              />
+            </div>
           </div>
-        </div>
+        </section>
       </div>
     </section>
   );
@@ -470,6 +503,7 @@ export function ModifierSwitches() {
   const defenderResolved =
     commandStructure.defender.speciesExact ??
     commandStructure.defender.speciesMatch;
+  const attackerReady = Boolean(attackerResolved);
   const defenderReady = Boolean(
     commandStructure.lexed.hasDelimiter && defenderResolved,
   );
@@ -576,15 +610,18 @@ export function ModifierSwitches() {
 
   return (
     <div className="min-w-0 px-4 py-4 md:px-5 md:py-5">
-      <section className="theme-panel mb-5 min-w-0 rounded-[28px] p-4">
-        <SectionLabel>{dictionary.modifierSwitches.global}</SectionLabel>
-        <div className="grid gap-3 md:grid-cols-3">
+      <section className="mb-4 min-w-0 rounded-lg border border-[var(--line)] bg-[var(--surface)] px-4 py-3">
+        <div className="mb-3">
+          <SectionLabel>{dictionary.modifierSwitches.global}</SectionLabel>
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
           <TokenGroup
             title={dictionary.modifierSwitches.weather}
             tokens={GLOBAL_WEATHER_TOKENS}
             activeTokens={activeChipTokens.global}
             onInsert={(token) => handleInsert("global", token)}
             fallbackEmptyText={dictionary.modifierSwitches.noOptionsYet}
+            variant="plain"
           />
           <TokenGroup
             title={dictionary.modifierSwitches.terrain}
@@ -592,6 +629,7 @@ export function ModifierSwitches() {
             activeTokens={activeChipTokens.global}
             onInsert={(token) => handleInsert("global", token)}
             fallbackEmptyText={dictionary.modifierSwitches.noOptionsYet}
+            variant="plain"
           />
           <TokenGroup
             title={dictionary.modifierSwitches.fieldEffects}
@@ -599,6 +637,7 @@ export function ModifierSwitches() {
             activeTokens={activeChipTokens.global}
             onInsert={(token) => handleInsert("global", token)}
             fallbackEmptyText={dictionary.modifierSwitches.noOptionsYet}
+            variant="plain"
           />
         </div>
       </section>
@@ -606,7 +645,9 @@ export function ModifierSwitches() {
         <SideColumn
           side="attacker"
           title={dictionary.modifierSwitches.attacker}
+          subtitle={attackerResolved?.entry.name}
           activeTokens={activeChipTokens.attacker}
+          disabled={!attackerReady}
           stageValue={attackerStage}
           speedValue={attackerSpeedStage}
           hpPercent={attackerHpPercent}
@@ -622,6 +663,7 @@ export function ModifierSwitches() {
         <SideColumn
           side="defender"
           title={dictionary.modifierSwitches.defender}
+          subtitle={defenderResolved?.entry.name}
           activeTokens={activeChipTokens.defender}
           disabled={!defenderReady}
           stageValue={defenderStage}

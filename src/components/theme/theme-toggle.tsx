@@ -97,7 +97,7 @@ export function ThemeToggle() {
   };
 
   return (
-    <div className="theme-toggle inline-flex rounded-full p-1">
+    <div className="theme-toggle inline-flex rounded-lg p-0.5">
       {(["dark", "light"] as const).map((option) => {
         const active = theme === option;
 
@@ -116,7 +116,7 @@ export function ThemeToggle() {
                 ? dictionary.themeToggle.moon
                 : dictionary.themeToggle.sun
             }
-            className={`theme-toggle-option flex h-8 w-8 items-center justify-center rounded-full ${
+            className={`theme-toggle-option flex h-8 w-8 items-center justify-center rounded-md ${
               active ? "theme-toggle-option-active" : ""
             }`}
             onClick={() => handleThemeChange(option)}

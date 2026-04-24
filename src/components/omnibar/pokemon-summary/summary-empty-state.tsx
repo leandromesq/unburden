@@ -40,15 +40,15 @@ export function SummaryEmptyState({
   return (
     <aside
       data-testid={`${side}-summary`}
-      className="theme-panel min-w-0 overflow-hidden rounded-[28px] p-4 sm:p-5"
+      className="theme-panel min-w-0 overflow-hidden rounded-xl p-4 sm:p-5"
     >
-      <div className="theme-text-faint text-xs font-semibold uppercase tracking-[0.24em]">
+      <div className="text-sm font-medium">
         {sideLabel}
       </div>
 
       <div className="mt-3 flex min-w-0 items-start gap-3 sm:items-center">
-        <div className="theme-subpanel-strong flex h-18 w-18 shrink-0 items-center justify-center rounded-2xl p-2 sm:h-20 sm:w-20">
-          <div className="theme-text-faint font-mono text-xs uppercase tracking-[0.2em]">
+        <div className="theme-subpanel flex h-18 w-18 shrink-0 items-center justify-center rounded-xl p-2 sm:h-20 sm:w-20">
+          <div className="theme-text-faint font-mono text-xs">
             —
           </div>
         </div>
@@ -65,6 +65,7 @@ export function SummaryEmptyState({
           label="Pokemon"
           hideLabel
           compact
+          name="pokemon-species"
           value={speciesInput}
           options={speciesOptions}
           placeholder="Pokemon"
@@ -76,12 +77,20 @@ export function SummaryEmptyState({
       </div>
 
       {hasImportedSets ? (
-        <SummarySavedSetList
-          sets={importedSetList}
-          onSelectSet={(set) => onSelectSet(set.speciesId)}
-          onRemoveSet={onRemoveSet}
-          onImportClick={onOpenImport}
-        />
+        <>
+          <button
+            type="button"
+            onClick={onOpenImport}
+            className="theme-control mt-4 w-full rounded-lg py-2.5 text-sm"
+          >
+            {dictionary.summary.import}
+          </button>
+          <SummarySavedSetList
+            sets={importedSetList}
+            onSelectSet={(set) => onSelectSet(set.speciesId)}
+            onRemoveSet={onRemoveSet}
+          />
+        </>
       ) : (
         <>
           <div className="theme-text-dim mt-3 text-sm">
@@ -90,7 +99,7 @@ export function SummaryEmptyState({
           <button
             type="button"
             onClick={onOpenImport}
-            className="theme-chip mt-4 w-full rounded-2xl py-2.5 text-xs"
+            className="theme-control mt-4 w-full rounded-lg py-2.5 text-sm"
           >
             {dictionary.summary.import}
           </button>

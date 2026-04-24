@@ -1,48 +1,74 @@
 "use client";
 
-import { AboutSection } from "@/components/about-section";
-import { LegalFooter } from "@/components/legal-footer";
+import Link from "next/link";
+
 import { LocaleToggle } from "@/components/locale-toggle";
 import { OmniComposer } from "@/components/omnibar/omni-composer";
+import { RegulationBadge } from "@/components/regulation-badge";
 import { TesterLinks } from "@/components/tester-links";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
-import { RegulationBadge } from "@/components/regulation-badge";
 import { useI18n } from "@/i18n/I18nProvider";
 
 export default function Home() {
   const { dictionary } = useI18n();
 
   return (
-    <main className="theme-page relative min-h-screen overflow-hidden">
-      <div className="theme-page-grid" />
-      <section className="relative z-20 mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-start px-6 py-16 text-center">
-        <div className="mb-5 flex flex-wrap items-center justify-center gap-2 md:gap-3">
-          <div className="theme-kicker rounded-full px-4 py-1 text-xs uppercase tracking-[0.35em]">
-            {dictionary.home.kicker}
+    <main className="theme-page">
+      <div className="mx-auto flex min-h-screen w-full max-w-[1360px] flex-col px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
+        <header className="border-b theme-divider pb-5">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="text-2xl font-semibold tracking-[-0.03em]">
+                  Unburden
+                </h1>
+                <RegulationBadge />
+              </div>
+              <p className="theme-text-dim mt-2 max-w-2xl text-sm leading-6">
+                {dictionary.home.heroDescription}
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-start gap-2 lg:justify-end">
+              <TesterLinks className="text-sm" />
+              <Link
+                href="/about"
+                className="theme-icon-button inline-flex h-8 items-center rounded-lg px-3 text-sm"
+              >
+                {dictionary.home.about}
+              </Link>
+              <LocaleToggle />
+              <ThemeToggle />
+            </div>
           </div>
-          <RegulationBadge />
-          <a
-            href="#about"
-            className="theme-icon-button inline-flex h-8 items-center rounded-full px-3.5 text-xs font-medium uppercase tracking-[0.16em]"
-          >
-            {dictionary.home.about}
-          </a>
-          <LocaleToggle />
-          <ThemeToggle />
-        </div>
-        <h1 className="max-w-4xl font-sans text-5xl leading-none tracking-[-0.05em] md:text-7xl">
-          Unburden
-        </h1>
-        <p className="theme-text-muted mt-4 max-w-2xl text-base leading-7 md:text-lg">
-          {dictionary.home.heroDescription}
-        </p>
-        <TesterLinks />
-        <div className="mt-8 w-full">
+        </header>
+
+        <section id="calculator" className="flex-1 py-5 sm:py-6">
           <OmniComposer />
-        </div>
-      </section>
-      <AboutSection />
-      <LegalFooter />
+        </section>
+
+        <footer className="border-t theme-divider pt-4">
+          <div className="flex flex-col gap-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+            <div className="theme-text-faint">
+              {dictionary.legalFooter.copyright}
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <Link
+                href="/about"
+                className="theme-text-dim underline underline-offset-4"
+              >
+                {dictionary.home.about}
+              </Link>
+              <span className="theme-text-faint" aria-hidden="true">
+                ·
+              </span>
+              <span className="theme-text-dim">
+                {dictionary.legalFooter.title}
+              </span>
+            </div>
+          </div>
+        </footer>
+      </div>
     </main>
   );
 }

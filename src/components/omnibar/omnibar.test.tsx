@@ -395,21 +395,6 @@ describe("omnibar components", () => {
     expect(screen.getByTestId("results-panel")).toBeInTheDocument();
   });
 
-  test("strict mode blocks calculations that rely on inferred abilities", () => {
-    render(<ResultsPanel />);
-
-    act(() => {
-      useOmniStore.getState().setStrictMode(true);
-      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
-    });
-
-    expect(useOmniStore.getState().calculationReady).toBe(false);
-    expect(useOmniStore.getState().issues[0]).toEqual({
-      id: "calc.strict_attacker_ability_required",
-    });
-    expect(screen.queryByTestId("results-panel")).not.toBeInTheDocument();
-  });
-
   test("results panel shows SP-style spreads instead of EV-style spreads", () => {
     render(<ResultsPanel />);
 
@@ -545,32 +530,6 @@ describe("omnibar components", () => {
     });
   });
 
-  test("copy share url preserves strict mode", async () => {
-    const writeText = jest.fn().mockResolvedValue(undefined);
-
-    Object.defineProperty(navigator, "clipboard", {
-      configurable: true,
-      value: { writeText },
-    });
-
-    render(<ResultsPanel />);
-
-    act(() => {
-      useOmniStore.getState().setStrictMode(true);
-      useOmniStore
-        .getState()
-        .setInput("politoed !muddy-water [Drizzle] x incineroar [Intimidate]");
-    });
-
-    await act(async () => {
-      fireEvent.click(
-        screen.getAllByRole("button", { name: /copy share url/i })[0],
-      );
-    });
-
-    expect(writeText).toHaveBeenCalledWith(expect.stringContaining("strict=1"));
-  });
-
   test("copy result text button copies the showdown-style result text", async () => {
     const writeText = jest.fn().mockResolvedValue(undefined);
 
@@ -659,20 +618,6 @@ describe("omnibar components", () => {
       expect(useOmniStore.getState().input).toBe(
         "politoed !muddy-water x incineroar",
       );
-    });
-  });
-
-  test("hydrates strict mode from the shared URL", async () => {
-    window.history.replaceState(
-      {},
-      "",
-      "/?prompt=politoed%20!muddy-water%20%5BDrizzle%5D%20x%20incineroar%20%5BIntimidate%5D&strict=1",
-    );
-
-    render(<OmniComposer />);
-
-    await waitFor(() => {
-      expect(useOmniStore.getState().strictMode).toBe(true);
     });
   });
 

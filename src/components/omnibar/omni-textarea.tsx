@@ -69,6 +69,29 @@ export function OmniTextarea({
   const ref = textareaRef ?? localRef;
 
   useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const element = ref.current;
+    if (!element) {
+      return;
+    }
+
+    const prefersDesktopFocus =
+      typeof window.matchMedia === "function"
+        ? window.matchMedia("(pointer: fine)").matches
+        : true;
+    if (!prefersDesktopFocus) {
+      return;
+    }
+
+    element.focus();
+    const cursor = element.value.length;
+    element.setSelectionRange(cursor, cursor);
+  }, [ref]);
+
+  useEffect(() => {
     const handleGlobalKeyDown = (event: KeyboardEvent) => {
       if (
         event.defaultPrevented ||
@@ -151,21 +174,20 @@ export function OmniTextarea({
             pendingSelectionRef.current = 0;
             setCaretAtEnd(true);
           }}
-          className="theme-icon-button absolute right-3 top-3 z-20 flex h-8 w-8 items-center justify-center rounded-full md:right-4 md:top-4"
+          className="theme-icon-button theme-icon-button-sm absolute right-3 top-3 z-20 md:right-4 md:top-4"
         >
           <X aria-hidden="true" size={15} strokeWidth={2} />
         </button>
       ) : null}
       <textarea
         ref={ref}
-        autoFocus
         rows={1}
         data-testid="omni-textarea"
         value={input}
         spellCheck={false}
         placeholder="politoed !muddy-water @mystic-water x incineroar ~rain"
         aria-keyshortcuts="Alt+K Alt+X"
-        className="theme-input relative z-10 block min-h-20 w-full min-w-0 resize-none border-0 bg-transparent px-4 py-3 pr-12 text-left font-mono text-base leading-7 tracking-[-0.02em] outline-none md:min-h-22 md:px-5 md:py-4 md:pr-14 md:text-xl md:leading-8"
+        className="theme-input relative z-10 block min-h-18 w-full min-w-0 resize-none border-0 bg-transparent px-4 py-3 pr-12 text-left font-mono text-base leading-7 tracking-[-0.02em] outline-none md:min-h-20 md:px-5 md:pr-14 md:text-lg"
         onChange={(event) =>
           setInput(
             event.target.value,

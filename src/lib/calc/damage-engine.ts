@@ -13,7 +13,6 @@ import {
 } from "@/lib/calc/stat-calc";
 import { normalizeKoText } from "@/lib/calc/ko-text";
 import { moveById, normalizeId, pokemonById } from "@/lib/data/loaders";
-import { createIssue } from "@/lib/issues";
 import { inferDefaultAbility, inferDefaultItem } from "@/lib/parser/inference";
 import { resolveReferencedImportedSet } from "@/lib/team/set-references";
 import type {
@@ -198,9 +197,6 @@ function createCalcPokemon(
 }
 
 type ValueSource = "prompt" | "set" | "default" | "archetype";
-interface CalculationOptions {
-  strictMode?: boolean;
-}
 
 function buildBaseIvs() {
   return { ...DEFAULT_IV_SPREAD };
@@ -248,12 +244,12 @@ function getResolvedAttackerAbility(
   parsed: ParsedCommand,
   attackerSet: ImportedSet | null,
   attackerId: string,
-  strictMode: boolean,
 ) {
   return (
     parsed.attackerAbility ??
     attackerSet?.ability ??
-    (strictMode ? undefined : inferDefaultAbility(attackerId) ?? undefined)
+    inferDefaultAbility(attackerId) ??
+    undefined
   );
 }
 
@@ -261,12 +257,12 @@ function getResolvedDefenderAbility(
   parsed: ParsedCommand,
   defenderSet: ImportedSet | null,
   defenderId: string,
-  strictMode: boolean,
 ) {
   return (
     parsed.defenderAbility ??
     defenderSet?.ability ??
-    (strictMode ? undefined : inferDefaultAbility(defenderId) ?? undefined)
+    inferDefaultAbility(defenderId) ??
+    undefined
   );
 }
 
@@ -275,16 +271,13 @@ function getResolvedDefenderItem(
   defenderSet: ImportedSet | null,
   defenderId: string,
   requiresTargetItem: boolean,
-  strictMode: boolean,
 ) {
   return (
     parsed.defenderItem ??
     defenderSet?.item ??
-    (strictMode
-      ? undefined
-      : requiresTargetItem
-        ? inferDefaultItem(defenderId) ?? "Leftovers"
-        : undefined)
+    (requiresTargetItem
+      ? inferDefaultItem(defenderId) ?? "Leftovers"
+      : undefined)
   );
 }
 
@@ -906,58 +899,16 @@ function describeAssumptions(
 export function getCalculationIssues(
   parsed: ParsedCommand,
   importedSets: Record<string, ImportedSet> = {},
-  options: CalculationOptions = {},
 ) {
-  if (!options.strictMode) {
-    return [];
-  }
-
-  const parsedAttacker = pokemonById.get(normalizeId(parsed.attacker));
-  const parsedDefender = pokemonById.get(normalizeId(parsed.defender));
-  const move = moveById.get(normalizeId(parsed.move));
-
-  if (!parsedAttacker || !parsedDefender || !move) {
-    return [];
-  }
-
-  const parsedAttackerSet = resolveReferencedImportedSet(
-    parsed.attackerSetReferenceId,
-    importedSets,
-  );
-  const parsedDefenderSet = resolveReferencedImportedSet(
-    parsed.defenderSetReferenceId,
-    importedSets,
-  );
-  const issues: OmniIssue[] = [];
-
-  if (!parsed.attackerAbility && !parsedAttackerSet?.ability) {
-    issues.push(createIssue("calc.strict_attacker_ability_required"));
-  }
-
-  if (!parsed.defenderAbility && !parsedDefenderSet?.ability) {
-    issues.push(createIssue("calc.strict_defender_ability_required"));
-  }
-
-  if (
-    normalizeId(move.name) === "poltergeist" &&
-    !parsed.defenderItem &&
-    !parsedDefenderSet?.item
-  ) {
-    issues.push(createIssue("calc.strict_poltergeist_item_required"));
-  }
-
-  return issues;
+  void parsed;
+  void importedSets;
+  return [];
 }
 
 export function buildCalculationContext(
   parsed: ParsedCommand,
   importedSets: Record<string, ImportedSet> = {},
-  options: CalculationOptions = {},
 ) {
-  if (getCalculationIssues(parsed, importedSets, options).length) {
-    return null;
-  }
-
   const parsedAttacker = pokemonById.get(normalizeId(parsed.attacker));
   const parsedDefender = pokemonById.get(normalizeId(parsed.defender));
   const move = moveById.get(normalizeId(parsed.move));
@@ -983,7 +934,6 @@ export function buildCalculationContext(
     parsedDefenderSet,
     defender.id,
     requiresTargetItem,
-    Boolean(options.strictMode),
   );
   const attackerSet = buildPromptStatPointSet(
     attacker.id,
@@ -1034,13 +984,11 @@ export function buildCalculationContext(
     parsed,
     attackerSet,
     attacker.id,
-    Boolean(options.strictMode),
   );
   const defenderAbility = getResolvedDefenderAbility(
     parsed,
     defenderSet,
     defender.id,
-    Boolean(options.strictMode),
   );
   const { moveHitMetadata, moveHitCount } = getResolvedMoveHitCount(parsed);
   const attackerAbilitySource: ValueSource = parsed.attackerAbility
@@ -1243,9 +1191,8 @@ export function buildCalculationContext(
 export function calculateDamageResults(
   parsed: ParsedCommand,
   importedSets: Record<string, ImportedSet> = {},
-  options: CalculationOptions = {},
 ): DamageResult[] {
-  const context = buildCalculationContext(parsed, importedSets, options);
+  const context = buildCalculationContext(parsed, importedSets);
 
   if (!context) {
     return [];

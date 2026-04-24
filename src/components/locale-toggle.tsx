@@ -85,7 +85,7 @@ export function LocaleToggle() {
             setOpen((current) => !current);
           });
         }}
-        className={`theme-control inline-flex h-8 min-w-[9rem] items-center justify-between gap-2 rounded-full border px-3 text-xs font-medium transition-all ${
+        className={`theme-control inline-flex h-8 min-w-[9rem] items-center justify-between gap-2 rounded-lg border px-3 text-xs font-medium ${
           open
             ? "border-[var(--accent-border)] bg-[color-mix(in_srgb,var(--surface-4)_86%,transparent)] text-[var(--text)] shadow-[0_0_0_3px_var(--accent-softer)]"
             : "text-[var(--text-dim)]"
@@ -116,7 +116,7 @@ export function LocaleToggle() {
           id={menuId}
           role="menu"
           aria-label={dictionary.localeToggle.label}
-          className="theme-menu absolute left-0 top-[calc(100%+0.35rem)] z-20 min-w-full overflow-hidden rounded-2xl p-1"
+          className="theme-menu absolute left-0 top-[calc(100%+0.35rem)] z-20 min-w-full overflow-hidden rounded-xl p-1"
           style={{ background: "var(--surface-3)" }}
         >
           {options.map((option) => {
@@ -129,7 +129,7 @@ export function LocaleToggle() {
                 role="menuitemradio"
                 aria-checked={active}
                 onClick={() => handleSelectLocale(option.value)}
-                className={`flex w-full items-center justify-between gap-3 rounded-xl border px-3 py-2 text-left text-sm transition-colors ${
+                className={`flex w-full items-center justify-between gap-3 rounded-lg border px-3 py-2 text-left text-sm ${
                   active
                     ? "border-[var(--line-strong)] bg-[var(--surface-4)] text-[var(--text)]"
                     : "border-transparent text-[var(--text-dim)] hover:border-[var(--line)] hover:bg-[var(--surface-4)] hover:text-[var(--text)]"

@@ -109,17 +109,5 @@ export function formatIssue(issue: OmniIssue, dictionary: AppDictionary) {
       return ptBR
         ? "Nao foi possivel determinar a ability do defensor."
         : "Could not resolve defender ability.";
-    case "calc.strict_attacker_ability_required":
-      return ptBR
-        ? "Modo Strict: adicione uma ability explícita para o atacante ou use um set com ability."
-        : "Strict mode: add an explicit attacker ability or use a set with an ability.";
-    case "calc.strict_defender_ability_required":
-      return ptBR
-        ? "Modo Strict: adicione uma ability explícita para o defensor ou use um set com ability."
-        : "Strict mode: add an explicit defender ability or use a set with an ability.";
-    case "calc.strict_poltergeist_item_required":
-      return ptBR
-        ? "Modo Strict: Poltergeist exige um item explícito no defensor ou um set com item."
-        : "Strict mode: Poltergeist requires an explicit defender item or a set with an item.";
   }
 }

@@ -39,12 +39,14 @@ function fallbackCopyText(text: string) {
 export function PokemonSideSummary({ side }: { side: SummarySide }) {
   const { dictionary } = useI18n();
   const {
+    abilityInput,
     abilityOptions,
     canSaveSet,
     currentStatPoints,
     getCurrentExportSet,
     handleInlineStatInputChange,
     handleInlineStatPointChange,
+    handleAbilityInputChange,
     handleItemInputChange,
     handleMoveInputChange,
     handleNicknameChange,
@@ -136,7 +138,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
         onChange={(event) => handleNicknameChange(event.currentTarget.value)}
         onBlur={() => onCommitNickname()}
         placeholder="set name"
-        className="theme-control theme-input h-9 w-full min-w-0 rounded-xl px-3 text-xs"
+        className="theme-control theme-input h-8.5 w-full min-w-0 rounded-lg px-3 text-sm"
       />
     </div>
   );
@@ -146,6 +148,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
         label="Status"
         hideLabel
         compact
+        name="pokemon-status"
         value={statusInput}
         options={statusOptions}
         placeholder="Status"
@@ -188,7 +191,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
   return (
     <aside
       data-testid={`${side}-summary`}
-      className="theme-panel min-w-0 overflow-hidden rounded-[28px] p-4 sm:p-5"
+      className="theme-panel min-w-0 overflow-hidden rounded-xl p-4 sm:p-5"
     >
       <SummaryHeader
         title={summary.title}
@@ -207,7 +210,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
               }
               title={isMegaActive ? "Mega form active" : "Mega form"}
               aria-pressed={isMegaActive}
-              className={`theme-icon-button theme-icon-button-mega flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full p-0 ${
+              className={`theme-icon-button theme-icon-button-mega flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg p-0 ${
                 isMegaActive
                   ? "theme-icon-button-mega-active"
                   : "theme-icon-button-mega-inactive"
@@ -239,7 +242,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
                 aria-label="Save"
                 title="Save set"
                 onClick={handleSaveCurrentSet}
-                className="theme-icon-button flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm"
+                className="theme-icon-button theme-icon-button-sm shrink-0 text-sm"
                 style={{ color: "var(--accent-text-mid)" }}
               >
                 <Save aria-hidden="true" size={14} strokeWidth={2} />
@@ -250,7 +253,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
               aria-label={dictionary.summary.import}
               title={dictionary.summary.import}
               onClick={openImportModal}
-              className="theme-icon-button flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm"
+              className="theme-icon-button theme-icon-button-sm shrink-0 text-sm"
             >
               <ArrowDownToLine aria-hidden="true" size={15} strokeWidth={1.9} />
             </button>
@@ -259,7 +262,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
               aria-label={dictionary.summary.export}
               title={copiedSet ? dictionary.summary.copied : dictionary.summary.export}
               onClick={() => void handleExportSet()}
-              className={`theme-icon-button flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm ${
+              className={`theme-icon-button theme-icon-button-sm shrink-0 text-sm ${
                 copiedSet ? "theme-icon-button-active" : ""
               }`}
             >
@@ -277,7 +280,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
                 onClick={() => {
                   handleRemoveSet(resolvedSetId);
                 }}
-                className="theme-icon-button flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm"
+                className="theme-icon-button theme-icon-button-sm shrink-0 text-sm"
                 style={{ color: "var(--accent-text-mid)" }}
               >
                 <Trash2 aria-hidden="true" size={15} strokeWidth={1.9} />
@@ -294,6 +297,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
         speciesInput={speciesInput}
         speciesOptions={speciesOptions}
         ability={summary.ability}
+        abilityInput={abilityInput}
         abilityOptions={abilityOptions}
         itemInput={itemInput}
         itemOptions={itemOptions}
@@ -313,6 +317,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
         onInputSpecies={onInputSpecies}
         onCommitSpecies={onCommitSpecies}
         onInputItem={handleItemInputChange}
+        onInputAbility={handleAbilityInputChange}
         onCommitItem={onCommitItem}
         onCommitAbility={onCommitAbility}
         onCommitNature={onCommitNature}

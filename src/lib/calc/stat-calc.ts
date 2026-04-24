@@ -18,7 +18,7 @@ export const DEFAULT_IV_SPREAD: StatSpread = {
   spe: 31,
 };
 
-export const MAX_STAT_POINTS = 66;
+const MAX_STAT_POINTS = 66;
 const MAX_STAT_POINTS_PER_STAT = 32;
 
 /** Maps nature name → { stat: multiplier } for boosted/lowered stats only */

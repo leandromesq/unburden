@@ -20,7 +20,7 @@ export const ptBRDictionary: AppDictionary = {
     kicker: "Calculadora de Dano para VGC",
     about: "Sobre",
     heroDescription:
-      "Digite uma matchup como um prompt de chat. Aceite entre sugestões com Tab e Setas do Teclado. Compare bulk Min, Mid e Max instantaneamente.",
+      "Escreva o prompt, ajuste os dois lados e compare bulk Min, Mid e Max sem sair do fluxo de edição.",
     toggleModifiers: "Alternar painel de modificadores",
     modifiers: "Modificadores",
     swapSides: "Trocar atacante e defensor",
@@ -159,7 +159,7 @@ export const ptBRDictionary: AppDictionary = {
       "Abilities de clima e terreno sugerem o ~token correspondente depois que os dois lados sao determinados.",
       "Use os sliders laterais para controlar estágios de stats.",
       "Use sp:hp/atk/def/spa/spd/spe para sobrescrever spreads do resumo e do calc diretamente pelo prompt.",
-      "O modo Fast permite defaults competitivos. O modo Strict bloqueia abilities inferidas e outras suposições.",
+      "Os defaults competitivos permanecem ativos ate voce sobrescrever algo explicitamente no prompt.",
       "O autocomplete funciona para nomes de Pokemon, golpes e tokens de modificador.",
     ],
   },
@@ -174,11 +174,8 @@ export const ptBRDictionary: AppDictionary = {
       "O que voce tentou fazer, o que aconteceu e como eu posso reproduzir?",
     attachedContext: "Contexto anexado",
     currentPrompt: "Prompt atual",
-    strictMode: "Modo strict",
-    on: "ativo",
-    off: "desativado",
     privacy:
-      "Privacidade: isso envia sua descricao, prompt atual, URL da pagina, user agent do navegador e estado do modo strict para uma issue no GitHub que pode ficar publicamente visivel.",
+      "Privacidade: isso envia sua descricao, prompt atual, URL da pagina e user agent do navegador para uma issue no GitHub que pode ficar publicamente visivel.",
     idleMessage:
       "Seus bugs e feedbacks se tornam issues no GitHub que podem ficar publicamente visiveis.",
     viewIssue: "Ver issue no GitHub",
@@ -215,12 +212,6 @@ export const ptBRDictionary: AppDictionary = {
     cancel: "Cancelar",
     preview: (count) =>
       `Prévia - ${count} set${count === 1 ? "" : "s"} encontrado${count === 1 ? "" : "s"}`,
-  },
-  strictMode: {
-    groupLabel: "Modo de cálculo",
-    fast: "Fast",
-    strict: "Strict",
-    optionAria: (label) => `Modo de cálculo ${label}`,
   },
   summary: {
     resolvePokemon:

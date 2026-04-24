@@ -107,7 +107,7 @@ function StatItem({
 
   return (
     <div className="min-w-0">
-      <span className="theme-text-faint shrink-0 text-[10px] font-semibold uppercase tracking-[0.18em]">
+      <span className="theme-text-faint shrink-0 text-[11px] font-medium">
         {label}
       </span>
       <div className="mt-0.5 flex min-w-0 items-baseline justify-between gap-2">
@@ -159,19 +159,24 @@ function StatItem({
             </span>
           )}
         </div>
+        {statKey === "hp" ? (
+          <span className="theme-text-faint shrink-0 font-mono text-[10px]">
+            %
+          </span>
+        ) : null}
         <input
           type="number"
           inputMode="numeric"
-          min={statKey === "hp" ? 1 : -6}
+          min={statKey === "hp" ? 0 : -6}
           max={statKey === "hp" ? 100 : 6}
-          step={statKey === "hp" ? 5 : 1}
+          step={1}
           value={inputValue}
           aria-label={inputLabel}
           onChange={(event) =>
             onChangeStage(statKey, Number(event.currentTarget.value))
           }
-          className={`theme-control theme-input h-5 shrink-0 rounded-md px-1 text-center font-mono text-[10px] ${
-            statKey === "hp" ? "w-14" : "w-12"
+          className={`theme-control theme-input h-6 shrink-0 rounded-[6px] bg-[var(--surface-2)] px-1.5 text-center font-mono text-[11px] tabular-nums ${
+            statKey === "hp" ? "w-16" : "w-13"
           }`}
         />
       </div>
@@ -194,7 +199,7 @@ export function SummaryStatsGrid({
   return (
     <div className="theme-divider mt-4 border-t pt-3">
       <div className="mb-2">
-        <span className="theme-text-faint text-[10px] font-semibold uppercase tracking-[0.18em]">
+        <span className="text-sm font-medium">
           {showLevelLabel ? `Stats · Lv. ${level}` : "Base Stats"}
         </span>
       </div>

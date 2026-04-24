@@ -76,6 +76,7 @@ interface SummaryEditorState {
   speciesInput: string;
   nicknameInput: string;
   itemInput: string;
+  abilityInput: string;
   statusInput: string;
   moveInputs: string[];
   selectedMoveIndex: number | null;
@@ -196,6 +197,7 @@ function isEditorStateEqual(
     current.speciesInput === next.speciesInput &&
     current.nicknameInput === next.nicknameInput &&
     current.itemInput === next.itemInput &&
+    current.abilityInput === next.abilityInput &&
     current.statusInput === next.statusInput &&
     current.selectedMoveIndex === next.selectedMoveIndex &&
     areStringArraysEqual(current.moveInputs, next.moveInputs)
@@ -213,6 +215,7 @@ function buildEditorState(
       speciesInput: "",
       nicknameInput: "",
       itemInput: "",
+      abilityInput: "",
       statusInput: "",
       moveInputs: buildMovesDraft([]),
       selectedMoveIndex: null,
@@ -242,6 +245,7 @@ function buildEditorState(
       ? current.nicknameInput
       : (summary.importedSet?.nickname ?? ""),
     itemInput: isSameContext ? current.itemInput : (summary.item ?? ""),
+    abilityInput: isSameContext ? current.abilityInput : (summary.ability ?? ""),
     statusInput: isSameContext
       ? current.statusInput
       : formatSummaryStatus(summary.status),
@@ -531,6 +535,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     speciesInput: "",
     nicknameInput: "",
     itemInput: "",
+    abilityInput: "",
     statusInput: "",
     moveInputs: buildMovesDraft([]),
     selectedMoveIndex: null,
@@ -1074,6 +1079,13 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     }));
   };
 
+  const handleAbilityInputChange = (value: string) => {
+    setEditorState((current) => ({
+      ...current,
+      abilityInput: value,
+    }));
+  };
+
   const commitItemSelection = useEffectEvent((value: string) => {
     if (!summary) {
       return;
@@ -1105,6 +1117,10 @@ export function usePokemonSideSummaryController(side: SummarySide) {
 
     const nextAbility =
       resolveCommittedAbilityName(value, abilityOptions) ?? summary.ability;
+    setEditorState((current) => ({
+      ...current,
+      abilityInput: nextAbility ?? "",
+    }));
     if (!nextAbility || nextAbility === summary.ability) {
       return;
     }
@@ -1356,6 +1372,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     getCurrentExportSet,
     handleInlineStatInputChange,
     handleInlineStatPointChange,
+    handleAbilityInputChange,
     handleItemInputChange,
     handleMoveInputChange,
     handleNicknameChange,
@@ -1369,6 +1386,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     importedSetList,
     isSpDepleted,
     itemInput: editorState.itemInput,
+    abilityInput: editorState.abilityInput,
     itemOptions,
     moveInputTypes,
     moveInputs: editorState.moveInputs,

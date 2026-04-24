@@ -63,13 +63,11 @@ function buildIssueBody({
   description,
   pageUrl,
   prompt,
-  strictMode,
   userAgent,
 }: {
   description: string;
   pageUrl: string;
   prompt: string;
-  strictMode: string;
   userAgent: string;
 }) {
   return [
@@ -83,7 +81,6 @@ function buildIssueBody({
     "",
     "### Context",
     "",
-    `- Strict mode: ${strictMode || "unknown"}`,
     `- Page: ${pageUrl || "n/a"}`,
     `- User agent: ${truncate(userAgent, 400) || "n/a"}`,
   ].join("\n");
@@ -93,12 +90,10 @@ function buildDuplicateSignature({
   description,
   pageUrl,
   prompt,
-  strictMode,
 }: {
   description: string;
   pageUrl: string;
   prompt: string;
-  strictMode: string;
 }) {
   return createHash("sha256")
     .update(
@@ -106,7 +101,6 @@ function buildDuplicateSignature({
         description: description.toLowerCase(),
         pageUrl: pageUrl.toLowerCase(),
         prompt: prompt.toLowerCase(),
-        strictMode,
       }),
     )
     .digest("hex");
@@ -134,7 +128,6 @@ export async function reportBug(
   const prompt = readTrimmedString(formData.get("prompt"));
   const pageUrl = readTrimmedString(formData.get("pageUrl"));
   const userAgent = readTrimmedString(formData.get("userAgent"));
-  const strictMode = readTrimmedString(formData.get("strictMode"));
   const honeypotValue = readTrimmedString(formData.get(HONEYPOT_FIELD_NAME));
   const headersList = await headers();
   const rateLimitKey = getClientAddressKey(headersList);
@@ -186,7 +179,6 @@ export async function reportBug(
     description,
     pageUrl,
     prompt,
-    strictMode,
   });
   const duplicateCheck = registerBugReportSignature(duplicateSignature);
   if (!duplicateCheck.accepted) {
@@ -212,7 +204,6 @@ export async function reportBug(
           prompt,
           pageUrl,
           userAgent,
-          strictMode,
         }),
       }),
       cache: "no-store",

@@ -37,7 +37,7 @@ export function SummarySetActions({
         onClick={onToggleSwitch}
         aria-label={dictionary.summary.switch}
         title={dictionary.summary.switch}
-        className="theme-icon-button flex h-8 w-10 items-center justify-center rounded-xl"
+        className="theme-icon-button flex h-8 w-10 items-center justify-center rounded-lg"
       >
         <span className="flex items-center justify-center gap-0.5">
           <Repeat2 aria-hidden="true" size={14} strokeWidth={2} />
@@ -50,13 +50,13 @@ export function SummarySetActions({
       </button>
 
       {switchOpen ? (
-        <div className="theme-menu absolute left-0 top-full z-30 mt-1.5 min-w-40 max-w-[calc(100vw-3rem)] overflow-hidden rounded-2xl p-1">
+        <div className="theme-menu absolute left-0 top-full z-30 mt-1.5 min-w-40 max-w-[calc(100vw-3rem)] overflow-hidden rounded-xl p-1">
           {otherSets.map((set) => (
             <button
               key={set.speciesId}
               type="button"
               onClick={() => onSelectSet(set)}
-              className="theme-menu-item w-full rounded-xl px-3 py-2 text-left"
+              className="theme-menu-item w-full rounded-lg px-3 py-2 text-left"
             >
               <div className="text-xs font-medium">
                 {set.nickname ?? set.speciesName}

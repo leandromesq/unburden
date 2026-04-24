@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { ArrowLeftRight, Settings2 } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
@@ -11,40 +11,22 @@ import { PokemonSideSummary } from "@/components/omnibar/pokemon-side-summary";
 import { QuickSuggestions } from "@/components/omnibar/quick-suggestions";
 import { ResultsPanel } from "@/components/omnibar/results-panel";
 import { HelpBubble } from "@/components/omnibar/help-bubble";
-import { StrictModeToggle } from "@/components/omnibar/strict-mode-toggle";
 import { useI18n } from "@/i18n/I18nProvider";
 import { formatIssue } from "@/i18n/messages";
 import { parseShareState } from "@/lib/share/parse-share-state";
 import { useOmniStore } from "@/store/use-omni-store";
 import { useTeamStore } from "@/store/use-team-store";
 
-function subscribeToHydration() {
-  return () => {};
-}
-
-function getClientHydrationSnapshot() {
-  return true;
-}
-
-function getServerHydrationSnapshot() {
-  return false;
-}
-
 export function OmniComposer() {
   const { dictionary } = useI18n();
-  const isHydrated = useSyncExternalStore(
-    subscribeToHydration,
-    getClientHydrationSnapshot,
-    getServerHydrationSnapshot,
-  );
+  const [isHydrated, setIsHydrated] = useState(false);
   const [modifiersOpen, setModifiersOpen] = useState(false);
-  const { issues, calculationReady, commandStructure, setInput, setStrictMode, swapSides } = useOmniStore(
+  const { issues, calculationReady, commandStructure, setInput, swapSides } = useOmniStore(
     useShallow((state) => ({
       issues: state.issues,
       calculationReady: state.calculationReady,
       commandStructure: state.commandStructure,
       setInput: state.setInput,
-      setStrictMode: state.setStrictMode,
       swapSides: state.swapSides,
     })),
   );
@@ -55,6 +37,10 @@ export function OmniComposer() {
   const issuesStatusId = useId();
   const resultsStatusId = useId();
   const modifiersSectionId = useId();
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   const scrollToResults = () => {
     resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -74,7 +60,6 @@ export function OmniComposer() {
     const prompt = url.searchParams.get("prompt");
     const hashTarget = window.location.hash.slice(1);
     const sharedSets = parseShareState(url.searchParams.get("state"));
-    setStrictMode(url.searchParams.get("strict") === "1");
 
     pendingHashTargetRef.current = hashTarget.startsWith("result-")
       ? hashTarget
@@ -89,7 +74,7 @@ export function OmniComposer() {
     if (prompt && !useOmniStore.getState().input.trim()) {
       setInput(prompt);
     }
-  }, [setInput, setStrictMode]);
+  }, [setInput]);
 
   useEffect(() => {
     if (!calculationReady) {
@@ -120,7 +105,7 @@ export function OmniComposer() {
           <PokemonSideSummary side="attacker" />
         </div>
         <div className="order-1 min-w-0 xl:order-2">
-          <div className="mb-2 flex flex-wrap items-center justify-between gap-2 sm:gap-3">
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
             <div className="flex min-w-0 items-center">
               <BugReportButton />
             </div>
@@ -131,7 +116,7 @@ export function OmniComposer() {
                 aria-controls={modifiersSectionId}
                 aria-label={dictionary.home.toggleModifiers}
                 onClick={() => setModifiersOpen((current) => !current)}
-                className={`flex min-h-8 items-center justify-center gap-1 rounded-full px-2.5 py-1 text-[13px] leading-none font-medium whitespace-nowrap transition-all sm:gap-1.5 sm:px-3 sm:text-sm ${
+                className={`theme-toolbar-button gap-1 text-sm whitespace-nowrap ${
                   modifiersOpen
                     ? "theme-icon-button-active"
                     : "theme-icon-button"
@@ -146,19 +131,19 @@ export function OmniComposer() {
                 aria-keyshortcuts="Alt+X"
                 onClick={swapSides}
                 disabled={
+                  !isHydrated ||
                   !commandStructure.lexed.hasDelimiter ||
                   !commandStructure.defender.speciesTokens.length
                 }
-                className="theme-icon-button flex min-h-8 min-w-8 items-center justify-center rounded-full px-2.5 py-1 text-[13px] leading-none transition-all disabled:cursor-not-allowed disabled:opacity-50 sm:px-3 sm:text-sm"
+                className="theme-icon-button theme-icon-button-sm px-2.5 text-sm disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <ArrowLeftRight aria-hidden="true" size={14} strokeWidth={1.9} />
               </button>
-              <StrictModeToggle />
               <HelpBubble />
             </div>
           </div>
           <div className="relative min-w-0">
-            <div className="theme-composer min-w-0 rounded-4xl">
+            <div className="theme-composer min-w-0 rounded-xl">
               <div className="theme-composer-top relative">
                 <OmniTextarea
                   textareaRef={textareaRef}
@@ -201,7 +186,7 @@ export function OmniComposer() {
           {calculationReady ? (
             <div
               ref={resultsRef}
-              className="mt-7"
+              className="mt-5"
               aria-describedby={resultsStatusId}
             >
               <ResultsPanel />

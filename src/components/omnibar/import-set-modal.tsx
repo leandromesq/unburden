@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
 import { useI18n } from "@/i18n/I18nProvider";
 import { formatStatPointSpread } from "@/lib/calc/stat-calc";
 import { parseShowdownSets } from "@/lib/parser/showdown-import";
+import type { ImportedSet } from "@/lib/types";
 import { useOmniStore } from "@/store/use-omni-store";
 import { useTeamStore } from "@/store/use-team-store";
-import type { ImportedSet } from "@/lib/types";
 
 interface ImportSetModalProps {
   onClose: () => void;
@@ -17,9 +17,14 @@ interface ImportSetModalProps {
 
 function SetPreviewCard({ set }: { set: ImportedSet }) {
   const statPointText = formatStatPointSpread(set.statPoints);
+  const details = [
+    set.ability,
+    `${set.nature} Lv. ${set.level}`,
+    set.teraType ? `Tera: ${set.teraType}` : null,
+  ].filter(Boolean);
 
   return (
-    <li className="theme-subpanel rounded-xl p-3">
+    <li className="theme-subpanel rounded-lg p-3">
       <div className="text-sm font-medium">
         {set.nickname ? (
           <>
@@ -31,21 +36,21 @@ function SetPreviewCard({ set }: { set: ImportedSet }) {
         ) : (
           set.speciesName
         )}
-        {set.item && (
+        {set.item ? (
           <span className="theme-text-dim font-normal"> @ {set.item}</span>
-        )}
+        ) : null}
       </div>
-      <div className="theme-text-dim mt-1 text-xs">
-        {set.ability ? `${set.ability} · ` : ""}
-        {set.nature} · Lv. {set.level}
-        {set.teraType ? ` · Tera: ${set.teraType}` : ""}
-      </div>
+      {details.length ? (
+        <div className="theme-text-dim mt-1 text-xs">
+          {details.join(" / ")}
+        </div>
+      ) : null}
       <div className="theme-text-dim mt-0.5 text-xs">{statPointText}</div>
-      {set.moves.length > 0 && (
+      {set.moves.length > 0 ? (
         <div className="theme-text-faint mt-1 text-xs">
           {set.moves.join(" / ")}
         </div>
-      )}
+      ) : null}
     </li>
   );
 }
@@ -70,29 +75,36 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
 
   const handleParse = useCallback(() => {
     const trimmed = text.trim();
-    if (!trimmed) return;
+    if (!trimmed) {
+      return;
+    }
 
     const sets = parseShowdownSets(trimmed);
     if (sets.length === 0) {
       setParseError(dictionary.importSetModal.parseError);
       setParsed([]);
-    } else {
-      setParseError(null);
-      setParsed(sets);
+      return;
     }
+
+    setParseError(null);
+    setParsed(sets);
   }, [dictionary.importSetModal.parseError, text]);
 
   const handleSave = useCallback(() => {
-    if (parsed.length > 0) {
-      saveSets(parsed);
-      recompute();
-      onClose();
+    if (parsed.length === 0) {
+      return;
     }
-  }, [parsed, saveSets, recompute, onClose]);
+
+    saveSets(parsed);
+    recompute();
+    onClose();
+  }, [onClose, parsed, recompute, saveSets]);
 
   const handleBackdropClick = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      if (e.target === e.currentTarget) onClose();
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      if (event.target === event.currentTarget) {
+        onClose();
+      }
     },
     [onClose],
   );
@@ -113,40 +125,39 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
       onClick={handleBackdropClick}
     >
       <div
-        className="theme-panel w-full max-w-lg overflow-hidden rounded-3xl"
-        style={{ boxShadow: "var(--shadow-overlay)" }}
-        onClick={(e) => e.stopPropagation()}
+        className="theme-panel theme-modal-shell max-w-lg overflow-hidden"
+        onClick={(event) => event.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex items-center justify-between px-6 pt-5 pb-4">
-          <h2 className="text-base font-semibold">
-            {dictionary.importSetModal.title}
-          </h2>
+          <div>
+            <h2 className="text-base font-semibold">
+              {dictionary.importSetModal.title}
+            </h2>
+            <p className="theme-text-dim mt-1 text-sm">
+              {dictionary.importSetModal.description}
+            </p>
+          </div>
           <button
             type="button"
             aria-label={dictionary.importSetModal.closeAria}
             onClick={onClose}
-            className="theme-icon-button -mr-1 flex h-8 w-8 items-center justify-center rounded-full"
+            className="theme-icon-button theme-icon-button-sm -mr-1"
           >
             <X aria-hidden="true" size={15} strokeWidth={2.1} />
           </button>
         </div>
 
         <div className="max-h-[70vh] overflow-y-auto px-6 pb-6 scrollbar-none">
-          <p className="theme-text-dim mb-3 text-sm">
-            {dictionary.importSetModal.description}
-          </p>
-
           <textarea
-            className="theme-control theme-input w-full resize-none rounded-2xl p-3 font-mono text-sm outline-none"
+            className="theme-control theme-field-sm theme-input w-full resize-none p-3 font-mono text-sm outline-none"
             rows={9}
             spellCheck={false}
             placeholder={
               "Politoed @ Mystic Water\nAbility: Drizzle\nLevel: 50\nEVs: 32 HP / 1 Def / 13 SpA / 1 SpD / 19 Spe\nModest Nature\n- Muddy Water\n- Ice Beam\n- Protect\n- Helping Hand"
             }
             value={text}
-            onChange={(e) => {
-              setText(e.currentTarget.value);
+            onChange={(event) => {
+              setText(event.currentTarget.value);
               if (parsed.length > 0 || parseError) {
                 setParsed([]);
                 setParseError(null);
@@ -154,45 +165,42 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
             }}
           />
 
-          {parseError && (
-            <p
-              className="mt-2 text-sm"
-              style={{ color: "var(--accent-strong)" }}
-            >
+          {parseError ? (
+            <p className="mt-2 text-sm" style={{ color: "var(--accent-strong)" }}>
               {parseError}
             </p>
-          )}
+          ) : null}
 
           <div className="mt-4 flex flex-wrap items-center gap-2">
             <button
               type="button"
               onClick={handleParse}
               disabled={!text.trim()}
-              className="theme-chip rounded-full px-4 py-1.5 text-sm disabled:cursor-not-allowed disabled:opacity-40"
+              className="theme-icon-button theme-toolbar-button disabled:cursor-not-allowed disabled:opacity-40"
             >
               {dictionary.importSetModal.parse}
             </button>
-            {parsed.length > 0 && (
+            {parsed.length > 0 ? (
               <button
                 type="button"
                 onClick={handleSave}
-                className="theme-chip-active rounded-full px-4 py-1.5 text-sm font-medium"
+                className="theme-chip-active theme-toolbar-button font-medium"
               >
                 {dictionary.importSetModal.saveSets(parsed.length)}
               </button>
-            )}
+            ) : null}
             <button
               type="button"
               onClick={onClose}
-              className="theme-chip ml-auto rounded-full px-4 py-1.5 text-sm"
+              className="theme-icon-button theme-toolbar-button ml-auto"
             >
               {dictionary.importSetModal.cancel}
             </button>
           </div>
 
-          {parsed.length > 0 && (
+          {parsed.length > 0 ? (
             <div className="theme-divider mt-5 border-t pt-4">
-              <div className="theme-text-dim mb-3 text-[11px] font-semibold uppercase tracking-[0.22em]">
+              <div className="theme-section-title mb-3">
                 {dictionary.importSetModal.preview(parsed.length)}
               </div>
               <ul className="space-y-2">
@@ -204,7 +212,7 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
                 ))}
               </ul>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>,

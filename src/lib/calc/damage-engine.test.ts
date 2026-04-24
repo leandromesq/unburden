@@ -206,32 +206,6 @@ describe("damage engine", () => {
     ).toBe(true);
   });
 
-  test("strict mode blocks calculations that rely on inferred abilities", () => {
-    const parsed = parseCommand("politoed !muddy-water x incineroar").parsed;
-
-    expect(
-      getCalculationIssues(parsed!, {}, { strictMode: true }),
-    ).toContainEqual({
-      id: "calc.strict_attacker_ability_required",
-    });
-    expect(
-      calculateDamageResults(parsed!, {}, { strictMode: true }),
-    ).toHaveLength(0);
-  });
-
-  test("strict mode allows calculations when abilities are explicit", () => {
-    const parsed = parseCommand(
-      "politoed !muddy-water [Drizzle] x incineroar [Intimidate]",
-    ).parsed;
-
-    expect(
-      getCalculationIssues(parsed!, {}, { strictMode: true }),
-    ).toHaveLength(0);
-    expect(
-      calculateDamageResults(parsed!, {}, { strictMode: true }),
-    ).toHaveLength(3);
-  });
-
   test("auto max bulk prioritizes the relevant defense for the move category", () => {
     const physicalParsed = parseCommand(
       "incineroar !flare-blitz x tinkaton",

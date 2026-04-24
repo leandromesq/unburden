@@ -31,7 +31,7 @@ function BlockTitle({
         style={{ background: "var(--accent)" }}
         aria-hidden
       />
-      <div className="theme-text-dim text-xs font-semibold uppercase tracking-[0.24em]">
+      <div className="text-sm font-medium">
         {label ??
           (archetype === "glass"
             ? fallbackLabels.minBulk
@@ -57,11 +57,10 @@ function fallbackCopyText(text: string) {
 
 export function ResultsPanel() {
   const { dictionary } = useI18n();
-  const { results, parsed, strictMode } = useOmniStore(
+  const { results, parsed } = useOmniStore(
     useShallow((state) => ({
       results: state.results,
       parsed: state.parsed,
-      strictMode: state.strictMode,
     })),
   );
   const importedSets = useTeamStore((state) => state.importedSets);
@@ -122,11 +121,6 @@ export function ResultsPanel() {
     } else {
       url.searchParams.delete("state");
     }
-    if (strictMode) {
-      url.searchParams.set("strict", "1");
-    } else {
-      url.searchParams.delete("strict");
-    }
     url.hash = `result-${archetype}`;
     return url.toString();
   };
@@ -186,7 +180,7 @@ export function ResultsPanel() {
           <article
             key={result.archetype}
             id={`result-${result.archetype}`}
-            className="theme-panel rounded-[26px] p-4"
+            className="theme-panel rounded-xl p-4"
           >
             <div className="mb-2.5">
               <BlockTitle
@@ -203,7 +197,7 @@ export function ResultsPanel() {
                 </div>
               </div>
             </div>
-            <div className="theme-subpanel-strong rounded-2xl px-4 py-3.5">
+            <div className="theme-subpanel-strong rounded-lg px-4 py-3.5">
               <div className="theme-text-dim text-[12px] leading-5">
                 {result.contextText}
               </div>
@@ -220,7 +214,7 @@ export function ResultsPanel() {
                   {result.assumptions.map((assumption) => (
                     <div
                       key={`${result.archetype}-${assumption}`}
-                      className="theme-pill-muted rounded-full px-2.5 py-1 text-[11px]"
+                      className="theme-pill-muted rounded-md px-2.5 py-1 text-[11px]"
                     >
                       {assumption}
                     </div>
@@ -235,7 +229,7 @@ export function ResultsPanel() {
                   onClick={() =>
                     void handleCopyText(result.archetype, result.showdownText)
                   }
-                  className={`theme-icon-button flex h-8 w-8 items-center justify-center rounded-full ${
+                  className={`theme-icon-button theme-icon-button-sm ${
                     copiedAction === `text:${result.archetype}`
                       ? "theme-icon-button-active"
                       : ""
@@ -256,7 +250,7 @@ export function ResultsPanel() {
                 <button
                   type="button"
                   onClick={() => void handleCopyUrl(result.archetype)}
-                  className={`theme-icon-button flex h-8 w-8 items-center justify-center rounded-full ${
+                  className={`theme-icon-button theme-icon-button-sm ${
                     copiedAction === `url:${result.archetype}`
                       ? "theme-icon-button-active"
                       : ""

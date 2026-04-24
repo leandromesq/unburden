@@ -7,7 +7,7 @@ interface SummarySavedSetListProps {
   onSelectSet: (set: ImportedSet) => void;
   onRemoveSet: (speciesId: string) => void;
   importButtonLabel?: string;
-  onImportClick: () => void;
+  onImportClick?: () => void;
 }
 
 function SavedSetListItem({
@@ -20,11 +20,11 @@ function SavedSetListItem({
   onRemove: () => void;
 }) {
   return (
-    <div className="group relative">
+    <div className="relative">
       <button
         type="button"
         onClick={onSelect}
-        className="theme-subpanel w-full rounded-2xl px-3 py-2.5 pr-8 text-left transition-colors"
+        className="theme-subpanel w-full rounded-lg px-3 py-2.5 pr-10 text-left transition-colors"
       >
         <div className="text-xs font-medium">
           {set.nickname ?? set.speciesName}
@@ -44,7 +44,7 @@ function SavedSetListItem({
         type="button"
         aria-label={`Remove ${set.speciesName}`}
         onClick={onRemove}
-        className="theme-icon-button absolute right-2 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full text-sm opacity-0 transition-opacity group-hover:opacity-100"
+        className="theme-icon-button absolute right-2 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md text-sm"
       >
         <X aria-hidden="true" size={12} strokeWidth={2.2} />
       </button>
@@ -65,7 +65,7 @@ export function SummarySavedSetList({
 
   return (
     <>
-      <div className="theme-text-dim mt-4 mb-2 text-[11px] font-semibold uppercase tracking-[0.22em]">
+      <div className="theme-text-dim mt-4 mb-2 text-sm font-medium">
         Saved Sets
       </div>
       <div className="space-y-1.5">
@@ -78,13 +78,15 @@ export function SummarySavedSetList({
           />
         ))}
       </div>
-      <button
-        type="button"
-        onClick={onImportClick}
-        className="theme-chip mt-2 w-full rounded-2xl py-2 text-xs"
-      >
-        {importButtonLabel}
-      </button>
+      {onImportClick ? (
+        <button
+          type="button"
+          onClick={onImportClick}
+          className="theme-control mt-2 w-full rounded-lg py-2 text-sm"
+        >
+          {importButtonLabel}
+        </button>
+      ) : null}
     </>
   );
 }

@@ -29,11 +29,7 @@ function Kbd({ children }: { children: string }) {
 }
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="theme-text-faint mb-2.5 text-[10px] font-semibold uppercase tracking-[0.28em]">
-      {children}
-    </div>
-  );
+  return <div className="theme-section-title mb-2">{children}</div>;
 }
 
 function Divider() {
@@ -138,7 +134,7 @@ export function HelpBubble() {
             setOpen((prev) => !prev);
           });
         }}
-        className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-all ${
+        className={`theme-icon-button-sm text-sm font-semibold ${
           open ? "theme-icon-button-active" : "theme-icon-button"
         }`}
       >
@@ -153,7 +149,7 @@ export function HelpBubble() {
           aria-labelledby={titleId}
           aria-describedby={descriptionId}
           tabIndex={-1}
-          className="theme-panel absolute right-0 top-full z-50 mt-2 w-[24rem] overflow-hidden rounded-3xl text-left outline-none"
+          className="theme-panel absolute right-0 top-full z-50 mt-2 w-[24rem] overflow-hidden rounded-xl text-left outline-none"
           style={{ boxShadow: "var(--shadow-overlay)" }}
         >
           <div
@@ -191,14 +187,14 @@ export function HelpBubble() {
                 });
               }}
               aria-label={dictionary.helpBubble.closeAria}
-              className="theme-icon-button flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm"
+              className="theme-icon-button theme-icon-button-sm shrink-0 text-sm"
             >
               <X aria-hidden="true" size={15} strokeWidth={2.1} />
             </button>
           </div>
           <section>
             <SectionHeading>{dictionary.helpBubble.structure}</SectionHeading>
-            <div className="theme-subpanel-strong rounded-2xl px-3 py-3">
+            <div className="theme-subpanel-strong rounded-lg px-3 py-3">
               <div
                 className="font-mono text-sm"
                 style={{ color: "var(--text)" }}
@@ -219,10 +215,10 @@ export function HelpBubble() {
             <div className="grid gap-2 sm:grid-cols-2">
               {dictionary.helpBubble.syntaxRows.map(
                 ({ token, description, example }) => (
-                  <div
-                    key={token}
-                    className="theme-subpanel rounded-2xl px-3 py-2.5"
-                  >
+                <div
+                  key={token}
+                  className="theme-subpanel rounded-lg px-3 py-2.5"
+                >
                     <code className="theme-badge mb-1 inline-block rounded px-1.5 py-0.5 font-mono text-[11px]">
                       {token}
                     </code>
@@ -246,8 +242,8 @@ export function HelpBubble() {
           <section>
             <SectionHeading>{dictionary.helpBubble.segmentTokens}</SectionHeading>
             <div className="space-y-3">
-              <div className="theme-subpanel rounded-2xl p-3">
-                <div className="theme-text-dim mb-2 text-[11px] font-semibold uppercase tracking-[0.22em]">
+              <div className="theme-subpanel rounded-lg p-3">
+                <div className="theme-text-muted mb-2 text-sm font-medium">
                   {dictionary.helpBubble.attacker}
                 </div>
                 <div className="space-y-1">
@@ -265,8 +261,8 @@ export function HelpBubble() {
                   )}
                 </div>
               </div>
-              <div className="theme-subpanel rounded-2xl p-3">
-                <div className="theme-text-dim mb-2 text-[11px] font-semibold uppercase tracking-[0.22em]">
+              <div className="theme-subpanel rounded-lg p-3">
+                <div className="theme-text-muted mb-2 text-sm font-medium">
                   {dictionary.helpBubble.defender}
                 </div>
                 <div className="space-y-1">
@@ -293,10 +289,7 @@ export function HelpBubble() {
             <SectionHeading>{dictionary.helpBubble.hotkeys}</SectionHeading>
             <div className="grid gap-2 sm:grid-cols-2">
               {dictionary.helpBubble.hotkeyRows.map(({ keys, description }) => (
-                <div
-                  key={description}
-                  className="theme-subpanel rounded-2xl px-3 py-2.5"
-                >
+                <div key={description} className="theme-subpanel rounded-lg px-3 py-2.5">
                   <div className="flex shrink-0 flex-wrap gap-1">
                     {keys.map((key) => (
                       <Kbd key={key}>{key}</Kbd>
@@ -317,12 +310,10 @@ export function HelpBubble() {
               {dictionary.helpBubble.tipsList.map((tip) => (
                 <li key={tip} className="flex items-start gap-2">
                   <span
-                    className="mt-0.75 shrink-0 text-[9px]"
-                    style={{ color: "var(--accent-border)" }}
+                    className="mt-1 inline-block h-1.5 w-1.5 shrink-0 rounded-full"
+                    style={{ backgroundColor: "var(--text-faint)" }}
                     aria-hidden
-                  >
-                    ◆
-                  </span>
+                  />
                   <span className="theme-text-dim text-[13px]">{tip}</span>
                 </li>
               ))}

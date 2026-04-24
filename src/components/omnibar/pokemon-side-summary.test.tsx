@@ -23,7 +23,6 @@ describe("PokemonSideSummary nature marker synchronization", () => {
     useOmniStore.setState({
       input: "",
       cursorIndex: 0,
-      strictMode: false,
       commandStructure: useOmniStore.getState().commandStructure,
       parsed: null,
       activeSuggestion: null,

@@ -31,7 +31,6 @@ import { useTeamStore } from "@/store/use-team-store";
 interface OmniStore {
   input: string;
   cursorIndex: number;
-  strictMode: boolean;
   commandStructure: ReturnType<typeof analyzeCommandStructure>;
   parsed: ParsedCommand | null;
   activeSuggestion: SuggestionState | null;
@@ -57,7 +56,6 @@ interface OmniStore {
     scope: "attacker" | "defender",
     value: number | null,
   ) => void;
-  setStrictMode: (strictMode: boolean) => void;
   recompute: () => void;
   setAttackerMove: (moveName: string) => void;
   swapSides: () => void;
@@ -66,7 +64,6 @@ interface OmniStore {
 const initialState = {
   input: "",
   cursorIndex: 0,
-  strictMode: false,
   commandStructure: analyzeCommandStructure(""),
   parsed: null as ParsedCommand | null,
   activeSuggestion: null as SuggestionState | null,
@@ -87,15 +84,13 @@ export const useOmniStore = create<OmniStore>((set, get) => {
   const commitState = (
     nextInput: string,
     nextCursorIndex: number,
-    nextStrictMode: boolean,
     options?: { debounceMs?: number; syncPreview?: boolean },
   ) => {
     const currentState = get();
 
     if (
       currentState.input === nextInput &&
-      currentState.cursorIndex === nextCursorIndex &&
-      currentState.strictMode === nextStrictMode
+      currentState.cursorIndex === nextCursorIndex
     ) {
       return;
     }
@@ -116,7 +111,6 @@ export const useOmniStore = create<OmniStore>((set, get) => {
           previousDismissedContextKey:
             currentState.dismissedAutoGlobalContextKey,
           cursorIndex: nextCursorIndex,
-          strictMode: nextStrictMode,
           applyAutoGlobalTokens,
         }),
       );
@@ -127,7 +121,6 @@ export const useOmniStore = create<OmniStore>((set, get) => {
       stateSnapshot: typeof currentState,
       input: string,
       cursorIndex: number,
-      strictMode: boolean,
     ) => {
       const previewState = computeOmniState({
         input,
@@ -136,7 +129,6 @@ export const useOmniStore = create<OmniStore>((set, get) => {
         previousContextKey: stateSnapshot.autoGlobalContextKey,
         previousDismissedContextKey: stateSnapshot.dismissedAutoGlobalContextKey,
         cursorIndex,
-        strictMode,
         includeResults: false,
         applyAutoGlobalTokens,
       });
@@ -161,14 +153,9 @@ export const useOmniStore = create<OmniStore>((set, get) => {
     const scheduleResultCalculation = (
       version: number,
       parsed: ParsedCommand,
-      strictMode: boolean,
     ) => {
       omniScheduler.scheduleCalculation(version, () => {
-        const results = calculateDamageResults(
-          parsed,
-          useTeamStore.getState().importedSets,
-          { strictMode },
-        );
+        const results = calculateDamageResults(parsed, useTeamStore.getState().importedSets);
 
         if (version !== omniScheduler.getVersion()) {
           return;
@@ -189,7 +176,6 @@ export const useOmniStore = create<OmniStore>((set, get) => {
         currentState,
         nextInput,
         nextCursorIndex,
-        nextStrictMode,
       );
 
       if (!previewState.parsed || previewState.issues.length > 0) {
@@ -199,7 +185,6 @@ export const useOmniStore = create<OmniStore>((set, get) => {
       scheduleResultCalculation(
         version,
         previewState.parsed,
-        previewState.strictMode,
       );
       return;
     }
@@ -207,7 +192,6 @@ export const useOmniStore = create<OmniStore>((set, get) => {
     set({
       input: nextInput,
       cursorIndex: nextCursorIndex,
-      strictMode: nextStrictMode,
     });
 
     const version = omniScheduler.bumpVersion();
@@ -220,7 +204,6 @@ export const useOmniStore = create<OmniStore>((set, get) => {
           state,
           state.input,
           state.cursorIndex,
-          state.strictMode,
         );
         const previewParsed = previewState.parsed;
 
@@ -231,7 +214,6 @@ export const useOmniStore = create<OmniStore>((set, get) => {
         scheduleResultCalculation(
           version,
           previewParsed,
-          previewState.strictMode,
         );
       },
       options?.debounceMs ?? 0,
@@ -242,18 +224,18 @@ export const useOmniStore = create<OmniStore>((set, get) => {
     ...initialState,
     setInput: (input, cursorIndex) => {
       const nextCursorIndex = cursorIndex ?? input.length;
-      commitState(input, nextCursorIndex, get().strictMode, {
+      commitState(input, nextCursorIndex, {
         debounceMs: TYPING_PREVIEW_DEBOUNCE_MS,
       });
     },
     setInputImmediately: (input, cursorIndex) => {
       const nextCursorIndex = cursorIndex ?? input.length;
-      commitState(input, nextCursorIndex, get().strictMode, {
+      commitState(input, nextCursorIndex, {
         syncPreview: true,
       });
     },
     setCursorIndex: (cursorIndex) => {
-      commitState(get().input, cursorIndex, get().strictMode, {
+      commitState(get().input, cursorIndex, {
         debounceMs: TYPING_PREVIEW_DEBOUNCE_MS,
       });
     },
@@ -280,7 +262,7 @@ export const useOmniStore = create<OmniStore>((set, get) => {
       if (highlightedOption) {
         const cursorIndex =
           highlightedOption.cursorOffset ?? highlightedOption.applyText.length;
-        commitState(highlightedOption.applyText, cursorIndex, get().strictMode);
+        commitState(highlightedOption.applyText, cursorIndex);
         return;
       }
 
@@ -292,33 +274,29 @@ export const useOmniStore = create<OmniStore>((set, get) => {
       commitState(
         suggestion.completionText,
         suggestion.completionText.length,
-        get().strictMode,
       );
     },
     applySuggestionText: (nextInput) => {
-      commitState(nextInput, nextInput.length, get().strictMode);
+      commitState(nextInput, nextInput.length);
     },
     insertChip: (scope, token) => {
       const nextInput = insertChipToken(get().input, scope, token);
-      commitState(nextInput, nextInput.length, get().strictMode);
+      commitState(nextInput, nextInput.length);
     },
     setStatModifier: (scope, value) => {
       const nextInput = setStatModifierToken(get().input, scope, value);
-      commitState(nextInput, nextInput.length, get().strictMode);
+      commitState(nextInput, nextInput.length);
     },
     setSpeedModifier: (scope, value) => {
       const nextInput = setSpeedModifierToken(get().input, scope, value);
-      commitState(nextInput, nextInput.length, get().strictMode);
+      commitState(nextInput, nextInput.length);
     },
     setHpPercentage: (scope, value) => {
       const nextInput = setHpPercentageToken(get().input, scope, value);
-      commitState(nextInput, nextInput.length, get().strictMode);
-    },
-    setStrictMode: (strictMode) => {
-      commitState(get().input, get().cursorIndex, strictMode);
+      commitState(nextInput, nextInput.length);
     },
     recompute: () => {
-      commitState(get().input, get().cursorIndex, get().strictMode);
+      commitState(get().input, get().cursorIndex);
     },
     setAttackerMove: (moveName) => {
       const currentInput = compactWhitespace(get().input);
@@ -344,14 +322,14 @@ export const useOmniStore = create<OmniStore>((set, get) => {
         newInput = newAttackerTokens.join(" ").trim();
       }
 
-      commitState(newInput, newInput.length, get().strictMode);
+      commitState(newInput, newInput.length);
     },
     swapSides: () => {
       const nextInput = swapPromptSides(
         get().input,
         useTeamStore.getState().importedSets,
       );
-      commitState(nextInput, nextInput.length, get().strictMode, {
+      commitState(nextInput, nextInput.length, {
         syncPreview: true,
       });
     },

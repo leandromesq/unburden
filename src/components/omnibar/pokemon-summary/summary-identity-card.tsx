@@ -16,6 +16,7 @@ interface SummaryIdentityCardProps {
   speciesInput: string;
   speciesOptions: string[];
   ability: string | null;
+  abilityInput: string;
   abilityOptions: string[];
   itemInput: string;
   itemOptions: string[];
@@ -26,6 +27,7 @@ interface SummaryIdentityCardProps {
   onInputSpecies: (value: string) => void;
   onCommitSpecies: (value: string) => void;
   onInputItem: (value: string) => void;
+  onInputAbility: (value: string) => void;
   onCommitItem: (value: string) => void;
   onCommitAbility: (value: string) => void;
   onCommitNature: (value: string) => void;
@@ -38,6 +40,7 @@ export function SummaryIdentityCard({
   speciesInput,
   speciesOptions,
   ability,
+  abilityInput,
   abilityOptions,
   itemInput,
   itemOptions,
@@ -48,13 +51,14 @@ export function SummaryIdentityCard({
   onInputSpecies,
   onCommitSpecies,
   onInputItem,
+  onInputAbility,
   onCommitItem,
   onCommitAbility,
   onCommitNature,
 }: SummaryIdentityCardProps) {
   return (
     <div className="mt-3 grid gap-2 sm:grid-cols-[5rem_minmax(0,1fr)] sm:items-start">
-      <div className="theme-subpanel-strong flex h-16 w-16 items-center justify-center rounded-2xl p-2 sm:row-span-2 sm:h-full sm:min-h-20 sm:w-20">
+      <div className="theme-subpanel flex h-16 w-16 items-center justify-center rounded-xl p-2 sm:row-span-2 sm:h-full sm:min-h-20 sm:w-20">
         <PokemonSprite
           sources={spriteSources}
           name={name}
@@ -67,6 +71,7 @@ export function SummaryIdentityCard({
           label="Pokemon"
           hideLabel
           compact
+          name="pokemon-species"
           value={speciesInput}
           options={speciesOptions}
           placeholder="Pokemon"
@@ -86,6 +91,7 @@ export function SummaryIdentityCard({
           label="Item"
           hideLabel
           compact
+          name="pokemon-item"
           value={itemInput}
           options={itemOptions}
           placeholder="Item"
@@ -103,10 +109,12 @@ export function SummaryIdentityCard({
           label="Ability"
           hideLabel
           compact
-          value={ability ?? ""}
+          name="pokemon-ability"
+          value={abilityInput}
           options={abilityOptions}
           placeholder="Ability"
-          onChange={() => { }}
+          onChange={onInputAbility}
+          onInputChange={onInputAbility}
           onSelectOption={onCommitAbility}
           onBlur={onCommitAbility}
           showAllOptions
@@ -118,6 +126,7 @@ export function SummaryIdentityCard({
           label="Nature"
           hideLabel
           compact
+          name="pokemon-nature"
           value={formatNatureWithDescription(nature)}
           options={SUMMARY_NATURES.map((entry) =>
             formatNatureWithDescription(entry),

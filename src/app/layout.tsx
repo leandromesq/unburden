@@ -132,6 +132,9 @@ export default async function RootLayout({
         data-theme={initialTheme}
         className="min-h-full flex flex-col"
       >
+        <a href="#calculator" className="theme-skip-link">
+          Skip to calculator
+        </a>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: jsonLd }}

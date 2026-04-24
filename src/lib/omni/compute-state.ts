@@ -25,7 +25,6 @@ interface ComputeStateInput {
   previousContextKey?: string | null;
   previousDismissedContextKey?: string | null;
   cursorIndex?: number;
-  strictMode?: boolean;
   includeResults?: boolean;
   applyAutoGlobalTokens: (
     input: string,
@@ -44,7 +43,6 @@ interface ComputeStateInput {
 interface ComputedOmniState {
   input: string;
   cursorIndex: number;
-  strictMode: boolean;
   commandStructure: ReturnType<typeof analyzeCommandStructure>;
   parsed: ParsedCommand | null;
   activeSuggestion: SuggestionState | null;
@@ -66,7 +64,6 @@ export function computeOmniState({
   previousContextKey = null,
   previousDismissedContextKey = null,
   cursorIndex = input.length,
-  strictMode = false,
   includeResults = true,
   applyAutoGlobalTokens,
 }: ComputeStateInput): ComputedOmniState {
@@ -82,7 +79,7 @@ export function computeOmniState({
   const commandStructure = analyzeCommandStructure(withAutoTokens.input);
   const parsedResult = parseCommand(withAutoTokens.input, importedSets);
   const calculationIssues = parsedResult.parsed
-    ? getCalculationIssues(parsedResult.parsed, importedSets, { strictMode })
+    ? getCalculationIssues(parsedResult.parsed, importedSets)
     : [];
   const issues = uniqueIssues([...parsedResult.issues, ...calculationIssues]);
   const nextCursorIndex = Math.min(cursorIndex, withAutoTokens.input.length);
@@ -102,7 +99,6 @@ export function computeOmniState({
   return {
     input: withAutoTokens.input,
     cursorIndex: nextCursorIndex,
-    strictMode,
     commandStructure,
     parsed: parsedCommand,
     activeSuggestion: autocomplete.activeSuggestion,
@@ -116,7 +112,7 @@ export function computeOmniState({
     issues,
     results:
       includeResults && canCalculate && parsedCommand
-        ? calculateDamageResults(parsedCommand, importedSets, { strictMode })
+        ? calculateDamageResults(parsedCommand, importedSets)
         : [],
   };
 }

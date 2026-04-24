@@ -7,43 +7,17 @@ export function LegalFooter() {
   const legal = dictionary.legalFooter;
 
   return (
-    <footer className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-10 md:pb-14">
-      <section
-        aria-labelledby="legal-title"
-        className="theme-panel overflow-hidden rounded-[1.6rem] px-5 py-5 text-left md:px-6 md:py-6"
-      >
-        <div className="grid gap-5 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start">
-          <div>
-            <div className="theme-text-faint text-[10px] font-semibold uppercase tracking-[0.24em]">
-              {legal.eyebrow}
-            </div>
-            <h2
-              id="legal-title"
-              className="mt-3 text-xl leading-tight tracking-[-0.03em] md:text-2xl"
-            >
-              {legal.title}
-            </h2>
-            <p className="theme-text-muted mt-3 text-sm leading-7">
-              {legal.copyright}
-            </p>
-          </div>
-
-          <div className="space-y-3 text-sm leading-7">
-            <p
-              className="theme-text-dim border-l pl-3"
-              style={{ borderColor: "var(--accent-border)" }}
-            >
-              {legal.proprietary}
-            </p>
-            <p
-              className="theme-text-dim border-l pl-3"
-              style={{ borderColor: "var(--accent-border)" }}
-            >
-              {legal.thirdParty}
-            </p>
-          </div>
-        </div>
-      </section>
-    </footer>
+    <section aria-labelledby="legal-title" className="mt-6 theme-panel rounded-xl p-5">
+      <h2 id="legal-title" className="text-lg font-semibold tracking-[-0.02em]">
+        {legal.title}
+      </h2>
+      <p className="theme-text-dim mt-2 text-sm leading-6">
+        {legal.copyright}
+      </p>
+      <div className="theme-text-dim mt-4 space-y-3 text-sm leading-6">
+        <p>{legal.proprietary}</p>
+        <p>{legal.thirdParty}</p>
+      </div>
+    </section>
   );
 }
