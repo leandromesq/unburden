@@ -13,13 +13,21 @@ import {
   DEFAULT_IV_SPREAD,
   EMPTY_STAT_SPREAD,
   computeStats,
+  sumStatPoints,
   statPointsToCalcEvs,
 } from "@/lib/calc/stat-calc";
-import { resolveAttackingStatKey } from "@/lib/calc/move-stat-context";
+import {
+  resolveAttackerRepresentativeNature,
+  resolveAttackingStatKey,
+} from "@/lib/calc/move-stat-context";
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
 import {
+  ATTACKER_NEGATIVE_NATURE,
   ATTACKER_MODIFIER_MAP,
+  ATTACKER_POSITIVE_NATURE,
+  DEFENDER_NEGATIVE_NATURE,
   DEFENDER_MODIFIER_MAP,
+  DEFENDER_POSITIVE_NATURE,
   buildCommonAbilities,
 } from "@/lib/parser/grammar";
 import { resolveMoveEntity } from "@/lib/parser/fuse-indexes";
@@ -38,6 +46,9 @@ import type {
 
 type SummarySide = "attacker" | "defender";
 type StatKey = keyof StatSpread;
+type SummaryInvestment =
+  | ParsedCommand["attackerInvestment"]
+  | ParsedCommand["defenderInvestment"];
 
 const STAT_LABELS: Array<[StatKey, string]> = [
   ["hp", "HP"],
@@ -65,6 +76,7 @@ interface PokemonSummaryData {
   promptPokemonId: string;
   spriteSources: string[];
   primaryType: string | null;
+  types: string[];
   ability: string | null;
   move: string | null;
   moveId: string | null;
@@ -112,7 +124,7 @@ function resolveParsedSpecies(
     importedSets,
   );
 
-  if (referenceSet && segment.leadingFreeTokens.length === 1) {
+  if (referenceSet && segment.leadingRemainderTokens.length === 0) {
     return pokemonById.get(normalizeId(referenceSet.speciesId)) ?? null;
   }
 
@@ -143,19 +155,22 @@ function resolveMoveName(moveInput: string | undefined): string | null {
 function resolveAbilityDisplay(
   pokemon: PokemonEntry | null,
   explicitAbility: string | undefined,
+  importedSetAbility?: string | undefined,
 ): string | null {
   if (!pokemon) {
     return null;
   }
 
-  if (explicitAbility) {
+  const resolvedAbility = explicitAbility ?? importedSetAbility;
+
+  if (resolvedAbility) {
     const knownAbilities = buildCommonAbilities(undefined, pokemon.abilities);
-    const normalized = normalizeAlias(explicitAbility);
+    const normalized = normalizeAlias(resolvedAbility);
 
     return (
       knownAbilities.find(
         (ability) => normalizeAlias(ability) === normalized,
-      ) ?? explicitAbility
+      ) ?? resolvedAbility
     );
   }
 
@@ -232,7 +247,7 @@ function resolveCurrentHpPercent(value: number | undefined) {
     return 100;
   }
 
-  return Math.max(1, Math.min(100, Math.round(value)));
+  return Math.max(0, Math.min(100, Math.round(value)));
 }
 
 function getItemStatBoosts(
@@ -267,9 +282,10 @@ function buildEffectiveSetPreview(
   importedSet: ImportedSet | null,
   statPoints: StatSpread | undefined,
   nature: string | undefined,
+  investment: SummaryInvestment,
 ) {
-  const effectiveStatPoints =
-    statPoints ?? importedSet?.statPoints ?? EMPTY_STAT_SPREAD;
+  const baseStatPoints = statPoints ?? importedSet?.statPoints ?? EMPTY_STAT_SPREAD;
+  const effectiveStatPoints = applyInvestmentPreview(baseStatPoints, investment);
   const effectiveNature = nature ?? importedSet?.nature ?? "Hardy";
 
   return {
@@ -278,6 +294,137 @@ function buildEffectiveSetPreview(
     ivs: { ...DEFAULT_IV_SPREAD },
     nature: effectiveNature,
   };
+}
+
+function applyInvestmentPreview(
+  statPoints: StatSpread,
+  investment: SummaryInvestment,
+) {
+  const investmentStat =
+    investment === "max_atk"
+      ? "atk"
+      : investment === "max_spa"
+        ? "spa"
+        : investment === "max_def"
+          ? "def"
+          : investment === "max_spd"
+            ? "spd"
+            : null;
+
+  if (!investmentStat) {
+    return statPoints;
+  }
+
+  const nextStatPoints = { ...statPoints };
+  const nextTotal = sumStatPoints(nextStatPoints) - nextStatPoints[investmentStat] + 32;
+
+  if (nextTotal > 66) {
+    return {
+      ...EMPTY_STAT_SPREAD,
+      [investmentStat]: 32,
+    };
+  }
+
+  nextStatPoints[investmentStat] = 32;
+  return nextStatPoints;
+}
+
+function resolveSummaryInvestment(
+  scope: SummarySide,
+  modifierValues: string[],
+): SummaryInvestment {
+  const modifierMap =
+    scope === "attacker" ? ATTACKER_MODIFIER_MAP : DEFENDER_MODIFIER_MAP;
+  let resolvedInvestment: SummaryInvestment = "auto";
+
+  for (const value of modifierValues) {
+    const definition = modifierMap.get(value);
+    if (definition?.kind === "investment") {
+      resolvedInvestment = definition.investment as SummaryInvestment;
+    }
+  }
+
+  return resolvedInvestment;
+}
+
+function resolveSummaryNature(
+  scope: SummarySide,
+  modifierValues: string[],
+  moveId: string | null,
+  moveCategory: string | null,
+) {
+  const modifierMap =
+    scope === "attacker" ? ATTACKER_MODIFIER_MAP : DEFENDER_MODIFIER_MAP;
+  let representativeNature: string | undefined;
+  let explicitNature: string | undefined;
+
+  for (const value of modifierValues) {
+    const definition = modifierMap.get(value);
+    if (definition?.kind !== "nature") {
+      continue;
+    }
+
+    const resolvedNature = definition.nature;
+    if (!resolvedNature) {
+      continue;
+    }
+
+    if (scope === "attacker") {
+      if (resolvedNature === ATTACKER_POSITIVE_NATURE) {
+        representativeNature = resolveAttackerRepresentativeNature(
+          moveId,
+          moveCategory,
+          "boost",
+        );
+      } else if (resolvedNature === ATTACKER_NEGATIVE_NATURE) {
+        representativeNature = resolveAttackerRepresentativeNature(
+          moveId,
+          moveCategory,
+          "nerf",
+        );
+      } else {
+        explicitNature = resolvedNature;
+      }
+      continue;
+    }
+
+    if (resolvedNature === DEFENDER_POSITIVE_NATURE) {
+      representativeNature =
+        moveCategory === "Physical"
+          ? "Bold"
+          : moveCategory === "Special"
+            ? "Calm"
+            : undefined;
+    } else if (resolvedNature === DEFENDER_NEGATIVE_NATURE) {
+      representativeNature =
+        moveCategory === "Physical"
+          ? "Mild"
+          : moveCategory === "Special"
+            ? "Rash"
+            : undefined;
+    } else {
+      explicitNature = resolvedNature;
+    }
+  }
+
+  return explicitNature ?? representativeNature;
+}
+
+function resolveSummaryStatus(
+  scope: SummarySide,
+  modifierValues: string[],
+): PokemonStatus | undefined {
+  const modifierMap =
+    scope === "attacker" ? ATTACKER_MODIFIER_MAP : DEFENDER_MODIFIER_MAP;
+
+  for (let index = modifierValues.length - 1; index >= 0; index -= 1) {
+    const definition = modifierMap.get(modifierValues[index]);
+    if (definition?.kind === "status") {
+      return definition.status;
+    }
+  }
+
+  return undefined;
 }
 
 function getPokemonSpriteSources(pokemon: PokemonEntry) {
@@ -377,6 +524,12 @@ export function usePokemonSummary({
       : null;
     const moveId = moveEntry?.id ?? null;
     const moveCategory = moveEntry?.category ?? null;
+    const attackerModifierValues = structure.attacker.modifierTokens.map(
+      (token) => token.value,
+    );
+    const defenderModifierValues = structure.defender.modifierTokens.map(
+      (token) => token.value,
+    );
     const attackerStageBoosts = buildStageBoosts(
       structure.attacker.modifierTokens,
       ATTACKER_MODIFIER_MAP,
@@ -419,6 +572,34 @@ export function usePokemonSummary({
       defenderItemDisplay ??
       defenderImportedSet?.item ??
       null;
+    const fallbackAttackerNature = resolveSummaryNature(
+      "attacker",
+      attackerModifierValues,
+      moveId,
+      moveCategory,
+    );
+    const fallbackDefenderNature = resolveSummaryNature(
+      "defender",
+      defenderModifierValues,
+      moveId,
+      moveCategory,
+    );
+    const fallbackAttackerInvestment = resolveSummaryInvestment(
+      "attacker",
+      attackerModifierValues,
+    );
+    const fallbackDefenderInvestment = resolveSummaryInvestment(
+      "defender",
+      defenderModifierValues,
+    );
+    const fallbackAttackerStatus = resolveSummaryStatus(
+      "attacker",
+      attackerModifierValues,
+    );
+    const fallbackDefenderStatus = resolveSummaryStatus(
+      "defender",
+      defenderModifierValues,
+    );
 
     if (side === "attacker") {
       const attacker = attackerPromptSpecies;
@@ -447,7 +628,10 @@ export function usePokemonSummary({
       const effectiveSet = buildEffectiveSetPreview(
         importedSet,
         effectivePromptStatPoints,
-        activePendingNature ?? parsedCommand?.attackerNature,
+        activePendingNature ??
+          parsedCommand?.attackerNature ??
+          fallbackAttackerNature,
+        parsedCommand?.attackerInvestment ?? fallbackAttackerInvestment,
       );
       const hasCustomStats = Boolean(importedSet || effectivePromptStatPoints);
       const stats = hasCustomStats
@@ -476,17 +660,19 @@ export function usePokemonSummary({
         promptPokemonId: attackerPromptSpecies?.id ?? attacker.id,
         spriteSources: getPokemonSpriteSources(attacker),
         primaryType: attacker.types[0] ?? null,
+        types: attacker.types,
         ability: resolveAbilityDisplay(
           attacker,
           parsedCommand?.attackerAbility ??
             structure.attacker.abilityToken?.value,
+          importedSet?.ability,
         ),
         move: parsedCommand?.move ?? moveName,
         moveId,
         moveCategory,
         activeMoveEntry: moveEntry,
         item: attackerItemName,
-        status: parsedCommand?.attackerStatus ?? null,
+        status: parsedCommand?.attackerStatus ?? fallbackAttackerStatus ?? null,
         nature: effectiveSet.nature,
         stats,
         isBaseStats: !hasCustomStats,
@@ -526,7 +712,10 @@ export function usePokemonSummary({
     const effectiveSet = buildEffectiveSetPreview(
       importedSet,
       effectivePromptStatPoints,
-      activePendingNature ?? parsedCommand?.defenderNature,
+      activePendingNature ??
+        parsedCommand?.defenderNature ??
+        fallbackDefenderNature,
+      parsedCommand?.defenderInvestment ?? fallbackDefenderInvestment,
     );
     const hasCustomStats = Boolean(importedSet || effectivePromptStatPoints);
     const stats = hasCustomStats
@@ -555,17 +744,19 @@ export function usePokemonSummary({
       promptPokemonId: defenderPromptSpecies?.id ?? defender.id,
       spriteSources: getPokemonSpriteSources(defender),
       primaryType: defender.types[0] ?? null,
+      types: defender.types,
       ability: resolveAbilityDisplay(
         defender,
         parsedCommand?.defenderAbility ??
           structure.defender.abilityToken?.value,
+        importedSet?.ability,
       ),
       move: null,
       moveId,
       moveCategory,
       activeMoveEntry: null,
       item: defenderItemName,
-      status: parsedCommand?.defenderStatus ?? null,
+      status: parsedCommand?.defenderStatus ?? fallbackDefenderStatus ?? null,
       nature: effectiveSet.nature,
       stats,
       isBaseStats: !hasCustomStats,

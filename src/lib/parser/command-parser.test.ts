@@ -307,6 +307,14 @@ describe("parseCommand", () => {
     });
   });
 
+  test("parses zero current hp percentages", () => {
+    const result = parseCommand("politoed !muddy-water %0 x incineroar");
+
+    expect(result.parsed).toMatchObject({
+      attackerCurrentHpPercent: 0,
+    });
+  });
+
   test("parses explicit SP spreads by segment", () => {
     const result = parseCommand(
       "politoed !muddy-water sp:32/0/1/13/1/19 x incineroar sp:32/0/12/0/22/0",
@@ -337,6 +345,24 @@ describe("parseCommand", () => {
       attacker: "Politoed",
       attackerSetReferenceId: "politoed",
       move: "Muddy Water",
+    });
+  });
+
+  test("parses side modifiers directly after a saved set reference", () => {
+    const result = parseCommand(
+      "#rain-toed max-spa +nature x incineroar",
+      referencedSets,
+    );
+
+    expect(result.parsed).toMatchObject({
+      attacker: "Politoed",
+      attackerSetReferenceId: "politoed",
+      move: "Muddy Water",
+      attackerInvestment: "max_spa",
+      attackerNature: "Modest",
+    });
+    expect(result.issues).not.toContainEqual({
+      id: "parser.saved_set_reference_attacker_slot_only",
     });
   });
 

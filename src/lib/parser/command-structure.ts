@@ -262,13 +262,31 @@ function findSpeciesSplit(tokens: LexToken[]) {
   };
 }
 
+function findLeadingReferenceSplit(tokens: LexToken[]) {
+  if (!tokens[0]?.raw.startsWith("#")) {
+    return null;
+  }
+
+  return {
+    speciesTokens: tokens.slice(0, 1),
+    remainderTokens: tokens.slice(1),
+  };
+}
+
 function analyzeSegment(tokens: LexToken[], side: "attacker" | "defender"): SegmentStructure {
   const firstExplicitIndex = tokens.findIndex((token) => isExplicitToken(token));
   const leadingFreeTokens =
     firstExplicitIndex === -1 ? tokens : tokens.slice(0, firstExplicitIndex);
   const explicitSlice = firstExplicitIndex === -1 ? [] : tokens.slice(firstExplicitIndex);
 
-  const { exact, speciesTokens, remainderTokens } = findSpeciesSplit(leadingFreeTokens);
+  const leadingReferenceSplit = findLeadingReferenceSplit(leadingFreeTokens);
+  const { exact, speciesTokens, remainderTokens } = leadingReferenceSplit
+    ? {
+        exact: null,
+        speciesTokens: leadingReferenceSplit.speciesTokens,
+        remainderTokens: leadingReferenceSplit.remainderTokens,
+      }
+    : findSpeciesSplit(leadingFreeTokens);
   const explicitSymbolTokens = explicitSlice
     .map((token) => parseExplicitSymbolToken(token, side))
     .filter((token): token is SymbolToken => Boolean(token));
@@ -350,19 +368,24 @@ function analyzeSegment(tokens: LexToken[], side: "attacker" | "defender"): Segm
     return token.scope !== side || !isKnown;
   });
 
+  const hasLeadingReference = Boolean(leadingReferenceSplit);
   const speciesText = buildCommandText(
-    (exact ? speciesTokens : leadingFreeTokens).map((token) => token.normalized),
+    (exact || hasLeadingReference ? speciesTokens : leadingFreeTokens).map(
+      (token) => token.normalized,
+    ),
   );
 
   return {
     side,
     rawTokens: tokens,
     leadingFreeTokens,
-    speciesTokens: exact ? speciesTokens : leadingFreeTokens,
+    speciesTokens: exact || hasLeadingReference ? speciesTokens : leadingFreeTokens,
     speciesText,
     speciesExact: exact,
-    speciesMatch: speciesText ? resolvePokemonEntity(speciesText) : null,
-    leadingRemainderTokens: exact ? unresolvedRemainderTokens : [],
+    speciesMatch:
+      speciesText && !hasLeadingReference ? resolvePokemonEntity(speciesText) : null,
+    leadingRemainderTokens:
+      exact || hasLeadingReference ? unresolvedRemainderTokens : [],
     postExplicitFreeTokens,
     symbolTokens,
     modifierTokens,

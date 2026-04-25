@@ -31,6 +31,24 @@ const OmniTextareaWithRef = OmniTextarea as ComponentType<{
   textareaRef: RefObject<HTMLTextAreaElement | null>;
 }>;
 
+function saveGliscorSet(
+  overrides: Record<string, unknown> = {},
+) {
+  useTeamStore.getState().saveSet({
+    speciesId: "gliscor",
+    speciesName: "Gliscor",
+    item: "Toxic Orb",
+    ability: "Poison Heal",
+    level: 50,
+    nature: "Jolly",
+    statPoints: { hp: 32, atk: 2, def: 0, spa: 0, spd: 0, spe: 32 },
+    evs: { hp: 252, atk: 16, def: 0, spa: 0, spd: 0, spe: 252 },
+    ivs: { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 },
+    moves: ["Earthquake", "Protect", "Tailwind", "Facade"],
+    ...overrides,
+  });
+}
+
 describe("omnibar components", () => {
   beforeEach(() => {
     resetOmniStore();
@@ -301,6 +319,262 @@ describe("omnibar components", () => {
     );
   });
 
+  test("nature and investment modifier chips stay exclusive and update the saved summary", () => {
+    saveGliscorSet();
+
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("#gliscor !earthquake x incineroar");
+    });
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Toggle modifiers panel" }),
+    );
+
+    const summary = screen.getByTestId("attacker-summary");
+    const natureCombobox = within(summary).getByRole("combobox", {
+      name: "Nature",
+    });
+    const atkSpInput = within(summary).getByRole("textbox", { name: "Atk SP" });
+    const spaSpInput = within(summary).getByRole("textbox", { name: "SpA SP" });
+    const hpSpInput = within(summary).getByRole("textbox", { name: "HP SP" });
+    const speSpInput = within(summary).getByRole("textbox", { name: "Spe SP" });
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Adamant (+Atk/-SpA)" }),
+    );
+
+    expect(useOmniStore.getState().input).toContain("adamant");
+    expect(useOmniStore.getState().input).not.toContain("modest");
+    expect(natureCombobox).toHaveValue("Adamant (+Atk/-SpA)");
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Modest (+SpA/-Atk)" }),
+    );
+
+    expect(useOmniStore.getState().input).toContain("modest");
+    expect(useOmniStore.getState().input).not.toContain("adamant");
+    expect(natureCombobox).toHaveValue("Modest (+SpA/-Atk)");
+
+    fireEvent.click(screen.getByRole("button", { name: "Max Atk" }));
+
+    expect(useOmniStore.getState().input).toContain("max-atk");
+    expect(useOmniStore.getState().input).not.toContain("max-spa");
+    expect(atkSpInput).toHaveValue("32-");
+    expect(hpSpInput).toHaveValue("0");
+    expect(speSpInput).toHaveValue("0");
+
+    fireEvent.click(screen.getByRole("button", { name: "Max SpA" }));
+
+    expect(useOmniStore.getState().input).toContain("max-spa");
+    expect(useOmniStore.getState().input).not.toContain("max-atk");
+    expect(atkSpInput).toHaveValue("0-");
+    expect(spaSpInput).toHaveValue("32+");
+  });
+
+  test("defender nature shortcut chips insert explicit common natures", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("snorlax !body-slam x incineroar");
+    });
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Toggle modifiers panel" }),
+    );
+
+    const summary = screen.getByTestId("defender-summary");
+    const natureCombobox = within(summary).getByRole("combobox", {
+      name: "Nature",
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Bold (+Def/-Atk)" }));
+
+    expect(useOmniStore.getState().input).toContain("x incineroar bold");
+    expect(natureCombobox).toHaveValue("Bold (+Def/-Atk)");
+
+    fireEvent.click(screen.getByRole("button", { name: "Calm (+SpD/-Atk)" }));
+
+    expect(useOmniStore.getState().input).toContain("x incineroar calm");
+    expect(useOmniStore.getState().input).not.toContain("x incineroar bold");
+    expect(natureCombobox).toHaveValue("Calm (+SpD/-Atk)");
+  });
+
+  test("ability modifier chips replace prior ability tokens instead of stacking them", () => {
+    saveGliscorSet({ ability: "Hyper Cutter" });
+
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("#gliscor !earthquake x incineroar");
+    });
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Toggle modifiers panel" }),
+    );
+
+    const summary = screen.getByTestId("attacker-summary");
+    const abilityCombobox = within(summary).getByRole("combobox", {
+      name: "Ability",
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Poison Heal" }));
+
+    expect(useOmniStore.getState().input).toContain("[Poison Heal]");
+    expect(useOmniStore.getState().input).not.toContain("[Hyper Cutter]");
+    expect(abilityCombobox).toHaveValue("Poison Heal");
+
+    fireEvent.click(screen.getByRole("button", { name: "Sand Veil" }));
+
+    const currentInput = useOmniStore.getState().input;
+    expect(currentInput).toContain("[Sand Veil]");
+    expect(currentInput).not.toContain("[Poison Heal]");
+    expect(currentInput.match(/\[[^\]]+\]/g) ?? []).toHaveLength(1);
+    expect(abilityCombobox).toHaveValue("Sand Veil");
+  });
+
+  test("nicknamed saved sets use the referenced species for modifier abilities and summary updates", () => {
+    saveGliscorSet({ nickname: "vlad" });
+
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("#vlad !earthquake x incineroar");
+    });
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Toggle modifiers panel" }),
+    );
+
+    expect(screen.getByRole("button", { name: "Poison Heal" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Sharpness" })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Max Atk" }));
+
+    const summary = screen.getByTestId("attacker-summary");
+    expect(
+      within(summary).getByRole("combobox", { name: "Pokemon" }),
+    ).toHaveValue("Gliscor");
+    expect(
+      within(summary).getByRole("textbox", { name: "Atk SP" }),
+    ).toHaveValue("32");
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Adamant (+Atk/-SpA)" }),
+    );
+
+    expect(
+      within(summary).getByRole("combobox", { name: "Nature" }),
+    ).toHaveValue("Adamant (+Atk/-SpA)");
+  });
+
+  test("attacker nature and investment modifiers still update the summary without a resolved defender", () => {
+    saveGliscorSet();
+
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("#gliscor !earthquake x");
+    });
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Toggle modifiers panel" }),
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Max Atk" }));
+
+    expect(useOmniStore.getState().input).toBe("#gliscor !earthquake max-atk x");
+
+    const summary = screen.getByTestId("attacker-summary");
+    expect(
+      within(summary).getByRole("textbox", { name: "Atk SP" }),
+    ).toHaveValue("32");
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Adamant (+Atk/-SpA)" }),
+    );
+
+    expect(useOmniStore.getState().input).toContain("adamant");
+    expect(
+      within(summary).getByRole("combobox", { name: "Nature" }),
+    ).toHaveValue("Adamant (+Atk/-SpA)");
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Modest (+SpA/-Atk)" }),
+    );
+
+    expect(useOmniStore.getState().input).toContain("modest");
+    expect(useOmniStore.getState().input).not.toContain("adamant");
+    expect(
+      within(summary).getByRole("combobox", { name: "Nature" }),
+    ).toHaveValue("Modest (+SpA/-Atk)");
+  });
+
+  test("saved sets stay resolved when a side modifier is inserted directly after the set reference", () => {
+    saveGliscorSet();
+
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("#gliscor x incineroar");
+    });
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Toggle modifiers panel" }),
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Max Atk" }));
+
+    expect(useOmniStore.getState().input).toBe("#gliscor max-atk x incineroar");
+
+    const summary = screen.getByTestId("attacker-summary");
+    expect(
+      within(summary).getByRole("combobox", { name: "Pokemon" }),
+    ).toHaveValue("Gliscor");
+    expect(
+      within(summary).getByRole("textbox", { name: "Atk SP" }),
+    ).toHaveValue("32");
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Adamant (+Atk/-SpA)" }),
+    );
+
+    expect(useOmniStore.getState().input).toBe(
+      "#gliscor max-atk adamant x incineroar",
+    );
+    expect(
+      within(summary).getByRole("combobox", { name: "Nature" }),
+    ).toHaveValue("Adamant (+Atk/-SpA)");
+  });
+
+  test("attacker summary keeps prompt investment and nature when the defender side is removed", () => {
+    saveGliscorSet();
+
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore
+        .getState()
+        .setInput("#gliscor !earthquake max-atk +nature x incineroar");
+    });
+
+    act(() => {
+      useOmniStore
+        .getState()
+        .setInput("#gliscor !earthquake max-atk +nature x");
+    });
+
+    const summary = screen.getByTestId("attacker-summary");
+
+    expect(
+      within(summary).getByRole("textbox", { name: "Atk SP" }),
+    ).toHaveValue("32+");
+    expect(
+      within(summary).getByRole("combobox", { name: "Nature" }),
+    ).toHaveValue("Adamant (+Atk/-SpA)");
+  });
+
   test("stage slider rewrites attacker and defender stages intuitively", () => {
     const textareaRef = createRef<HTMLTextAreaElement>();
 
@@ -396,6 +670,21 @@ describe("omnibar components", () => {
   });
 
   test("results panel shows SP-style spreads instead of EV-style spreads", () => {
+    act(() => {
+      useTeamStore.getState().saveSet({
+        speciesId: "politoed",
+        speciesName: "Politoed",
+        item: "Mystic Water",
+        ability: "Drizzle",
+        level: 50,
+        nature: "Hardy",
+        statPoints: { hp: 1, atk: 0, def: 0, spa: 32, spd: 0, spe: 0 },
+        evs: { hp: 12, atk: 0, def: 0, spa: 252, spd: 0, spe: 0 },
+        ivs: { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 },
+        moves: ["Muddy Water", "Ice Beam", "Protect", "Helping Hand"],
+      });
+    });
+
     render(<ResultsPanel />);
 
     act(() => {

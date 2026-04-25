@@ -198,8 +198,16 @@ export function insertChipToken(
   }
 
   const structure = analyzeCommandStructure(normalizedInput);
-  const attackerTokens = structure.attacker.rawTokens.map((entry) => entry.raw);
-  const defenderTokens = structure.defender.rawTokens.map((entry) => entry.raw);
+  const attackerTokens = normalizeSideChipTokensForInsert(
+    "attacker",
+    structure.attacker.rawTokens,
+    scope === "attacker" ? token : "",
+  ).map((entry) => entry.raw);
+  const defenderTokens = normalizeSideChipTokensForInsert(
+    "defender",
+    structure.defender.rawTokens,
+    scope === "defender" ? token : "",
+  ).map((entry) => entry.raw);
 
   if (scope === "attacker") {
     if (structure.lexed.hasDelimiter) {
@@ -232,7 +240,13 @@ export function insertChipToken(
 function stripModifierTokensByKind(
   scope: "attacker" | "defender",
   tokens: ReturnType<typeof analyzeCommandStructure>["attacker"]["rawTokens"],
-  kind: "stat_mod" | "stat_stage" | "speed_mod" | "nature" | "status",
+  kind:
+    | "stat_mod"
+    | "stat_stage"
+    | "speed_mod"
+    | "nature"
+    | "investment"
+    | "status",
   statKey?: StageStatKey,
 ) {
   const modifierMap =
@@ -257,6 +271,34 @@ function stripModifierTokensByKind(
 
     return false;
   });
+}
+
+function normalizeSideChipTokensForInsert(
+  scope: "attacker" | "defender",
+  tokens: ReturnType<typeof analyzeCommandStructure>["attacker"]["rawTokens"],
+  token: string,
+) {
+  if (!token) {
+    return tokens;
+  }
+
+  if (parseAbilitySymbol(token, scope)) {
+    return stripAbilityTokens(tokens);
+  }
+
+  const definition = (
+    scope === "attacker" ? ATTACKER_MODIFIER_MAP : DEFENDER_MODIFIER_MAP
+  ).get(normalizeModifierValue(token));
+
+  if (
+    definition?.kind === "nature" ||
+    definition?.kind === "investment" ||
+    definition?.kind === "status"
+  ) {
+    return stripModifierTokensByKind(scope, tokens, definition.kind);
+  }
+
+  return tokens;
 }
 
 function stripItemTokens(
@@ -624,7 +666,7 @@ export function setHpPercentageToken(
       : structure.defender.rawTokens
   ).map((entry) => entry.raw);
 
-  const token = value === null ? null : `%${Math.max(1, Math.min(100, value))}`;
+  const token = value === null ? null : `%${Math.max(0, Math.min(100, value))}`;
 
   if (scope === "attacker") {
     const nextAttackerTokens = token

@@ -43,7 +43,7 @@ function resolveParsedSpecies(
     importedSets,
   );
 
-  if (referenceSet && segment.leadingFreeTokens.length === 1) {
+  if (referenceSet && segment.leadingRemainderTokens.length === 0) {
     return pokemonById.get(referenceSet.speciesId) ?? null;
   }
 

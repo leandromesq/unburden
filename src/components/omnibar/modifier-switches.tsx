@@ -4,6 +4,7 @@ import { type ReactNode, useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { useI18n } from "@/i18n/I18nProvider";
+import { normalizeId, pokemonById } from "@/lib/data/loaders";
 import {
   ATTACKER_MODIFIER_MAP,
   ATTACKER_CHIP_DEFINITIONS,
@@ -16,7 +17,9 @@ import {
   type ModifierScope,
 } from "@/lib/parser/grammar";
 import { getSuggestedAbilities } from "@/lib/parser/inference";
+import { resolveSetReferenceToken } from "@/lib/team/set-references";
 import { useOmniStore } from "@/store/use-omni-store";
+import { useTeamStore } from "@/store/use-team-store";
 
 function SectionLabel({
   children,
@@ -477,6 +480,30 @@ const DEFENDER_EFFECT_TOKENS = toGroupTokens(
   ),
 );
 
+function resolveModifierSidePokemon(
+  segment: ReturnType<typeof useOmniStore.getState>["commandStructure"]["attacker"],
+  importedSets: ReturnType<typeof useTeamStore.getState>["importedSets"],
+) {
+  const referenceSet = resolveSetReferenceToken(
+    segment.leadingFreeTokens[0]?.raw,
+    importedSets,
+  );
+
+  if (referenceSet) {
+    return pokemonById.get(normalizeId(referenceSet.speciesId)) ?? null;
+  }
+
+  if (segment.speciesExact) {
+    return segment.speciesExact.entry;
+  }
+
+  if (segment.leadingRemainderTokens.length === 0) {
+    return segment.speciesMatch?.entry ?? null;
+  }
+
+  return null;
+}
+
 export function ModifierSwitches() {
   const { dictionary } = useI18n();
   const {
@@ -496,16 +523,19 @@ export function ModifierSwitches() {
       setHpPercentage: state.setHpPercentage,
     })),
   );
+  const importedSets = useTeamStore((state) => state.importedSets);
 
-  const attackerResolved =
-    commandStructure.attacker.speciesExact ??
-    commandStructure.attacker.speciesMatch;
-  const defenderResolved =
-    commandStructure.defender.speciesExact ??
-    commandStructure.defender.speciesMatch;
-  const attackerReady = Boolean(attackerResolved);
+  const attackerPokemon = useMemo(
+    () => resolveModifierSidePokemon(commandStructure.attacker, importedSets),
+    [commandStructure.attacker, importedSets],
+  );
+  const defenderPokemon = useMemo(
+    () => resolveModifierSidePokemon(commandStructure.defender, importedSets),
+    [commandStructure.defender, importedSets],
+  );
+  const attackerReady = Boolean(attackerPokemon);
   const defenderReady = Boolean(
-    commandStructure.lexed.hasDelimiter && defenderResolved,
+    commandStructure.lexed.hasDelimiter && defenderPokemon,
   );
   const attackerHpPercent = commandStructure.attacker.hpToken
     ? Number(commandStructure.attacker.hpToken.value)
@@ -565,27 +595,27 @@ export function ModifierSwitches() {
 
   const attackerAbilityTokens = useMemo(
     () =>
-      attackerResolved
-        ? getSuggestedAbilities(attackerResolved.entry.id, "", 4).map(
+      attackerPokemon
+        ? getSuggestedAbilities(attackerPokemon.id, "", 4).map(
             (ability) => ({
               token: formatAbilityToken("attacker", ability),
               label: ability,
             }),
           )
         : [],
-    [attackerResolved],
+    [attackerPokemon],
   );
   const defenderAbilityTokens = useMemo(
     () =>
-      defenderResolved
-        ? getSuggestedAbilities(defenderResolved.entry.id, "", 4).map(
+      defenderPokemon
+        ? getSuggestedAbilities(defenderPokemon.id, "", 4).map(
             (ability) => ({
               token: formatAbilityToken("defender", ability),
               label: ability,
             }),
           )
         : [],
-    [defenderResolved],
+    [defenderPokemon],
   );
 
   const handleInsert = (
@@ -645,7 +675,7 @@ export function ModifierSwitches() {
         <SideColumn
           side="attacker"
           title={dictionary.modifierSwitches.attacker}
-          subtitle={attackerResolved?.entry.name}
+          subtitle={attackerPokemon?.name}
           activeTokens={activeChipTokens.attacker}
           disabled={!attackerReady}
           stageValue={attackerStage}
@@ -663,7 +693,7 @@ export function ModifierSwitches() {
         <SideColumn
           side="defender"
           title={dictionary.modifierSwitches.defender}
-          subtitle={defenderResolved?.entry.name}
+          subtitle={defenderPokemon?.name}
           activeTokens={activeChipTokens.defender}
           disabled={!defenderReady}
           stageValue={defenderStage}

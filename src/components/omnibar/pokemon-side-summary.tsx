@@ -77,6 +77,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
     openImportModal,
     otherSets,
     resolvedSetId,
+    effectiveStatus,
     setImportModalOpen,
     speciesInput,
     speciesOptions,
@@ -294,6 +295,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
         name={summary.name}
         spriteSources={summary.spriteSources}
         primaryType={summary.primaryType}
+        types={summary.types}
         speciesInput={speciesInput}
         speciesOptions={speciesOptions}
         abilityInput={abilityInput}
@@ -346,7 +348,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
         stageBoosts={stageBoosts}
         itemBoosts={itemBoosts}
         ability={summary.ability}
-        status={summary.status}
+        status={effectiveStatus}
         showLevelLabel={Boolean(importedSet || summary.promptStatPoints)}
         level={importedSet?.level ?? 50}
         onChangeStage={handleStageValueChange}

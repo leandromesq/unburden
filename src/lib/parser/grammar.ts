@@ -483,14 +483,66 @@ export const GLOBAL_MODIFIER_MAP = new Map(
   GLOBAL_MODIFIERS.map((definition) => [definition.token, definition]),
 );
 
-export const ATTACKER_CHIP_DEFINITIONS = ATTACKER_MODIFIERS.filter(
-  (definition) =>
-    !(definition.kind === "nature" && definition.nature && definition.nature[0] !== "_"),
-);
-export const DEFENDER_CHIP_DEFINITIONS = DEFENDER_MODIFIERS.filter(
-  (definition) =>
-    !(definition.kind === "nature" && definition.nature && definition.nature[0] !== "_"),
-);
+const ATTACKER_COMMON_NATURE_CHIPS: ModifierDefinition[] = [
+  {
+    scope: "attacker",
+    token: "adamant",
+    label: "Adamant (+Atk/-SpA)",
+    section: "stats",
+    kind: "nature",
+    nature: "Adamant",
+  },
+  {
+    scope: "attacker",
+    token: "modest",
+    label: "Modest (+SpA/-Atk)",
+    section: "stats",
+    kind: "nature",
+    nature: "Modest",
+  },
+];
+
+const DEFENDER_COMMON_NATURE_CHIPS: ModifierDefinition[] = [
+  {
+    scope: "defender",
+    token: "bold",
+    label: "Bold (+Def/-Atk)",
+    section: "stats",
+    kind: "nature",
+    nature: "Bold",
+  },
+  {
+    scope: "defender",
+    token: "calm",
+    label: "Calm (+SpD/-Atk)",
+    section: "stats",
+    kind: "nature",
+    nature: "Calm",
+  },
+];
+
+export const ATTACKER_CHIP_DEFINITIONS = ATTACKER_MODIFIERS.flatMap((definition) => {
+  if (definition.token === "+nature") {
+    return ATTACKER_COMMON_NATURE_CHIPS;
+  }
+
+  if (definition.kind === "nature") {
+    return [];
+  }
+
+  return [definition];
+});
+export const DEFENDER_CHIP_DEFINITIONS = DEFENDER_MODIFIERS.flatMap((definition) => {
+  if (definition.token === "+nature") {
+    return DEFENDER_COMMON_NATURE_CHIPS;
+  }
+
+  if (definition.kind === "nature") {
+    return [];
+  }
+
+  return [definition];
+});
 export const GLOBAL_CHIP_DEFINITIONS = GLOBAL_MODIFIERS;
 
 export function slugifySymbolValue(value: string) {

@@ -120,6 +120,7 @@ function buildEditorSyncKey(
     summary.contextKey,
     summary.name,
     summary.item ?? "",
+    summary.ability ?? "",
     summary.status ?? "",
     summary.importedSet?.nickname ?? "",
     summary.importedSet?.moves.join("|") ?? "",
@@ -550,6 +551,10 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     () => buildEditorState(summary, editorState, side),
     [editorState, summary, side],
   );
+  const currentEditorSyncKey = useMemo(
+    () => buildEditorSyncKey(summary),
+    [summary],
+  );
 
   const summaryContextKey = summary?.contextKey ?? "empty";
   const summaryNature = summary?.nature ?? "Hardy";
@@ -648,6 +653,33 @@ export function usePokemonSideSummaryController(side: SummarySide) {
   const statusOptions = useMemo(
     () => [...SUMMARY_STATUS_OPTIONS],
     [],
+  );
+  const effectiveStatus = useMemo(() => {
+    if (!summary) {
+      return null;
+    }
+
+    if (editorState.syncKey === currentEditorSyncKey) {
+      const pendingStatus = resolveCommittedStatus(editorState.statusInput);
+      if (pendingStatus !== undefined) {
+        return pendingStatus ?? null;
+      }
+    }
+
+    return summary.status ?? null;
+  }, [
+    currentEditorSyncKey,
+    editorState.statusInput,
+    editorState.syncKey,
+    summary,
+  ]);
+  const updateEditorDraft = useCallback(
+    (transform: (current: SummaryEditorState) => SummaryEditorState) => {
+      setEditorState((current) =>
+        transform(summary ? buildEditorState(summary, current, side) : current),
+      );
+    },
+    [side, summary],
   );
   const moveOptions = useMemo(() => {
     const learnset = summaryPokemon
@@ -1003,7 +1035,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
   };
 
   const handleSpeciesInputChange = (value: string) => {
-    setEditorState((current) => ({
+    updateEditorDraft((current) => ({
       ...current,
       speciesInput: value,
     }));
@@ -1016,7 +1048,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
         return;
       }
 
-      setEditorState((current) => ({
+      updateEditorDraft((current) => ({
         ...current,
         speciesInput: summaryPokemon?.name ?? summary.name,
       }));
@@ -1040,10 +1072,11 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     side,
     summary,
     summaryPokemon?.name,
+    updateEditorDraft,
   ]);
 
   const handleNicknameChange = (value: string) => {
-    setEditorState((current) => ({
+    updateEditorDraft((current) => ({
       ...current,
       nicknameInput: value,
     }));
@@ -1071,22 +1104,24 @@ export function usePokemonSideSummaryController(side: SummarySide) {
   ]);
 
   const handleItemInputChange = (value: string) => {
-    setEditorState((current) => ({
+    updateEditorDraft((current) => ({
       ...current,
       itemInput: value,
     }));
   };
 
   const handleStatusInputChange = (value: string) => {
-    setEditorState((current) => ({
+    updateEditorDraft((current) => ({
       ...current,
+      syncKey: currentEditorSyncKey,
       statusInput: value,
     }));
   };
 
   const handleAbilityInputChange = (value: string) => {
-    setEditorState((current) => ({
+    updateEditorDraft((current) => ({
       ...current,
+      syncKey: currentEditorSyncKey,
       abilityInput: value,
     }));
   };
@@ -1099,7 +1134,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     const nextItem = value.trim()
       ? (resolveCommittedItemName(value) ?? summary.item ?? null)
       : null;
-    setEditorState((current) => ({
+    updateEditorDraft((current) => ({
       ...current,
       itemInput: nextItem ?? "",
     }));
@@ -1120,6 +1155,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     setInputImmediately,
     side,
     summary,
+    updateEditorDraft,
   ]);
 
   const commitAbilitySelection = useCallback((value: string) => {
@@ -1129,8 +1165,9 @@ export function usePokemonSideSummaryController(side: SummarySide) {
 
     const nextAbility =
       resolveCommittedAbilityName(value, abilityOptions) ?? summary.ability;
-    setEditorState((current) => ({
+    updateEditorDraft((current) => ({
       ...current,
+      syncKey: currentEditorSyncKey,
       abilityInput: nextAbility ?? "",
     }));
     if (!nextAbility || nextAbility === summary.ability) {
@@ -1150,10 +1187,12 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     abilityOptions,
     buildCurrentSet,
     commitReferencedSet,
+    currentEditorSyncKey,
     input,
     setInputImmediately,
     side,
     summary,
+    updateEditorDraft,
   ]);
 
   const commitNatureSelection = useCallback((value: string) => {
@@ -1203,15 +1242,17 @@ export function usePokemonSideSummaryController(side: SummarySide) {
 
     const nextStatus = resolveCommittedStatus(value);
     if (nextStatus === undefined) {
-      setEditorState((current) => ({
+      updateEditorDraft((current) => ({
         ...current,
+        syncKey: currentEditorSyncKey,
         statusInput: formatSummaryStatus(summary.status),
       }));
       return;
     }
 
-    setEditorState((current) => ({
+    updateEditorDraft((current) => ({
       ...current,
+      syncKey: currentEditorSyncKey,
       statusInput: formatSummaryStatus(nextStatus),
     }));
 
@@ -1219,10 +1260,17 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     if (nextInput !== input) {
       setInputImmediately(nextInput);
     }
-  }, [input, setInputImmediately, side, summary]);
+  }, [
+    currentEditorSyncKey,
+    input,
+    setInputImmediately,
+    side,
+    summary,
+    updateEditorDraft,
+  ]);
 
   const handleMoveInputChange = (index: number, value: string) => {
-    setEditorState((current) => {
+    updateEditorDraft((current) => {
       const nextMoveInputs = [...current.moveInputs];
       nextMoveInputs[index] = value;
       return {
@@ -1240,7 +1288,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     const nextMoveName = value.trim() ? resolveCommittedMoveName(value) : "";
 
     if (value.trim() && !nextMoveName) {
-      setEditorState((current) => {
+      updateEditorDraft((current) => {
         const nextMoveInputs = [...current.moveInputs];
         nextMoveInputs[index] = "";
         return {
@@ -1253,7 +1301,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
 
     const nextMoveInputs = [...syncedEditorState.moveInputs];
     nextMoveInputs[index] = nextMoveName;
-    setEditorState((current) => ({
+    updateEditorDraft((current) => ({
       ...current,
       moveInputs: buildMovesDraft(nextMoveInputs),
     }));
@@ -1296,6 +1344,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     summary,
     syncedEditorState.moveInputs,
     syncedEditorState.selectedMoveIndex,
+    updateEditorDraft,
   ]);
 
   const handleSelectActiveMove = (index: number, moveName: string) => {
@@ -1303,7 +1352,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
       return;
     }
 
-    setEditorState((current) => ({
+    updateEditorDraft((current) => ({
       ...current,
       selectedMoveIndex: index,
     }));
@@ -1329,7 +1378,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
 
     if (stat === "hp") {
       const sanitizedPercent = Math.max(
-        1,
+        0,
         Math.min(100, Math.round(nextValue)),
       );
       const nextInput = setHpPercentageToken(
@@ -1446,6 +1495,7 @@ export function usePokemonSideSummaryController(side: SummarySide) {
     setImportModalOpen,
     speciesInput: syncedEditorState.speciesInput,
     speciesOptions,
+    effectiveStatus,
     statusInput: syncedEditorState.statusInput,
     statusOptions,
     spLeft,

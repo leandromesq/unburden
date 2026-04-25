@@ -30,11 +30,11 @@ function roundPercent(value: number) {
 }
 
 function toCurrentHp(maxHP: number, percent: number | undefined) {
-  if (!percent || percent >= 100) {
+  if (percent === undefined || percent >= 100) {
     return maxHP;
   }
 
-  return Math.max(1, Math.round((maxHP * percent) / 100));
+  return Math.max(0, Math.round((maxHP * percent) / 100));
 }
 
 function getWeather(parsed: ParsedCommand) {

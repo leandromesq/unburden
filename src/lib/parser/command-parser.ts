@@ -257,7 +257,7 @@ function resolveCurrentHpPercent(tokenValue: string | undefined) {
     return undefined;
   }
 
-  return Math.max(1, Math.min(100, value));
+  return Math.max(0, Math.min(100, value));
 }
 
 function resolveAegislashCalcFormId(speciesText: string) {
@@ -341,11 +341,11 @@ export function parseCommand(
     );
   }
 
-  if (attackerReferenceSet && structure.attacker.leadingFreeTokens.length > 1) {
+  if (attackerReferenceSet && structure.attacker.leadingRemainderTokens.length > 0) {
     issues.push(createIssue("parser.saved_set_reference_attacker_slot_only"));
   }
 
-  if (defenderReferenceSet && structure.defender.leadingFreeTokens.length > 1) {
+  if (defenderReferenceSet && structure.defender.leadingRemainderTokens.length > 0) {
     issues.push(createIssue("parser.saved_set_reference_defender_slot_only"));
   }
 

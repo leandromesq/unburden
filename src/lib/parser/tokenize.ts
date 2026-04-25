@@ -21,7 +21,7 @@ export function parseHpToken(raw: string) {
     return null;
   }
 
-  return Math.max(1, Math.min(100, value));
+  return Math.max(0, Math.min(100, value));
 }
 
 function parseCompactSpreadToken(

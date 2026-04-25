@@ -178,6 +178,46 @@ describe("input mutations", () => {
         ),
       ).toBe("politoed !muddy-water x incineroar ~gravity ~grassy-terrain");
     });
+
+    test("replaces existing side nature chips when selecting another nature modifier", () => {
+      expect(
+        insertChipToken(
+          "gliscor !earthquake +nature x incineroar",
+          "attacker",
+          "-nature",
+        ),
+      ).toBe("gliscor !earthquake -nature x incineroar");
+    });
+
+    test("replaces existing investment chips on the same side", () => {
+      expect(
+        insertChipToken(
+          "gliscor !earthquake max-atk x incineroar",
+          "attacker",
+          "max-spa",
+        ),
+      ).toBe("gliscor !earthquake max-spa x incineroar");
+    });
+
+    test("replaces existing ability chips on the same side", () => {
+      expect(
+        insertChipToken(
+          "gliscor !earthquake [Hyper Cutter] x incineroar",
+          "attacker",
+          "[Poison Heal]",
+        ),
+      ).toBe("gliscor !earthquake [Poison Heal] x incineroar");
+    });
+
+    test("appends and toggles attacker chips directly after a saved set reference", () => {
+      expect(
+        insertChipToken("#gliscor x incineroar", "attacker", "max-atk"),
+      ).toBe("#gliscor max-atk x incineroar");
+
+      expect(
+        insertChipToken("#gliscor max-atk x incineroar", "attacker", "max-atk"),
+      ).toBe("#gliscor x incineroar");
+    });
   });
 
   describe("setStatModifierToken", () => {
@@ -373,7 +413,7 @@ describe("input mutations", () => {
           "defender",
           0,
         ),
-      ).toBe("politoed !muddy-water x incineroar %1");
+      ).toBe("politoed !muddy-water x incineroar %0");
 
       expect(
         setHpPercentageToken(

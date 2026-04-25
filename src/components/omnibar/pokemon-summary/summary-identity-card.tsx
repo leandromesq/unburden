@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 
+import { MoveTypeIcon } from "@/components/omnibar/move-type-icon";
 import { SearchableCombobox } from "@/components/omnibar/searchable-combobox";
 import { PokemonSprite } from "@/components/omnibar/pokemon-summary/pokemon-sprite";
 import {
@@ -9,10 +10,15 @@ import {
   SUMMARY_NATURES,
 } from "@/components/omnibar/pokemon-summary/shared";
 
+function formatTypeName(type: string) {
+  return type.slice(0, 1).toUpperCase() + type.slice(1).toLowerCase();
+}
+
 interface SummaryIdentityCardProps {
   name: string;
   spriteSources: string[];
   primaryType: string | null;
+  types: string[];
   speciesInput: string;
   speciesOptions: string[];
   abilityInput: string;
@@ -36,6 +42,7 @@ export function SummaryIdentityCard({
   name,
   spriteSources,
   primaryType,
+  types,
   speciesInput,
   speciesOptions,
   abilityInput,
@@ -78,6 +85,20 @@ export function SummaryIdentityCard({
           onSelectOption={onCommitSpecies}
           onBlur={onCommitSpecies}
         />
+
+        {types.length > 0 ? (
+          <div className="mt-1.5 flex flex-wrap gap-1.5">
+            {types.map((type) => (
+              <span
+                key={type}
+                className="theme-chip inline-flex h-6 items-center gap-1 rounded-md px-2 text-[11px] font-medium text-[var(--text-subtle)]"
+              >
+                <MoveTypeIcon type={type} size={12} />
+                <span>{formatTypeName(type)}</span>
+              </span>
+            ))}
+          </div>
+        ) : null}
       </div>
 
       {setNameField ? <div className="min-w-0">{setNameField}</div> : null}
