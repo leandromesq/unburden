@@ -12,7 +12,7 @@ import {
 import type { SlotResolver } from "@/lib/parser/resolvers/types";
 
 export const resolveAttackerSpeciesSuggestion: SlotResolver = (context) => {
-  if (context.attackerSpeciesLocked) {
+  if (context.attackerSpeciesLocked || context.cursorInDefender) {
     return null;
   }
 

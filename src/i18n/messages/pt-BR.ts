@@ -3,7 +3,7 @@ import type { AppDictionary } from "@/i18n/types";
 export const ptBRDictionary: AppDictionary = {
   metadata: {
     description:
-      "Calculo de dano VGC em alta velocidade com um composer estilo chat.",
+      "Calculadora de dano Pokemon VGC em alta velocidade com um composer estilo chat.",
   },
   localeToggle: {
     label: "Idioma da UI",
@@ -19,7 +19,8 @@ export const ptBRDictionary: AppDictionary = {
   home: {
     kicker: "Calculadora de Dano para VGC",
     about: "Sobre",
-    heroDescription: "Calculadora de dano com base em texto.",
+    heroDescription:
+      "Calculadora de dano Pokemon VGC em texto para matchups de doubles, spreads SP do Champions e sets salvos.",
     toggleModifiers: "Alternar painel de modificadores",
     modifiers: "Modificadores",
     swapSides: "Trocar atacante e defensor",

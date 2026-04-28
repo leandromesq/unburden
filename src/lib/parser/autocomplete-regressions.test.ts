@@ -58,4 +58,15 @@ describe("autocomplete regressions", () => {
       /^#garchomp !.+ x #gengarmega$/,
     );
   });
+
+  test("completes defender species after a gendered attacker form and explicit move", () => {
+    const input = "basculegion !last-respects x fr";
+    const result = getAutocompleteState(input);
+    const values = result.suggestionOptions.map((option) => option.value);
+
+    expect(result.activeSuggestion?.slot).toBe("defender_pokemon");
+    expect(values).not.toContain("basculegion");
+    expect(values).not.toContain("basculegion-f");
+    expect(values.some((value) => value.startsWith("fr"))).toBe(true);
+  });
 });

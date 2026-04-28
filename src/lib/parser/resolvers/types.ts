@@ -33,6 +33,7 @@ export interface SuggestionContext {
   activeTokenInDefender: boolean;
   activeTokenInAttackerSpecies: boolean;
   activeTokenInDefenderSpecies: boolean;
+  cursorInDefender: boolean;
 }
 
 export type SlotResolver = (

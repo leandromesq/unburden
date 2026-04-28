@@ -75,6 +75,9 @@ export function buildSuggestionContext(
     !trailingWhitespace && activeToken
       ? input.slice(activeToken.start, cursorIndex) || activeToken.raw
       : null;
+  const delimiterToken = fullStructure.lexed.hasDelimiter
+    ? fullStructure.lexed.tokens[fullStructure.lexed.delimiterIndex]
+    : null;
 
   return {
     input,
@@ -106,6 +109,6 @@ export function buildSuggestionContext(
       activeToken,
       fullStructure.defender.speciesTokens,
     ),
+    cursorInDefender: Boolean(delimiterToken && cursorIndex > delimiterToken.end),
   };
 }
-

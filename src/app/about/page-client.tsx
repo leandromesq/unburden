@@ -35,7 +35,7 @@ export function AboutPage() {
                 </Link>
               </div>
               <h1 className="mt-2 text-2xl font-semibold tracking-[-0.03em]">
-                {dictionary.home.about}
+                {dictionary.home.about} Unburden VGC
               </h1>
             </div>
             <div className="flex justify-center">
