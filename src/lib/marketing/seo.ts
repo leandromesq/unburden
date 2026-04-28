@@ -14,6 +14,9 @@ export const SITE_X_HANDLE = "@lelezonio";
 const SITE_X_URL = "https://x.com/lelezonio";
 export const SITE_OG_IMAGE_PATH = "/opengraph-image";
 export const SITE_TWITTER_IMAGE_PATH = "/twitter-image";
+export const SITE_SHARE_IMAGE_VERSION = "2026-04-28-v2";
+export const SITE_OG_IMAGE_URL = `${SITE_OG_IMAGE_PATH}?v=${SITE_SHARE_IMAGE_VERSION}`;
+export const SITE_TWITTER_IMAGE_URL = `${SITE_TWITTER_IMAGE_PATH}?v=${SITE_SHARE_IMAGE_VERSION}`;
 export const SITE_LAST_MODIFIED = "2026-04-28";
 const SITE_LOCALES = ["en", "pt-BR"] as const;
 export const SITE_THEME_COLOR_DARK = "#060608";
@@ -68,7 +71,7 @@ export function getSeoStructuredData() {
       alternateName: SITE_SHORT_NAME,
       description: SITE_DESCRIPTION,
       inLanguage: [...SITE_LOCALES],
-      image: absoluteUrl(SITE_OG_IMAGE_PATH),
+      image: absoluteUrl(SITE_OG_IMAGE_URL),
       publisher: creator,
       creator,
       about: [
@@ -88,8 +91,8 @@ export function getSeoStructuredData() {
       browserRequirements: "Requires JavaScript and a modern web browser.",
       description: SITE_DESCRIPTION,
       url: SITE_URL,
-      image: absoluteUrl(SITE_OG_IMAGE_PATH),
-      screenshot: absoluteUrl(SITE_OG_IMAGE_PATH),
+      image: absoluteUrl(SITE_OG_IMAGE_URL),
+      screenshot: absoluteUrl(SITE_OG_IMAGE_URL),
       inLanguage: [...SITE_LOCALES],
       keywords: SITE_KEYWORDS.join(", "),
       featureList: [

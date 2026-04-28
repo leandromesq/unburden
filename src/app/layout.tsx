@@ -13,12 +13,12 @@ import {
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
   SITE_NAME,
-  SITE_OG_IMAGE_PATH,
+  SITE_OG_IMAGE_URL,
   SITE_SHARE_IMAGE_ALT,
   SITE_THEME_COLOR_DARK,
   SITE_THEME_COLOR_LIGHT,
   SITE_TITLE,
-  SITE_TWITTER_IMAGE_PATH,
+  SITE_TWITTER_IMAGE_URL,
   SITE_URL,
   SITE_X_HANDLE,
 } from "@/lib/marketing/seo";
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: absoluteUrl(SITE_OG_IMAGE_PATH),
+        url: absoluteUrl(SITE_OG_IMAGE_URL),
         width: 1200,
         height: 630,
         alt: SITE_SHARE_IMAGE_ALT,
@@ -93,7 +93,7 @@ export const metadata: Metadata = {
     creator: SITE_X_HANDLE,
     images: [
       {
-        url: absoluteUrl(SITE_TWITTER_IMAGE_PATH),
+        url: absoluteUrl(SITE_TWITTER_IMAGE_URL),
         alt: SITE_SHARE_IMAGE_ALT,
       },
     ],

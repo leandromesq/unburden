@@ -7,9 +7,9 @@ import {
   SITE_ABOUT_DESCRIPTION,
   SITE_ABOUT_TITLE,
   SITE_NAME,
-  SITE_OG_IMAGE_PATH,
+  SITE_OG_IMAGE_URL,
   SITE_SHARE_IMAGE_ALT,
-  SITE_TWITTER_IMAGE_PATH,
+  SITE_TWITTER_IMAGE_URL,
 } from "@/lib/marketing/seo";
 import { AboutPage } from "./page-client";
 
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: absoluteUrl(SITE_OG_IMAGE_PATH),
+        url: absoluteUrl(SITE_OG_IMAGE_URL),
         width: 1200,
         height: 630,
         alt: SITE_SHARE_IMAGE_ALT,
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     description: SITE_ABOUT_DESCRIPTION,
     images: [
       {
-        url: absoluteUrl(SITE_TWITTER_IMAGE_PATH),
+        url: absoluteUrl(SITE_TWITTER_IMAGE_URL),
         alt: SITE_SHARE_IMAGE_ALT,
       },
     ],

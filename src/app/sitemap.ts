@@ -3,7 +3,7 @@ import {
   absoluteUrl,
   SITE_INDEXABLE_ROUTES,
   SITE_LAST_MODIFIED,
-  SITE_OG_IMAGE_PATH,
+  SITE_OG_IMAGE_URL,
 } from "@/lib/marketing/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -12,6 +12,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: SITE_LAST_MODIFIED,
     changeFrequency: route.changeFrequency,
     priority: route.priority,
-    images: [absoluteUrl(SITE_OG_IMAGE_PATH)],
+    images: [absoluteUrl(SITE_OG_IMAGE_URL)],
   }));
 }
