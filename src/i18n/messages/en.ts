@@ -18,8 +18,7 @@ export const enDictionary: AppDictionary = {
   home: {
     kicker: "VGC Damage Calculator",
     about: "About",
-    heroDescription:
-      "Enter a prompt, adjust both sides, and compare Min, Mid, and Max bulk without leaving the editor.",
+    heroDescription: "VGC text-based damage calculator.",
     toggleModifiers: "Toggle modifiers panel",
     modifiers: "Modifiers",
     swapSides: "Swap attacker and defender",

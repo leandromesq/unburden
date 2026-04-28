@@ -55,6 +55,22 @@ function fallbackCopyText(text: string) {
   document.body.removeChild(textarea);
 }
 
+function clampPercent(value: number) {
+  return Math.max(0, Math.min(100, value));
+}
+
+function getDamageBandMetrics(minPercentage: number, maxPercentage: number) {
+  const isGuaranteedOhko = minPercentage >= 100;
+  const left = clampPercent(minPercentage);
+  const right = clampPercent(maxPercentage);
+
+  return {
+    isGuaranteedOhko,
+    left: isGuaranteedOhko ? 0 : left,
+    width: isGuaranteedOhko ? 100 : Math.max(1.5, right - left),
+  };
+}
+
 export function ResultsPanel() {
   const { dictionary } = useI18n();
   const { results, parsed } = useOmniStore(
@@ -175,38 +191,89 @@ export function ResultsPanel() {
             : result.archetype === "mid"
               ? dictionary.resultsPanel.midBulk
               : dictionary.resultsPanel.maxBulk);
+        const band = getDamageBandMetrics(
+          result.minPercentage,
+          result.maxPercentage,
+        );
 
         return (
           <article
             key={result.archetype}
             id={`result-${result.archetype}`}
-            className="theme-panel rounded-xl p-4"
+            className="theme-panel theme-results-card rounded-xl p-4"
           >
-            <div className="mb-2.5">
+            <div className="mb-3">
               <BlockTitle
                 archetype={result.archetype}
                 label={result.label}
                 fallbackLabels={dictionary.resultsPanel}
               />
-              <div className="flex items-center justify-between gap-3">
-                <div className="theme-text-dim text-[13px]">{result.summary}</div>
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="theme-text-dim text-[12px] leading-5">
+                    {result.summary}
+                  </div>
+                  <div
+                    className="mt-1 font-mono text-[17px] leading-6 md:text-[18px]"
+                    style={{ color: "var(--text)" }}
+                  >
+                    {result.damageText}
+                  </div>
+                </div>
                 <div
-                  className={`shrink-0 text-[13px] font-semibold tabular-nums ${koTextTone(result.koChanceText)}`}
+                  className={`shrink-0 font-mono text-[12px] font-semibold tabular-nums ${koTextTone(result.koChanceText)}`}
                 >
                   {result.koChanceText}
                 </div>
               </div>
             </div>
-            <div className="theme-subpanel-strong rounded-lg px-4 py-3.5">
-              <div className="theme-text-dim text-[12px] leading-5">
-                {result.contextText}
+            <div className="mb-3">
+              <div className="mb-1.5 flex items-center justify-between gap-3">
+                <div className="theme-data-label">Damage range</div>
+                <div className="theme-data-text text-[11px]">
+                  {band.isGuaranteedOhko
+                    ? `Guaranteed OHKO · ${result.minPercentage.toFixed(1)}% - ${result.maxPercentage.toFixed(1)}%`
+                    : `${result.minPercentage.toFixed(1)}% - ${result.maxPercentage.toFixed(1)}%`}
+                </div>
               </div>
               <div
-                className="mt-2.5 font-mono text-base md:text-lg"
-                style={{ color: "var(--text)" }}
+                className={`theme-results-band relative h-2.5 overflow-hidden rounded-full ${
+                  band.isGuaranteedOhko ? "theme-results-band-ohko" : ""
+                }`}
               >
-                {result.damageText}
+                <div
+                  className="theme-results-band-fill absolute inset-y-0 rounded-full"
+                  style={{
+                    left: `${band.left}%`,
+                    width: `${band.width}%`,
+                  }}
+                />
               </div>
+            </div>
+            <div className="theme-subpanel-strong rounded-lg px-4 py-3.5">
+              <div className="theme-data-label">Calc</div>
+              <div className="theme-data-text mt-1 text-[12px] leading-5 md:text-[13px]">
+                {result.contextText}
+              </div>
+              {result.damageRolls.length ? (
+                <details className="theme-rolls-details mt-3">
+                  <summary className="theme-data-label cursor-pointer select-none">
+                    Rolls ({result.damageRolls.length})
+                  </summary>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {result.damageRolls.map((roll, index) => (
+                      <span
+                        key={`${result.archetype}-roll-${index}-${roll.damage}`}
+                        className={`theme-roll-chip rounded-md px-2 py-1 font-mono text-[10px] leading-none tabular-nums ${
+                          roll.percentage >= 100 ? "theme-roll-chip-ohko" : ""
+                        }`}
+                      >
+                        {roll.damage} ({roll.percentage.toFixed(1)}%)
+                      </span>
+                    ))}
+                  </div>
+                </details>
+              ) : null}
             </div>
             <div className="mt-2.5 flex items-end gap-2">
               {result.assumptions.length ? (
@@ -214,7 +281,7 @@ export function ResultsPanel() {
                   {result.assumptions.map((assumption) => (
                     <div
                       key={`${result.archetype}-${assumption}`}
-                      className="theme-pill-muted rounded-md px-2.5 py-1 text-[11px]"
+                      className="theme-pill-muted rounded-md px-2.5 py-1 font-mono text-[10px]"
                     >
                       {assumption}
                     </div>

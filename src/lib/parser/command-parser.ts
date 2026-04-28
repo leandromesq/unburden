@@ -110,6 +110,7 @@ function parseModifierCollections(
   let defenderStatus: ParsedCommand["defenderStatus"];
   let attackerInvestment: ParsedCommand["attackerInvestment"] = "auto";
   let defenderInvestment: ParsedCommand["defenderInvestment"] = "auto";
+  let moveTargetMode: ParsedCommand["moveTargetMode"];
   const attackerSideEffects = new Set<ParsedCommand["attackerSideEffects"][number]>();
   const defenderSideEffects = new Set<ParsedCommand["defenderSideEffects"][number]>();
   const globalEffects = new Set<ParsedCommand["globalEffects"][number]>();
@@ -140,6 +141,8 @@ function parseModifierCollections(
       attackerStatus = definition.status;
     } else if (definition.kind === "investment") {
       attackerInvestment = definition.investment as ParsedCommand["attackerInvestment"];
+    } else if (definition.kind === "move_target") {
+      moveTargetMode = definition.moveTargetMode;
     } else if (definition.kind === "side_effect" && definition.sideEffect) {
       attackerSideEffects.add(definition.sideEffect);
     }
@@ -210,6 +213,7 @@ function parseModifierCollections(
     defenderStatus,
     attackerInvestment,
     defenderInvestment,
+    moveTargetMode,
     attackerSideEffects: Array.from(attackerSideEffects),
     defenderSideEffects: Array.from(defenderSideEffects),
     globalEffects: Array.from(globalEffects),
@@ -487,6 +491,12 @@ export function parseCommand(
     move.category,
   );
   const defenderNature = resolveDefenderNature(modifiers.defenderNature, move.category);
+  const isDoubleTarget =
+    modifiers.moveTargetMode === "single"
+      ? false
+      : modifiers.moveTargetMode === "multi"
+        ? move.isSpread
+        : move.isSpread;
 
   return {
     parsed: {
@@ -522,7 +532,9 @@ export function parseCommand(
       globalEffects: modifiers.globalEffects,
       attackerSideEffects: modifiers.attackerSideEffects,
       defenderSideEffects: modifiers.defenderSideEffects,
-      isDoubleTarget: move.isSpread,
+      isDoubleTarget,
+      lastRespectsStacks: moveToken?.lastRespectsStacks,
+      moveTargetMode: modifiers.moveTargetMode,
     },
     issues: uniqueIssues(issues),
   };

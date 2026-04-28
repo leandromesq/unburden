@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 import { AboutSection } from "@/components/about-section";
+import { AppLogoMark } from "@/components/app-logo-mark";
 import { LegalFooter } from "@/components/legal-footer";
 import { LocaleToggle } from "@/components/locale-toggle";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
@@ -16,7 +17,7 @@ export function AboutPage() {
     <main className="theme-page">
       <div className="mx-auto flex min-h-screen w-full max-w-[1040px] flex-col px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
         <header className="border-b theme-divider pb-5">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-3">
             <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <Link
@@ -37,7 +38,10 @@ export function AboutPage() {
                 {dictionary.home.about}
               </h1>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex justify-center">
+              <AppLogoMark />
+            </div>
+            <div className="flex flex-wrap items-center justify-end gap-2">
               <LocaleToggle />
               <ThemeToggle />
             </div>

@@ -40,7 +40,7 @@ export function SummaryMoves({
   return (
     <div className="theme-divider mt-4 border-t pt-3">
       <div className="mb-2">
-        <div className="text-sm font-medium">Moves</div>
+        <div className="theme-data-label">Moves</div>
       </div>
 
       <div className="grid gap-1.5">
@@ -66,7 +66,7 @@ export function SummaryMoves({
                       onSelectMove(index, moveName);
                     }
                   }}
-                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-colors ${
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md border transition-colors ${
                     isActive
                       ? "theme-chip-active border-transparent"
                       : "theme-control"

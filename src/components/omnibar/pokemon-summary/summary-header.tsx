@@ -14,7 +14,7 @@ export function SummaryHeader({
   return (
     <div className="flex min-w-0 items-start justify-between gap-3">
       <div className="min-w-0 flex-1">
-        <div className="text-sm font-medium">
+        <div className="theme-data-label">
           {title}
         </div>
       </div>

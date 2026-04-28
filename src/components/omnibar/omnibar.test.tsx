@@ -78,32 +78,61 @@ describe("omnibar components", () => {
     expect(screen.getByRole("button", { name: /^Rain$/i })).toBeInTheDocument();
   });
 
-  test("swap sides button is disabled until the defender side exists", () => {
+  test("swap sides button is inert until the defender side exists", async () => {
     render(<OmniComposer />);
 
-    expect(
-      screen.getByRole("button", { name: "Swap attacker and defender" }),
-    ).toBeDisabled();
+    const swapButton = screen.getByRole("button", {
+      name: "Swap attacker and defender",
+    });
+
+    expect(swapButton).toBeEnabled();
+
+    fireEvent.click(swapButton);
+    expect(useOmniStore.getState().input).toBe("");
 
     act(() => {
       useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
     });
 
-    expect(
-      screen.getByRole("button", { name: "Swap attacker and defender" }),
-    ).toBeEnabled();
+    fireEvent.click(swapButton);
+    expect(useOmniStore.getState().input).toBe("incineroar x politoed");
   });
 
-  test("swap sides flips the prompt and both summaries", () => {
+  test("swap sides button has no hydration-sensitive disabled attribute after a remount", () => {
+    const firstRender = render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    firstRender.unmount();
+
+    render(<OmniComposer />);
+
+    const remountedSwapButton = screen.getByRole("button", {
+      name: "Swap attacker and defender",
+    });
+
+    expect(remountedSwapButton).toBeEnabled();
+    expect(remountedSwapButton).not.toHaveAttribute("disabled");
+  });
+
+  test("swap sides flips the prompt and both summaries", async () => {
     render(<OmniComposer />);
 
     act(() => {
       useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
     });
 
-    fireEvent.click(
-      screen.getByRole("button", { name: "Swap attacker and defender" }),
-    );
+    const swapButton = screen.getByRole("button", {
+      name: "Swap attacker and defender",
+    });
+
+    await waitFor(() => {
+      expect(swapButton).toBeEnabled();
+    });
+
+    fireEvent.click(swapButton);
 
     expect(useOmniStore.getState().input).toBe("incineroar x politoed");
     expect(
@@ -118,7 +147,7 @@ describe("omnibar components", () => {
     ).toHaveValue("Politoed");
   });
 
-  test("swap sides uses the defender set move when the new attacker is a compact #set", () => {
+  test("swap sides uses the defender set move when the new attacker is a compact #set", async () => {
     act(() => {
       useTeamStore.getState().saveSet({
         speciesId: "incineroar",
@@ -138,9 +167,15 @@ describe("omnibar components", () => {
       useOmniStore.getState().setInput("politoed !muddy-water x #incineroar");
     });
 
-    fireEvent.click(
-      screen.getByRole("button", { name: "Swap attacker and defender" }),
-    );
+    const swapButton = screen.getByRole("button", {
+      name: "Swap attacker and defender",
+    });
+
+    await waitFor(() => {
+      expect(swapButton).toBeEnabled();
+    });
+
+    fireEvent.click(swapButton);
 
     expect(useOmniStore.getState().input).toBe("#incineroar !fake-out x politoed");
   });
@@ -160,6 +195,40 @@ describe("omnibar components", () => {
 
     expect(useOmniStore.getState().input).toBe("politoed");
     expect(document.activeElement).toBe(textareaRef.current);
+  });
+
+  test("composer highlights prompt tokens inline without changing the textarea value", () => {
+    const textareaRef = createRef<HTMLTextAreaElement>();
+
+    render(<OmniTextareaWithRef textareaRef={textareaRef} />);
+
+    act(() => {
+      useOmniStore
+        .getState()
+        .setInput("#gliscor !earthquake @toxic-orb [Poison Heal] max-atk x incineroar bold ~rain");
+    });
+
+    const highlightLayer = screen.getByTestId("prompt-highlight-layer");
+
+    expect(screen.getByTestId("omni-textarea")).toHaveValue(
+      "#gliscor !earthquake @toxic-orb [Poison Heal] max-atk x incineroar bold ~rain",
+    );
+    expect(within(highlightLayer).getByText("#gliscor")).toHaveAttribute(
+      "data-token-kind",
+      "set",
+    );
+    expect(within(highlightLayer).getByText("!earthquake")).toHaveAttribute(
+      "data-token-kind",
+      "move",
+    );
+    expect(within(highlightLayer).getByText("x")).toHaveAttribute(
+      "data-token-kind",
+      "separator",
+    );
+    expect(within(highlightLayer).getByText("~rain")).toHaveAttribute(
+      "data-token-kind",
+      "global",
+    );
   });
 
   test("suggestion navigation advances the highlighted option", () => {
@@ -296,6 +365,22 @@ describe("omnibar components", () => {
     });
 
     expect(useOmniStore.getState().input).toBe("incineroar x politoed");
+  });
+
+  test("Alt+Backspace clears the prompt from the main textarea", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    fireEvent.keyDown(screen.getByTestId("omni-textarea"), {
+      key: "Backspace",
+      altKey: true,
+    });
+
+    expect(useOmniStore.getState().input).toBe("");
+    expect(screen.getByTestId("omni-textarea")).toHaveValue("");
   });
 
   test("modifier chip toggles its token in the current input", () => {

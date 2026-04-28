@@ -28,6 +28,7 @@ export interface ModifierDefinition {
     | "speed_mod"
     | "nature"
     | "investment"
+    | "move_target"
     | "status"
     | "side_effect"
     | "global_effect";
@@ -35,6 +36,7 @@ export interface ModifierDefinition {
   statKey?: Exclude<keyof StatSpread, "hp">;
   nature?: string;
   investment?: "max_atk" | "max_spa" | "max_def" | "max_spd";
+  moveTargetMode?: "single" | "multi";
   status?: PokemonStatus;
   sideEffect?: SideEffect;
   globalEffect?: GlobalEffect;
@@ -95,6 +97,12 @@ const MODIFIER_ALIASES = new Map<string, string>([
   ["psn", "poison"],
   ["slp", "sleep"],
   ["frz", "freeze"],
+  ["single", "single-target"],
+  ["single-targeted", "single-target"],
+  ["multi", "multi-target"],
+  ["double-target", "multi-target"],
+  ["double-targeted", "multi-target"],
+  ["spread", "multi-target"],
 ]);
 
 function buildStatusDefinitions(scope: "attacker" | "defender") {
@@ -235,6 +243,22 @@ const ATTACKER_MODIFIERS: ModifierDefinition[] = [
   ...buildNamedStageDefinitions("attacker"),
   ...buildSpeedStageDefinitions("attacker"),
   ...buildStatusDefinitions("attacker"),
+  {
+    scope: "attacker",
+    token: "single-target",
+    label: "Single Target",
+    section: "move_effects",
+    kind: "move_target",
+    moveTargetMode: "single",
+  },
+  {
+    scope: "attacker",
+    token: "multi-target",
+    label: "Multi Target",
+    section: "move_effects",
+    kind: "move_target",
+    moveTargetMode: "multi",
+  },
   {
     scope: "attacker",
     token: "max-atk",

@@ -293,7 +293,7 @@ export function SearchableCombobox({
               setOpen(false);
             }
           }}
-          className={`theme-control theme-input w-full rounded-lg px-3 py-2 ${
+          className={`theme-control theme-input w-full rounded-md px-3 py-2 ${
             compact ? "theme-field-sm text-sm" : ""
           } ${endAdornment ? "pr-10" : ""}`}
           placeholder={placeholder}
@@ -307,7 +307,7 @@ export function SearchableCombobox({
           <div
             id={listboxId}
             role="listbox"
-            className="theme-menu absolute left-0 right-0 top-[calc(100%+0.35rem)] z-20 max-h-64 overflow-y-auto rounded-xl py-1"
+            className="theme-menu absolute left-0 right-0 top-[calc(100%+0.35rem)] z-20 max-h-64 overflow-y-auto rounded-lg py-1"
             style={{ scrollbarGutter: "stable" }}
           >
             {filteredOptions.map((option, index) => (

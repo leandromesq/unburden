@@ -22,13 +22,16 @@ describe("damage engine", () => {
     expect(context?.attackerPokemon.ivs.spe).toBe(31);
   });
 
-  test("emits compact showdown-like damage text without raw rolls", () => {
+  test("emits compact showdown-like damage text and exposes rolls separately", () => {
     const parsed = parseCommand("politoed !muddy-water x incineroar").parsed;
     const [result] = calculateDamageResults(parsed!);
 
     expect(result.damageText).toContain("%");
     expect(result.damageText).toContain("--");
     expect(result.damageText).not.toContain("Rolls:");
+    expect(result.damageRolls).toHaveLength(16);
+    expect(result.damageRolls[0]).toHaveProperty("damage");
+    expect(result.damageRolls[0]).toHaveProperty("percentage");
   });
 
   test("applies defender stages to the relevant defensive stat", () => {
@@ -107,7 +110,7 @@ describe("damage engine", () => {
       "maushold !population-bomb x incineroar",
     ).parsed;
     const explicitParsed = parseCommand(
-      "maushold !population-bomb(2) x incineroar",
+      "maushold !population-bomb[2] x incineroar",
     ).parsed;
 
     const [defaultResult] = calculateDamageResults(defaultParsed!);
@@ -117,6 +120,43 @@ describe("damage engine", () => {
       defaultResult.maxPercentage,
     );
     expect(explicitResult.assumptions).toContain("Hits: 2");
+  });
+
+  test("applies Last Respects stacks as base power overrides", () => {
+    const base = parseCommand(
+      "basculegion !last-respects[0] x incineroar",
+    ).parsed;
+    const stacked = parseCommand(
+      "basculegion !last-respects[3] x incineroar",
+    ).parsed;
+
+    const [baseResult] = calculateDamageResults(base!);
+    const [stackedResult] = calculateDamageResults(stacked!);
+
+    expect(stackedResult.maxPercentage).toBeGreaterThan(
+      baseResult.maxPercentage,
+    );
+    expect(stackedResult.assumptions).toContain("Last Respects stacks: 3");
+  });
+
+  test("can calculate spread moves as single-target hits", () => {
+    const spread = parseCommand("charizard !heat-wave x tinkaton").parsed;
+    const singleTarget = parseCommand(
+      "charizard !heat-wave single-target x tinkaton",
+    ).parsed;
+
+    const [spreadResult] = calculateDamageResults(spread!);
+    const [singleTargetResult] = calculateDamageResults(singleTarget!);
+
+    expect(singleTargetResult.maxPercentage).toBeGreaterThan(
+      spreadResult.maxPercentage,
+    );
+    expect(spreadResult.assumptions).toContain(
+      "Spread move: 0.75x doubles modifier",
+    );
+    expect(singleTargetResult.assumptions).toContain(
+      "Spread move: single target",
+    );
   });
 
   test("applies attacker and defender speed stages to speed-based move calculations", () => {

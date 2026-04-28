@@ -1,10 +1,18 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 import { X } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
 import { GhostSuggestion } from "@/components/omnibar/ghost-suggestion";
+import { PromptHighlightLayer } from "@/components/omnibar/prompt-highlight-layer";
 import { useOmniStore } from "@/store/use-omni-store";
 
 interface OmniTextareaProps {
@@ -67,6 +75,11 @@ export function OmniTextarea({
   const localRef = useRef<HTMLTextAreaElement>(null);
   const pendingSelectionRef = useRef<number | null>(null);
   const ref = textareaRef ?? localRef;
+  const clearPrompt = useCallback(() => {
+    setInput("", 0);
+    pendingSelectionRef.current = 0;
+    setCaretAtEnd(true);
+  }, [setInput]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -125,12 +138,18 @@ export function OmniTextarea({
       if (key === "x") {
         event.preventDefault();
         swapSides();
+        return;
+      }
+
+      if (key === "backspace") {
+        event.preventDefault();
+        clearPrompt();
       }
     };
 
     window.addEventListener("keydown", handleGlobalKeyDown);
     return () => window.removeEventListener("keydown", handleGlobalKeyDown);
-  }, [ref, swapSides]);
+  }, [clearPrompt, ref, swapSides]);
 
   useEffect(() => {
     const element = ref.current;
@@ -168,26 +187,23 @@ export function OmniTextarea({
         <button
           type="button"
           aria-label="Clear prompt"
-          title="Clear prompt"
-          onClick={() => {
-            setInput("", 0);
-            pendingSelectionRef.current = 0;
-            setCaretAtEnd(true);
-          }}
+          title="Clear prompt (Alt+Backspace)"
+          onClick={clearPrompt}
           className="theme-icon-button theme-icon-button-sm absolute right-3 top-3 z-20 md:right-4 md:top-4"
         >
           <X aria-hidden="true" size={15} strokeWidth={2} />
         </button>
       ) : null}
+      <PromptHighlightLayer value={input} textareaRef={ref} />
       <textarea
         ref={ref}
         rows={1}
         data-testid="omni-textarea"
         value={input}
         spellCheck={false}
-        placeholder="politoed !muddy-water @mystic-water x incineroar ~rain"
-        aria-keyshortcuts="Alt+K Alt+X"
-        className="theme-input relative z-10 block min-h-18 w-full min-w-0 resize-none border-0 bg-transparent px-4 py-3 pr-12 text-left font-mono text-base leading-7 tracking-[-0.02em] outline-none md:min-h-20 md:px-5 md:pr-14 md:text-lg"
+        placeholder="#gliscor !earthquake adamant x incineroar bold ~rain"
+        aria-keyshortcuts="Alt+K Alt+X Alt+Backspace"
+        className="theme-input theme-prompt-input relative z-10 block min-h-18 w-full min-w-0 resize-none border-0 bg-transparent px-4 py-3 pr-12 text-left outline-none md:min-h-20 md:px-5 md:pr-14"
         onChange={(event) =>
           setInput(
             event.target.value,
@@ -195,6 +211,17 @@ export function OmniTextarea({
           )
         }
         onKeyDown={(event) => {
+          if (
+            event.altKey &&
+            !event.ctrlKey &&
+            !event.metaKey &&
+            event.key.toLowerCase() === "backspace"
+          ) {
+            event.preventDefault();
+            clearPrompt();
+            return;
+          }
+
           if (
             event.altKey &&
             !event.ctrlKey &&

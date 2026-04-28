@@ -36,6 +36,7 @@ interface SymbolToken {
   value: string;
   hits?: number;
   hitCountInvalid?: boolean;
+  lastRespectsStacks?: number;
   spread?: StatSpread;
   source: LexToken;
 }
@@ -81,28 +82,47 @@ function isExplicitToken(token: LexToken) {
 
 function parseMoveSymbol(raw: string) {
   const body = raw.startsWith("!") ? raw.slice(1) : raw.slice(2);
-  const match = body.match(/^(.*?)(?:\((\d{1,2})\))?$/);
+  const match = body.match(/^(.*?)(?:\((\d{1,2})\)|\[(\d{1,2})\])?$/);
 
   if (!match) {
     return null;
   }
 
-  const [, moveBody, hitCountText] = match;
+  const [, moveBody, parenthesizedParameter, bracketedParameter] = match;
   const value = slugifySymbolValue(moveBody);
 
   if (!value) {
     return null;
   }
 
-  const parsedHitCount = hitCountText ? Number(hitCountText) : undefined;
+  const parameterText = parenthesizedParameter ?? bracketedParameter;
+  const parsedParameter = parameterText ? Number(parameterText) : undefined;
+  const isLastRespects = value === "last-respects";
+  const lastRespectsStacks =
+    isLastRespects && parsedParameter !== undefined ? parsedParameter : undefined;
+  const lastRespectsStacksInvalid =
+    lastRespectsStacks !== undefined &&
+    (!Number.isInteger(lastRespectsStacks) ||
+      lastRespectsStacks < 0 ||
+      lastRespectsStacks > 3);
+  const parsedHitCount =
+    !isLastRespects && parsedParameter !== undefined
+      ? parsedParameter
+      : undefined;
   const hitCountInvalid =
-    parsedHitCount !== undefined &&
-    (!Number.isInteger(parsedHitCount) || parsedHitCount < 1 || parsedHitCount > 10);
+    lastRespectsStacksInvalid ||
+    (parsedHitCount !== undefined &&
+      (!Number.isInteger(parsedHitCount) ||
+        parsedHitCount < 1 ||
+        parsedHitCount > 10));
 
   return {
     value,
     hits: hitCountInvalid ? undefined : parsedHitCount,
     hitCountInvalid,
+    lastRespectsStacks: lastRespectsStacksInvalid
+      ? undefined
+      : lastRespectsStacks,
   };
 }
 
@@ -136,6 +156,7 @@ function parseExplicitSymbolToken(
       value: parsedMove.value,
       hits: parsedMove.hits,
       hitCountInvalid: parsedMove.hitCountInvalid,
+      lastRespectsStacks: parsedMove.lastRespectsStacks,
       source: token,
     };
   }

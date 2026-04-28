@@ -61,6 +61,27 @@ describe("parseCommand", () => {
     expect(result.parsed?.isDoubleTarget).toBe(true);
   });
 
+  test("parses spread target modifiers and Last Respects move parameters", () => {
+    const singleTarget = parseCommand(
+      "basculegion !last-respects[3] single-target x incineroar",
+    );
+    const multiTarget = parseCommand(
+      "charizard !heat-wave single-target multi-target x tinkaton",
+    );
+
+    expect(singleTarget.parsed).toMatchObject({
+      move: "Last Respects",
+      isDoubleTarget: false,
+      lastRespectsStacks: 3,
+      moveTargetMode: "single",
+    });
+    expect(multiTarget.parsed).toMatchObject({
+      move: "Heat Wave",
+      isDoubleTarget: true,
+      moveTargetMode: "multi",
+    });
+  });
+
   test("forces trick room into parsed global effects", () => {
     const result = parseCommand("charizard !heat-wave ~trick-room x incineroar");
 
@@ -385,7 +406,7 @@ describe("parseCommand", () => {
   });
 
   test("parses explicit multi-hit counts on attacker moves", () => {
-    const result = parseCommand("maushold !population-bomb(4) x incineroar");
+    const result = parseCommand("maushold !population-bomb[4] x incineroar");
 
     expect(result.parsed).toMatchObject({
       attacker: "Maushold",

@@ -1,6 +1,11 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 import { ArrowLeftRight, Settings2 } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
@@ -17,14 +22,17 @@ import { parseShareState } from "@/lib/share/parse-share-state";
 import { useOmniStore } from "@/store/use-omni-store";
 import { useTeamStore } from "@/store/use-team-store";
 
+function getWorkbenchSideLabel(
+  segment: ReturnType<typeof useOmniStore.getState>["commandStructure"]["attacker"],
+  fallback: string,
+) {
+  const label = segment.speciesText?.trim();
+  return label || fallback;
+}
+
 export function OmniComposer() {
   const { dictionary } = useI18n();
   const [modifiersOpen, setModifiersOpen] = useState(false);
-  const isHydrated = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
   const { issues, calculationReady, commandStructure, setInput, swapSides } = useOmniStore(
     useShallow((state) => ({
       issues: state.issues,
@@ -41,9 +49,23 @@ export function OmniComposer() {
   const issuesStatusId = useId();
   const resultsStatusId = useId();
   const modifiersSectionId = useId();
+  const attackerLabel = getWorkbenchSideLabel(commandStructure.attacker, "attacker");
+  const defenderLabel = getWorkbenchSideLabel(commandStructure.defender, "defender");
+  const separatorLabel = commandStructure.separatorText ?? "x";
+  const canSwapSides =
+    commandStructure.lexed.hasDelimiter &&
+    commandStructure.defender.speciesTokens.length > 0;
 
   const scrollToResults = () => {
     resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const handleSwapSides = () => {
+    if (!canSwapSides) {
+      return;
+    }
+
+    swapSides();
   };
 
   useEffect(() => {
@@ -129,13 +151,8 @@ export function OmniComposer() {
                 type="button"
                 aria-label={dictionary.home.swapSides}
                 aria-keyshortcuts="Alt+X"
-                onClick={swapSides}
-                disabled={
-                  !isHydrated ||
-                  !commandStructure.lexed.hasDelimiter ||
-                  !commandStructure.defender.speciesTokens.length
-                }
-                className="theme-icon-button theme-icon-button-sm px-2.5 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+                onClick={handleSwapSides}
+                className="theme-icon-button theme-icon-button-sm px-2.5 text-sm"
               >
                 <ArrowLeftRight aria-hidden="true" size={14} strokeWidth={1.9} />
               </button>
@@ -145,6 +162,19 @@ export function OmniComposer() {
           <div className="relative min-w-0">
             <div className="theme-composer min-w-0 rounded-xl">
               <div className="theme-composer-top relative">
+                <div className="theme-workbench-strip flex items-center gap-2 px-4 py-2 md:px-5">
+                  <div className="theme-workbench-segment flex min-w-0 flex-1 flex-col rounded-md px-3 py-1.5">
+                    <span>{dictionary.modifierSwitches.attacker}</span>
+                    <strong className="truncate">{attackerLabel}</strong>
+                  </div>
+                  <div className="theme-data-text rounded-md border border-[var(--line)] bg-[var(--surface-2)] px-2.5 py-1 text-[12px]">
+                    {separatorLabel}
+                  </div>
+                  <div className="theme-workbench-segment flex min-w-0 flex-1 flex-col rounded-md px-3 py-1.5 text-right">
+                    <span>{dictionary.modifierSwitches.defender}</span>
+                    <strong className="truncate">{defenderLabel}</strong>
+                  </div>
+                </div>
                 <OmniTextarea
                   textareaRef={textareaRef}
                   onSubmitReady={scrollToResults}
@@ -167,7 +197,7 @@ export function OmniComposer() {
                   id={modifiersSectionId}
                   className="theme-composer-secondary"
                 >
-                  {isHydrated ? <ModifierSwitches /> : null}
+                  <ModifierSwitches />
                 </div>
               ) : null}
             </div>

@@ -8,7 +8,7 @@ interface GhostSuggestionProps {
   textareaRef: RefObject<HTMLTextAreaElement | null>;
 }
 
-const TEXT_MIRROR_STYLE_KEYS = [
+export const TEXT_MIRROR_STYLE_KEYS = [
   "borderTopWidth",
   "borderRightWidth",
   "borderBottomWidth",

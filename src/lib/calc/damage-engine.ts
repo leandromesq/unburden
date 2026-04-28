@@ -29,6 +29,39 @@ function roundPercent(value: number) {
   return Number(value.toFixed(1));
 }
 
+function extractRollDamages(damage: ReturnType<typeof calculate>["damage"]) {
+  if (typeof damage === "number") {
+    return [damage];
+  }
+
+  if (!Array.isArray(damage)) {
+    return [];
+  }
+
+  if (damage.every((roll): roll is number => typeof roll === "number")) {
+    return damage;
+  }
+
+  const damageByHit = damage.filter((roll): roll is number[] =>
+    Array.isArray(roll),
+  );
+  const rollCount = Math.max(0, ...damageByHit.map((rolls) => rolls.length));
+
+  return Array.from({ length: rollCount }, (_entry, index) =>
+    damageByHit.reduce((sum, rolls) => sum + (rolls[index] ?? 0), 0),
+  );
+}
+
+function buildDamageRolls(
+  damage: ReturnType<typeof calculate>["damage"],
+  maxHP: number,
+) {
+  return extractRollDamages(damage).map((roll) => ({
+    damage: roll,
+    percentage: roundPercent((roll / maxHP) * 100),
+  }));
+}
+
 function toCurrentHp(maxHP: number, percent: number | undefined) {
   if (percent === undefined || percent >= 100) {
     return maxHP;
@@ -734,6 +767,8 @@ function describeAssumptions(
     ratio?: number;
   },
   hasMegaSolOverride?: boolean,
+  lastRespectsStacks?: number,
+  isSpreadMoveSingleTarget?: boolean,
 ) {
   const assumptions: string[] = [];
   const hasWeatherBoost = parsed.globalEffects.includes("sun");
@@ -865,6 +900,12 @@ function describeAssumptions(
 
   if (parsed.isDoubleTarget) {
     assumptions.push("Spread move: 0.75x doubles modifier");
+  } else if (isSpreadMoveSingleTarget) {
+    assumptions.push("Spread move: single target");
+  }
+
+  if (lastRespectsStacks !== undefined) {
+    assumptions.push(`Last Respects stacks: ${lastRespectsStacks}`);
   }
 
   if (parsed.moveHitCount && resolvedMoveHitCount && resolvedMoveHitCount > 1) {
@@ -1182,6 +1223,10 @@ export function buildCalculationContext(
         }
         : undefined,
       hasMegaSolWeatherOverride(attackerAbility),
+      normalizeId(move.name) === "lastrespects"
+        ? parsed.lastRespectsStacks
+        : undefined,
+      move.isSpread && !parsed.isDoubleTarget,
     ),
     moveHitCount,
   };
@@ -1252,17 +1297,30 @@ export function calculateDamageResults(
 
     const defenderPokemon = defenderPokemonResult.pokemon;
 
+    const moveOverrides = {
+      ...(normalizeId(parsed.move) === "lastrespects" &&
+      parsed.lastRespectsStacks !== undefined
+        ? { basePower: 50 * (parsed.lastRespectsStacks + 1) }
+        : {}),
+      ...(context.move.isSpread && !parsed.isDoubleTarget
+        ? { target: "normal" as const }
+        : {}),
+    };
+    const calcMove = new Move(9, parsed.move, {
+      ability: context.attackerAbility,
+      hits: context.moveHitCount,
+      item: context.attackerItem,
+      isCrit: parsed.isCriticalHit,
+      overrides: Object.keys(moveOverrides).length
+        ? moveOverrides
+        : undefined,
+      species: context.attackerCalcSpeciesName,
+    });
     const result = calculate(
       9,
       context.attackerPokemon,
       defenderPokemon,
-      new Move(9, parsed.move, {
-        ability: context.attackerAbility,
-        hits: context.moveHitCount,
-        item: context.attackerItem,
-        isCrit: parsed.isCriticalHit,
-        species: context.attackerCalcSpeciesName,
-      }),
+      calcMove,
       context.field,
     );
     const [minDamage, maxDamage] = result.range();
@@ -1288,6 +1346,7 @@ export function calculateDamageResults(
       showdownText: description.showdownText,
       contextText: description.contextText,
       damageText: description.damageText,
+      damageRolls: buildDamageRolls(result.damage, maxHP),
       assumptions: context.assumptions,
       },
     ];

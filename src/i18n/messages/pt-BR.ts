@@ -19,8 +19,7 @@ export const ptBRDictionary: AppDictionary = {
   home: {
     kicker: "Calculadora de Dano para VGC",
     about: "Sobre",
-    heroDescription:
-      "Escreva o prompt, ajuste os dois lados e compare bulk Min, Mid e Max sem sair do fluxo de edição.",
+    heroDescription: "Calculadora de dano com base em texto.",
     toggleModifiers: "Alternar painel de modificadores",
     modifiers: "Modificadores",
     swapSides: "Trocar atacante e defensor",

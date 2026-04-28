@@ -175,7 +175,7 @@ function StatItem({
           onChange={(event) =>
             onChangeStage(statKey, Number(event.currentTarget.value))
           }
-          className={`theme-control theme-input h-6 shrink-0 rounded-[6px] bg-[var(--surface-2)] px-1.5 text-center font-mono text-[11px] tabular-nums ${
+          className={`theme-control theme-input h-6 shrink-0 rounded-[6px] bg-[var(--surface-3)] px-1.5 text-center font-mono text-[11px] tabular-nums ${
             statKey === "hp" ? "w-16" : "w-13"
           }`}
         />
@@ -199,11 +199,12 @@ export function SummaryStatsGrid({
   return (
     <div className="theme-divider mt-4 border-t pt-3">
       <div className="mb-2">
-        <span className="text-sm font-medium">
+        <span className="theme-data-label">
           {showLevelLabel ? `Stats · Lv. ${level}` : "Base Stats"}
         </span>
       </div>
-      <div className="grid grid-cols-2 gap-x-4 gap-y-2.5">
+      <div className="theme-subpanel rounded-lg p-3">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2.5">
         <StatItem
           statKey="hp"
           label="HP"
@@ -268,6 +269,7 @@ export function SummaryStatsGrid({
           natureEffect={natureEffects.spe}
           onChangeStage={onChangeStage}
         />
+        </div>
       </div>
     </div>
   );

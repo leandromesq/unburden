@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
-import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { DeferredVercelInsights } from "@/components/deferred-vercel-insights";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { I18nProvider } from "@/i18n/I18nProvider";
@@ -28,13 +28,14 @@ import {
 } from "@/lib/persistence/storage-keys";
 import "./globals.css";
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+const ibmPlexSans = IBM_Plex_Sans({
+  variable: "--font-ibm-plex-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
 });
 
 const ibmPlexMono = IBM_Plex_Mono({
-  variable: "--font-jetbrains-mono",
+  variable: "--font-ibm-plex-mono",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
 });
@@ -124,7 +125,7 @@ export default async function RootLayout({
     <html
       lang={initialLocale}
       data-theme={initialTheme}
-      className={`${spaceGrotesk.variable} ${ibmPlexMono.variable} h-full antialiased`}
+      className={`${ibmPlexSans.variable} ${ibmPlexMono.variable} h-full antialiased`}
       style={{ colorScheme: initialTheme }}
     >
       <body

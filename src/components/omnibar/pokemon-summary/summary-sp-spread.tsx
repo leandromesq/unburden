@@ -30,7 +30,7 @@ export function SummarySpSpread({
   return (
     <div className="theme-divider mt-4 border-t pt-3">
       <div className="mb-3 flex items-center justify-between gap-2">
-        <div className="text-sm font-medium">SP Spread</div>
+        <div className="theme-data-label">SP Spread</div>
         <div className="theme-pill-muted rounded-md px-2 py-0.5 text-[10px] font-medium">
           <span
             className="theme-text-dim"
@@ -62,7 +62,7 @@ export function SummarySpSpread({
           return (
             <div
               key={statKey}
-              className="theme-subpanel rounded-lg px-2.5 py-1.5"
+              className="theme-subpanel rounded-md px-2.5 py-1.5"
             >
               <div className="mb-1 flex items-center gap-2">
                 <span className="theme-text-faint w-8 shrink-0 font-mono text-[11px] font-medium">

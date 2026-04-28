@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 import { MoveTypeIcon } from "@/components/omnibar/move-type-icon";
 import { SearchableCombobox } from "@/components/omnibar/searchable-combobox";
@@ -12,6 +12,31 @@ import {
 
 function formatTypeName(type: string) {
   return type.slice(0, 1).toUpperCase() + type.slice(1).toLowerCase();
+}
+
+const TYPE_COLORS: Record<string, string> = {
+  normal: "#8e877a",
+  fire: "#9f6b55",
+  water: "#627f93",
+  electric: "#9b8748",
+  grass: "#6f8865",
+  ice: "#72919d",
+  fighting: "#967061",
+  poison: "#826996",
+  ground: "#9b815f",
+  flying: "#7b8797",
+  psychic: "#9d6c7d",
+  bug: "#7a8663",
+  rock: "#8a7a64",
+  ghost: "#706a8d",
+  dragon: "#6b7695",
+  dark: "#6b655f",
+  steel: "#72777c",
+  fairy: "#a07c8e",
+};
+
+function getTypeColor(type: string) {
+  return TYPE_COLORS[type.toLowerCase()] ?? "#7a766f";
 }
 
 interface SummaryIdentityCardProps {
@@ -62,8 +87,8 @@ export function SummaryIdentityCard({
   onCommitNature,
 }: SummaryIdentityCardProps) {
   return (
-    <div className="mt-3 grid gap-2 sm:grid-cols-[5rem_minmax(0,1fr)] sm:items-start">
-      <div className="theme-subpanel flex h-16 w-16 items-center justify-center rounded-xl p-2 sm:row-span-2 sm:h-full sm:min-h-20 sm:w-20">
+    <div className="mt-3 grid gap-2.5 sm:grid-cols-[5rem_minmax(0,1fr)] sm:items-start">
+      <div className="theme-summary-sprite-shell flex h-16 w-16 items-center justify-center rounded-lg p-2 sm:row-span-2 sm:h-full sm:min-h-20 sm:w-20">
         <PokemonSprite
           sources={spriteSources}
           name={name}
@@ -91,7 +116,8 @@ export function SummaryIdentityCard({
             {types.map((type) => (
               <span
                 key={type}
-                className="theme-chip inline-flex h-6 items-center gap-1 rounded-md px-2 text-[11px] font-medium text-[var(--text-subtle)]"
+                className="theme-type-badge inline-flex h-6 items-center gap-1 rounded-md px-2 text-[11px] font-medium"
+                style={{ "--type-color": getTypeColor(type) } as CSSProperties}
               >
                 <MoveTypeIcon type={type} size={12} />
                 <span>{formatTypeName(type)}</span>

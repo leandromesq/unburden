@@ -246,6 +246,7 @@ function stripModifierTokensByKind(
     | "speed_mod"
     | "nature"
     | "investment"
+    | "move_target"
     | "status",
   statKey?: StageStatKey,
 ) {
@@ -293,6 +294,7 @@ function normalizeSideChipTokensForInsert(
   if (
     definition?.kind === "nature" ||
     definition?.kind === "investment" ||
+    definition?.kind === "move_target" ||
     definition?.kind === "status"
   ) {
     return stripModifierTokensByKind(scope, tokens, definition.kind);

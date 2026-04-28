@@ -118,6 +118,13 @@ export interface ParsedCommand {
   attackerInvestment?: "auto" | "max_atk" | "max_spa";
   defenderInvestment?: "auto" | "max_def" | "max_spd";
   isDoubleTarget: boolean;
+  lastRespectsStacks?: number;
+  moveTargetMode?: "single" | "multi";
+}
+
+export interface DamageRoll {
+  damage: number;
+  percentage: number;
 }
 
 export interface DamageResult {
@@ -130,6 +137,7 @@ export interface DamageResult {
   showdownText: string;
   contextText: string;
   damageText: string;
+  damageRolls: DamageRoll[];
   assumptions: string[];
 }
 
