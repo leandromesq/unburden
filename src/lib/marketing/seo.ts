@@ -7,8 +7,6 @@ export const SITE_DESCRIPTION =
 export const SITE_ABOUT_TITLE = `About ${SITE_NAME} | Pokemon VGC Calculator`;
 export const SITE_ABOUT_DESCRIPTION =
   "Learn how Unburden VGC speeds up Pokemon Champions teambuilding with prompt-first damage calculation, saved sets, and doubles-focused matchup tools.";
-export const SITE_SHARE_IMAGE_SUBTITLE =
-  "Fast Pokemon VGC damage calculation for testing doubles matchups, Champions SP spreads, saved sets, and bulk ranges.";
 export const SITE_SHARE_IMAGE_ALT =
   "Unburden VGC share image with a tactical grid background, the app name, and a subtitle about fast Pokemon VGC damage calculation.";
 export const SITE_AUTHOR_NAME = "Leandro Mesquita";
