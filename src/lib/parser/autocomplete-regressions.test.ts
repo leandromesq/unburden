@@ -69,4 +69,17 @@ describe("autocomplete regressions", () => {
     expect(values).not.toContain("basculegion-f");
     expect(values.some((value) => value.startsWith("fr"))).toBe(true);
   });
+
+  test("offers explicit Aegislash defender forms without collapsing them to base species", () => {
+    const input = "incineroar !flare-blitz x aegislash-s";
+    const result = getAutocompleteState(input);
+    const values = result.suggestionOptions.map((option) => option.value);
+
+    expect(result.activeSuggestion?.slot).toBe("defender_pokemon");
+    expect(values).toContain("aegislash-shield");
+    expect(values).toContain("aegislash-blade");
+    expect(result.suggestionOptions[0]?.applyText).toBe(
+      "incineroar !flare-blitz x aegislash-shield",
+    );
+  });
 });

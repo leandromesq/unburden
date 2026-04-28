@@ -72,7 +72,30 @@ type StaticDataBuildOptions = {
   regulationAllowedPokemonIds: string[];
 };
 
+type ChampionsMoveOverride = Partial<
+  Pick<MoveEntry, "type" | "category" | "basePower" | "accuracy">
+>;
+
 const EXTRA_SPECIES_NAMES = ["Floette-Eternal"];
+const CHAMPIONS_EXTRA_MOVE_IDS = ["snaptrap"];
+const CHAMPIONS_MOVE_OVERRIDES = new Map<string, ChampionsMoveOverride>([
+  ["growth", { type: "Grass" }],
+  ["crabhammer", { accuracy: 95 }],
+  ["bonerush", { basePower: 30 }],
+  ["nightdaze", { basePower: 90 }],
+  ["firstimpression", { basePower: 100 }],
+  ["spiritshackle", { basePower: 90 }],
+  ["firelash", { basePower: 90 }],
+  ["tropkick", { basePower: 85 }],
+  ["beakblast", { basePower: 120 }],
+  ["snaptrap", { type: "Steel" }],
+  ["appleacid", { basePower: 90 }],
+  ["gravapple", { basePower: 90 }],
+  ["psyshieldbash", { basePower: 90 }],
+  ["mountaingale", { basePower: 120 }],
+  ["infernalparade", { basePower: 65 }],
+  ["syrupbomb", { accuracy: 90 }],
+]);
 const SPECIAL_BASE_SPECIES_IDS = new Map<string, string>([
   ["floettemega", "floetteeternal"],
 ]);
@@ -447,19 +470,49 @@ export async function buildStaticDataSnapshot({
   pokemonEntries.sort((a, b) => a.name.localeCompare(b.name));
 
   const moveEntries: MoveEntry[] = [];
+  const moveIds = new Set<string>();
 
-  for (const move of gen.moves) {
+  const addMoveEntry = (move: {
+    id: string;
+    name: string;
+    type: string;
+    category: string;
+    basePower: number;
+    accuracy: number | boolean;
+    target: string;
+  }) => {
+    const override = CHAMPIONS_MOVE_OVERRIDES.get(move.id);
+
+    if (moveIds.has(move.id)) {
+      return;
+    }
+
+    moveIds.add(move.id);
     moveEntries.push({
       id: move.id,
       name: move.name,
       aliases: aliasVariants(move.name),
-      type: move.type,
-      category: move.category,
-      basePower: move.basePower,
-      accuracy: typeof move.accuracy === "number" ? move.accuracy : null,
+      type: override?.type ?? move.type,
+      category: override?.category ?? move.category,
+      basePower: override?.basePower ?? move.basePower,
+      accuracy:
+        override?.accuracy ??
+        (typeof move.accuracy === "number" ? move.accuracy : null),
       target: move.target,
       isSpread: ["allAdjacent", "allAdjacentFoes"].includes(move.target),
     });
+  };
+
+  for (const move of gen.moves) {
+    addMoveEntry(move);
+  }
+
+  for (const moveId of CHAMPIONS_EXTRA_MOVE_IDS) {
+    const move = Dex.moves.get(moveId);
+
+    if (move.exists) {
+      addMoveEntry(move);
+    }
   }
 
   moveEntries.sort((a, b) => a.name.localeCompare(b.name));

@@ -1,3 +1,4 @@
+import { normalizeAlias } from "@/lib/data/loaders";
 import { searchPokemonEntities } from "@/lib/parser/fuse-indexes";
 import { joinTokenValues } from "@/lib/parser/tokenize";
 import { searchSetReferences } from "@/lib/team/set-references";
@@ -10,6 +11,19 @@ import {
   replaceRangeWithCursor,
 } from "@/lib/parser/resolvers/shared";
 import type { SlotResolver } from "@/lib/parser/resolvers/types";
+
+const AEGISLASH_DEFENDER_FORMS = [
+  {
+    label: "Aegislash-Shield",
+    value: "aegislash-shield",
+    aliases: ["aegislash shield", "aegislash-shield"],
+  },
+  {
+    label: "Aegislash-Blade",
+    value: "aegislash-blade",
+    aliases: ["aegislash sword", "aegislash-sword", "aegislash blade"],
+  },
+] as const;
 
 export const resolveDefenderSpeciesSuggestion: SlotResolver = (context) => {
   if (context.defenderSpeciesLocked) {
@@ -98,9 +112,13 @@ export const resolveDefenderSpeciesSuggestion: SlotResolver = (context) => {
     return { activeSuggestion: active, suggestionOptions: options };
   }
 
-  const options: SuggestionOption[] = searchPokemonEntities(query, 6).map(
-    (match) => {
-      const speciesText = formatSpeciesText(match.entry.name);
+  function buildPokemonOption({
+    label,
+    speciesText,
+  }: {
+    label: string;
+    speciesText: string;
+  }): SuggestionOption {
       const mergedSuffixTokens =
         context.cursorIndex === context.input.length
           ? []
@@ -154,12 +172,37 @@ export const resolveDefenderSpeciesSuggestion: SlotResolver = (context) => {
       return {
         type: "pokemon",
         value: speciesText,
-        label: match.entry.name,
+        label,
         applyText,
         cursorOffset,
       };
-    },
+  }
+
+  const normalizedQuery = normalizeAlias(query);
+  const aegislashOptions = normalizedQuery
+    ? AEGISLASH_DEFENDER_FORMS.filter((form) =>
+        form.aliases.some((alias) =>
+          normalizeAlias(alias).startsWith(normalizedQuery),
+        ),
+      ).map((form) =>
+        buildPokemonOption({
+          label: form.label,
+          speciesText: form.value,
+        }),
+      )
+    : [];
+  const regularOptions = searchPokemonEntities(query, 6).map((match) =>
+    buildPokemonOption({
+      label: match.entry.name,
+      speciesText: formatSpeciesText(match.entry.name),
+    }),
   );
+  const options: SuggestionOption[] = [...aegislashOptions, ...regularOptions]
+    .filter(
+      (option, index, collection) =>
+        collection.findIndex((entry) => entry.value === option.value) === index,
+    )
+    .slice(0, 6);
   const active = options[0]
     ? buildActiveSuggestion(
         "defender_pokemon",

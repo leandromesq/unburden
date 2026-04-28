@@ -8,22 +8,16 @@
       "Blizzard",
       "Protect",
       "Giga Drain",
-      "Aurora Veil",
       "Earth Power",
-      "Weather Ball",
-      "Wood Hammer",
       "Energy Ball",
-      "Earthquake",
-      "Icicle Spear"
+      "Aurora Veil",
+      "Wood Hammer",
+      "Ice Shard",
+      "Focus Blast",
+      "Weather Ball"
     ],
-    "commonAbilities": [
-      "Snow Warning"
-    ],
-    "commonItems": [
-      "Abomasite",
-      "Focus Sash",
-      "Quick Claw"
-    ]
+    "commonAbilities": ["Snow Warning"],
+    "commonItems": ["Abomasite", "Sitrus Berry"]
   },
   {
     "pokemonId": "abomasnowmega",
@@ -34,46 +28,35 @@
       "Blizzard",
       "Protect",
       "Giga Drain",
-      "Aurora Veil",
       "Earth Power",
-      "Weather Ball",
-      "Wood Hammer",
       "Energy Ball",
-      "Earthquake",
-      "Icicle Spear"
+      "Aurora Veil",
+      "Wood Hammer",
+      "Ice Shard",
+      "Focus Blast",
+      "Weather Ball"
     ],
-    "commonAbilities": [
-      "Snow Warning"
-    ],
-    "commonItems": [
-      "Abomasite"
-    ]
+    "commonAbilities": ["Snow Warning"],
+    "commonItems": ["Abomasite"]
   },
   {
     "pokemonId": "absol",
-    "defaultItem": "Absolite",
+    "defaultItem": "Scope Lens",
     "defaultAbility": "Super Luck",
     "defaultMove": "Close Combat",
     "commonMoves": [
       "Sucker Punch",
-      "Protect",
       "Close Combat",
+      "Protect",
       "Night Slash",
-      "Shadow Claw",
-      "Stone Edge",
+      "Knock Off",
       "Psycho Cut",
-      "Swords Dance",
-      "Play Rough",
-      "Knock Off"
+      "Feint",
+      "Stone Edge",
+      "Phantom Force"
     ],
-    "commonAbilities": [
-      "Super Luck",
-      "Justified"
-    ],
-    "commonItems": [
-      "Absolite",
-      "Scope Lens"
-    ]
+    "commonAbilities": ["Super Luck", "Justified"],
+    "commonItems": ["Scope Lens", "Absolite"]
   },
   {
     "pokemonId": "absolmega",
@@ -82,20 +65,17 @@
     "defaultMove": "Close Combat",
     "commonMoves": [
       "Sucker Punch",
-      "Protect",
       "Close Combat",
+      "Protect",
       "Night Slash",
-      "Shadow Claw",
-      "Stone Edge",
+      "Knock Off",
       "Psycho Cut",
-      "Swords Dance",
-      "Play Rough",
-      "Knock Off"
+      "Feint",
+      "Stone Edge",
+      "Phantom Force"
     ],
-    "commonAbilities": [],
-    "commonItems": [
-      "Absolite"
-    ]
+    "commonAbilities": ["Magic Bounce"],
+    "commonItems": ["Absolite"]
   },
   {
     "pokemonId": "aegislash",
@@ -103,30 +83,28 @@
     "defaultAbility": "Stance Change",
     "defaultMove": "Close Combat",
     "commonMoves": [
-      "Shadow Sneak",
       "Poltergeist",
+      "Shadow Sneak",
       "Iron Head",
-      "Shadow Ball",
-      "Flash Cannon",
       "Sacred Sword",
       "Wide Guard",
+      "Shadow Ball",
+      "Flash Cannon",
       "Close Combat",
-      "Substitute"
+      "Protect"
     ],
-    "commonAbilities": [
-      "Stance Change"
-    ],
+    "commonAbilities": ["Stance Change"],
     "commonItems": [
       "Spell Tag",
       "Leftovers",
       "Focus Sash",
       "White Herb",
-      "Sitrus Berry",
-      "Metal Coat",
       "Colbur Berry",
+      "Metal Coat",
+      "Sitrus Berry",
       "Occa Berry",
       "Kasib Berry",
-      "Bright Powder"
+      "Shuca Berry"
     ]
   },
   {
@@ -136,31 +114,27 @@
     "defaultMove": "Earthquake",
     "commonMoves": [
       "Rock Slide",
+      "Tailwind",
       "Dual Wingbeat",
       "Protect",
-      "Tailwind",
       "Wide Guard",
-      "Iron Head",
-      "Ice Fang",
-      "Earthquake",
       "Taunt",
-      "Crunch"
+      "Ice Fang",
+      "Iron Head",
+      "Earthquake",
+      "Psychic Fangs"
     ],
-    "commonAbilities": [
-      "Unnerve",
-      "Pressure",
-      "Rock Head"
-    ],
+    "commonAbilities": ["Unnerve", "Rock Head", "Pressure"],
     "commonItems": [
       "Focus Sash",
       "Aerodactylite",
       "Lum Berry",
       "Sitrus Berry",
-      "White Herb",
-      "Sharp Beak",
-      "Choice Scarf",
+      "Hard Stone",
+      "King's Rock",
+      "Mental Herb",
       "Leftovers",
-      "Mental Herb"
+      "White Herb"
     ]
   },
   {
@@ -170,22 +144,18 @@
     "defaultMove": "Earthquake",
     "commonMoves": [
       "Rock Slide",
+      "Tailwind",
       "Dual Wingbeat",
       "Protect",
-      "Tailwind",
       "Wide Guard",
-      "Iron Head",
-      "Ice Fang",
-      "Earthquake",
       "Taunt",
-      "Crunch"
+      "Ice Fang",
+      "Iron Head",
+      "Earthquake",
+      "Psychic Fangs"
     ],
-    "commonAbilities": [
-      "Tough Claws"
-    ],
-    "commonItems": [
-      "Aerodactylite"
-    ]
+    "commonAbilities": ["Tough Claws"],
+    "commonItems": ["Aerodactylite"]
   },
   {
     "pokemonId": "aggron",
@@ -193,27 +163,25 @@
     "defaultAbility": "Sturdy",
     "defaultMove": "Earthquake",
     "commonMoves": [
+      "Body Press",
       "Heavy Slam",
       "Protect",
-      "Body Press",
       "Iron Defense",
-      "Iron Head",
       "Rock Slide",
+      "Iron Head",
       "Earthquake",
-      "Stone Edge",
-      "Stealth Rock",
-      "Metal Burst"
+      "Rest",
+      "Curse",
+      "Sleep Talk"
     ],
-    "commonAbilities": [
-      "Sturdy",
-      "Heavy Metal",
-      "Rock Head"
-    ],
+    "commonAbilities": ["Sturdy", "Heavy Metal", "Rock Head"],
     "commonItems": [
       "Aggronite",
+      "Shell Bell",
       "Leftovers",
-      "Bright Powder",
-      "Shell Bell"
+      "Metal Coat",
+      "Focus Sash",
+      "Quick Claw"
     ]
   },
   {
@@ -222,23 +190,19 @@
     "defaultAbility": "Filter",
     "defaultMove": "Earthquake",
     "commonMoves": [
+      "Body Press",
       "Heavy Slam",
       "Protect",
-      "Body Press",
       "Iron Defense",
-      "Iron Head",
       "Rock Slide",
+      "Iron Head",
       "Earthquake",
-      "Stone Edge",
-      "Stealth Rock",
-      "Metal Burst"
+      "Rest",
+      "Curse",
+      "Sleep Talk"
     ],
-    "commonAbilities": [
-      "Filter"
-    ],
-    "commonItems": [
-      "Aggronite"
-    ]
+    "commonAbilities": ["Filter"],
+    "commonItems": ["Aggronite"]
   },
   {
     "pokemonId": "alakazam",
@@ -250,21 +214,22 @@
       "Expanding Force",
       "Focus Blast",
       "Psychic",
-      "Nasty Plot",
       "Speed Swap",
       "Dazzling Gleam",
+      "Nasty Plot",
       "Light Screen",
-      "Shadow Ball",
+      "Encore",
       "Reflect"
     ],
-    "commonAbilities": [
-      "Inner Focus",
-      "Magic Guard"
-    ],
+    "commonAbilities": ["Inner Focus", "Magic Guard"],
     "commonItems": [
       "Alakazite",
       "Focus Sash",
-      "Colbur Berry"
+      "Colbur Berry",
+      "Lum Berry",
+      "Mental Herb",
+      "Choice Scarf",
+      "Twisted Spoon"
     ]
   },
   {
@@ -277,46 +242,41 @@
       "Expanding Force",
       "Focus Blast",
       "Psychic",
-      "Nasty Plot",
       "Speed Swap",
       "Dazzling Gleam",
+      "Nasty Plot",
       "Light Screen",
-      "Shadow Ball",
+      "Encore",
       "Reflect"
     ],
-    "commonAbilities": [
-      "Trace"
-    ],
-    "commonItems": [
-      "Alakazite"
-    ]
+    "commonAbilities": [],
+    "commonItems": ["Alakazite"]
   },
   {
     "pokemonId": "alcremie",
-    "defaultItem": "Sitrus Berry",
+    "defaultItem": "Leftovers",
     "defaultAbility": "Aroma Veil",
     "defaultMove": "Dazzling Gleam",
     "commonMoves": [
       "Dazzling Gleam",
       "Decorate",
       "Protect",
-      "Encore",
       "Recover",
       "Helping Hand",
+      "Encore",
+      "Aromatic Mist",
       "Calm Mind",
-      "Light Screen",
-      "Aromatic Mist"
+      "Baby-Doll Eyes",
+      "Light Screen"
     ],
-    "commonAbilities": [
-      "Aroma Veil",
-      "Sweet Veil"
-    ],
+    "commonAbilities": ["Aroma Veil", "Sweet Veil"],
     "commonItems": [
+      "Leftovers",
       "Sitrus Berry",
-      "Babiri Berry",
-      "Focus Sash",
+      "Mental Herb",
       "Kebia Berry",
-      "Leftovers"
+      "Babiri Berry",
+      "Shell Bell"
     ]
   },
   {
@@ -326,28 +286,27 @@
     "defaultMove": "Draco Meteor",
     "commonMoves": [
       "Protect",
-      "Draco Meteor",
       "Tailwind",
-      "Roost",
-      "Perish Song",
       "Hyper Voice",
-      "Will-O-Wisp",
-      "Cotton Guard",
+      "Roost",
+      "Draco Meteor",
+      "Flamethrower",
+      "Helping Hand",
       "Dragon Pulse",
-      "Moonblast"
+      "Brave Bird",
+      "Cotton Guard"
     ],
-    "commonAbilities": [
-      "Cloud Nine",
-      "Natural Cure"
-    ],
+    "commonAbilities": ["Cloud Nine", "Natural Cure"],
     "commonItems": [
       "Altarianite",
       "Leftovers",
-      "Haban Berry",
       "Focus Sash",
-      "Yache Berry",
       "Lum Berry",
-      "Roseli Berry"
+      "Haban Berry",
+      "Sitrus Berry",
+      "Roseli Berry",
+      "Yache Berry",
+      "Mental Herb"
     ]
   },
   {
@@ -357,22 +316,18 @@
     "defaultMove": "Draco Meteor",
     "commonMoves": [
       "Protect",
-      "Draco Meteor",
       "Tailwind",
-      "Roost",
-      "Perish Song",
       "Hyper Voice",
-      "Will-O-Wisp",
-      "Cotton Guard",
+      "Roost",
+      "Draco Meteor",
+      "Flamethrower",
+      "Helping Hand",
       "Dragon Pulse",
-      "Moonblast"
+      "Brave Bird",
+      "Cotton Guard"
     ],
-    "commonAbilities": [
-      "Pixilate"
-    ],
-    "commonItems": [
-      "Altarianite"
-    ]
+    "commonAbilities": [],
+    "commonItems": ["Altarianite"]
   },
   {
     "pokemonId": "ampharos",
@@ -384,19 +339,15 @@
       "Protect",
       "Thunderbolt",
       "Volt Switch",
-      "Thunder",
       "Power Gem",
-      "Dazzling Gleam",
-      "Substitute",
       "Discharge",
+      "Dazzling Gleam",
+      "Thunder",
+      "Parabolic Charge",
       "Focus Blast"
     ],
-    "commonAbilities": [
-      "Static"
-    ],
-    "commonItems": [
-      "Ampharosite"
-    ]
+    "commonAbilities": ["Static", "Plus"],
+    "commonItems": ["Ampharosite", "Bright Powder"]
   },
   {
     "pokemonId": "ampharosmega",
@@ -408,19 +359,34 @@
       "Protect",
       "Thunderbolt",
       "Volt Switch",
-      "Thunder",
       "Power Gem",
-      "Dazzling Gleam",
-      "Substitute",
       "Discharge",
+      "Dazzling Gleam",
+      "Thunder",
+      "Parabolic Charge",
       "Focus Blast"
     ],
-    "commonAbilities": [
-      "Mold Breaker"
+    "commonAbilities": ["Mold Breaker"],
+    "commonItems": ["Ampharosite"]
+  },
+  {
+    "pokemonId": "appletun",
+    "defaultItem": "Leftovers",
+    "defaultAbility": "Thick Fat",
+    "defaultMove": "Draco Meteor",
+    "commonMoves": [
+      "Protect",
+      "Apple Acid",
+      "Leech Seed",
+      "Draco Meteor",
+      "Dragon Pulse",
+      "Giga Drain",
+      "Substitute",
+      "Body Press",
+      "Energy Ball"
     ],
-    "commonItems": [
-      "Ampharosite"
-    ]
+    "commonAbilities": ["Thick Fat"],
+    "commonItems": ["Leftovers"]
   },
   {
     "pokemonId": "araquanid",
@@ -429,27 +395,47 @@
     "defaultMove": "Liquidation",
     "commonMoves": [
       "Liquidation",
-      "Protect",
       "Wide Guard",
+      "Protect",
       "Leech Life",
       "Lunge",
-      "Infestation",
-      "Icy Wind",
       "Poison Jab",
-      "Mirror Coat",
-      "Bug Bite"
+      "Rain Dance",
+      "Infestation",
+      "Bug Bite",
+      "Icy Wind"
     ],
-    "commonAbilities": [
-      "Water Bubble",
-      "Water Absorb"
-    ],
+    "commonAbilities": ["Water Bubble", "Water Absorb"],
     "commonItems": [
       "Mystic Water",
       "Leftovers",
-      "Lum Berry",
       "Sitrus Berry",
-      "Shell Bell"
+      "Lum Berry",
+      "White Herb",
+      "Shell Bell",
+      "Quick Claw",
+      "Focus Sash",
+      "Wacan Berry",
+      "Mental Herb"
     ]
+  },
+  {
+    "pokemonId": "arbok",
+    "defaultItem": "Shuca Berry",
+    "defaultAbility": "Intimidate",
+    "defaultMove": "Gunk Shot",
+    "commonMoves": [
+      "Protect",
+      "Sucker Punch",
+      "Glare",
+      "Breaking Swipe",
+      "Toxic",
+      "Ice Fang",
+      "Gunk Shot",
+      "Earthquake"
+    ],
+    "commonAbilities": ["Intimidate"],
+    "commonItems": ["Shuca Berry", "Sitrus Berry"]
   },
   {
     "pokemonId": "arcanine",
@@ -465,24 +451,20 @@
       "Play Rough",
       "Close Combat",
       "Wild Charge",
-      "Temper Flare"
+      "Psychic Fangs"
     ],
-    "commonAbilities": [
-      "Intimidate",
-      "Justified",
-      "Flash Fire"
-    ],
+    "commonAbilities": ["Intimidate", "Justified"],
     "commonItems": [
       "Sitrus Berry",
       "Leftovers",
-      "Shuca Berry",
       "Lum Berry",
+      "Shuca Berry",
       "Charcoal",
       "White Herb",
-      "Focus Sash",
-      "Quick Claw",
-      "Black Belt",
-      "Chesto Berry"
+      "Passho Berry",
+      "Chesto Berry",
+      "Shell Bell",
+      "Quick Claw"
     ]
   },
   {
@@ -493,30 +475,27 @@
     "commonMoves": [
       "Flare Blitz",
       "Rock Slide",
-      "Protect",
       "Extreme Speed",
+      "Protect",
       "Head Smash",
-      "Howl",
       "Close Combat",
       "Wild Charge",
+      "Snarl",
       "Will-O-Wisp",
-      "Snarl"
+      "Psychic Fangs"
     ],
-    "commonAbilities": [
-      "Intimidate",
-      "Rock Head"
-    ],
+    "commonAbilities": ["Intimidate", "Rock Head", "Flash Fire"],
     "commonItems": [
       "Focus Sash",
       "Choice Scarf",
-      "White Herb",
-      "Shuca Berry",
-      "Sitrus Berry",
-      "Lum Berry",
       "Chople Berry",
+      "Sitrus Berry",
+      "Shuca Berry",
+      "Lum Berry",
       "Hard Stone",
+      "White Herb",
       "Passho Berry",
-      "Leftovers"
+      "Charcoal"
     ]
   },
   {
@@ -531,27 +510,22 @@
       "Draco Meteor",
       "Dragon Pulse",
       "Aura Sphere",
-      "Snarl",
       "Thunderbolt",
-      "Steel Beam",
-      "Dark Pulse"
+      "Snarl",
+      "Steel Beam"
     ],
-    "commonAbilities": [
-      "Stamina",
-      "Sturdy",
-      "Stalwart"
-    ],
+    "commonAbilities": ["Stamina", "Sturdy", "Stalwart"],
     "commonItems": [
       "Leftovers",
-      "Magnet",
-      "White Herb",
       "Chople Berry",
-      "Sitrus Berry",
-      "Dragon Fang",
       "Choice Scarf",
-      "Shuca Berry",
-      "Bright Powder",
-      "Quick Claw"
+      "Sitrus Berry",
+      "White Herb",
+      "Magnet",
+      "Dragon Fang",
+      "Metal Coat",
+      "Quick Claw",
+      "Shuca Berry"
     ]
   },
   {
@@ -560,102 +534,162 @@
     "defaultAbility": "Insomnia",
     "defaultMove": "First Impression",
     "commonMoves": [
-      "Toxic Spikes",
-      "Cross Poison",
       "Rage Powder",
-      "Sticky Web",
-      "Sunny Day",
+      "Toxic Thread",
       "Leech Life",
-      "Knock Off",
+      "String Shot",
+      "Protect",
       "First Impression",
-      "Sucker Punch",
-      "Toxic"
+      "Struggle Bug",
+      "Toxic Spikes",
+      "Poison Jab",
+      "Cross Poison"
     ],
-    "commonAbilities": [
-      "Insomnia",
-      "Sniper"
-    ],
+    "commonAbilities": ["Insomnia", "Swarm", "Sniper"],
     "commonItems": [
       "Bright Powder",
-      "Leftovers",
-      "Focus Sash"
+      "Sitrus Berry",
+      "Focus Sash",
+      "Occa Berry",
+      "Scope Lens",
+      "Leftovers"
     ]
   },
   {
     "pokemonId": "armarouge",
-    "defaultItem": "White Herb",
+    "defaultItem": "Sitrus Berry",
     "defaultAbility": "Flash Fire",
     "defaultMove": "Armor Cannon",
     "commonMoves": [
       "Armor Cannon",
-      "Expanding Force",
+      "Wide Guard",
+      "Protect",
       "Psychic",
       "Trick Room",
-      "Protect",
-      "Wide Guard",
       "Heat Wave",
-      "Aura Sphere",
+      "Expanding Force",
       "Energy Ball",
-      "Psyshock"
+      "Psyshock",
+      "Aura Sphere"
     ],
-    "commonAbilities": [
-      "Flash Fire",
-      "Weak Armor"
-    ],
+    "commonAbilities": ["Flash Fire", "Weak Armor"],
     "commonItems": [
-      "White Herb",
-      "Lum Berry",
-      "Twisted Spoon",
-      "Mental Herb",
-      "Focus Sash",
       "Sitrus Berry",
+      "Twisted Spoon",
+      "White Herb",
+      "Focus Sash",
       "Quick Claw",
-      "Shell Bell",
-      "Choice Scarf",
-      "Charcoal"
+      "Focus Band",
+      "Mental Herb",
+      "Colbur Berry",
+      "Shuca Berry",
+      "Lum Berry"
     ]
+  },
+  {
+    "pokemonId": "aromatisse",
+    "defaultItem": "Leftovers",
+    "defaultAbility": "Aroma Veil",
+    "defaultMove": "Moonblast",
+    "commonMoves": [
+      "Trick Room",
+      "Moonblast",
+      "Helping Hand",
+      "Heal Pulse",
+      "Ally Switch",
+      "Protect",
+      "Encore",
+      "Dazzling Gleam"
+    ],
+    "commonAbilities": ["Aroma Veil"],
+    "commonItems": ["Leftovers", "Sitrus Berry", "Kebia Berry", "Lum Berry"]
+  },
+  {
+    "pokemonId": "audino",
+    "defaultItem": "Audinite",
+    "defaultAbility": "Regenerator",
+    "defaultMove": "Hyper Beam",
+    "commonMoves": [
+      "Protect",
+      "Dazzling Gleam",
+      "Trick Room",
+      "Life Dew",
+      "Helping Hand",
+      "Hyper Beam",
+      "Fire Blast",
+      "Thunderbolt"
+    ],
+    "commonAbilities": ["Regenerator", "Healer"],
+    "commonItems": ["Audinite", "Leftovers"]
+  },
+  {
+    "pokemonId": "audinomega",
+    "defaultItem": "Audinite",
+    "defaultAbility": "Healer",
+    "defaultMove": "Hyper Beam",
+    "commonMoves": [
+      "Protect",
+      "Dazzling Gleam",
+      "Trick Room",
+      "Life Dew",
+      "Helping Hand",
+      "Hyper Beam",
+      "Fire Blast",
+      "Thunderbolt"
+    ],
+    "commonAbilities": ["Healer"],
+    "commonItems": ["Audinite"]
+  },
+  {
+    "pokemonId": "aurorus",
+    "defaultItem": "Focus Sash",
+    "defaultAbility": "Snow Warning",
+    "defaultMove": "Blizzard",
+    "commonMoves": [
+      "Blizzard",
+      "Aurora Veil",
+      "Protect",
+      "Ancient Power",
+      "Freeze-Dry",
+      "Icy Wind",
+      "Thunderbolt",
+      "Weather Ball",
+      "Light Screen",
+      "Hyper Voice"
+    ],
+    "commonAbilities": ["Snow Warning", "Refrigerate"],
+    "commonItems": ["Focus Sash", "Leftovers", "Sitrus Berry", "Chople Berry"]
   },
   {
     "pokemonId": "avalugg",
     "defaultItem": "Leftovers",
-    "defaultAbility": "Sturdy",
-    "defaultMove": "Hydro Pump",
-    "commonMoves": [
-      "Icicle Spear",
-      "Body Press",
-      "Stone Edge",
-      "Hydro Pump"
-    ],
-    "commonAbilities": [
-      "Sturdy"
-    ],
-    "commonItems": [
-      "Leftovers"
-    ]
+    "defaultAbility": "Ice Body",
+    "defaultMove": "Body Press",
+    "commonMoves": ["Body Press", "Iron Defense", "Ice Spinner", "Protect"],
+    "commonAbilities": ["Ice Body"],
+    "commonItems": ["Leftovers"]
   },
   {
     "pokemonId": "avalugghisui",
-    "defaultItem": "Leftovers",
+    "defaultItem": "White Herb",
     "defaultAbility": "Sturdy",
-    "defaultMove": "Hydro Pump",
+    "defaultMove": "Mountain Gale",
     "commonMoves": [
-      "Icicle Spear",
-      "Body Press",
-      "Stone Edge",
-      "Hydro Pump"
+      "Mountain Gale",
+      "Rock Slide",
+      "Protect",
+      "High Horsepower",
+      "Wide Guard",
+      "Body Press"
     ],
-    "commonAbilities": [
-      "Sturdy"
-    ],
-    "commonItems": [
-      "Leftovers"
-    ]
+    "commonAbilities": ["Sturdy"],
+    "commonItems": ["White Herb", "Leftovers", "King's Rock"]
   },
   {
     "pokemonId": "azumarill",
     "defaultItem": "Sitrus Berry",
     "defaultAbility": "Huge Power",
-    "defaultMove": "Superpower",
+    "defaultMove": "Hyper Beam",
     "commonMoves": [
       "Aqua Jet",
       "Play Rough",
@@ -663,52 +697,43 @@
       "Protect",
       "Liquidation",
       "Superpower",
-      "Ice Spinner",
       "Knock Off",
-      "Ice Punch",
-      "Perish Song"
+      "Ice Spinner",
+      "Hyper Beam",
+      "Whirlpool"
     ],
-    "commonAbilities": [
-      "Huge Power",
-      "Sap Sipper",
-      "Thick Fat"
-    ],
+    "commonAbilities": ["Huge Power", "Sap Sipper", "Thick Fat"],
     "commonItems": [
       "Sitrus Berry",
       "Mystic Water",
-      "Quick Claw",
       "Leftovers",
-      "White Herb",
+      "Quick Claw",
       "Chesto Berry",
-      "Focus Sash"
+      "Focus Sash",
+      "Fairy Feather",
+      "Kebia Berry",
+      "White Herb"
     ]
   },
   {
     "pokemonId": "banette",
     "defaultItem": "Banettite",
-    "defaultAbility": "Insomnia",
+    "defaultAbility": "Cursed Body",
     "defaultMove": "Poltergeist",
     "commonMoves": [
+      "Will-O-Wisp",
+      "Destiny Bond",
       "Poltergeist",
       "Encore",
-      "Thief",
-      "Hex",
-      "Protect",
-      "Swagger",
-      "Shadow Sneak",
-      "Will-O-Wisp",
       "Disable",
-      "Rain Dance"
+      "Rain Dance",
+      "Shadow Sneak",
+      "Protect",
+      "Shadow Claw",
+      "Taunt"
     ],
-    "commonAbilities": [
-      "Insomnia",
-      "Cursed Body",
-      "Frisk"
-    ],
-    "commonItems": [
-      "Banettite",
-      "Bright Powder"
-    ]
+    "commonAbilities": ["Cursed Body", "Frisk", "Insomnia"],
+    "commonItems": ["Banettite"]
   },
   {
     "pokemonId": "banettemega",
@@ -716,21 +741,19 @@
     "defaultAbility": "Insomnia",
     "defaultMove": "Poltergeist",
     "commonMoves": [
+      "Will-O-Wisp",
+      "Destiny Bond",
       "Poltergeist",
       "Encore",
-      "Thief",
-      "Hex",
-      "Protect",
-      "Swagger",
-      "Shadow Sneak",
-      "Will-O-Wisp",
       "Disable",
-      "Rain Dance"
+      "Rain Dance",
+      "Shadow Sneak",
+      "Protect",
+      "Shadow Claw",
+      "Taunt"
     ],
     "commonAbilities": [],
-    "commonItems": [
-      "Banettite"
-    ]
+    "commonItems": ["Banettite"]
   },
   {
     "pokemonId": "basculegion",
@@ -739,31 +762,28 @@
     "defaultMove": "Wave Crash",
     "commonMoves": [
       "Last Respects",
-      "Wave Crash",
       "Aqua Jet",
+      "Wave Crash",
       "Flip Turn",
       "Protect",
       "Liquidation",
-      "Icy Wind",
       "Psychic Fangs",
-      "Shadow Ball",
+      "Icy Wind",
+      "Phantom Force",
       "Ice Fang"
     ],
-    "commonAbilities": [
-      "Adaptability",
-      "Swift Swim",
-      "Mold Breaker"
-    ],
+    "commonAbilities": ["Adaptability", "Swift Swim", "Mold Breaker"],
     "commonItems": [
       "Choice Scarf",
       "Mystic Water",
       "Sitrus Berry",
       "Focus Sash",
+      "Kasib Berry",
+      "Colbur Berry",
       "Spell Tag",
       "White Herb",
       "Lum Berry",
-      "Leftovers",
-      "Colbur Berry"
+      "Leftovers"
     ]
   },
   {
@@ -773,31 +793,28 @@
     "defaultMove": "Wave Crash",
     "commonMoves": [
       "Last Respects",
-      "Wave Crash",
       "Aqua Jet",
+      "Wave Crash",
       "Flip Turn",
       "Protect",
       "Liquidation",
-      "Icy Wind",
       "Psychic Fangs",
-      "Shadow Ball",
+      "Icy Wind",
+      "Phantom Force",
       "Ice Fang"
     ],
-    "commonAbilities": [
-      "Adaptability",
-      "Swift Swim",
-      "Mold Breaker"
-    ],
+    "commonAbilities": ["Adaptability", "Swift Swim", "Mold Breaker"],
     "commonItems": [
       "Choice Scarf",
       "Mystic Water",
       "Sitrus Berry",
       "Focus Sash",
+      "Kasib Berry",
+      "Colbur Berry",
       "Spell Tag",
       "White Herb",
       "Lum Berry",
-      "Leftovers",
-      "Colbur Berry"
+      "Leftovers"
     ]
   },
   {
@@ -807,20 +824,18 @@
     "defaultMove": "Foul Play",
     "commonMoves": [
       "Body Press",
-      "Protect",
-      "Wide Guard",
       "Iron Defense",
-      "Block",
-      "Foul Play"
+      "Wide Guard",
+      "Protect",
+      "Foul Play",
+      "Heavy Slam",
+      "Metal Sound",
+      "Reversal",
+      "Rock Slide",
+      "Rain Dance"
     ],
-    "commonAbilities": [
-      "Soundproof",
-      "Sturdy"
-    ],
-    "commonItems": [
-      "Leftovers",
-      "Focus Sash"
-    ]
+    "commonAbilities": ["Soundproof", "Sturdy"],
+    "commonItems": ["Leftovers", "Mental Herb", "Chople Berry", "Sitrus Berry"]
   },
   {
     "pokemonId": "beartic",
@@ -828,98 +843,84 @@
     "defaultAbility": "Swift Swim",
     "defaultMove": "Close Combat",
     "commonMoves": [
-      "Icicle Crash",
-      "Liquidation",
-      "Close Combat",
-      "Swords Dance",
-      "Play Rough",
-      "Superpower",
       "Protect",
+      "Ice Punch",
+      "Close Combat",
       "Earthquake",
       "Throat Chop",
-      "Brick Break"
+      "Brick Break",
+      "Icicle Crash",
+      "Icy Wind",
+      "Liquidation",
+      "Rock Slide"
     ],
-    "commonAbilities": [
-      "Swift Swim",
-      "Slush Rush"
-    ],
-    "commonItems": [
-      "Focus Sash",
-      "Sitrus Berry",
-      "Scope Lens"
-    ]
+    "commonAbilities": ["Swift Swim", "Slush Rush"],
+    "commonItems": ["Focus Sash", "Scope Lens", "Hard Stone", "Never-Melt Ice"]
   },
   {
     "pokemonId": "beedrill",
     "defaultItem": "Beedrillite",
     "defaultAbility": "Sniper",
-    "defaultMove": "Poison Jab",
+    "defaultMove": "Pollen Puff",
     "commonMoves": [
       "Poison Jab",
       "Protect",
       "U-turn",
       "Drill Run",
       "Fell Stinger",
+      "Pin Missile",
+      "Dual Wingbeat",
       "Knock Off",
-      "Lunge",
-      "Electroweb"
+      "Electroweb",
+      "Pollen Puff"
     ],
-    "commonAbilities": [
-      "Sniper",
-      "Swarm"
-    ],
-    "commonItems": [
-      "Beedrillite",
-      "White Herb"
-    ]
+    "commonAbilities": ["Sniper", "Swarm"],
+    "commonItems": ["Beedrillite"]
   },
   {
     "pokemonId": "beedrillmega",
     "defaultItem": "Beedrillite",
     "defaultAbility": "Adaptability",
-    "defaultMove": "Poison Jab",
+    "defaultMove": "Pollen Puff",
     "commonMoves": [
       "Poison Jab",
       "Protect",
       "U-turn",
       "Drill Run",
       "Fell Stinger",
+      "Pin Missile",
+      "Dual Wingbeat",
       "Knock Off",
-      "Lunge",
-      "Electroweb"
+      "Electroweb",
+      "Pollen Puff"
     ],
-    "commonAbilities": [
-      "Adaptability"
-    ],
-    "commonItems": [
-      "Beedrillite"
-    ]
+    "commonAbilities": ["Adaptability"],
+    "commonItems": ["Beedrillite"]
   },
   {
     "pokemonId": "bellibolt",
-    "defaultItem": "Leftovers",
+    "defaultItem": "Sitrus Berry",
     "defaultAbility": "Electromorphosis",
     "defaultMove": "Thunder",
     "commonMoves": [
       "Protect",
       "Parabolic Charge",
-      "Thunderbolt",
-      "Volt Switch",
-      "Light Screen",
-      "Thunder",
-      "Muddy Water",
       "Soak",
-      "Sucker Punch",
-      "Reflect"
+      "Volt Switch",
+      "Muddy Water",
+      "Thunderbolt",
+      "Weather Ball",
+      "Acid Spray",
+      "Light Screen",
+      "Thunder"
     ],
-    "commonAbilities": [
-      "Electromorphosis"
-    ],
+    "commonAbilities": ["Electromorphosis"],
     "commonItems": [
+      "Sitrus Berry",
       "Leftovers",
       "Magnet",
-      "Sitrus Berry",
-      "Shuca Berry"
+      "Chesto Berry",
+      "Focus Band"
     ]
   },
   {
@@ -928,32 +929,27 @@
     "defaultAbility": "Rain Dish",
     "defaultMove": "Water Spout",
     "commonMoves": [
-      "Protect",
       "Water Spout",
-      "Aura Sphere",
       "Dark Pulse",
+      "Protect",
       "Fake Out",
+      "Aura Sphere",
+      "Shell Smash",
       "Water Pulse",
       "Ice Beam",
-      "Shell Smash",
       "Flip Turn",
-      "Dragon Pulse"
+      "Muddy Water"
     ],
-    "commonAbilities": [
-      "Rain Dish",
-      "Torrent"
-    ],
+    "commonAbilities": ["Rain Dish", "Torrent"],
     "commonItems": [
       "Blastoisinite",
       "Leftovers",
-      "Rindo Berry",
+      "White Herb",
       "Mystic Water",
       "Sitrus Berry",
-      "Wacan Berry",
+      "Rindo Berry",
       "Choice Scarf",
-      "Bright Powder",
-      "Never-Melt Ice",
-      "White Herb"
+      "Lum Berry"
     ]
   },
   {
@@ -962,23 +958,19 @@
     "defaultAbility": "Mega Launcher",
     "defaultMove": "Water Spout",
     "commonMoves": [
-      "Protect",
       "Water Spout",
-      "Aura Sphere",
       "Dark Pulse",
+      "Protect",
       "Fake Out",
+      "Aura Sphere",
+      "Shell Smash",
       "Water Pulse",
       "Ice Beam",
-      "Shell Smash",
       "Flip Turn",
-      "Dragon Pulse"
+      "Muddy Water"
     ],
-    "commonAbilities": [
-      "Mega Launcher"
-    ],
-    "commonItems": [
-      "Blastoisinite"
-    ]
+    "commonAbilities": ["Mega Launcher"],
+    "commonItems": ["Blastoisinite"]
   },
   {
     "pokemonId": "camerupt",
@@ -993,20 +985,17 @@
       "Ancient Power",
       "Flamethrower",
       "Flash Cannon",
-      "Yawn",
       "Rock Slide",
-      "Body Slam"
+      "Lava Plume",
+      "Overheat"
     ],
-    "commonAbilities": [
-      "Solid Rock",
-      "Magma Armor",
-      "Anger Point"
-    ],
+    "commonAbilities": ["Solid Rock", "Magma Armor", "Anger Point"],
     "commonItems": [
       "Cameruptite",
-      "Focus Sash",
+      "Charcoal",
       "Leftovers",
-      "Charcoal"
+      "Oran Berry",
+      "Soft Sand"
     ]
   },
   {
@@ -1022,49 +1011,59 @@
       "Ancient Power",
       "Flamethrower",
       "Flash Cannon",
-      "Yawn",
       "Rock Slide",
-      "Body Slam"
+      "Lava Plume",
+      "Overheat"
     ],
-    "commonAbilities": [
-      "Sheer Force"
+    "commonAbilities": ["Sheer Force"],
+    "commonItems": ["Cameruptite"]
+  },
+  {
+    "pokemonId": "castform",
+    "defaultItem": "Bright Powder",
+    "defaultAbility": "Forecast",
+    "defaultMove": "Solar Beam",
+    "commonMoves": [
+      "Weather Ball",
+      "Protect",
+      "Thunder",
+      "Shadow Ball",
+      "Solar Beam",
+      "Hurricane",
+      "Rain Dance"
     ],
-    "commonItems": [
-      "Cameruptite"
-    ]
+    "commonAbilities": ["Forecast"],
+    "commonItems": ["Bright Powder", "Focus Sash"]
   },
   {
     "pokemonId": "ceruledge",
-    "defaultItem": "Focus Sash",
+    "defaultItem": "Colbur Berry",
     "defaultAbility": "Flash Fire",
-    "defaultMove": "Close Combat",
+    "defaultMove": "Solar Blade",
     "commonMoves": [
       "Bitter Blade",
       "Protect",
       "Shadow Sneak",
+      "Swords Dance",
+      "Poltergeist",
       "Close Combat",
       "Bulk Up",
-      "Poltergeist",
       "Shadow Claw",
-      "Swords Dance",
       "Will-O-Wisp",
-      "Psycho Cut"
+      "Solar Blade"
     ],
-    "commonAbilities": [
-      "Flash Fire",
-      "Weak Armor"
-    ],
+    "commonAbilities": ["Flash Fire", "Weak Armor"],
     "commonItems": [
+      "Colbur Berry",
       "Focus Sash",
       "Lum Berry",
       "Choice Scarf",
       "Charcoal",
       "Leftovers",
-      "Colbur Berry",
-      "Focus Band",
-      "Shell Bell",
-      "Quick Claw",
-      "Spell Tag"
+      "White Herb",
+      "Sitrus Berry",
+      "Spell Tag",
+      "Scope Lens"
     ]
   },
   {
@@ -1077,22 +1076,24 @@
       "Heat Wave",
       "Protect",
       "Trick Room",
-      "Overheat",
       "Energy Ball",
-      "Dark Pulse",
+      "Overheat",
+      "Flamethrower",
       "Calm Mind",
-      "Trick",
-      "Flamethrower"
+      "Imprison",
+      "Psychic"
     ],
-    "commonAbilities": [
-      "Flash Fire",
-      "Infiltrator"
-    ],
+    "commonAbilities": ["Flash Fire", "Infiltrator", "Flame Body"],
     "commonItems": [
       "Chandelurite",
-      "Choice Scarf",
       "Focus Sash",
-      "Charcoal"
+      "Choice Scarf",
+      "Sitrus Berry",
+      "Charcoal",
+      "Spell Tag",
+      "Miracle Seed",
+      "Shuca Berry",
+      "White Herb"
     ]
   },
   {
@@ -1105,19 +1106,15 @@
       "Heat Wave",
       "Protect",
       "Trick Room",
-      "Overheat",
       "Energy Ball",
-      "Dark Pulse",
+      "Overheat",
+      "Flamethrower",
       "Calm Mind",
-      "Trick",
-      "Flamethrower"
+      "Imprison",
+      "Psychic"
     ],
-    "commonAbilities": [
-      "Infiltrator"
-    ],
-    "commonItems": [
-      "Chandelurite"
-    ]
+    "commonAbilities": ["Infiltrator"],
+    "commonItems": ["Chandelurite"]
   },
   {
     "pokemonId": "charizard",
@@ -1129,25 +1126,22 @@
       "Heat Wave",
       "Solar Beam",
       "Weather Ball",
-      "Air Slash",
-      "Overheat",
       "Flare Blitz",
       "Dragon Claw",
       "Dragon Dance",
+      "Air Slash",
+      "Overheat",
       "Dragon Pulse"
     ],
-    "commonAbilities": [
-      "Blaze",
-      "Solar Power"
-    ],
+    "commonAbilities": ["Blaze", "Solar Power"],
     "commonItems": [
       "Charizardite Y",
       "Charizardite X",
       "Charcoal",
       "Choice Scarf",
-      "Charti Berry",
       "Lum Berry",
-      "Leftovers"
+      "Focus Sash",
+      "Focus Band"
     ]
   },
   {
@@ -1160,19 +1154,15 @@
       "Heat Wave",
       "Solar Beam",
       "Weather Ball",
-      "Air Slash",
-      "Overheat",
       "Flare Blitz",
       "Dragon Claw",
       "Dragon Dance",
+      "Air Slash",
+      "Overheat",
       "Dragon Pulse"
     ],
-    "commonAbilities": [
-      "Tough Claws"
-    ],
-    "commonItems": [
-      "Charizardite X"
-    ]
+    "commonAbilities": ["Tough Claws"],
+    "commonItems": ["Charizardite X"]
   },
   {
     "pokemonId": "charizardmegay",
@@ -1184,19 +1174,15 @@
       "Heat Wave",
       "Solar Beam",
       "Weather Ball",
-      "Air Slash",
-      "Overheat",
       "Flare Blitz",
       "Dragon Claw",
       "Dragon Dance",
+      "Air Slash",
+      "Overheat",
       "Dragon Pulse"
     ],
-    "commonAbilities": [
-      "Drought"
-    ],
-    "commonItems": [
-      "Charizardite Y"
-    ]
+    "commonAbilities": ["Drought"],
+    "commonItems": ["Charizardite Y"]
   },
   {
     "pokemonId": "chesnaught",
@@ -1207,21 +1193,20 @@
       "Spiky Shield",
       "Body Press",
       "Wood Hammer",
-      "Leech Seed",
       "Wide Guard",
+      "Leech Seed",
       "Iron Defense",
       "Drain Punch",
+      "Rock Slide",
       "Seed Bomb",
-      "Poison Jab",
       "Knock Off"
     ],
-    "commonAbilities": [
-      "Bulletproof",
-      "Overgrow"
-    ],
+    "commonAbilities": ["Bulletproof", "Overgrow"],
     "commonItems": [
       "Chesnaughtite",
-      "Leftovers"
+      "Sitrus Berry",
+      "Leftovers",
+      "Miracle Seed"
     ]
   },
   {
@@ -1233,20 +1218,16 @@
       "Spiky Shield",
       "Body Press",
       "Wood Hammer",
-      "Leech Seed",
       "Wide Guard",
+      "Leech Seed",
       "Iron Defense",
       "Drain Punch",
+      "Rock Slide",
       "Seed Bomb",
-      "Poison Jab",
       "Knock Off"
     ],
-    "commonAbilities": [
-      "Bulletproof"
-    ],
-    "commonItems": [
-      "Chesnaughtite"
-    ]
+    "commonAbilities": ["Bulletproof"],
+    "commonItems": ["Chesnaughtite"]
   },
   {
     "pokemonId": "chimecho",
@@ -1254,24 +1235,19 @@
     "defaultAbility": "Levitate",
     "defaultMove": "Boomburst",
     "commonMoves": [
-      "Protect",
-      "Calm Mind",
-      "Psychic",
       "Flash Cannon",
-      "Boomburst",
+      "Protect",
+      "Psychic",
+      "Calm Mind",
       "Trick Room",
-      "Icy Wind",
+      "Recover",
       "Stored Power",
-      "Draining Kiss",
-      "Shadow Ball"
+      "Cosmic Power",
+      "Dazzling Gleam",
+      "Boomburst"
     ],
-    "commonAbilities": [
-      "Levitate"
-    ],
-    "commonItems": [
-      "Chimechite",
-      "Scizorite"
-    ]
+    "commonAbilities": ["Levitate"],
+    "commonItems": ["Chimechite"]
   },
   {
     "pokemonId": "chimechomega",
@@ -1279,48 +1255,41 @@
     "defaultAbility": "Levitate",
     "defaultMove": "Boomburst",
     "commonMoves": [
-      "Protect",
-      "Calm Mind",
-      "Psychic",
       "Flash Cannon",
-      "Boomburst",
+      "Protect",
+      "Psychic",
+      "Calm Mind",
       "Trick Room",
-      "Icy Wind",
+      "Recover",
       "Stored Power",
-      "Draining Kiss",
-      "Shadow Ball"
+      "Cosmic Power",
+      "Dazzling Gleam",
+      "Boomburst"
     ],
-    "commonAbilities": [
-      "Levitate"
-    ],
-    "commonItems": [
-      "Chimechite"
-    ]
+    "commonAbilities": ["Levitate"],
+    "commonItems": ["Chimechite"]
   },
   {
     "pokemonId": "clawitzer",
-    "defaultItem": "Sitrus Berry",
+    "defaultItem": "Mystic Water",
     "defaultAbility": "Mega Launcher",
-    "defaultMove": "Hydro Pump",
+    "defaultMove": "Sludge Bomb",
     "commonMoves": [
       "Water Pulse",
       "Dark Pulse",
       "Aura Sphere",
-      "Heal Pulse",
-      "Muddy Water",
       "Protect",
+      "Heal Pulse",
       "Dragon Pulse",
-      "Hydro Pump",
-      "Ice Beam"
+      "Sludge Bomb"
     ],
-    "commonAbilities": [
-      "Mega Launcher"
-    ],
+    "commonAbilities": ["Mega Launcher"],
     "commonItems": [
-      "Sitrus Berry",
-      "Black Belt",
       "Mystic Water",
-      "Scope Lens"
+      "Wacan Berry",
+      "Leftovers",
+      "Rindo Berry",
+      "Quick Claw"
     ]
   },
   {
@@ -1334,28 +1303,24 @@
       "Protect",
       "Helping Hand",
       "Life Dew",
-      "Thunder Wave",
       "Icy Wind",
       "Dazzling Gleam",
       "Encore",
-      "Moonlight"
+      "Air Slash",
+      "Thunder Wave"
     ],
-    "commonAbilities": [
-      "Unaware",
-      "Magic Guard",
-      "Cute Charm"
-    ],
+    "commonAbilities": ["Unaware", "Magic Guard", "Cute Charm"],
     "commonItems": [
       "Sitrus Berry",
-      "Leftovers",
       "Clefablite",
+      "Leftovers",
+      "Focus Sash",
       "Mental Herb",
-      "Bright Powder",
-      "Kebia Berry",
       "Lum Berry",
       "Babiri Berry",
-      "Focus Sash",
-      "Colbur Berry"
+      "Bright Powder",
+      "Kebia Berry",
+      "Quick Claw"
     ]
   },
   {
@@ -1369,17 +1334,39 @@
       "Protect",
       "Helping Hand",
       "Life Dew",
-      "Thunder Wave",
       "Icy Wind",
       "Dazzling Gleam",
       "Encore",
-      "Moonlight"
+      "Air Slash",
+      "Thunder Wave"
     ],
-    "commonAbilities": [
-      "Magic Bounce"
+    "commonAbilities": [],
+    "commonItems": ["Clefablite"]
+  },
+  {
+    "pokemonId": "cofagrigus",
+    "defaultItem": "Leftovers",
+    "defaultAbility": "Mummy",
+    "defaultMove": "Body Press",
+    "commonMoves": [
+      "Trick Room",
+      "Body Press",
+      "Will-O-Wisp",
+      "Shadow Ball",
+      "Ally Switch",
+      "Protect",
+      "Iron Defense",
+      "Hex",
+      "Haze",
+      "Curse"
     ],
+    "commonAbilities": ["Mummy"],
     "commonItems": [
-      "Clefablite"
+      "Leftovers",
+      "Mental Herb",
+      "Colbur Berry",
+      "Sitrus Berry",
+      "Kasib Berry"
     ]
   },
   {
@@ -1390,8 +1377,8 @@
     "commonMoves": [
       "Mach Punch",
       "Drain Punch",
-      "Protect",
       "Ice Punch",
+      "Protect",
       "Thunder Punch",
       "Knock Off",
       "Wide Guard",
@@ -1399,18 +1386,16 @@
       "Close Combat",
       "Rock Slide"
     ],
-    "commonAbilities": [
-      "Iron Fist",
-      "Guts"
-    ],
+    "commonAbilities": ["Iron Fist", "Guts", "Sheer Force"],
     "commonItems": [
       "Black Belt",
-      "White Herb",
       "Sitrus Berry",
       "Leftovers",
-      "Focus Sash",
       "Lum Berry",
-      "Coba Berry"
+      "White Herb",
+      "Focus Sash",
+      "Focus Band",
+      "King's Rock"
     ]
   },
   {
@@ -1421,31 +1406,27 @@
     "commonMoves": [
       "Brave Bird",
       "Tailwind",
-      "Body Press",
       "Roost",
-      "Bulk Up",
       "Iron Head",
+      "Body Press",
+      "Bulk Up",
       "Iron Defense",
       "Protect",
       "Taunt",
-      "U-turn"
+      "Dual Wingbeat"
     ],
-    "commonAbilities": [
-      "Mirror Armor",
-      "Pressure",
-      "Unnerve"
-    ],
+    "commonAbilities": ["Mirror Armor", "Unnerve", "Pressure"],
     "commonItems": [
       "Leftovers",
       "Sitrus Berry",
       "Occa Berry",
       "Lum Berry",
       "Sharp Beak",
-      "Mental Herb",
-      "Metal Coat",
       "Focus Sash",
+      "Mental Herb",
       "Bright Powder",
-      "Focus Band"
+      "Metal Coat",
+      "Quick Claw"
     ]
   },
   {
@@ -1455,24 +1436,18 @@
     "defaultMove": "Close Combat",
     "commonMoves": [
       "Protect",
-      "Drain Punch",
       "Ice Hammer",
+      "Drain Punch",
       "Mach Punch",
-      "Ice Punch",
       "Thunder Punch",
       "Close Combat",
+      "Ice Punch",
+      "Rock Slide",
       "Crabhammer",
-      "Knock Off",
-      "Rock Slide"
+      "Knock Off"
     ],
-    "commonAbilities": [
-      "Hyper Cutter",
-      "Iron Fist"
-    ],
-    "commonItems": [
-      "Crabominite",
-      "Focus Sash"
-    ]
+    "commonAbilities": ["Hyper Cutter", "Iron Fist", "Anger Point"],
+    "commonItems": ["Crabominite"]
   },
   {
     "pokemonId": "crabominablemega",
@@ -1481,47 +1456,43 @@
     "defaultMove": "Close Combat",
     "commonMoves": [
       "Protect",
-      "Drain Punch",
       "Ice Hammer",
+      "Drain Punch",
       "Mach Punch",
-      "Ice Punch",
       "Thunder Punch",
       "Close Combat",
+      "Ice Punch",
+      "Rock Slide",
       "Crabhammer",
-      "Knock Off",
-      "Rock Slide"
+      "Knock Off"
     ],
-    "commonAbilities": [
-      "Iron Fist"
-    ],
-    "commonItems": [
-      "Crabominite"
-    ]
+    "commonAbilities": ["Iron Fist"],
+    "commonItems": ["Crabominite"]
   },
   {
     "pokemonId": "decidueye",
-    "defaultItem": "Bright Powder",
+    "defaultItem": "Quick Claw",
     "defaultAbility": "Long Reach",
-    "defaultMove": "Leaf Storm",
+    "defaultMove": "Brave Bird",
     "commonMoves": [
       "Spirit Shackle",
-      "Protect",
       "Leaf Blade",
-      "Knock Off",
-      "Brave Bird",
-      "Leaf Storm",
-      "Poltergeist",
-      "Hurricane",
       "Tailwind",
-      "Imprison"
+      "U-turn",
+      "Protect",
+      "Brave Bird",
+      "Imprison",
+      "Sucker Punch",
+      "Phantom Force",
+      "Knock Off"
     ],
-    "commonAbilities": [
-      "Long Reach"
-    ],
+    "commonAbilities": ["Long Reach"],
     "commonItems": [
-      "Bright Powder",
       "Quick Claw",
-      "Focus Sash"
+      "Focus Sash",
+      "Miracle Seed",
+      "Sitrus Berry",
+      "Choice Scarf"
     ]
   },
   {
@@ -1530,52 +1501,39 @@
     "defaultAbility": "Scrappy",
     "defaultMove": "Brave Bird",
     "commonMoves": [
-      "Leaf Blade",
       "Triple Arrows",
+      "Leaf Blade",
       "Protect",
+      "Sucker Punch",
       "Brave Bird",
-      "Close Combat",
-      "Upper Hand",
-      "Knock Off",
-      "Shadow Claw",
+      "U-turn",
       "Shadow Sneak",
+      "Dual Wingbeat",
+      "Upper Hand",
       "Trailblaze"
     ],
-    "commonAbilities": [
-      "Scrappy"
-    ],
+    "commonAbilities": ["Scrappy", "Overgrow"],
     "commonItems": [
       "Scope Lens",
-      "Focus Band",
-      "Quick Claw",
-      "Focus Sash",
       "Sharp Beak",
+      "Focus Sash",
+      "Miracle Seed",
       "Lum Berry",
-      "Black Belt"
+      "Black Belt",
+      "Black Glasses",
+      "Roseli Berry",
+      "Shell Bell",
+      "Quick Claw"
     ]
   },
   {
     "pokemonId": "dedenne",
-    "defaultItem": "Sitrus Berry",
-    "defaultAbility": "Cheek Pouch",
-    "defaultMove": "Thunder",
-    "commonMoves": [
-      "Super Fang",
-      "Thunder",
-      "Dazzling Gleam",
-      "Magnet Rise",
-      "Nuzzle",
-      "Helping Hand",
-      "Tearful Look"
-    ],
-    "commonAbilities": [
-      "Cheek Pouch",
-      "Pickup"
-    ],
-    "commonItems": [
-      "Sitrus Berry",
-      "Choice Scarf"
-    ]
+    "defaultItem": "Choice Scarf",
+    "defaultAbility": "Pickup",
+    "defaultMove": "Nuzzle",
+    "commonMoves": ["Nuzzle", "Super Fang", "Helping Hand", "Tearful Look"],
+    "commonAbilities": ["Pickup"],
+    "commonItems": ["Choice Scarf"]
   },
   {
     "pokemonId": "delphox",
@@ -1583,25 +1541,23 @@
     "defaultAbility": "Blaze",
     "defaultMove": "Heat Wave",
     "commonMoves": [
-      "Heat Wave",
       "Protect",
+      "Heat Wave",
       "Psychic",
-      "Substitute",
       "Encore",
-      "Nasty Plot",
+      "Substitute",
       "Psyshock",
+      "Nasty Plot",
       "Dazzling Gleam",
-      "Calm Mind",
-      "Flamethrower"
+      "Flamethrower",
+      "Calm Mind"
     ],
-    "commonAbilities": [
-      "Blaze",
-      "Magician"
-    ],
+    "commonAbilities": ["Blaze", "Magician"],
     "commonItems": [
       "Delphoxite",
-      "Leftovers",
-      "Sitrus Berry",
+      "Focus Sash",
+      "Lum Berry",
+      "Charcoal",
       "Choice Scarf"
     ]
   },
@@ -1611,40 +1567,53 @@
     "defaultAbility": "Levitate",
     "defaultMove": "Heat Wave",
     "commonMoves": [
-      "Heat Wave",
       "Protect",
+      "Heat Wave",
       "Psychic",
-      "Substitute",
       "Encore",
-      "Nasty Plot",
+      "Substitute",
       "Psyshock",
+      "Nasty Plot",
       "Dazzling Gleam",
-      "Calm Mind",
-      "Flamethrower"
+      "Flamethrower",
+      "Calm Mind"
     ],
-    "commonAbilities": [
-      "Levitate"
+    "commonAbilities": ["Levitate"],
+    "commonItems": ["Delphoxite"]
+  },
+  {
+    "pokemonId": "diggersby",
+    "defaultItem": "Choice Scarf",
+    "defaultAbility": "Huge Power",
+    "defaultMove": "Earthquake",
+    "commonMoves": [
+      "Quick Attack",
+      "Rock Slide",
+      "High Horsepower",
+      "U-turn",
+      "Ice Punch",
+      "Earthquake",
+      "Body Slam",
+      "Swords Dance"
     ],
-    "commonItems": [
-      "Delphoxite"
-    ]
+    "commonAbilities": ["Huge Power"],
+    "commonItems": ["Choice Scarf", "White Herb"]
   },
   {
     "pokemonId": "ditto",
     "defaultItem": "Choice Scarf",
     "defaultAbility": "Imposter",
     "defaultMove": "Transform",
-    "commonMoves": [
-      "Transform"
-    ],
-    "commonAbilities": [
-      "Imposter"
-    ],
+    "commonMoves": ["Transform"],
+    "commonAbilities": ["Imposter", "Limber"],
     "commonItems": [
       "Choice Scarf",
       "Focus Sash",
-      "Sitrus Berry",
-      "Lum Berry"
+      "Quick Claw",
+      "Lum Berry",
+      "Leftovers",
+      "Bright Powder",
+      "Sitrus Berry"
     ]
   },
   {
@@ -1654,32 +1623,28 @@
     "defaultMove": "Draco Meteor",
     "commonMoves": [
       "Dragon Darts",
-      "Phantom Force",
       "Protect",
+      "Phantom Force",
       "Will-O-Wisp",
-      "Shadow Ball",
-      "U-turn",
       "Draco Meteor",
       "Psychic Fangs",
-      "Outrage",
-      "Sucker Punch"
+      "Shadow Ball",
+      "U-turn",
+      "Sucker Punch",
+      "Dragon Dance"
     ],
-    "commonAbilities": [
-      "Clear Body",
-      "Infiltrator",
-      "Cursed Body"
-    ],
+    "commonAbilities": ["Clear Body", "Infiltrator", "Cursed Body"],
     "commonItems": [
       "Focus Sash",
       "Dragon Fang",
-      "Lum Berry",
-      "Choice Scarf",
       "Colbur Berry",
-      "White Herb",
+      "Choice Scarf",
       "Kasib Berry",
+      "Lum Berry",
+      "White Herb",
       "Spell Tag",
-      "Leftovers",
-      "Focus Band"
+      "Sitrus Berry",
+      "Haban Berry"
     ]
   },
   {
@@ -1695,24 +1660,21 @@
       "Tailwind",
       "Dragon Pulse",
       "Thunder",
-      "Scale Shot",
       "Ice Beam",
-      "Dragon Claw"
+      "Dragon Claw",
+      "Low Kick"
     ],
-    "commonAbilities": [
-      "Multiscale",
-      "Inner Focus"
-    ],
+    "commonAbilities": ["Multiscale", "Inner Focus"],
     "commonItems": [
       "Dragoninite",
       "Lum Berry",
-      "White Herb",
       "Dragon Fang",
-      "Silk Scarf",
+      "White Herb",
       "Leftovers",
       "Sitrus Berry",
-      "Focus Sash",
-      "Choice Scarf"
+      "Choice Scarf",
+      "Haban Berry",
+      "Silk Scarf"
     ]
   },
   {
@@ -1728,16 +1690,12 @@
       "Tailwind",
       "Dragon Pulse",
       "Thunder",
-      "Scale Shot",
       "Ice Beam",
-      "Dragon Claw"
+      "Dragon Claw",
+      "Low Kick"
     ],
-    "commonAbilities": [
-      "Multiscale"
-    ],
-    "commonItems": [
-      "Dragoninite"
-    ]
+    "commonAbilities": ["Multiscale"],
+    "commonItems": ["Dragoninite"]
   },
   {
     "pokemonId": "drampa",
@@ -1748,25 +1706,24 @@
       "Hyper Voice",
       "Protect",
       "Draco Meteor",
-      "Dragon Pulse",
       "Earth Power",
+      "Dragon Pulse",
       "Thunderbolt",
       "Calm Mind",
+      "Heat Wave",
       "Flamethrower",
-      "Thunder",
       "Roost"
     ],
-    "commonAbilities": [
-      "Cloud Nine",
-      "Berserk"
-    ],
+    "commonAbilities": ["Cloud Nine", "Berserk", "Sap Sipper"],
     "commonItems": [
       "Drampanite",
+      "Chople Berry",
       "Quick Claw",
       "Silk Scarf",
-      "Yache Berry",
-      "Leftovers",
       "Focus Sash",
+      "White Herb",
+      "Leftovers",
+      "Bright Powder",
       "Shell Bell"
     ]
   },
@@ -1779,20 +1736,16 @@
       "Hyper Voice",
       "Protect",
       "Draco Meteor",
-      "Dragon Pulse",
       "Earth Power",
+      "Dragon Pulse",
       "Thunderbolt",
       "Calm Mind",
+      "Heat Wave",
       "Flamethrower",
-      "Thunder",
       "Roost"
     ],
-    "commonAbilities": [
-      "Berserk"
-    ],
-    "commonItems": [
-      "Drampanite"
-    ]
+    "commonAbilities": ["Berserk"],
+    "commonItems": ["Drampanite"]
   },
   {
     "pokemonId": "emboar",
@@ -1801,25 +1754,22 @@
     "defaultMove": "Flare Blitz",
     "commonMoves": [
       "Flare Blitz",
-      "Protect",
       "Close Combat",
-      "Wild Charge",
       "Sucker Punch",
+      "Protect",
       "Drain Punch",
-      "Rock Slide",
+      "Wild Charge",
       "Heat Crash",
-      "Earthquake",
-      "Thunder Punch"
+      "High Horsepower",
+      "Rock Slide"
     ],
-    "commonAbilities": [
-      "Reckless",
-      "Blaze"
-    ],
+    "commonAbilities": ["Reckless", "Blaze"],
     "commonItems": [
       "Emboarite",
-      "Lum Berry",
       "Charcoal",
-      "Meganiumite"
+      "Meganiumite",
+      "Quick Claw",
+      "Leftovers"
     ]
   },
   {
@@ -1829,22 +1779,26 @@
     "defaultMove": "Flare Blitz",
     "commonMoves": [
       "Flare Blitz",
-      "Protect",
       "Close Combat",
-      "Wild Charge",
       "Sucker Punch",
+      "Protect",
       "Drain Punch",
-      "Rock Slide",
+      "Wild Charge",
       "Heat Crash",
-      "Earthquake",
-      "Thunder Punch"
+      "High Horsepower",
+      "Rock Slide"
     ],
-    "commonAbilities": [
-      "Mold Breaker"
-    ],
-    "commonItems": [
-      "Emboarite"
-    ]
+    "commonAbilities": ["Mold Breaker"],
+    "commonItems": ["Emboarite"]
+  },
+  {
+    "pokemonId": "emolga",
+    "defaultItem": "Charti Berry",
+    "defaultAbility": "Motor Drive",
+    "defaultMove": "Volt Switch",
+    "commonMoves": ["Nuzzle", "Volt Switch", "Air Slash", "Encore"],
+    "commonAbilities": ["Motor Drive"],
+    "commonItems": ["Charti Berry"]
   },
   {
     "pokemonId": "empoleon",
@@ -1852,30 +1806,29 @@
     "defaultAbility": "Competitive",
     "defaultMove": "Hydro Pump",
     "commonMoves": [
-      "Flash Cannon",
       "Protect",
-      "Hydro Pump",
+      "Flash Cannon",
       "Ice Beam",
-      "Surf",
-      "Roar",
+      "Hydro Pump",
       "Water Pulse",
+      "Roar",
+      "Surf",
       "Vacuum Wave",
-      "Weather Ball",
-      "Stealth Rock"
+      "Icy Wind",
+      "Roost"
     ],
-    "commonAbilities": [
-      "Competitive",
-      "Torrent"
-    ],
+    "commonAbilities": ["Competitive", "Torrent"],
     "commonItems": [
       "Leftovers",
-      "Sitrus Berry",
       "Chople Berry",
+      "Shuca Berry",
+      "Sitrus Berry",
+      "Metal Coat",
       "Mystic Water",
       "Mental Herb",
-      "White Herb",
-      "Metal Coat",
-      "Shuca Berry"
+      "Choice Scarf",
+      "Quick Claw",
+      "Focus Sash"
     ]
   },
   {
@@ -1886,24 +1839,22 @@
     "commonMoves": [
       "Protect",
       "Lumina Crash",
-      "Calm Mind",
-      "Hypnosis",
-      "Dazzling Gleam",
       "Baton Pass",
-      "Skill Swap",
+      "Dazzling Gleam",
+      "Hypnosis",
+      "Calm Mind",
       "Psychic Terrain",
       "Stored Power",
-      "Hex"
+      "Skill Swap",
+      "Shadow Ball"
     ],
-    "commonAbilities": [
-      "Speed Boost"
-    ],
+    "commonAbilities": ["Speed Boost"],
     "commonItems": [
       "Focus Sash",
-      "Colbur Berry",
+      "Sitrus Berry",
       "Leftovers",
       "Mental Herb",
-      "Sitrus Berry",
+      "Colbur Berry",
       "Twisted Spoon"
     ]
   },
@@ -1913,24 +1864,25 @@
     "defaultAbility": "Magic Bounce",
     "defaultMove": "Psychic",
     "commonMoves": [
-      "Dazzling Gleam",
       "Protect",
+      "Power Gem",
+      "Psychic",
+      "Dazzling Gleam",
       "Expanding Force",
       "Psychic Terrain",
       "Trick Room",
-      "Trick",
-      "Psychic",
-      "Yawn",
-      "Helping Hand"
+      "Detect",
+      "Copycat",
+      "Trick"
     ],
-    "commonAbilities": [
-      "Magic Bounce"
-    ],
+    "commonAbilities": ["Magic Bounce"],
     "commonItems": [
       "Focus Sash",
+      "Twisted Spoon",
+      "Focus Band",
       "Choice Scarf",
-      "Mental Herb",
-      "Colbur Berry"
+      "Colbur Berry",
+      "Sitrus Berry"
     ]
   },
   {
@@ -1942,29 +1894,26 @@
       "Iron Head",
       "Protect",
       "Rock Slide",
-      "High Horsepower",
       "Earthquake",
+      "High Horsepower",
       "Swords Dance",
-      "Drill Run",
       "Stomping Tantrum",
-      "Horn Drill",
-      "Fissure"
+      "Drill Run",
+      "Fissure",
+      "Horn Drill"
     ],
-    "commonAbilities": [
-      "Sand Rush",
-      "Mold Breaker",
-      "Sand Force"
-    ],
+    "commonAbilities": ["Sand Rush", "Mold Breaker", "Sand Force"],
     "commonItems": [
       "Focus Sash",
-      "White Herb",
       "Excadrite",
+      "White Herb",
       "Choice Scarf",
+      "Occa Berry",
       "Soft Sand",
-      "Shuca Berry",
+      "Metal Coat",
       "Chople Berry",
-      "Quick Claw",
-      "Sitrus Berry"
+      "Shuca Berry",
+      "Leftovers"
     ]
   },
   {
@@ -1976,18 +1925,16 @@
       "Iron Head",
       "Protect",
       "Rock Slide",
-      "High Horsepower",
       "Earthquake",
+      "High Horsepower",
       "Swords Dance",
-      "Drill Run",
       "Stomping Tantrum",
-      "Horn Drill",
-      "Fissure"
+      "Drill Run",
+      "Fissure",
+      "Horn Drill"
     ],
     "commonAbilities": [],
-    "commonItems": [
-      "Excadrite"
-    ]
+    "commonItems": ["Excadrite"]
   },
   {
     "pokemonId": "farigiraf",
@@ -2000,16 +1947,13 @@
       "Psychic",
       "Helping Hand",
       "Protect",
-      "Imprison",
       "Twin Beam",
-      "Psychic Noise",
-      "Dazzling Gleam",
-      "Foul Play"
+      "Imprison",
+      "Rain Dance",
+      "Foul Play",
+      "Dazzling Gleam"
     ],
-    "commonAbilities": [
-      "Armor Tail",
-      "Cud Chew"
-    ],
+    "commonAbilities": ["Armor Tail", "Cud Chew"],
     "commonItems": [
       "Sitrus Berry",
       "Colbur Berry",
@@ -2017,10 +1961,10 @@
       "Leftovers",
       "Silk Scarf",
       "Lum Berry",
+      "Twisted Spoon",
       "Focus Sash",
       "Quick Claw",
-      "Twisted Spoon",
-      "White Herb"
+      "Bright Powder"
     ]
   },
   {
@@ -2032,22 +1976,16 @@
       "Liquidation",
       "Protect",
       "Double-Edge",
-      "Dragon Dance",
       "Aqua Jet",
-      "Ice Punch",
+      "Dragon Dance",
       "Body Slam",
+      "Swords Dance",
+      "Ice Punch",
       "Waterfall",
-      "Crunch",
-      "Brick Break"
+      "Crunch"
     ],
-    "commonAbilities": [
-      "Sheer Force",
-      "Torrent"
-    ],
-    "commonItems": [
-      "Feraligite",
-      "White Herb"
-    ]
+    "commonAbilities": ["Sheer Force", "Torrent"],
+    "commonItems": ["Feraligite", "Mystic Water"]
   },
   {
     "pokemonId": "feraligatrmega",
@@ -2058,147 +1996,135 @@
       "Liquidation",
       "Protect",
       "Double-Edge",
-      "Dragon Dance",
       "Aqua Jet",
-      "Ice Punch",
+      "Dragon Dance",
       "Body Slam",
+      "Swords Dance",
+      "Ice Punch",
       "Waterfall",
-      "Crunch",
-      "Brick Break"
+      "Crunch"
     ],
-    "commonAbilities": [
-      "Dragonize"
-    ],
-    "commonItems": [
-      "Feraligite"
-    ]
+    "commonAbilities": ["Dragonize"],
+    "commonItems": ["Feraligite"]
   },
   {
     "pokemonId": "flapple",
-    "defaultItem": "Choice Scarf",
+    "defaultItem": "Focus Sash",
     "defaultAbility": "Hustle",
-    "defaultMove": "Outrage",
+    "defaultMove": "Dragon Rush",
     "commonMoves": [
       "Grav Apple",
-      "Outrage",
+      "Dragon Rush",
+      "Protect",
+      "Dragon Dance",
       "U-turn",
-      "Sucker Punch"
+      "Dual Wingbeat",
+      "Aerial Ace"
     ],
-    "commonAbilities": [
-      "Hustle"
-    ],
-    "commonItems": [
-      "Choice Scarf"
-    ]
+    "commonAbilities": ["Hustle"],
+    "commonItems": ["Focus Sash", "Choice Scarf", "Leftovers"]
   },
   {
     "pokemonId": "flareon",
     "defaultItem": "White Herb",
     "defaultAbility": "Guts",
     "defaultMove": "Lava Plume",
-    "commonMoves": [
-      "Lava Plume",
-      "Flare Blitz",
-      "Superpower",
-      "Quick Attack"
-    ],
-    "commonAbilities": [
-      "Guts"
-    ],
-    "commonItems": [
-      "White Herb"
-    ]
+    "commonMoves": ["Flare Blitz", "Lava Plume", "Quick Attack", "Superpower"],
+    "commonAbilities": ["Guts"],
+    "commonItems": ["White Herb"]
   },
   {
     "pokemonId": "floette",
     "defaultItem": "Floettite",
     "defaultAbility": "Flower Veil",
-    "defaultMove": "Petal Dance",
+    "defaultMove": "Moonblast",
     "commonMoves": [
       "Protect",
       "Dazzling Gleam",
-      "Calm Mind",
       "Moonblast",
+      "Calm Mind",
       "Draining Kiss",
       "Psychic",
       "Giga Drain",
-      "Pollen Puff",
-      "Petal Dance"
+      "Substitute",
+      "Pollen Puff"
     ],
-    "commonAbilities": [
-      "Flower Veil",
-      "Symbiosis"
-    ],
-    "commonItems": [
-      "Floettite",
-      "Choice Scarf"
-    ]
+    "commonAbilities": ["Flower Veil", "Symbiosis"],
+    "commonItems": ["Floettite", "Choice Scarf", "Fairy Feather", "Meganiumite"]
   },
   {
     "pokemonId": "floetteeternal",
     "defaultItem": "Floettite",
     "defaultAbility": "Flower Veil",
-    "defaultMove": "Petal Dance",
+    "defaultMove": "Moonblast",
     "commonMoves": [
       "Protect",
       "Dazzling Gleam",
-      "Calm Mind",
       "Moonblast",
+      "Light of Ruin",
+      "Calm Mind",
       "Draining Kiss",
       "Psychic",
       "Giga Drain",
-      "Pollen Puff",
-      "Petal Dance"
+      "Substitute",
+      "Pollen Puff"
     ],
-    "commonAbilities": [
-      "Flower Veil",
-      "Symbiosis"
-    ],
-    "commonItems": [
-      "Floettite",
-      "Choice Scarf"
-    ]
+    "commonAbilities": ["Flower Veil", "Symbiosis"],
+    "commonItems": ["Floettite", "Choice Scarf", "Fairy Feather", "Meganiumite"]
   },
   {
     "pokemonId": "floettemega",
     "defaultItem": "Floettite",
     "defaultAbility": "Fairy Aura",
-    "defaultMove": "Petal Dance",
+    "defaultMove": "Moonblast",
     "commonMoves": [
       "Protect",
       "Dazzling Gleam",
-      "Calm Mind",
       "Moonblast",
+      "Light of Ruin",
+      "Calm Mind",
       "Draining Kiss",
       "Psychic",
       "Giga Drain",
-      "Pollen Puff",
-      "Petal Dance"
+      "Substitute",
+      "Pollen Puff"
     ],
-    "commonAbilities": [
-      "Fairy Aura"
-    ],
-    "commonItems": [
-      "Floettite"
-    ]
+    "commonAbilities": ["Fairy Aura"],
+    "commonItems": ["Floettite"]
   },
   {
     "pokemonId": "florges",
-    "defaultItem": "Lum Berry",
+    "defaultItem": "Bright Powder",
     "defaultAbility": "Symbiosis",
-    "defaultMove": "Pollen Puff",
+    "defaultMove": "Moonblast",
+    "commonMoves": ["Moonblast", "Pollen Puff", "Helping Hand", "Protect"],
+    "commonAbilities": ["Symbiosis"],
+    "commonItems": ["Bright Powder"]
+  },
+  {
+    "pokemonId": "forretress",
+    "defaultItem": "Sitrus Berry",
+    "defaultAbility": "Sturdy",
+    "defaultMove": "Steel Beam",
     "commonMoves": [
-      "Dazzling Gleam",
-      "Pollen Puff",
-      "Skill Swap",
-      "Psychic Noise"
+      "Steel Beam",
+      "Bug Buzz",
+      "Flash Cannon",
+      "Iron Head",
+      "Lunge",
+      "Smart Strike",
+      "Bug Bite",
+      "Pounce",
+      "Struggle Bug",
+      "Pin Missile",
+      "Explosion",
+      "Self-Destruct",
+      "Giga Impact",
+      "Hyper Beam",
+      "Double-Edge"
     ],
-    "commonAbilities": [
-      "Symbiosis"
-    ],
-    "commonItems": [
-      "Lum Berry"
-    ]
+    "commonAbilities": ["Sturdy", "Overcoat"],
+    "commonItems": ["Sitrus Berry"]
   },
   {
     "pokemonId": "froslass",
@@ -2214,16 +2140,16 @@
       "Nasty Plot",
       "Thunderbolt",
       "Taunt",
-      "Icy Wind",
-      "Will-O-Wisp"
+      "Will-O-Wisp",
+      "Destiny Bond"
     ],
-    "commonAbilities": [
-      "Cursed Body",
-      "Snow Cloak"
-    ],
+    "commonAbilities": ["Cursed Body", "Snow Cloak"],
     "commonItems": [
       "Froslassite",
-      "Focus Sash"
+      "Focus Sash",
+      "Bright Powder",
+      "Meganiumite",
+      "Feraligite"
     ]
   },
   {
@@ -2240,15 +2166,20 @@
       "Nasty Plot",
       "Thunderbolt",
       "Taunt",
-      "Icy Wind",
-      "Will-O-Wisp"
+      "Will-O-Wisp",
+      "Destiny Bond"
     ],
-    "commonAbilities": [
-      "Snow Warning"
-    ],
-    "commonItems": [
-      "Froslassite"
-    ]
+    "commonAbilities": ["Snow Warning"],
+    "commonItems": ["Froslassite"]
+  },
+  {
+    "pokemonId": "furfrou",
+    "defaultItem": "Leftovers",
+    "defaultAbility": "Fur Coat",
+    "defaultMove": "Cotton Guard",
+    "commonMoves": ["Cotton Guard", "Fire Fang", "Sucker Punch", "Protect"],
+    "commonAbilities": ["Fur Coat"],
+    "commonItems": ["Leftovers"]
   },
   {
     "pokemonId": "gallade",
@@ -2256,33 +2187,28 @@
     "defaultAbility": "Sharpness",
     "defaultMove": "Close Combat",
     "commonMoves": [
-      "Psycho Cut",
       "Sacred Sword",
+      "Psycho Cut",
       "Protect",
       "Wide Guard",
       "Trick Room",
       "Leaf Blade",
-      "Swords Dance",
+      "Close Combat",
       "Night Slash",
-      "Knock Off",
-      "Close Combat"
+      "Triple Axel",
+      "Rock Slide"
     ],
-    "commonAbilities": [
-      "Sharpness",
-      "Steadfast",
-      "Justified"
-    ],
+    "commonAbilities": ["Sharpness", "Justified", "Steadfast"],
     "commonItems": [
       "Galladite",
       "White Herb",
-      "Focus Sash",
       "Scope Lens",
-      "Sitrus Berry",
+      "Focus Sash",
       "Black Belt",
+      "Sitrus Berry",
       "Choice Scarf",
       "Leftovers",
-      "Bright Powder",
-      "Twisted Spoon"
+      "Lum Berry"
     ]
   },
   {
@@ -2291,23 +2217,28 @@
     "defaultAbility": "Inner Focus",
     "defaultMove": "Close Combat",
     "commonMoves": [
-      "Psycho Cut",
       "Sacred Sword",
+      "Psycho Cut",
       "Protect",
       "Wide Guard",
       "Trick Room",
       "Leaf Blade",
-      "Swords Dance",
+      "Close Combat",
       "Night Slash",
-      "Knock Off",
-      "Close Combat"
+      "Triple Axel",
+      "Rock Slide"
     ],
-    "commonAbilities": [
-      "Inner Focus"
-    ],
-    "commonItems": [
-      "Galladite"
-    ]
+    "commonAbilities": ["Inner Focus"],
+    "commonItems": ["Galladite"]
+  },
+  {
+    "pokemonId": "garbodor",
+    "defaultItem": "Leftovers",
+    "defaultAbility": "Stench",
+    "defaultMove": "Explosion",
+    "commonMoves": ["Explosion", "Toxic Spikes", "Stockpile", "Clear Smog"],
+    "commonAbilities": ["Stench"],
+    "commonItems": ["Leftovers"]
   },
   {
     "pokemonId": "garchomp",
@@ -2320,27 +2251,24 @@
       "Rock Slide",
       "Protect",
       "Stomping Tantrum",
-      "Swords Dance",
-      "Stone Edge",
       "Poison Jab",
       "Iron Head",
-      "Bulldoze"
+      "Swords Dance",
+      "Stone Edge",
+      "Scale Shot"
     ],
-    "commonAbilities": [
-      "Rough Skin",
-      "Sand Veil"
-    ],
+    "commonAbilities": ["Rough Skin", "Sand Veil"],
     "commonItems": [
       "Choice Scarf",
       "White Herb",
-      "Soft Sand",
-      "Lum Berry",
-      "Haban Berry",
       "Sitrus Berry",
-      "Yache Berry",
-      "Garchompite",
+      "Soft Sand",
+      "Haban Berry",
+      "Lum Berry",
       "Focus Sash",
-      "Bright Powder"
+      "Garchompite",
+      "Bright Powder",
+      "Yache Berry"
     ]
   },
   {
@@ -2354,51 +2282,43 @@
       "Rock Slide",
       "Protect",
       "Stomping Tantrum",
-      "Swords Dance",
-      "Stone Edge",
       "Poison Jab",
       "Iron Head",
-      "Bulldoze"
+      "Swords Dance",
+      "Stone Edge",
+      "Scale Shot"
     ],
-    "commonAbilities": [
-      "Sand Force"
-    ],
-    "commonItems": [
-      "Garchompite"
-    ]
+    "commonAbilities": ["Sand Force"],
+    "commonItems": ["Garchompite"]
   },
   {
     "pokemonId": "gardevoir",
     "defaultItem": "Gardevoirite",
-    "defaultAbility": "Telepathy",
+    "defaultAbility": "Trace",
     "defaultMove": "Moonblast",
     "commonMoves": [
       "Protect",
       "Hyper Voice",
+      "Trick Room",
       "Psychic",
       "Psyshock",
-      "Trick Room",
       "Moonblast",
-      "Dazzling Gleam",
       "Calm Mind",
+      "Dazzling Gleam",
       "Icy Wind",
       "Aura Sphere"
     ],
-    "commonAbilities": [
-      "Telepathy",
-      "Trace",
-      "Synchronize"
-    ],
+    "commonAbilities": ["Trace", "Telepathy", "Synchronize"],
     "commonItems": [
       "Gardevoirite",
       "Choice Scarf",
-      "Sitrus Berry",
       "Focus Sash",
       "Fairy Feather",
-      "Quick Claw",
       "Leftovers",
-      "Focus Band",
-      "White Herb"
+      "Quick Claw",
+      "Sitrus Berry",
+      "Kebia Berry",
+      "Bright Powder"
     ]
   },
   {
@@ -2409,21 +2329,17 @@
     "commonMoves": [
       "Protect",
       "Hyper Voice",
+      "Trick Room",
       "Psychic",
       "Psyshock",
-      "Trick Room",
       "Moonblast",
-      "Dazzling Gleam",
       "Calm Mind",
+      "Dazzling Gleam",
       "Icy Wind",
       "Aura Sphere"
     ],
-    "commonAbilities": [
-      "Pixilate"
-    ],
-    "commonItems": [
-      "Gardevoirite"
-    ]
+    "commonAbilities": ["Pixilate"],
+    "commonItems": ["Gardevoirite"]
   },
   {
     "pokemonId": "garganacl",
@@ -2432,26 +2348,24 @@
     "defaultMove": "Earthquake",
     "commonMoves": [
       "Salt Cure",
+      "Wide Guard",
       "Protect",
       "Recover",
-      "Wide Guard",
       "Body Press",
-      "Iron Defense",
       "Rock Slide",
-      "Stealth Rock",
-      "Zen Headbutt",
-      "Earthquake"
+      "Iron Defense",
+      "Earthquake",
+      "Helping Hand",
+      "Stealth Rock"
     ],
-    "commonAbilities": [
-      "Purifying Salt",
-      "Clear Body"
-    ],
+    "commonAbilities": ["Purifying Salt", "Sturdy"],
     "commonItems": [
       "Leftovers",
       "Sitrus Berry",
-      "Rindo Berry",
       "Shuca Berry",
-      "Quick Claw"
+      "Bright Powder",
+      "Shell Bell",
+      "Hard Stone"
     ]
   },
   {
@@ -2460,31 +2374,29 @@
     "defaultAbility": "Cursed Body",
     "defaultMove": "Sludge Wave",
     "commonMoves": [
-      "Shadow Ball",
       "Protect",
+      "Shadow Ball",
       "Sludge Bomb",
       "Perish Song",
       "Disable",
-      "Substitute",
       "Icy Wind",
+      "Substitute",
+      "Taunt",
       "Sludge Wave",
-      "Will-O-Wisp",
-      "Destiny Bond"
+      "Will-O-Wisp"
     ],
-    "commonAbilities": [
-      "Cursed Body"
-    ],
+    "commonAbilities": ["Cursed Body"],
     "commonItems": [
       "Gengarite",
       "Focus Sash",
       "Choice Scarf",
-      "Sitrus Berry",
       "Quick Claw",
-      "Bright Powder",
-      "White Herb",
-      "Shell Bell",
-      "Leftovers",
-      "Meganiumite"
+      "Poison Barb",
+      "Meganiumite",
+      "Twisted Spoon",
+      "Kasib Berry",
+      "Spell Tag",
+      "Sitrus Berry"
     ]
   },
   {
@@ -2493,68 +2405,64 @@
     "defaultAbility": "Shadow Tag",
     "defaultMove": "Sludge Wave",
     "commonMoves": [
-      "Shadow Ball",
       "Protect",
+      "Shadow Ball",
       "Sludge Bomb",
       "Perish Song",
       "Disable",
-      "Substitute",
       "Icy Wind",
+      "Substitute",
+      "Taunt",
       "Sludge Wave",
-      "Will-O-Wisp",
-      "Destiny Bond"
+      "Will-O-Wisp"
     ],
-    "commonAbilities": [
-      "Shadow Tag"
-    ],
-    "commonItems": [
-      "Gengarite"
-    ]
+    "commonAbilities": ["Shadow Tag"],
+    "commonItems": ["Gengarite"]
   },
   {
     "pokemonId": "glaceon",
-    "defaultItem": "Never-Melt Ice",
+    "defaultItem": "Bright Powder",
     "defaultAbility": "Snow Cloak",
     "defaultMove": "Blizzard",
     "commonMoves": [
       "Blizzard",
       "Freeze-Dry",
       "Protect",
-      "Ice Shard",
-      "Calm Mind",
       "Detect",
-      "Hyper Voice",
-      "Water Pulse",
+      "Ice Shard",
+      "Icy Wind",
+      "Ice Beam",
       "Yawn",
-      "Mud Shot"
+      "Helping Hand",
+      "Snowscape"
     ],
-    "commonAbilities": [
-      "Snow Cloak",
-      "Ice Body"
-    ],
+    "commonAbilities": ["Snow Cloak", "Ice Body"],
     "commonItems": [
-      "Never-Melt Ice",
       "Bright Powder",
+      "Never-Melt Ice",
+      "Quick Claw",
       "Leftovers"
     ]
   },
   {
     "pokemonId": "glalie",
-    "defaultItem": "Glalitite",
+    "defaultItem": "Never-Melt Ice",
     "defaultAbility": "Inner Focus",
     "defaultMove": "Explosion",
     "commonMoves": [
+      "Protect",
+      "Icicle Crash",
+      "Earthquake",
+      "Freeze-Dry",
+      "Sheer Cold",
+      "Crunch",
+      "Ice Spinner",
       "Explosion",
-      "Ice Shard",
-      "Body Slam",
-      "Protect"
+      "Blizzard",
+      "Icy Wind"
     ],
-    "commonAbilities": [
-      "Inner Focus"
-    ],
-    "commonItems": [
-      "Glalitite"
-    ]
+    "commonAbilities": ["Inner Focus", "Moody", "Ice Body"],
+    "commonItems": ["Never-Melt Ice", "Leftovers", "Quick Claw"]
   },
   {
     "pokemonId": "glaliemega",
@@ -2562,15 +2470,19 @@
     "defaultAbility": "Refrigerate",
     "defaultMove": "Explosion",
     "commonMoves": [
+      "Protect",
+      "Icicle Crash",
+      "Earthquake",
+      "Freeze-Dry",
+      "Sheer Cold",
+      "Crunch",
+      "Ice Spinner",
       "Explosion",
-      "Ice Shard",
-      "Body Slam",
-      "Protect"
+      "Blizzard",
+      "Icy Wind"
     ],
     "commonAbilities": [],
-    "commonItems": [
-      "Glalitite"
-    ]
+    "commonItems": ["Glalitite"]
   },
   {
     "pokemonId": "glimmora",
@@ -2583,22 +2495,21 @@
       "Sludge Bomb",
       "Earth Power",
       "Sludge Wave",
-      "Protect",
       "Mortal Spin",
+      "Protect",
       "Substitute",
       "Energy Ball",
       "Stealth Rock"
     ],
-    "commonAbilities": [
-      "Toxic Debris",
-      "Corrosion"
-    ],
+    "commonAbilities": ["Toxic Debris", "Corrosion"],
     "commonItems": [
       "Glimmoranite",
       "Focus Sash",
-      "Sitrus Berry",
       "Leftovers",
       "Choice Scarf",
+      "Sitrus Berry",
+      "Soft Sand",
+      "Hard Stone",
       "Shuca Berry"
     ]
   },
@@ -2613,48 +2524,43 @@
       "Sludge Bomb",
       "Earth Power",
       "Sludge Wave",
-      "Protect",
       "Mortal Spin",
+      "Protect",
       "Substitute",
       "Energy Ball",
       "Stealth Rock"
     ],
-    "commonAbilities": [
-      "Adaptability"
-    ],
-    "commonItems": [
-      "Glimmoranite"
-    ]
+    "commonAbilities": ["Adaptability"],
+    "commonItems": ["Glimmoranite"]
   },
   {
     "pokemonId": "gliscor",
-    "defaultItem": "Leftovers",
+    "defaultItem": "Lum Berry",
     "defaultAbility": "Hyper Cutter",
     "defaultMove": "Earthquake",
     "commonMoves": [
-      "Earthquake",
-      "High Horsepower",
       "Dual Wingbeat",
+      "Protect",
+      "Earthquake",
       "Tailwind",
+      "High Horsepower",
       "Rock Slide",
       "U-turn",
-      "Facade",
       "Knock Off",
-      "Aerial Ace",
-      "Protect"
+      "Swords Dance",
+      "Dig"
     ],
-    "commonAbilities": [
-      "Hyper Cutter",
-      "Poison Heal",
-      "Sand Veil"
-    ],
+    "commonAbilities": ["Hyper Cutter", "Sand Veil", "Poison Heal"],
     "commonItems": [
+      "Lum Berry",
+      "Focus Sash",
       "Leftovers",
       "Sitrus Berry",
-      "Yache Berry",
       "Choice Scarf",
-      "Sharp Beak",
-      "Focus Sash"
+      "Passho Berry",
+      "Focus Band",
+      "Quick Claw",
+      "Yache Berry"
     ]
   },
   {
@@ -2663,27 +2569,19 @@
     "defaultAbility": "Iron Fist",
     "defaultMove": "Headlong Rush",
     "commonMoves": [
-      "Protect",
       "Headlong Rush",
+      "Protect",
       "Poltergeist",
       "Ice Punch",
       "Drain Punch",
-      "Earthquake",
       "Thunder Punch",
+      "Earthquake",
+      "Rock Slide",
       "High Horsepower",
-      "Knock Off",
-      "Rock Slide"
+      "Close Combat"
     ],
-    "commonAbilities": [
-      "Iron Fist",
-      "No Guard"
-    ],
-    "commonItems": [
-      "Golurkite",
-      "Black Belt",
-      "Meganiumite",
-      "Spell Tag"
-    ]
+    "commonAbilities": ["Iron Fist", "No Guard", "Klutz"],
+    "commonItems": ["Golurkite", "Meganiumite", "Spell Tag", "Charcoal"]
   },
   {
     "pokemonId": "golurkmega",
@@ -2691,85 +2589,91 @@
     "defaultAbility": "Unseen Fist",
     "defaultMove": "Headlong Rush",
     "commonMoves": [
-      "Protect",
       "Headlong Rush",
+      "Protect",
       "Poltergeist",
       "Ice Punch",
       "Drain Punch",
-      "Earthquake",
       "Thunder Punch",
+      "Earthquake",
+      "Rock Slide",
       "High Horsepower",
-      "Knock Off",
-      "Rock Slide"
+      "Close Combat"
     ],
-    "commonAbilities": [
-      "Unseen Fist"
-    ],
-    "commonItems": [
-      "Golurkite"
-    ]
+    "commonAbilities": ["Unseen Fist"],
+    "commonItems": ["Golurkite"]
   },
   {
     "pokemonId": "goodra",
     "defaultItem": "Leftovers",
-    "defaultAbility": "Hydration",
+    "defaultAbility": "Sap Sipper",
     "defaultMove": "Draco Meteor",
     "commonMoves": [
-      "Flamethrower",
-      "Thunderbolt",
       "Draco Meteor",
-      "Dragon Pulse",
-      "Sludge Bomb",
       "Protect",
       "Muddy Water",
-      "Thunder",
-      "Rest",
-      "Rain Dance"
+      "Ice Beam",
+      "Flamethrower",
+      "Thunderbolt",
+      "Flash Cannon"
     ],
-    "commonAbilities": [
-      "Hydration",
-      "Gooey",
-      "Sap Sipper"
-    ],
-    "commonItems": [
-      "Leftovers",
-      "Dragon Fang",
-      "White Herb",
-      "Bright Powder",
-      "Sitrus Berry",
-      "Haban Berry"
-    ]
+    "commonAbilities": ["Sap Sipper", "Gooey"],
+    "commonItems": ["Leftovers", "Charcoal", "Sitrus Berry"]
   },
   {
     "pokemonId": "goodrahisui",
     "defaultItem": "Leftovers",
-    "defaultAbility": "Shell Armor",
+    "defaultAbility": "Sap Sipper",
     "defaultMove": "Draco Meteor",
     "commonMoves": [
+      "Protect",
       "Body Press",
       "Shelter",
-      "Flash Cannon",
-      "Protect",
-      "Thunderbolt",
       "Heavy Slam",
-      "Dragon Pulse",
+      "Flash Cannon",
+      "Draco Meteor",
       "Life Dew",
-      "Rest",
-      "Draco Meteor"
+      "Thunderbolt",
+      "Ice Beam",
+      "Iron Head"
     ],
-    "commonAbilities": [
-      "Shell Armor",
-      "Sap Sipper",
-      "Gooey"
-    ],
+    "commonAbilities": ["Sap Sipper", "Shell Armor", "Gooey"],
     "commonItems": [
       "Leftovers",
-      "Chesto Berry",
-      "Chople Berry",
-      "Lum Berry",
       "Sitrus Berry",
-      "Bright Powder",
+      "Shuca Berry",
+      "Chople Berry",
+      "White Herb",
+      "Lum Berry",
       "Quick Claw"
+    ]
+  },
+  {
+    "pokemonId": "gourgeist",
+    "defaultItem": "Mental Herb",
+    "defaultAbility": "Insomnia",
+    "defaultMove": "Power Whip",
+    "commonMoves": [
+      "Trick Room",
+      "Poltergeist",
+      "Will-O-Wisp",
+      "Seed Bomb",
+      "Protect",
+      "Leech Seed",
+      "Shadow Sneak",
+      "Power Whip",
+      "Phantom Force"
+    ],
+    "commonAbilities": ["Insomnia", "Frisk", "Pickup"],
+    "commonItems": [
+      "Mental Herb",
+      "Colbur Berry",
+      "Coba Berry",
+      "Sitrus Berry",
+      "Leftovers",
+      "Occa Berry",
+      "Focus Sash",
+      "Spell Tag"
     ]
   },
   {
@@ -2779,29 +2683,27 @@
     "defaultMove": "Hydro Pump",
     "commonMoves": [
       "Dark Pulse",
+      "Protect",
       "Ice Beam",
       "Hydro Pump",
-      "Protect",
-      "Sludge Wave",
-      "Water Shuriken",
-      "U-turn",
+      "Blizzard",
+      "Low Kick",
       "Extrasensory",
-      "Icy Wind",
-      "Surf"
+      "Water Shuriken",
+      "Sludge Wave",
+      "Icy Wind"
     ],
-    "commonAbilities": [
-      "Protean",
-      "Torrent"
-    ],
+    "commonAbilities": ["Protean", "Torrent"],
     "commonItems": [
       "Greninjite",
       "Choice Scarf",
-      "Mystic Water",
       "Focus Sash",
-      "Sitrus Berry",
-      "King's Rock",
       "Black Glasses",
-      "Scope Lens"
+      "Sitrus Berry",
+      "Scope Lens",
+      "Bright Powder",
+      "King's Rock",
+      "Quick Claw"
     ]
   },
   {
@@ -2811,85 +2713,75 @@
     "defaultMove": "Hydro Pump",
     "commonMoves": [
       "Dark Pulse",
+      "Protect",
       "Ice Beam",
       "Hydro Pump",
-      "Protect",
-      "Sludge Wave",
-      "Water Shuriken",
-      "U-turn",
+      "Blizzard",
+      "Low Kick",
       "Extrasensory",
-      "Icy Wind",
-      "Surf"
+      "Water Shuriken",
+      "Sludge Wave",
+      "Icy Wind"
     ],
-    "commonAbilities": [
-      "Protean"
-    ],
-    "commonItems": [
-      "Greninjite"
-    ]
+    "commonAbilities": ["Protean"],
+    "commonItems": ["Greninjite"]
   },
   {
     "pokemonId": "gyarados",
     "defaultItem": "Gyaradosite",
     "defaultAbility": "Intimidate",
-    "defaultMove": "Earthquake",
+    "defaultMove": "Power Whip",
     "commonMoves": [
       "Waterfall",
       "Protect",
-      "Thunder Wave",
-      "Taunt",
-      "Dragon Dance",
       "Crunch",
+      "Dragon Dance",
+      "Taunt",
+      "Thunder Wave",
       "Ice Fang",
-      "Helping Hand",
       "Earthquake",
-      "Icy Wind"
+      "Helping Hand",
+      "Power Whip"
     ],
-    "commonAbilities": [
-      "Intimidate",
-      "Moxie"
-    ],
+    "commonAbilities": ["Intimidate", "Moxie"],
     "commonItems": [
       "Gyaradosite",
-      "Leftovers",
       "Sitrus Berry",
+      "Leftovers",
       "Lum Berry",
       "Wacan Berry",
+      "White Herb",
       "Mystic Water",
+      "Choice Scarf",
       "Quick Claw",
-      "Focus Sash",
-      "White Herb"
+      "Mental Herb"
     ]
   },
   {
     "pokemonId": "gyaradosmega",
     "defaultItem": "Gyaradosite",
     "defaultAbility": "Mold Breaker",
-    "defaultMove": "Earthquake",
+    "defaultMove": "Power Whip",
     "commonMoves": [
       "Waterfall",
       "Protect",
-      "Thunder Wave",
-      "Taunt",
-      "Dragon Dance",
       "Crunch",
+      "Dragon Dance",
+      "Taunt",
+      "Thunder Wave",
       "Ice Fang",
-      "Helping Hand",
       "Earthquake",
-      "Icy Wind"
+      "Helping Hand",
+      "Power Whip"
     ],
-    "commonAbilities": [
-      "Mold Breaker"
-    ],
-    "commonItems": [
-      "Gyaradosite"
-    ]
+    "commonAbilities": ["Mold Breaker"],
+    "commonItems": ["Gyaradosite"]
   },
   {
     "pokemonId": "hatterene",
     "defaultItem": "Fairy Feather",
     "defaultAbility": "Magic Bounce",
-    "defaultMove": "Future Sight",
+    "defaultMove": "Psychic",
     "commonMoves": [
       "Dazzling Gleam",
       "Trick Room",
@@ -2898,57 +2790,43 @@
       "Mystical Fire",
       "Expanding Force",
       "Magic Powder",
-      "Calm Mind",
-      "Future Sight",
-      "Psychic Terrain"
+      "Psychic Terrain",
+      "Life Dew",
+      "Calm Mind"
     ],
-    "commonAbilities": [
-      "Magic Bounce",
-      "Healer"
-    ],
+    "commonAbilities": ["Magic Bounce", "Healer"],
     "commonItems": [
       "Fairy Feather",
       "Focus Sash",
-      "Twisted Spoon",
       "Sitrus Berry",
-      "Kebia Berry",
       "Leftovers",
-      "Shell Bell",
+      "Babiri Berry",
+      "Twisted Spoon",
+      "Kebia Berry",
       "Kasib Berry",
-      "Quick Claw",
-      "Focus Band"
+      "Shell Bell",
+      "Mental Herb"
     ]
   },
   {
     "pokemonId": "hawlucha",
     "defaultItem": "Hawluchanite",
-    "defaultAbility": "Limber",
+    "defaultAbility": "Unburden",
     "defaultMove": "High Jump Kick",
     "commonMoves": [
       "Entrainment",
       "Protect",
-      "Brave Bird",
       "High Jump Kick",
+      "Dual Wingbeat",
+      "Brave Bird",
       "Close Combat",
       "Detect",
-      "Flying Press",
-      "Dual Wingbeat",
       "Stone Edge",
-      "Coaching"
+      "Rock Slide",
+      "Flying Press"
     ],
-    "commonAbilities": [
-      "Limber",
-      "Mold Breaker",
-      "Unburden"
-    ],
-    "commonItems": [
-      "Hawluchanite",
-      "White Herb",
-      "Focus Sash",
-      "Focus Band",
-      "Bright Powder",
-      "Mental Herb"
-    ]
+    "commonAbilities": ["Unburden", "Mold Breaker", "Limber"],
+    "commonItems": ["Hawluchanite", "White Herb", "Focus Sash"]
   },
   {
     "pokemonId": "hawluchamega",
@@ -2958,20 +2836,45 @@
     "commonMoves": [
       "Entrainment",
       "Protect",
-      "Brave Bird",
       "High Jump Kick",
+      "Dual Wingbeat",
+      "Brave Bird",
       "Close Combat",
       "Detect",
-      "Flying Press",
-      "Dual Wingbeat",
       "Stone Edge",
-      "Coaching"
+      "Rock Slide",
+      "Flying Press"
     ],
-    "commonAbilities": [
-      "No Guard"
+    "commonAbilities": [],
+    "commonItems": ["Hawluchanite"]
+  },
+  {
+    "pokemonId": "heliolisk",
+    "defaultItem": "Choice Scarf",
+    "defaultAbility": "Dry Skin",
+    "defaultMove": "Thunder",
+    "commonMoves": [
+      "Thunderbolt",
+      "Protect",
+      "Electroweb",
+      "Volt Switch",
+      "Shed Tail",
+      "Thunder",
+      "Hyper Voice",
+      "Weather Ball",
+      "Eerie Impulse",
+      "Dragon Pulse"
     ],
+    "commonAbilities": ["Dry Skin", "Solar Power", "Sand Veil"],
     "commonItems": [
-      "Hawluchanite"
+      "Choice Scarf",
+      "Magnet",
+      "Focus Sash",
+      "Sitrus Berry",
+      "Shuca Berry",
+      "Leftovers",
+      "Chople Berry",
+      "Silk Scarf"
     ]
   },
   {
@@ -2983,23 +2886,16 @@
       "Close Combat",
       "Rock Blast",
       "Pin Missile",
-      "Protect",
       "Detect",
+      "Protect",
       "Bullet Seed",
+      "Rock Slide",
       "Lunge",
       "Upper Hand",
-      "Rock Slide",
       "Megahorn"
     ],
-    "commonAbilities": [
-      "Moxie",
-      "Guts"
-    ],
-    "commonItems": [
-      "Heracronite",
-      "Black Belt",
-      "Choice Scarf"
-    ]
+    "commonAbilities": ["Moxie", "Guts"],
+    "commonItems": ["Heracronite", "Black Belt", "Choice Scarf"]
   },
   {
     "pokemonId": "heracrossmega",
@@ -3010,45 +2906,36 @@
       "Close Combat",
       "Rock Blast",
       "Pin Missile",
-      "Protect",
       "Detect",
+      "Protect",
       "Bullet Seed",
+      "Rock Slide",
       "Lunge",
       "Upper Hand",
-      "Rock Slide",
       "Megahorn"
     ],
     "commonAbilities": [],
-    "commonItems": [
-      "Heracronite"
-    ]
+    "commonItems": ["Heracronite"]
   },
   {
     "pokemonId": "hippowdon",
-    "defaultItem": "Sitrus Berry",
+    "defaultItem": "Leftovers",
     "defaultAbility": "Sand Stream",
-    "defaultMove": "High Horsepower",
+    "defaultMove": "Earthquake",
     "commonMoves": [
       "Protect",
-      "Rock Slide",
       "Yawn",
-      "High Horsepower",
-      "Stomping Tantrum",
-      "Sand Tomb",
-      "Slack Off",
+      "Rock Slide",
+      "Earthquake",
       "Helping Hand",
+      "Stone Edge",
       "Rest",
-      "Heavy Slam"
+      "Heavy Slam",
+      "Whirlwind",
+      "Iron Head"
     ],
-    "commonAbilities": [
-      "Sand Stream",
-      "Sand Force"
-    ],
-    "commonItems": [
-      "Sitrus Berry",
-      "Soft Sand",
-      "Leftovers"
-    ]
+    "commonAbilities": ["Sand Stream", "Sand Force"],
+    "commonItems": ["Leftovers", "Sitrus Berry"]
   },
   {
     "pokemonId": "houndoom",
@@ -3059,17 +2946,16 @@
       "Heat Wave",
       "Protect",
       "Dark Pulse",
-      "Solar Beam",
       "Snarl",
+      "Nasty Plot",
+      "Solar Beam",
+      "Scorching Sands",
       "Sucker Punch",
-      "Scorching Sands"
+      "Sludge Bomb",
+      "Flamethrower"
     ],
-    "commonAbilities": [
-      "Flash Fire"
-    ],
-    "commonItems": [
-      "Houndoominite"
-    ]
+    "commonAbilities": ["Flash Fire"],
+    "commonItems": ["Houndoominite"]
   },
   {
     "pokemonId": "houndoommega",
@@ -3080,17 +2966,16 @@
       "Heat Wave",
       "Protect",
       "Dark Pulse",
-      "Solar Beam",
       "Snarl",
+      "Nasty Plot",
+      "Solar Beam",
+      "Scorching Sands",
       "Sucker Punch",
-      "Scorching Sands"
+      "Sludge Bomb",
+      "Flamethrower"
     ],
-    "commonAbilities": [
-      "Solar Power"
-    ],
-    "commonItems": [
-      "Houndoominite"
-    ]
+    "commonAbilities": ["Solar Power"],
+    "commonItems": ["Houndoominite"]
   },
   {
     "pokemonId": "hydrapple",
@@ -3099,28 +2984,28 @@
     "defaultMove": "Leaf Storm",
     "commonMoves": [
       "Fickle Beam",
-      "Earth Power",
       "Protect",
-      "Energy Ball",
+      "Earth Power",
       "Giga Drain",
-      "Leaf Storm",
       "Pollen Puff",
-      "Draco Meteor",
-      "Infestation",
-      "Dragon Tail"
+      "Leaf Storm",
+      "Energy Ball",
+      "Syrup Bomb",
+      "Nasty Plot",
+      "Draco Meteor"
     ],
-    "commonAbilities": [
-      "Regenerator",
-      "Supersweet Syrup"
-    ],
+    "commonAbilities": ["Regenerator", "Supersweet Syrup"],
     "commonItems": [
       "Leftovers",
-      "Focus Sash",
-      "Soft Sand",
+      "White Herb",
       "Miracle Seed",
-      "Dragon Fang",
       "Yache Berry",
-      "White Herb"
+      "Quick Claw",
+      "Haban Berry",
+      "Focus Sash",
+      "Occa Berry",
+      "Roseli Berry",
+      "Soft Sand"
     ]
   },
   {
@@ -3131,29 +3016,27 @@
     "commonMoves": [
       "Dark Pulse",
       "Draco Meteor",
+      "Snarl",
+      "Heat Wave",
       "Protect",
       "Earth Power",
-      "Snarl",
       "Tailwind",
-      "Heat Wave",
       "Flamethrower",
-      "Focus Energy",
-      "Flash Cannon"
+      "U-turn",
+      "Dragon Pulse"
     ],
-    "commonAbilities": [
-      "Levitate"
-    ],
+    "commonAbilities": ["Levitate"],
     "commonItems": [
       "Choice Scarf",
-      "Scope Lens",
-      "White Herb",
+      "Haban Berry",
+      "Focus Sash",
       "Chople Berry",
       "Sitrus Berry",
-      "Focus Sash",
+      "White Herb",
+      "Scope Lens",
       "Black Glasses",
-      "Lum Berry",
-      "Quick Claw",
-      "Leftovers"
+      "Leftovers",
+      "Lum Berry"
     ]
   },
   {
@@ -3168,53 +3051,44 @@
       "Throat Chop",
       "Darkest Lariat",
       "Protect",
+      "Close Combat",
       "Will-O-Wisp",
       "Helping Hand",
-      "Taunt",
-      "Snarl"
+      "Taunt"
     ],
-    "commonAbilities": [
-      "Intimidate",
-      "Blaze"
-    ],
+    "commonAbilities": ["Intimidate", "Blaze"],
     "commonItems": [
       "Sitrus Berry",
       "Chople Berry",
       "Shuca Berry",
       "Leftovers",
-      "Lum Berry",
       "Passho Berry",
       "White Herb",
-      "Black Glasses",
+      "Lum Berry",
       "Charcoal",
-      "Quick Claw"
+      "Quick Claw",
+      "Bright Powder"
     ]
   },
   {
     "pokemonId": "infernape",
-    "defaultItem": "White Herb",
-    "defaultAbility": "Blaze",
+    "defaultItem": "Focus Sash",
+    "defaultAbility": "Iron Fist",
     "defaultMove": "Overheat",
     "commonMoves": [
       "Fake Out",
-      "Close Combat",
       "Protect",
+      "Aura Sphere",
+      "Fire Punch",
       "Overheat",
-      "Flare Blitz",
-      "Mach Punch",
-      "Upper Hand",
+      "Close Combat",
       "Heat Wave",
-      "Aura Sphere"
+      "Flare Blitz",
+      "Stealth Rock",
+      "Bulk Up"
     ],
-    "commonAbilities": [
-      "Blaze",
-      "Iron Fist"
-    ],
-    "commonItems": [
-      "White Herb",
-      "Black Belt",
-      "Focus Sash"
-    ]
+    "commonAbilities": ["Iron Fist", "Blaze"],
+    "commonItems": ["Focus Sash", "White Herb", "Charcoal", "Shell Bell"]
   },
   {
     "pokemonId": "jolteon",
@@ -3222,34 +3096,32 @@
     "defaultAbility": "Volt Absorb",
     "defaultMove": "Thunder",
     "commonMoves": [
-      "Protect",
-      "Thunderbolt",
       "Electroweb",
-      "Volt Switch",
+      "Thunderbolt",
+      "Protect",
       "Fake Tears",
-      "Shadow Ball",
-      "Weather Ball",
+      "Volt Switch",
       "Thunder",
-      "Alluring Voice",
-      "Discharge"
+      "Weather Ball",
+      "Shadow Ball",
+      "Yawn",
+      "Alluring Voice"
     ],
-    "commonAbilities": [
-      "Volt Absorb",
-      "Quick Feet"
-    ],
+    "commonAbilities": ["Volt Absorb", "Quick Feet"],
     "commonItems": [
       "Focus Sash",
       "Magnet",
-      "Lum Berry",
-      "Fairy Feather",
-      "Choice Scarf"
+      "Shuca Berry",
+      "Choice Scarf",
+      "Focus Band",
+      "King's Rock"
     ]
   },
   {
     "pokemonId": "kangaskhan",
     "defaultItem": "Kangaskhanite",
     "defaultAbility": "Scrappy",
-    "defaultMove": "Double-Edge",
+    "defaultMove": "Last Resort",
     "commonMoves": [
       "Fake Out",
       "Double-Edge",
@@ -3257,27 +3129,27 @@
       "Drain Punch",
       "Low Kick",
       "Protect",
+      "Ice Punch",
       "Body Slam",
       "Crunch",
-      "Ice Punch",
-      "Bite"
+      "Last Resort"
     ],
-    "commonAbilities": [
-      "Scrappy",
-      "Inner Focus",
-      "Early Bird"
-    ],
+    "commonAbilities": ["Scrappy", "Inner Focus", "Early Bird"],
     "commonItems": [
       "Kangaskhanite",
       "Silk Scarf",
-      "Spell Tag"
+      "Chople Berry",
+      "Hard Stone",
+      "Choice Scarf",
+      "Leftovers",
+      "Sitrus Berry"
     ]
   },
   {
     "pokemonId": "kangaskhanmega",
     "defaultItem": "Kangaskhanite",
     "defaultAbility": "Parental Bond",
-    "defaultMove": "Double-Edge",
+    "defaultMove": "Last Resort",
     "commonMoves": [
       "Fake Out",
       "Double-Edge",
@@ -3285,17 +3157,13 @@
       "Drain Punch",
       "Low Kick",
       "Protect",
+      "Ice Punch",
       "Body Slam",
       "Crunch",
-      "Ice Punch",
-      "Bite"
+      "Last Resort"
     ],
-    "commonAbilities": [
-      "Parental Bond"
-    ],
-    "commonItems": [
-      "Kangaskhanite"
-    ]
+    "commonAbilities": ["Parental Bond"],
+    "commonItems": ["Kangaskhanite"]
   },
   {
     "pokemonId": "kingambit",
@@ -3304,30 +3172,27 @@
     "defaultMove": "Sucker Punch",
     "commonMoves": [
       "Sucker Punch",
-      "Protect",
       "Kowtow Cleave",
+      "Protect",
       "Iron Head",
-      "Swords Dance",
       "Low Kick",
+      "Swords Dance",
       "Assurance",
       "Brick Break",
-      "Iron Defense",
-      "Low Sweep"
+      "Low Sweep",
+      "Throat Chop"
     ],
-    "commonAbilities": [
-      "Defiant",
-      "Supreme Overlord",
-      "Pressure"
-    ],
+    "commonAbilities": ["Defiant", "Supreme Overlord", "Pressure"],
     "commonItems": [
       "Black Glasses",
       "Chople Berry",
       "Focus Sash",
       "Lum Berry",
-      "Leftovers",
       "Sitrus Berry",
+      "Leftovers",
       "Occa Berry",
-      "Black Belt",
+      "Metal Coat",
+      "Shuca Berry",
       "Quick Claw"
     ]
   },
@@ -3341,23 +3206,22 @@
       "X-Scissor",
       "U-turn",
       "Close Combat",
-      "Protect",
       "Night Slash",
-      "Tailwind",
+      "Protect",
       "Aerial Ace",
       "Rock Slide",
-      "Agility"
+      "Tailwind",
+      "Dual Wingbeat"
     ],
-    "commonAbilities": [
-      "Sharpness",
-      "Swarm"
-    ],
+    "commonAbilities": ["Sharpness", "Swarm"],
     "commonItems": [
       "Choice Scarf",
       "Focus Sash",
-      "Hard Stone",
       "White Herb",
-      "Shell Bell"
+      "Scope Lens",
+      "Quick Claw",
+      "Charti Berry",
+      "Occa Berry"
     ]
   },
   {
@@ -3367,26 +3231,27 @@
     "defaultMove": "Foul Play",
     "commonMoves": [
       "Light Screen",
-      "Reflect",
       "Thunder Wave",
+      "Reflect",
       "Dazzling Gleam",
       "Rain Dance",
-      "Flash Cannon",
-      "Sandstorm",
-      "Sunny Day",
       "Foul Play",
-      "Protect"
+      "Trick Room",
+      "Protect",
+      "Sandstorm",
+      "Draining Kiss"
     ],
-    "commonAbilities": [
-      "Prankster"
-    ],
+    "commonAbilities": ["Prankster"],
     "commonItems": [
       "Mental Herb",
-      "Shuca Berry",
-      "Occa Berry",
-      "Focus Sash",
+      "Leftovers",
       "Sitrus Berry",
-      "Leftovers"
+      "Occa Berry",
+      "Shuca Berry",
+      "Metal Coat",
+      "Bright Powder",
+      "Focus Sash",
+      "Quick Claw"
     ]
   },
   {
@@ -3397,139 +3262,145 @@
     "commonMoves": [
       "Protect",
       "Clanging Scales",
-      "Clangorous Soul",
       "Aura Sphere",
-      "Flamethrower",
+      "Clangorous Soul",
+      "Draco Meteor",
       "Body Press",
       "Iron Defense",
-      "Draco Meteor",
+      "Flamethrower",
       "Vacuum Wave",
       "Flash Cannon"
     ],
-    "commonAbilities": [
-      "Soundproof",
-      "Overcoat",
-      "Bulletproof"
-    ],
+    "commonAbilities": ["Soundproof", "Overcoat", "Bulletproof"],
     "commonItems": [
       "Leftovers",
       "Dragon Fang",
       "Haban Berry",
       "Sitrus Berry",
+      "Choice Scarf",
       "Roseli Berry",
-      "White Herb",
-      "Black Belt",
+      "Lum Berry",
       "Shell Bell",
-      "Coba Berry"
+      "White Herb",
+      "Quick Claw"
     ]
   },
   {
     "pokemonId": "krookodile",
     "defaultItem": "Choice Scarf",
     "defaultAbility": "Intimidate",
-    "defaultMove": "Outrage",
+    "defaultMove": "Close Combat",
     "commonMoves": [
-      "Earthquake",
       "Knock Off",
-      "High Horsepower",
       "Rock Slide",
+      "High Horsepower",
+      "Earthquake",
       "Protect",
-      "Brick Break",
-      "Outrage",
       "Throat Chop",
-      "Crunch",
-      "Close Combat"
+      "Close Combat",
+      "Gunk Shot",
+      "Iron Head",
+      "Breaking Swipe"
     ],
-    "commonAbilities": [
-      "Intimidate",
-      "Moxie"
-    ],
+    "commonAbilities": ["Intimidate", "Moxie"],
     "commonItems": [
       "Choice Scarf",
       "Soft Sand",
-      "Focus Sash",
-      "Sitrus Berry",
-      "Leftovers",
-      "Roseli Berry",
-      "Quick Claw"
+      "Hard Stone",
+      "White Herb",
+      "Passho Berry",
+      "King's Rock",
+      "Chople Berry",
+      "Bright Powder",
+      "Sitrus Berry"
     ]
   },
   {
     "pokemonId": "leafeon",
-    "defaultItem": "Leftovers",
+    "defaultItem": "Miracle Seed",
     "defaultAbility": "Chlorophyll",
     "defaultMove": "Solar Blade",
     "commonMoves": [
-      "Knock Off",
-      "Protect",
       "Leaf Blade",
-      "X-Scissor",
-      "Solar Blade",
-      "Double-Edge",
-      "Aerial Ace",
-      "Swords Dance",
+      "Knock Off",
       "Detect",
-      "Rain Dance"
+      "Protect",
+      "Rain Dance",
+      "Solar Blade",
+      "Fake Tears",
+      "X-Scissor",
+      "Swords Dance",
+      "Yawn"
     ],
-    "commonAbilities": [
-      "Chlorophyll"
-    ],
+    "commonAbilities": ["Chlorophyll", "Leaf Guard"],
     "commonItems": [
-      "Leftovers",
       "Miracle Seed",
+      "Scope Lens",
       "Sitrus Berry",
-      "Choice Scarf",
+      "Focus Sash",
+      "Leftovers",
       "Occa Berry"
     ]
+  },
+  {
+    "pokemonId": "liepard",
+    "defaultItem": "Focus Sash",
+    "defaultAbility": "Prankster",
+    "defaultMove": "Foul Play",
+    "commonMoves": [
+      "Fake Out",
+      "Foul Play",
+      "Encore",
+      "Thunder Wave",
+      "Taunt",
+      "Rain Dance",
+      "Fake Tears",
+      "Snarl",
+      "Swagger",
+      "Yawn"
+    ],
+    "commonAbilities": ["Prankster"],
+    "commonItems": ["Focus Sash", "Bright Powder"]
   },
   {
     "pokemonId": "lopunny",
     "defaultItem": "Lopunnite",
     "defaultAbility": "Limber",
-    "defaultMove": "Giga Impact",
+    "defaultMove": "Close Combat",
     "commonMoves": [
       "Close Combat",
       "Fake Out",
       "Protect",
       "Triple Axel",
-      "Ice Punch",
-      "U-turn",
-      "Mega Kick",
       "Encore",
-      "Quick Attack",
-      "Giga Impact"
+      "U-turn",
+      "Ice Punch",
+      "After You",
+      "Mach Punch",
+      "Quick Attack"
     ],
-    "commonAbilities": [
-      "Limber",
-      "Cute Charm"
-    ],
-    "commonItems": [
-      "Lopunnite"
-    ]
+    "commonAbilities": ["Limber", "Cute Charm", "Klutz"],
+    "commonItems": ["Lopunnite"]
   },
   {
     "pokemonId": "lopunnymega",
     "defaultItem": "Lopunnite",
     "defaultAbility": "Scrappy",
-    "defaultMove": "Giga Impact",
+    "defaultMove": "Close Combat",
     "commonMoves": [
       "Close Combat",
       "Fake Out",
       "Protect",
       "Triple Axel",
-      "Ice Punch",
-      "U-turn",
-      "Mega Kick",
       "Encore",
-      "Quick Attack",
-      "Giga Impact"
+      "U-turn",
+      "Ice Punch",
+      "After You",
+      "Mach Punch",
+      "Quick Attack"
     ],
-    "commonAbilities": [
-      "Scrappy"
-    ],
-    "commonItems": [
-      "Lopunnite"
-    ]
+    "commonAbilities": ["Scrappy"],
+    "commonItems": ["Lopunnite"]
   },
   {
     "pokemonId": "lucario",
@@ -3537,32 +3408,29 @@
     "defaultAbility": "Inner Focus",
     "defaultMove": "Close Combat",
     "commonMoves": [
-      "Protect",
       "Close Combat",
-      "Bullet Punch",
+      "Protect",
       "Meteor Mash",
+      "Bullet Punch",
       "Aura Sphere",
       "Flash Cannon",
+      "Detect",
       "Vacuum Wave",
-      "Nasty Plot",
       "Extreme Speed",
-      "Detect"
+      "Ice Punch"
     ],
-    "commonAbilities": [
-      "Inner Focus",
-      "Steadfast",
-      "Justified"
-    ],
+    "commonAbilities": ["Inner Focus", "Justified", "Steadfast"],
     "commonItems": [
       "Lucarionite",
-      "Quick Claw",
-      "Focus Sash",
-      "Lum Berry",
-      "Black Belt",
-      "White Herb",
       "Choice Scarf",
-      "Sitrus Berry",
-      "Never-Melt Ice"
+      "Focus Sash",
+      "Shuca Berry",
+      "Lum Berry",
+      "Chople Berry",
+      "Focus Band",
+      "Quick Claw",
+      "Mental Herb",
+      "Leftovers"
     ]
   },
   {
@@ -3571,45 +3439,44 @@
     "defaultAbility": "Adaptability",
     "defaultMove": "Close Combat",
     "commonMoves": [
-      "Protect",
       "Close Combat",
-      "Bullet Punch",
+      "Protect",
       "Meteor Mash",
+      "Bullet Punch",
       "Aura Sphere",
       "Flash Cannon",
+      "Detect",
       "Vacuum Wave",
-      "Nasty Plot",
       "Extreme Speed",
-      "Detect"
+      "Ice Punch"
     ],
-    "commonAbilities": [
-      "Adaptability"
-    ],
-    "commonItems": [
-      "Lucarionite"
-    ]
+    "commonAbilities": ["Adaptability"],
+    "commonItems": ["Lucarionite"]
   },
   {
     "pokemonId": "luxray",
     "defaultItem": "Sitrus Berry",
     "defaultAbility": "Intimidate",
-    "defaultMove": "Wild Charge",
+    "defaultMove": "Superpower",
     "commonMoves": [
-      "Snarl",
       "Volt Switch",
+      "Snarl",
+      "Psychic Fangs",
       "Wild Charge",
-      "Throat Chop",
-      "Helping Hand",
       "Protect",
+      "Helping Hand",
       "Baby-Doll Eyes",
-      "Quick Attack"
+      "Supercell Slam",
+      "Superpower",
+      "Throat Chop"
     ],
-    "commonAbilities": [
-      "Intimidate"
-    ],
+    "commonAbilities": ["Intimidate", "Guts"],
     "commonItems": [
       "Sitrus Berry",
-      "Magnet"
+      "Choice Scarf",
+      "Magnet",
+      "Focus Sash",
+      "King's Rock"
     ]
   },
   {
@@ -3618,25 +3485,26 @@
     "defaultAbility": "Sand Rush",
     "defaultMove": "Close Combat",
     "commonMoves": [
-      "Protect",
       "Rock Slide",
+      "Protect",
       "Accelerock",
       "Close Combat",
-      "Endeavor",
       "Psychic Fangs",
       "Crunch",
-      "Iron Head",
-      "Quick Guard",
-      "Swords Dance"
+      "Endeavor",
+      "Sucker Punch",
+      "Drill Run",
+      "Stomping Tantrum"
     ],
-    "commonAbilities": [
-      "Sand Rush",
-      "Keen Eye"
-    ],
+    "commonAbilities": ["Sand Rush", "Steadfast", "Keen Eye"],
     "commonItems": [
       "Focus Sash",
       "Hard Stone",
-      "Sitrus Berry"
+      "Choice Scarf",
+      "Quick Claw",
+      "Black Belt",
+      "Black Glasses",
+      "King's Rock"
     ]
   },
   {
@@ -3645,24 +3513,26 @@
     "defaultAbility": "Tough Claws",
     "defaultMove": "Close Combat",
     "commonMoves": [
-      "Protect",
       "Rock Slide",
+      "Protect",
       "Accelerock",
       "Close Combat",
-      "Endeavor",
       "Psychic Fangs",
       "Crunch",
-      "Iron Head",
-      "Quick Guard",
-      "Swords Dance"
+      "Endeavor",
+      "Sucker Punch",
+      "Drill Run",
+      "Stomping Tantrum"
     ],
-    "commonAbilities": [
-      "Tough Claws"
-    ],
+    "commonAbilities": ["Tough Claws"],
     "commonItems": [
       "Focus Sash",
       "Hard Stone",
-      "Sitrus Berry"
+      "Choice Scarf",
+      "Quick Claw",
+      "Black Belt",
+      "Black Glasses",
+      "King's Rock"
     ]
   },
   {
@@ -3671,58 +3541,84 @@
     "defaultAbility": "Keen Eye",
     "defaultMove": "Close Combat",
     "commonMoves": [
-      "Protect",
       "Rock Slide",
+      "Protect",
       "Accelerock",
       "Close Combat",
-      "Endeavor",
       "Psychic Fangs",
       "Crunch",
-      "Iron Head",
-      "Quick Guard",
-      "Swords Dance"
+      "Endeavor",
+      "Sucker Punch",
+      "Drill Run",
+      "Stomping Tantrum"
     ],
-    "commonAbilities": [
-      "Keen Eye"
-    ],
+    "commonAbilities": ["Keen Eye"],
     "commonItems": [
       "Focus Sash",
       "Hard Stone",
-      "Sitrus Berry"
+      "Choice Scarf",
+      "Quick Claw",
+      "Black Belt",
+      "Black Glasses",
+      "King's Rock"
+    ]
+  },
+  {
+    "pokemonId": "machamp",
+    "defaultItem": "Quick Claw",
+    "defaultAbility": "No Guard",
+    "defaultMove": "Close Combat",
+    "commonMoves": [
+      "Stone Edge",
+      "Dynamic Punch",
+      "Bullet Punch",
+      "Ice Punch",
+      "Wide Guard",
+      "Close Combat",
+      "Knock Off",
+      "Drain Punch",
+      "Protect"
+    ],
+    "commonAbilities": ["No Guard", "Guts"],
+    "commonItems": [
+      "Quick Claw",
+      "Scope Lens",
+      "White Herb",
+      "Leftovers",
+      "Choice Scarf",
+      "Sitrus Berry",
+      "Black Belt"
     ]
   },
   {
     "pokemonId": "mamoswine",
-    "defaultItem": "Choice Scarf",
+    "defaultItem": "Focus Sash",
     "defaultAbility": "Oblivious",
     "defaultMove": "Superpower",
     "commonMoves": [
-      "Icicle Crash",
-      "Earthquake",
       "Ice Shard",
-      "High Horsepower",
+      "Icicle Crash",
       "Protect",
+      "Earthquake",
+      "High Horsepower",
       "Rock Slide",
-      "Stomping Tantrum",
       "Icicle Spear",
-      "Superpower",
-      "Icy Wind"
+      "Iron Head",
+      "Knock Off",
+      "Superpower"
     ],
-    "commonAbilities": [
-      "Oblivious",
-      "Thick Fat",
-      "Snow Cloak"
-    ],
+    "commonAbilities": ["Oblivious", "Thick Fat", "Snow Cloak"],
     "commonItems": [
-      "Choice Scarf",
       "Focus Sash",
-      "Sitrus Berry",
+      "Choice Scarf",
       "Never-Melt Ice",
-      "Soft Sand",
       "Bright Powder",
-      "Chople Berry",
       "Leftovers",
-      "Occa Berry"
+      "Chople Berry",
+      "Soft Sand",
+      "Occa Berry",
+      "Lum Berry",
+      "White Herb"
     ]
   },
   {
@@ -3736,21 +3632,20 @@
       "Snarl",
       "Thunderbolt",
       "Overheat",
-      "Flamethrower",
       "Thunder",
+      "Flamethrower",
       "Light Screen",
       "Discharge",
-      "Thunder Shock"
+      "Eerie Impulse"
     ],
-    "commonAbilities": [
-      "Lightning Rod",
-      "Static"
-    ],
+    "commonAbilities": ["Lightning Rod", "Static"],
     "commonItems": [
       "Manectite",
-      "Quick Claw",
-      "Focus Sash",
-      "Leftovers"
+      "Leftovers",
+      "Magnet",
+      "Choice Scarf",
+      "White Herb",
+      "Lum Berry"
     ]
   },
   {
@@ -3764,18 +3659,14 @@
       "Snarl",
       "Thunderbolt",
       "Overheat",
-      "Flamethrower",
       "Thunder",
+      "Flamethrower",
       "Light Screen",
       "Discharge",
-      "Thunder Shock"
+      "Eerie Impulse"
     ],
-    "commonAbilities": [
-      "Intimidate"
-    ],
-    "commonItems": [
-      "Manectite"
-    ]
+    "commonAbilities": ["Intimidate"],
+    "commonItems": ["Manectite"]
   },
   {
     "pokemonId": "maushold",
@@ -3791,130 +3682,105 @@
       "Encore",
       "Population Bomb",
       "Feint",
-      "After You",
+      "U-turn",
       "Rain Dance"
     ],
-    "commonAbilities": [
-      "Friend Guard",
-      "Technician",
-      "Cheek Pouch"
-    ],
+    "commonAbilities": ["Friend Guard", "Technician", "Cheek Pouch"],
     "commonItems": [
       "Chople Berry",
       "Focus Sash",
       "Sitrus Berry",
-      "Lum Berry",
-      "Bright Powder",
+      "King's Rock",
       "Mental Herb",
-      "Leftovers",
+      "Bright Powder",
+      "Lum Berry",
       "Silk Scarf",
-      "King's Rock"
+      "Leftovers"
     ]
   },
   {
     "pokemonId": "medicham",
     "defaultItem": "Medichamite",
     "defaultAbility": "Pure Power",
-    "defaultMove": "High Jump Kick",
+    "defaultMove": "Close Combat",
     "commonMoves": [
       "Fake Out",
-      "Zen Headbutt",
       "Close Combat",
-      "High Jump Kick",
-      "Ice Punch",
       "Psycho Cut",
-      "Rock Tomb",
       "Protect",
-      "Trick Room",
-      "Bullet Punch"
+      "Zen Headbutt",
+      "Drain Punch",
+      "Ice Punch",
+      "Bullet Punch",
+      "Rock Slide",
+      "Poison Jab"
     ],
-    "commonAbilities": [
-      "Pure Power"
-    ],
-    "commonItems": [
-      "Medichamite",
-      "Focus Sash",
-      "Sitrus Berry"
-    ]
+    "commonAbilities": ["Pure Power", "Telepathy"],
+    "commonItems": ["Medichamite", "Focus Sash", "White Herb"]
   },
   {
     "pokemonId": "medichammega",
     "defaultItem": "Medichamite",
     "defaultAbility": "Pure Power",
-    "defaultMove": "High Jump Kick",
+    "defaultMove": "Close Combat",
     "commonMoves": [
       "Fake Out",
-      "Zen Headbutt",
       "Close Combat",
-      "High Jump Kick",
-      "Ice Punch",
       "Psycho Cut",
-      "Rock Tomb",
       "Protect",
-      "Trick Room",
-      "Bullet Punch"
+      "Zen Headbutt",
+      "Drain Punch",
+      "Ice Punch",
+      "Bullet Punch",
+      "Rock Slide",
+      "Poison Jab"
     ],
-    "commonAbilities": [
-      "Pure Power"
-    ],
-    "commonItems": [
-      "Medichamite"
-    ]
+    "commonAbilities": ["Pure Power"],
+    "commonItems": ["Medichamite"]
   },
   {
     "pokemonId": "meganium",
     "defaultItem": "Meganiumite",
     "defaultAbility": "Overgrow",
-    "defaultMove": "Solar Beam",
+    "defaultMove": "Solar Blade",
     "commonMoves": [
       "Solar Beam",
       "Dazzling Gleam",
-      "Protect",
       "Weather Ball",
+      "Protect",
       "Synthesis",
       "Earth Power",
+      "Leech Seed",
+      "Ancient Power",
       "Giga Drain",
-      "Heal Pulse",
-      "Substitute",
-      "Ingrain"
+      "Solar Blade"
     ],
-    "commonAbilities": [
-      "Overgrow",
-      "Leaf Guard"
-    ],
-    "commonItems": [
-      "Meganiumite",
-      "Leftovers",
-      "Sitrus Berry"
-    ]
+    "commonAbilities": ["Overgrow", "Leaf Guard"],
+    "commonItems": ["Meganiumite"]
   },
   {
     "pokemonId": "meganiummega",
     "defaultItem": "Meganiumite",
     "defaultAbility": "Mega Sol",
-    "defaultMove": "Solar Beam",
+    "defaultMove": "Solar Blade",
     "commonMoves": [
       "Solar Beam",
       "Dazzling Gleam",
-      "Protect",
       "Weather Ball",
+      "Protect",
       "Synthesis",
       "Earth Power",
+      "Leech Seed",
+      "Ancient Power",
       "Giga Drain",
-      "Heal Pulse",
-      "Substitute",
-      "Ingrain"
+      "Solar Blade"
     ],
-    "commonAbilities": [
-      "Mega Sol"
-    ],
-    "commonItems": [
-      "Meganiumite"
-    ]
+    "commonAbilities": ["Mega Sol"],
+    "commonItems": ["Meganiumite"]
   },
   {
     "pokemonId": "meowscarada",
-    "defaultItem": "Focus Sash",
+    "defaultItem": "Choice Scarf",
     "defaultAbility": "Protean",
     "defaultMove": "Triple Axel",
     "commonMoves": [
@@ -3922,273 +3788,298 @@
       "Knock Off",
       "Triple Axel",
       "Protect",
-      "Sucker Punch",
       "U-turn",
+      "Sucker Punch",
       "Low Kick",
-      "Play Rough",
       "Throat Chop",
+      "Play Rough",
       "Thunder Punch"
     ],
-    "commonAbilities": [
-      "Protean",
-      "Overgrow"
-    ],
+    "commonAbilities": ["Protean", "Overgrow"],
     "commonItems": [
-      "Focus Sash",
       "Choice Scarf",
-      "Black Glasses",
+      "Focus Sash",
       "Miracle Seed",
-      "White Herb",
+      "Black Glasses",
+      "King's Rock",
+      "Bright Powder",
+      "Occa Berry",
+      "Leftovers",
       "Sitrus Berry",
-      "Quick Claw",
-      "Lum Berry",
-      "Never-Melt Ice",
-      "Bright Powder"
+      "White Herb"
     ]
   },
   {
     "pokemonId": "meowstic",
-    "defaultItem": "Meowsticite",
+    "defaultItem": "Focus Sash",
     "defaultAbility": "Prankster",
     "defaultMove": "Psychic",
     "commonMoves": [
-      "Fake Out",
       "Psychic Terrain",
       "Expanding Force",
-      "Light Screen",
+      "Fake Out",
       "Psychic",
+      "Protect",
+      "Light Screen",
+      "Reflect",
       "Trick Room",
-      "Gravity",
       "Helping Hand",
-      "Alluring Voice",
-      "Thunder Wave"
+      "Alluring Voice"
     ],
-    "commonAbilities": [
-      "Prankster",
-      "Infiltrator"
-    ],
+    "commonAbilities": ["Prankster", "Infiltrator", "Keen Eye"],
     "commonItems": [
-      "Meowsticite",
       "Focus Sash",
+      "Meowsticite",
       "Mental Herb",
       "Sitrus Berry",
       "Colbur Berry",
-      "Lum Berry",
+      "Leftovers",
       "Bright Powder",
-      "Quick Claw"
+      "Quick Claw",
+      "Lum Berry"
     ]
   },
   {
     "pokemonId": "meowsticf",
-    "defaultItem": "Meowsticite",
+    "defaultItem": "Focus Sash",
     "defaultAbility": "Competitive",
     "defaultMove": "Psychic",
     "commonMoves": [
-      "Alluring Voice",
-      "Protect",
+      "Psychic Terrain",
       "Expanding Force",
-      "Shadow Ball",
       "Fake Out",
-      "Psychic"
+      "Psychic",
+      "Protect",
+      "Light Screen",
+      "Reflect",
+      "Trick Room",
+      "Helping Hand",
+      "Alluring Voice"
     ],
-    "commonAbilities": [
-      "Competitive"
-    ],
+    "commonAbilities": ["Competitive", "Infiltrator", "Keen Eye"],
     "commonItems": [
-      "Meowsticite"
+      "Focus Sash",
+      "Meowsticite",
+      "Mental Herb",
+      "Sitrus Berry",
+      "Colbur Berry",
+      "Leftovers",
+      "Bright Powder",
+      "Quick Claw",
+      "Lum Berry"
     ]
   },
   {
     "pokemonId": "milotic",
     "defaultItem": "Leftovers",
     "defaultAbility": "Competitive",
-    "defaultMove": "Ice Beam",
+    "defaultMove": "Muddy Water",
     "commonMoves": [
       "Scald",
       "Protect",
-      "Icy Wind",
-      "Ice Beam",
       "Recover",
-      "Life Dew",
+      "Icy Wind",
       "Muddy Water",
-      "Hypnosis",
       "Coil",
+      "Hypnosis",
+      "Ice Beam",
+      "Life Dew",
       "Helping Hand"
     ],
-    "commonAbilities": [
-      "Competitive",
-      "Marvel Scale",
-      "Cute Charm"
-    ],
+    "commonAbilities": ["Competitive", "Marvel Scale"],
     "commonItems": [
       "Leftovers",
       "Sitrus Berry",
       "Mystic Water",
+      "Shell Bell",
       "Lum Berry",
       "Wacan Berry",
-      "Bright Powder",
       "Rindo Berry",
-      "Choice Scarf",
-      "Shell Bell",
-      "Quick Claw"
+      "Quick Claw",
+      "Bright Powder",
+      "Choice Scarf"
     ]
   },
   {
     "pokemonId": "mimikyu",
-    "defaultItem": "Mental Herb",
+    "defaultItem": "White Herb",
     "defaultAbility": "Disguise",
     "defaultMove": "Play Rough",
     "commonMoves": [
       "Play Rough",
       "Shadow Sneak",
-      "Trick Room",
-      "Protect",
       "Shadow Claw",
+      "Protect",
+      "Trick Room",
       "Swords Dance",
       "Will-O-Wisp",
       "Taunt",
-      "Endure",
-      "Shadow Ball"
+      "Phantom Force",
+      "Curse"
     ],
-    "commonAbilities": [
-      "Disguise"
-    ],
+    "commonAbilities": ["Disguise"],
     "commonItems": [
+      "White Herb",
       "Mental Herb",
       "Spell Tag",
       "Sitrus Berry",
-      "White Herb",
       "Lum Berry",
       "Leftovers",
-      "Focus Sash",
-      "Babiri Berry",
+      "Fairy Feather",
       "Bright Powder",
-      "Focus Band"
+      "Scope Lens",
+      "Babiri Berry"
     ]
   },
   {
     "pokemonId": "mimikyubusted",
-    "defaultItem": "Mental Herb",
+    "defaultItem": "White Herb",
     "defaultAbility": "Disguise",
     "defaultMove": "Play Rough",
     "commonMoves": [
       "Play Rough",
       "Shadow Sneak",
-      "Trick Room",
-      "Protect",
       "Shadow Claw",
+      "Protect",
+      "Trick Room",
       "Swords Dance",
       "Will-O-Wisp",
       "Taunt",
-      "Endure",
-      "Shadow Ball"
+      "Phantom Force",
+      "Curse"
     ],
-    "commonAbilities": [
-      "Disguise"
-    ],
+    "commonAbilities": ["Disguise"],
     "commonItems": [
+      "White Herb",
       "Mental Herb",
       "Spell Tag",
       "Sitrus Berry",
-      "White Herb",
       "Lum Berry",
       "Leftovers",
-      "Focus Sash",
-      "Babiri Berry",
+      "Fairy Feather",
       "Bright Powder",
-      "Focus Band"
+      "Scope Lens",
+      "Babiri Berry"
     ]
   },
   {
     "pokemonId": "morpeko",
     "defaultItem": "Focus Sash",
     "defaultAbility": "Hunger Switch",
-    "defaultMove": "Aura Wheel",
+    "defaultMove": "Outrage",
     "commonMoves": [
+      "Aura Wheel",
       "Fake Out",
       "Parting Shot",
-      "Aura Wheel",
-      "Protect"
+      "Protect",
+      "Knock Off",
+      "Taunt",
+      "Electroweb",
+      "Outrage",
+      "Lash Out",
+      "Endeavor"
     ],
-    "commonAbilities": [
-      "Hunger Switch"
-    ],
-    "commonItems": [
-      "Focus Sash"
-    ]
+    "commonAbilities": ["Hunger Switch"],
+    "commonItems": ["Focus Sash", "Choice Scarf"]
   },
   {
     "pokemonId": "morpekohangry",
     "defaultItem": "Focus Sash",
     "defaultAbility": "Hunger Switch",
-    "defaultMove": "Aura Wheel",
+    "defaultMove": "Outrage",
     "commonMoves": [
+      "Aura Wheel",
       "Fake Out",
       "Parting Shot",
-      "Aura Wheel",
-      "Protect"
+      "Protect",
+      "Knock Off",
+      "Taunt",
+      "Electroweb",
+      "Outrage",
+      "Lash Out",
+      "Endeavor"
     ],
-    "commonAbilities": [
-      "Hunger Switch"
+    "commonAbilities": ["Hunger Switch"],
+    "commonItems": ["Focus Sash", "Choice Scarf"]
+  },
+  {
+    "pokemonId": "mrrime",
+    "defaultItem": "Sitrus Berry",
+    "defaultAbility": "Screen Cleaner",
+    "defaultMove": "Blizzard",
+    "commonMoves": [
+      "Freeze-Dry",
+      "Fake Out",
+      "Psychic",
+      "Protect",
+      "Trick Room",
+      "Ally Switch",
+      "Sheer Cold",
+      "Blizzard",
+      "Chilling Water",
+      "Shadow Ball"
     ],
+    "commonAbilities": ["Screen Cleaner", "Ice Body", "Tangled Feet"],
     "commonItems": [
-      "Focus Sash"
+      "Sitrus Berry",
+      "Focus Sash",
+      "Kasib Berry",
+      "Leftovers",
+      "Mental Herb",
+      "Never-Melt Ice",
+      "Babiri Berry"
     ]
   },
   {
     "pokemonId": "mudsdale",
     "defaultItem": "Leftovers",
     "defaultAbility": "Stamina",
-    "defaultMove": "Earthquake",
+    "defaultMove": "Close Combat",
     "commonMoves": [
       "Protect",
       "High Horsepower",
-      "Body Press",
-      "Earthquake",
       "Rock Slide",
+      "Earthquake",
+      "Body Press",
       "Heavy Slam",
       "Iron Head",
-      "Lash Out",
+      "Close Combat",
       "Stone Edge",
       "Low Kick"
     ],
-    "commonAbilities": [
-      "Stamina",
-      "Inner Focus"
-    ],
+    "commonAbilities": ["Stamina", "Inner Focus"],
     "commonItems": [
       "Leftovers",
-      "Rindo Berry",
-      "Sitrus Berry",
       "Soft Sand",
-      "Passho Berry"
+      "Sitrus Berry",
+      "Passho Berry",
+      "Rindo Berry"
     ]
   },
   {
     "pokemonId": "ninetales",
-    "defaultItem": "Charcoal",
+    "defaultItem": "Focus Sash",
     "defaultAbility": "Drought",
-    "defaultMove": "Heat Wave",
+    "defaultMove": "Flamethrower",
     "commonMoves": [
       "Protect",
+      "Flamethrower",
+      "Will-O-Wisp",
+      "Weather Ball",
+      "Encore",
+      "Solar Beam",
       "Helping Hand",
       "Heat Wave",
-      "Will-O-Wisp",
-      "Encore",
-      "Flamethrower",
-      "Mystical Fire",
-      "Shadow Ball",
-      "Weather Ball",
-      "Overheat"
+      "Snarl",
+      "Scorching Sands"
     ],
-    "commonAbilities": [
-      "Drought"
-    ],
+    "commonAbilities": ["Drought"],
     "commonItems": [
-      "Charcoal",
-      "Passho Berry",
       "Focus Sash",
-      "Leftovers"
+      "Charcoal",
+      "Bright Powder",
+      "Shuca Berry",
+      "Passho Berry"
     ]
   },
   {
@@ -4201,28 +4092,25 @@
       "Protect",
       "Aurora Veil",
       "Freeze-Dry",
-      "Encore",
       "Moonblast",
+      "Encore",
       "Icy Wind",
       "Disable",
       "Dazzling Gleam",
       "Helping Hand"
     ],
-    "commonAbilities": [
-      "Snow Warning",
-      "Snow Cloak"
-    ],
+    "commonAbilities": ["Snow Warning", "Snow Cloak"],
     "commonItems": [
       "Focus Sash",
       "Never-Melt Ice",
-      "Occa Berry",
       "Choice Scarf",
-      "Mental Herb",
-      "Leftovers",
-      "Sitrus Berry",
+      "Occa Berry",
       "Babiri Berry",
-      "Kebia Berry",
-      "White Herb"
+      "Sitrus Berry",
+      "Bright Powder",
+      "Leftovers",
+      "Mental Herb",
+      "Quick Claw"
     ]
   },
   {
@@ -4231,27 +4119,27 @@
     "defaultAbility": "Infiltrator",
     "defaultMove": "Draco Meteor",
     "commonMoves": [
-      "Draco Meteor",
       "Tailwind",
+      "Draco Meteor",
       "Protect",
       "Air Slash",
-      "Hurricane",
       "Super Fang",
-      "Flamethrower",
-      "Defog",
-      "U-turn",
-      "Heat Wave"
+      "Heat Wave",
+      "Hurricane",
+      "Dark Pulse",
+      "Taunt",
+      "Dragon Pulse"
     ],
-    "commonAbilities": [
-      "Infiltrator",
-      "Frisk",
-      "Telepathy"
-    ],
+    "commonAbilities": ["Infiltrator", "Telepathy", "Frisk"],
     "commonItems": [
       "Focus Sash",
       "Yache Berry",
+      "Bright Powder",
+      "Dragon Fang",
+      "Mental Herb",
+      "Quick Claw",
       "Lum Berry",
-      "Bright Powder"
+      "Haban Berry"
     ]
   },
   {
@@ -4260,37 +4148,36 @@
     "defaultAbility": "Inner Focus",
     "defaultMove": "Foul Play",
     "commonMoves": [
-      "Trick Room",
       "Instruct",
+      "Trick Room",
       "Protect",
       "Psychic",
-      "Foul Play",
       "Encore",
-      "Taunt",
-      "Knock Off",
+      "Foul Play",
       "Psychic Noise",
+      "Psyshock",
+      "Taunt",
       "Hyper Voice"
     ],
-    "commonAbilities": [
-      "Inner Focus",
-      "Telepathy"
-    ],
+    "commonAbilities": ["Inner Focus", "Telepathy"],
     "commonItems": [
       "Mental Herb",
       "Sitrus Berry",
       "Colbur Berry",
       "Leftovers",
-      "Focus Sash",
-      "Lum Berry",
       "Focus Band",
-      "Silk Scarf"
+      "Silk Scarf",
+      "Twisted Spoon",
+      "Magnet",
+      "Focus Sash",
+      "Lum Berry"
     ]
   },
   {
     "pokemonId": "orthworm",
     "defaultItem": "Sitrus Berry",
     "defaultAbility": "Earth Eater",
-    "defaultMove": "Earthquake",
+    "defaultMove": "Iron Tail",
     "commonMoves": [
       "Body Press",
       "Shed Tail",
@@ -4299,19 +4186,17 @@
       "Protect",
       "Iron Head",
       "Helping Hand",
-      "Smack Down",
-      "Earthquake"
+      "Iron Tail",
+      "Rock Slide",
+      "Coil"
     ],
-    "commonAbilities": [
-      "Earth Eater"
-    ],
+    "commonAbilities": ["Earth Eater"],
     "commonItems": [
       "Sitrus Berry",
       "Leftovers",
-      "Occa Berry",
       "Chople Berry",
-      "Black Belt",
-      "Lum Berry"
+      "Lum Berry",
+      "Mental Herb"
     ]
   },
   {
@@ -4326,21 +4211,20 @@
       "Close Combat",
       "Flip Turn",
       "Ice Punch",
-      "Bulk Up",
       "Drain Punch",
-      "Haze",
-      "Taunt"
+      "Bulk Up",
+      "Aqua Jet",
+      "Haze"
     ],
-    "commonAbilities": [
-      "Zero to Hero"
-    ],
+    "commonAbilities": ["Zero to Hero"],
     "commonItems": [
       "Mystic Water",
       "Choice Scarf",
+      "Sitrus Berry",
       "Leftovers",
       "Lum Berry",
-      "Sitrus Berry",
-      "Black Belt"
+      "Black Belt",
+      "White Herb"
     ]
   },
   {
@@ -4355,22 +4239,40 @@
       "Close Combat",
       "Flip Turn",
       "Ice Punch",
-      "Bulk Up",
       "Drain Punch",
-      "Haze",
-      "Taunt"
+      "Bulk Up",
+      "Aqua Jet",
+      "Haze"
     ],
-    "commonAbilities": [
-      "Zero to Hero"
-    ],
+    "commonAbilities": ["Zero to Hero"],
     "commonItems": [
       "Mystic Water",
       "Choice Scarf",
+      "Sitrus Berry",
       "Leftovers",
       "Lum Berry",
-      "Sitrus Berry",
-      "Black Belt"
+      "Black Belt",
+      "White Herb"
     ]
+  },
+  {
+    "pokemonId": "pangoro",
+    "defaultItem": "Focus Sash",
+    "defaultAbility": "Scrappy",
+    "defaultMove": "Close Combat",
+    "commonMoves": [
+      "Knock Off",
+      "Close Combat",
+      "Rock Slide",
+      "Protect",
+      "Parting Shot",
+      "Detect",
+      "Drain Punch",
+      "Entrainment",
+      "Poison Jab"
+    ],
+    "commonAbilities": ["Scrappy"],
+    "commonItems": ["Focus Sash", "Chople Berry", "White Herb"]
   },
   {
     "pokemonId": "passimian",
@@ -4379,22 +4281,27 @@
     "defaultMove": "Close Combat",
     "commonMoves": [
       "Close Combat",
-      "Rock Slide",
       "Protect",
-      "U-turn",
+      "Rock Slide",
       "Knock Off",
-      "Gunk Shot",
+      "U-turn",
+      "Fling",
+      "Coaching",
       "Feint",
-      "Fling"
+      "Upper Hand",
+      "Drain Punch"
     ],
-    "commonAbilities": [
-      "Defiant"
-    ],
-    "commonItems": [
-      "Choice Scarf",
-      "Black Belt",
-      "Hard Stone"
-    ]
+    "commonAbilities": ["Defiant", "Receiver"],
+    "commonItems": ["Choice Scarf", "Hard Stone", "Sitrus Berry", "White Herb"]
+  },
+  {
+    "pokemonId": "patrat",
+    "defaultItem": "Sitrus Berry",
+    "defaultAbility": "Run Away",
+    "defaultMove": "Tackle",
+    "commonMoves": ["Tackle"],
+    "commonAbilities": ["Run Away", "Keen Eye", "Analytic"],
+    "commonItems": ["Sitrus Berry"]
   },
   {
     "pokemonId": "pelipper",
@@ -4410,44 +4317,37 @@
       "Muddy Water",
       "Icy Wind",
       "U-turn",
-      "Helping Hand",
-      "Ice Beam"
+      "Ice Beam",
+      "Helping Hand"
     ],
-    "commonAbilities": [
-      "Drizzle",
-      "Keen Eye",
-      "Rain Dish"
-    ],
+    "commonAbilities": ["Drizzle", "Keen Eye", "Rain Dish"],
     "commonItems": [
       "Focus Sash",
-      "Choice Scarf",
       "Sitrus Berry",
+      "Choice Scarf",
       "Leftovers",
       "Mystic Water",
       "Quick Claw",
       "Sharp Beak",
       "Wacan Berry",
-      "Lum Berry",
-      "Mental Herb"
+      "Charti Berry",
+      "Bright Powder"
     ]
   },
   {
     "pokemonId": "pidgeot",
     "defaultItem": "Pidgeotite",
-    "defaultAbility": "Big Pecks",
+    "defaultAbility": "Keen Eye",
     "defaultMove": "Hurricane",
     "commonMoves": [
       "Hurricane",
-      "Tailwind",
       "Heat Wave",
-      "Protect"
+      "Protect",
+      "Tailwind",
+      "Whirlwind"
     ],
-    "commonAbilities": [
-      "Big Pecks"
-    ],
-    "commonItems": [
-      "Pidgeotite"
-    ]
+    "commonAbilities": ["Keen Eye", "Tangled Feet", "Big Pecks"],
+    "commonItems": ["Pidgeotite"]
   },
   {
     "pokemonId": "pidgeotmega",
@@ -4456,14 +4356,13 @@
     "defaultMove": "Hurricane",
     "commonMoves": [
       "Hurricane",
-      "Tailwind",
       "Heat Wave",
-      "Protect"
+      "Protect",
+      "Tailwind",
+      "Whirlwind"
     ],
     "commonAbilities": [],
-    "commonItems": [
-      "Pidgeotite"
-    ]
+    "commonItems": ["Pidgeotite"]
   },
   {
     "pokemonId": "pikachu",
@@ -4473,64 +4372,53 @@
     "commonMoves": [
       "Fake Out",
       "Protect",
+      "Volt Switch",
+      "Thunder",
       "Thunderbolt",
       "Volt Tackle",
-      "Volt Switch",
-      "Encore",
-      "Thunder",
-      "Nuzzle",
       "Surf",
-      "Knock Off"
+      "Nuzzle",
+      "Rain Dance",
+      "Helping Hand"
     ],
-    "commonAbilities": [
-      "Lightning Rod",
-      "Static"
-    ],
-    "commonItems": [
-      "Light Ball",
-      "Focus Sash"
-    ]
+    "commonAbilities": ["Lightning Rod", "Static"],
+    "commonItems": ["Light Ball", "Focus Sash", "Bright Powder", "Lum Berry"]
   },
   {
     "pokemonId": "pinsir",
     "defaultItem": "Pinsirite",
     "defaultAbility": "Hyper Cutter",
-    "defaultMove": "Body Slam",
+    "defaultMove": "Close Combat",
     "commonMoves": [
       "Body Slam",
+      "Close Combat",
       "Protect",
-      "Swords Dance",
       "Feint",
-      "Quick Attack",
+      "Rock Slide",
+      "Rock Tomb",
       "Lunge",
-      "X-Scissor"
+      "Quick Attack"
     ],
-    "commonAbilities": [
-      "Hyper Cutter",
-      "Moxie"
-    ],
-    "commonItems": [
-      "Pinsirite"
-    ]
+    "commonAbilities": ["Hyper Cutter"],
+    "commonItems": ["Pinsirite"]
   },
   {
     "pokemonId": "pinsirmega",
     "defaultItem": "Pinsirite",
     "defaultAbility": "Aerilate",
-    "defaultMove": "Body Slam",
+    "defaultMove": "Close Combat",
     "commonMoves": [
       "Body Slam",
+      "Close Combat",
       "Protect",
-      "Swords Dance",
       "Feint",
-      "Quick Attack",
+      "Rock Slide",
+      "Rock Tomb",
       "Lunge",
-      "X-Scissor"
+      "Quick Attack"
     ],
     "commonAbilities": [],
-    "commonItems": [
-      "Pinsirite"
-    ]
+    "commonItems": ["Pinsirite"]
   },
   {
     "pokemonId": "politoed",
@@ -4549,72 +4437,65 @@
       "Rain Dance",
       "Earth Power"
     ],
-    "commonAbilities": [
-      "Drizzle",
-      "Water Absorb"
-    ],
+    "commonAbilities": ["Drizzle", "Water Absorb"],
     "commonItems": [
       "Leftovers",
       "Sitrus Berry",
       "Mystic Water",
-      "Quick Claw",
-      "Mental Herb",
       "Wacan Berry",
       "Bright Powder",
-      "Choice Scarf",
       "Focus Sash",
-      "Rindo Berry"
+      "Quick Claw",
+      "Rindo Berry",
+      "Lum Berry",
+      "Never-Melt Ice"
     ]
   },
   {
     "pokemonId": "polteageist",
     "defaultItem": "Focus Sash",
-    "defaultAbility": "Weak Armor",
-    "defaultMove": "Shell Smash",
+    "defaultAbility": "Cursed Body",
+    "defaultMove": "Shadow Ball",
     "commonMoves": [
-      "Shell Smash",
-      "Stored Power",
       "Shadow Ball",
-      "Baton Pass"
+      "Trick Room",
+      "Giga Drain",
+      "Protect",
+      "Strength Sap",
+      "Aromatic Mist"
     ],
-    "commonAbilities": [
-      "Weak Armor"
-    ],
-    "commonItems": [
-      "Focus Sash"
-    ]
+    "commonAbilities": ["Cursed Body"],
+    "commonItems": ["Focus Sash", "Leftovers"]
   },
   {
     "pokemonId": "primarina",
     "defaultItem": "Leftovers",
     "defaultAbility": "Liquid Voice",
-    "defaultMove": "Hydro Pump",
+    "defaultMove": "Hydro Cannon",
     "commonMoves": [
       "Hyper Voice",
-      "Protect",
       "Moonblast",
+      "Protect",
       "Calm Mind",
-      "Dazzling Gleam",
-      "Icy Wind",
-      "Haze",
+      "Hydro Cannon",
       "Ice Beam",
-      "Weather Ball",
-      "Hydro Pump"
+      "Icy Wind",
+      "Dazzling Gleam",
+      "Life Dew",
+      "Haze"
     ],
-    "commonAbilities": [
-      "Liquid Voice",
-      "Torrent"
-    ],
+    "commonAbilities": ["Liquid Voice", "Torrent"],
     "commonItems": [
       "Leftovers",
-      "Mystic Water",
       "Sitrus Berry",
+      "Mystic Water",
       "Fairy Feather",
+      "Kebia Berry",
       "Quick Claw",
       "Lum Berry",
-      "Kebia Berry",
-      "Focus Sash",
-      "Rindo Berry"
+      "Bright Powder",
+      "Rindo Berry",
+      "Focus Sash"
     ]
   },
   {
@@ -4623,27 +4504,27 @@
     "defaultAbility": "Moxie",
     "defaultMove": "Close Combat",
     "commonMoves": [
-      "Aqua Step",
       "Close Combat",
+      "Aqua Step",
       "Protect",
       "Ice Spinner",
-      "Aqua Jet",
-      "Knock Off",
-      "Bulk Up",
-      "Swords Dance",
       "Triple Axel",
-      "Wave Crash"
+      "Flip Turn",
+      "Knock Off",
+      "Aqua Jet",
+      "Wave Crash",
+      "Detect"
     ],
-    "commonAbilities": [
-      "Moxie"
-    ],
+    "commonAbilities": ["Moxie"],
     "commonItems": [
       "Focus Sash",
-      "Mystic Water",
       "White Herb",
       "Choice Scarf",
+      "Mental Herb",
       "Sitrus Berry",
-      "Mental Herb"
+      "Black Belt",
+      "Mystic Water",
+      "Lum Berry"
     ]
   },
   {
@@ -4655,29 +4536,25 @@
       "Fake Out",
       "Volt Switch",
       "Nuzzle",
-      "Encore",
+      "Protect",
       "Thunderbolt",
       "Electroweb",
-      "Protect",
       "Thunder",
-      "Endeavor",
-      "Dazzling Gleam"
+      "Encore",
+      "Helping Hand",
+      "Endeavor"
     ],
-    "commonAbilities": [
-      "Lightning Rod",
-      "Static"
-    ],
+    "commonAbilities": ["Lightning Rod", "Static"],
     "commonItems": [
       "Focus Sash",
       "Sitrus Berry",
       "Shuca Berry",
       "Magnet",
       "Leftovers",
+      "Choice Scarf",
       "Bright Powder",
-      "Lum Berry",
       "Quick Claw",
-      "Silk Scarf",
-      "White Herb"
+      "Passho Berry"
     ]
   },
   {
@@ -4686,46 +4563,68 @@
     "defaultAbility": "Surge Surfer",
     "defaultMove": "Focus Blast",
     "commonMoves": [
-      "Fake Out",
       "Psychic",
+      "Fake Out",
       "Thunderbolt",
-      "Electric Terrain",
       "Expanding Force",
-      "Focus Blast",
-      "Surf",
       "Electroweb",
+      "Focus Blast",
       "Thunder",
-      "Speed Swap"
+      "Speed Swap",
+      "Volt Switch",
+      "Electric Terrain"
     ],
-    "commonAbilities": [
-      "Surge Surfer"
+    "commonAbilities": ["Surge Surfer"],
+    "commonItems": ["Focus Sash", "Magnet", "Sitrus Berry", "Quick Claw"]
+  },
+  {
+    "pokemonId": "rampardos",
+    "defaultItem": "White Herb",
+    "defaultAbility": "Sheer Force",
+    "defaultMove": "Head Smash",
+    "commonMoves": [
+      "Rock Slide",
+      "Iron Head",
+      "Protect",
+      "Hammer Arm",
+      "Head Smash",
+      "Ice Beam",
+      "Brick Break",
+      "Surf"
     ],
-    "commonItems": [
-      "Focus Sash",
-      "Magnet"
-    ]
+    "commonAbilities": ["Sheer Force"],
+    "commonItems": ["White Herb", "Choice Scarf", "Focus Sash", "Bright Powder"]
   },
   {
     "pokemonId": "reuniclus",
     "defaultItem": "Sitrus Berry",
     "defaultAbility": "Regenerator",
-    "defaultMove": "Psychic",
+    "defaultMove": "Focus Blast",
     "commonMoves": [
       "Psychic",
-      "Energy Ball",
+      "Protect",
       "Trick Room",
-      "Protect"
+      "Flash Cannon",
+      "Focus Blast",
+      "Energy Ball",
+      "Thunder",
+      "Recover",
+      "Psychic Noise",
+      "Pain Split"
     ],
-    "commonAbilities": [
-      "Regenerator"
-    ],
+    "commonAbilities": ["Regenerator", "Overcoat", "Magic Guard"],
     "commonItems": [
-      "Sitrus Berry"
+      "Sitrus Berry",
+      "Leftovers",
+      "Colbur Berry",
+      "Twisted Spoon",
+      "Quick Claw",
+      "Focus Sash"
     ]
   },
   {
     "pokemonId": "rhyperior",
-    "defaultItem": "Soft Sand",
+    "defaultItem": "Hard Stone",
     "defaultAbility": "Solid Rock",
     "defaultMove": "Earthquake",
     "commonMoves": [
@@ -4734,56 +4633,61 @@
       "Earthquake",
       "High Horsepower",
       "Ice Punch",
-      "Swords Dance",
-      "Heavy Slam",
-      "Fire Fang",
-      "Stealth Rock",
-      "Smart Strike"
+      "Stomping Tantrum",
+      "Body Press",
+      "Dragon Tail",
+      "Rock Blast"
     ],
-    "commonAbilities": [
-      "Solid Rock",
-      "Lightning Rod",
-      "Reckless"
-    ],
+    "commonAbilities": ["Solid Rock", "Lightning Rod", "Reckless"],
     "commonItems": [
+      "Hard Stone",
       "Soft Sand",
       "White Herb",
-      "Focus Sash",
       "Rindo Berry",
-      "Chesto Berry",
+      "Leftovers",
       "Sitrus Berry",
-      "Charcoal",
-      "Hard Stone",
-      "King's Rock"
+      "Passho Berry",
+      "King's Rock",
+      "Focus Sash"
     ]
   },
   {
+    "pokemonId": "roserade",
+    "defaultItem": "Choice Scarf",
+    "defaultAbility": "Poison Point",
+    "defaultMove": "Leaf Storm",
+    "commonMoves": [
+      "Sludge Bomb",
+      "Leaf Storm",
+      "Sleep Powder",
+      "Extrasensory",
+      "Energy Ball",
+      "Shadow Ball",
+      "Protect",
+      "Dazzling Gleam",
+      "Petal Dance"
+    ],
+    "commonAbilities": ["Poison Point", "Natural Cure"],
+    "commonItems": ["Choice Scarf", "Focus Sash", "Miracle Seed"]
+  },
+  {
     "pokemonId": "rotom",
-    "defaultItem": "Leftovers",
+    "defaultItem": "Sitrus Berry",
     "defaultAbility": "Levitate",
     "defaultMove": "Hydro Pump",
     "commonMoves": [
-      "Volt Switch",
-      "Will-O-Wisp",
-      "Protect",
       "Hydro Pump",
-      "Electroweb",
+      "Protect",
+      "Volt Switch",
+      "Thunder Wave",
       "Thunderbolt",
-      "Reflect",
+      "Will-O-Wisp",
       "Light Screen",
-      "Dark Pulse",
-      "Shadow Ball"
+      "Electroweb",
+      "Discharge"
     ],
-    "commonAbilities": [
-      "Levitate"
-    ],
-    "commonItems": [
-      "Leftovers",
-      "Focus Sash",
-      "Magnet",
-      "Choice Scarf",
-      "Sitrus Berry"
-    ]
+    "commonAbilities": ["Levitate"],
+    "commonItems": ["Sitrus Berry", "Quick Claw"]
   },
   {
     "pokemonId": "rotomfan",
@@ -4791,45 +4695,45 @@
     "defaultAbility": "Levitate",
     "defaultMove": "Thunderbolt",
     "commonMoves": [
-      "Air Slash",
       "Thunderbolt",
-      "Will-O-Wisp",
-      "Double Team"
+      "Protect",
+      "Air Slash",
+      "Volt Switch",
+      "Electroweb",
+      "Light Screen"
     ],
-    "commonAbilities": [
-      "Levitate"
-    ],
-    "commonItems": [
-      "Magnet"
-    ]
+    "commonAbilities": ["Levitate"],
+    "commonItems": ["Magnet", "Sitrus Berry"]
   },
   {
     "pokemonId": "rotomfrost",
-    "defaultItem": "Never-Melt Ice",
+    "defaultItem": "Choice Scarf",
     "defaultAbility": "Levitate",
     "defaultMove": "Blizzard",
     "commonMoves": [
       "Blizzard",
       "Thunderbolt",
-      "Protect",
       "Volt Switch",
-      "Helping Hand",
       "Electroweb",
+      "Protect",
+      "Helping Hand",
       "Will-O-Wisp",
-      "Thunder",
       "Shadow Ball",
-      "Discharge"
+      "Discharge",
+      "Trick"
     ],
-    "commonAbilities": [
-      "Levitate"
-    ],
+    "commonAbilities": ["Levitate"],
     "commonItems": [
-      "Never-Melt Ice",
       "Choice Scarf",
+      "Never-Melt Ice",
       "Sitrus Berry",
+      "Focus Sash",
+      "Magnet",
+      "Leftovers",
+      "Babiri Berry",
+      "Quick Claw",
       "Occa Berry",
-      "Scope Lens",
-      "Leftovers"
+      "Charti Berry"
     ]
   },
   {
@@ -4841,26 +4745,25 @@
       "Overheat",
       "Thunderbolt",
       "Volt Switch",
+      "Electroweb",
       "Protect",
       "Will-O-Wisp",
-      "Electroweb",
       "Trick",
       "Discharge",
-      "Eerie Impulse",
-      "Helping Hand"
+      "Helping Hand",
+      "Shadow Ball"
     ],
-    "commonAbilities": [
-      "Levitate"
-    ],
+    "commonAbilities": ["Levitate"],
     "commonItems": [
       "Choice Scarf",
       "Sitrus Berry",
       "Leftovers",
       "Passho Berry",
       "Magnet",
-      "Lum Berry",
+      "Charcoal",
       "White Herb",
-      "Quick Claw",
+      "Lum Berry",
+      "Focus Sash",
       "Mental Herb"
     ]
   },
@@ -4873,24 +4776,24 @@
       "Leaf Storm",
       "Volt Switch",
       "Thunderbolt",
-      "Will-O-Wisp",
       "Electroweb",
+      "Will-O-Wisp",
       "Protect",
       "Trick",
+      "Shadow Ball",
       "Discharge",
-      "Eerie Impulse",
-      "Shadow Ball"
+      "Eerie Impulse"
     ],
-    "commonAbilities": [
-      "Levitate"
-    ],
+    "commonAbilities": ["Levitate"],
     "commonItems": [
       "Choice Scarf",
-      "Leftovers",
       "Sitrus Berry",
-      "Magnet",
+      "Leftovers",
+      "White Herb",
       "Focus Sash",
-      "Occa Berry"
+      "Kebia Berry",
+      "Magnet",
+      "Miracle Seed"
     ]
   },
   {
@@ -4906,58 +4809,73 @@
       "Volt Switch",
       "Electroweb",
       "Trick",
-      "Helping Hand",
       "Discharge",
-      "Nasty Plot"
+      "Helping Hand",
+      "Shadow Ball"
     ],
-    "commonAbilities": [
-      "Levitate"
-    ],
+    "commonAbilities": ["Levitate"],
     "commonItems": [
       "Sitrus Berry",
       "Choice Scarf",
       "Leftovers",
       "Magnet",
       "Rindo Berry",
-      "Quick Claw",
       "Lum Berry",
       "Mystic Water",
-      "Chesto Berry"
+      "Quick Claw",
+      "Focus Sash",
+      "Bright Powder"
     ]
   },
   {
+    "pokemonId": "runerigus",
+    "defaultItem": "Sitrus Berry",
+    "defaultAbility": "Wandering Spirit",
+    "defaultMove": "Poltergeist",
+    "commonMoves": [
+      "Body Press",
+      "Trick Room",
+      "Rock Slide",
+      "Destiny Bond",
+      "Earthquake",
+      "Poltergeist",
+      "Ally Switch",
+      "Will-O-Wisp",
+      "Confuse Ray",
+      "Power Split"
+    ],
+    "commonAbilities": ["Wandering Spirit"],
+    "commonItems": ["Sitrus Berry", "Leftovers", "Hard Stone"]
+  },
+  {
     "pokemonId": "sableye",
-    "defaultItem": "Mental Herb",
+    "defaultItem": "Roseli Berry",
     "defaultAbility": "Prankster",
     "defaultMove": "Foul Play",
     "commonMoves": [
       "Encore",
-      "Disable",
       "Fake Out",
       "Foul Play",
       "Rain Dance",
+      "Disable",
       "Light Screen",
-      "Reflect",
       "Will-O-Wisp",
+      "Reflect",
       "Quash",
       "Protect"
     ],
-    "commonAbilities": [
-      "Prankster",
-      "Keen Eye",
-      "Stall"
-    ],
+    "commonAbilities": ["Prankster", "Keen Eye", "Stall"],
     "commonItems": [
-      "Mental Herb",
       "Roseli Berry",
-      "Sitrus Berry",
       "Focus Sash",
-      "Leftovers",
-      "Sablenite",
-      "Lum Berry",
+      "Sitrus Berry",
+      "Mental Herb",
       "Black Glasses",
+      "Leftovers",
+      "Lum Berry",
       "White Herb",
-      "Focus Band"
+      "Sablenite",
+      "Choice Scarf"
     ]
   },
   {
@@ -4967,99 +4885,97 @@
     "defaultMove": "Foul Play",
     "commonMoves": [
       "Encore",
-      "Disable",
       "Fake Out",
       "Foul Play",
       "Rain Dance",
+      "Disable",
       "Light Screen",
-      "Reflect",
       "Will-O-Wisp",
+      "Reflect",
       "Quash",
       "Protect"
     ],
-    "commonAbilities": [
-      "Magic Bounce"
-    ],
-    "commonItems": [
-      "Sablenite"
-    ]
+    "commonAbilities": ["Magic Bounce"],
+    "commonItems": ["Sablenite"]
   },
   {
     "pokemonId": "salazzle",
-    "defaultItem": "Shuca Berry",
-    "defaultAbility": "Oblivious",
-    "defaultMove": "Flamethrower",
+    "defaultItem": "Focus Sash",
+    "defaultAbility": "Corrosion",
+    "defaultMove": "Overheat",
     "commonMoves": [
+      "Overheat",
       "Sludge Bomb",
       "Fake Out",
+      "Will-O-Wisp",
+      "Protect",
+      "Taunt",
       "Flamethrower",
-      "Disable",
-      "Encore",
-      "Heat Wave",
-      "Dragon Pulse",
-      "Overheat",
-      "Dragon Cheer"
+      "Sunny Day",
+      "Toxic",
+      "Fling"
     ],
-    "commonAbilities": [
-      "Oblivious",
-      "Corrosion"
-    ],
-    "commonItems": [
-      "Shuca Berry",
-      "Focus Sash"
-    ]
+    "commonAbilities": ["Corrosion", "Oblivious"],
+    "commonItems": ["Focus Sash", "Charcoal", "King's Rock"]
+  },
+  {
+    "pokemonId": "samurott",
+    "defaultItem": "White Herb",
+    "defaultAbility": "Torrent",
+    "defaultMove": "Hydro Pump",
+    "commonMoves": ["Hydro Pump", "Ice Beam", "Vacuum Wave", "Substitute"],
+    "commonAbilities": ["Torrent"],
+    "commonItems": ["White Herb"]
   },
   {
     "pokemonId": "samurotthisui",
-    "defaultItem": "Chople Berry",
+    "defaultItem": "Choice Scarf",
     "defaultAbility": "Sharpness",
     "defaultMove": "Sacred Sword",
     "commonMoves": [
-      "Ceaseless Edge",
-      "Sacred Sword",
       "Aqua Cutter",
-      "Aqua Jet",
-      "Razor Shell",
-      "Sucker Punch",
+      "Sacred Sword",
       "Night Slash",
+      "Ceaseless Edge",
       "Protect",
+      "Sucker Punch",
+      "Razor Shell",
+      "Aqua Jet",
       "Flip Turn",
-      "Encore"
+      "Aerial Ace"
     ],
-    "commonAbilities": [
-      "Sharpness"
-    ],
+    "commonAbilities": ["Sharpness"],
     "commonItems": [
-      "Chople Berry",
-      "Scope Lens",
       "Choice Scarf",
+      "Scope Lens",
+      "Chople Berry",
+      "Black Glasses",
       "Focus Sash",
-      "Quick Claw",
       "Sitrus Berry",
-      "Leftovers",
+      "Quick Claw",
+      "White Herb",
       "Mystic Water"
     ]
   },
   {
     "pokemonId": "sandaconda",
-    "defaultItem": "Leftovers",
-    "defaultAbility": "Sand Spit",
+    "defaultItem": "Bright Powder",
+    "defaultAbility": "Sand Veil",
     "defaultMove": "Earthquake",
     "commonMoves": [
+      "Body Press",
       "Minimize",
-      "Substitute",
+      "Iron Defense",
+      "Protect",
+      "Rock Slide",
+      "High Horsepower",
       "Earthquake",
-      "Coil",
       "Glare",
-      "Body Slam",
-      "Body Press"
+      "Endeavor",
+      "Scorching Sands"
     ],
-    "commonAbilities": [
-      "Sand Spit"
-    ],
-    "commonItems": [
-      "Leftovers"
-    ]
+    "commonAbilities": ["Sand Veil", "Sand Spit"],
+    "commonItems": ["Bright Powder", "Soft Sand", "Leftovers", "Focus Sash"]
   },
   {
     "pokemonId": "scizor",
@@ -5069,31 +4985,26 @@
     "commonMoves": [
       "Bullet Punch",
       "Protect",
-      "Swords Dance",
       "Bug Bite",
+      "Swords Dance",
       "Close Combat",
       "Dual Wingbeat",
       "U-turn",
       "Knock Off",
       "Assurance",
-      "X-Scissor"
+      "Psycho Cut"
     ],
-    "commonAbilities": [
-      "Technician",
-      "Light Metal",
-      "Swarm"
-    ],
+    "commonAbilities": ["Technician", "Light Metal", "Swarm"],
     "commonItems": [
       "Scizorite",
       "Metal Coat",
       "Sitrus Berry",
-      "White Herb",
-      "Occa Berry",
       "Focus Sash",
-      "Bright Powder",
+      "Occa Berry",
+      "White Herb",
       "Leftovers",
-      "Quick Claw",
-      "Lum Berry"
+      "Silver Powder",
+      "Meganiumite"
     ]
   },
   {
@@ -5104,146 +5015,169 @@
     "commonMoves": [
       "Bullet Punch",
       "Protect",
-      "Swords Dance",
       "Bug Bite",
+      "Swords Dance",
       "Close Combat",
       "Dual Wingbeat",
       "U-turn",
       "Knock Off",
       "Assurance",
-      "X-Scissor"
+      "Psycho Cut"
     ],
-    "commonAbilities": [
-      "Technician"
-    ],
-    "commonItems": [
-      "Scizorite"
-    ]
+    "commonAbilities": ["Technician"],
+    "commonItems": ["Scizorite"]
   },
   {
     "pokemonId": "scovillain",
     "defaultItem": "Scovillainite",
     "defaultAbility": "Moody",
-    "defaultMove": "Flamethrower",
+    "defaultMove": "Overheat",
     "commonMoves": [
       "Rage Powder",
       "Protect",
       "Leech Seed",
-      "Flamethrower",
       "Overheat",
+      "Flamethrower",
       "Giga Drain",
       "Leaf Storm",
-      "Helping Hand",
       "Spicy Extract",
+      "Fire Spin",
       "Energy Ball"
     ],
-    "commonAbilities": [
-      "Moody",
-      "Chlorophyll",
-      "Insomnia"
-    ],
-    "commonItems": [
-      "Scovillainite",
-      "Sitrus Berry",
-      "Miracle Seed"
-    ]
+    "commonAbilities": ["Moody", "Chlorophyll", "Insomnia"],
+    "commonItems": ["Scovillainite", "Miracle Seed", "Lum Berry"]
   },
   {
     "pokemonId": "scovillainmega",
     "defaultItem": "Scovillainite",
     "defaultAbility": "Spicy Spray",
-    "defaultMove": "Flamethrower",
+    "defaultMove": "Overheat",
     "commonMoves": [
       "Rage Powder",
       "Protect",
       "Leech Seed",
-      "Flamethrower",
       "Overheat",
+      "Flamethrower",
       "Giga Drain",
       "Leaf Storm",
-      "Helping Hand",
       "Spicy Extract",
+      "Fire Spin",
       "Energy Ball"
     ],
-    "commonAbilities": [
-      "Spicy Spray"
-    ],
-    "commonItems": [
-      "Scovillainite"
-    ]
+    "commonAbilities": ["Spicy Spray"],
+    "commonItems": ["Scovillainite"]
   },
   {
     "pokemonId": "serperior",
-    "defaultItem": "Choice Scarf",
+    "defaultItem": "Occa Berry",
     "defaultAbility": "Contrary",
     "defaultMove": "Leaf Storm",
     "commonMoves": [
       "Leaf Storm",
+      "Protect",
       "Dragon Pulse",
       "Giga Drain",
-      "Protect",
-      "Energy Ball",
-      "Mean Look",
-      "Knock Off",
       "Glare",
-      "Solar Beam"
+      "Taunt",
+      "Endure",
+      "Substitute",
+      "Scale Shot",
+      "Sweet Scent"
     ],
-    "commonAbilities": [
-      "Contrary"
-    ],
+    "commonAbilities": ["Contrary"],
     "commonItems": [
-      "Choice Scarf",
+      "Occa Berry",
       "Sitrus Berry",
-      "Leftovers",
-      "Occa Berry"
+      "Miracle Seed",
+      "Focus Sash",
+      "Shell Bell",
+      "Kebia Berry",
+      "King's Rock",
+      "Choice Scarf"
     ]
   },
   {
     "pokemonId": "sharpedo",
     "defaultItem": "Sharpedonite",
     "defaultAbility": "Speed Boost",
-    "defaultMove": "Crunch",
+    "defaultMove": "Close Combat",
     "commonMoves": [
       "Crunch",
-      "Liquidation",
-      "Waterfall",
       "Protect",
-      "Rain Dance",
-      "Taunt",
-      "Ice Fang",
+      "Liquidation",
       "Psychic Fangs",
+      "Ice Fang",
+      "Waterfall",
+      "Aqua Jet",
+      "Close Combat",
       "Poison Fang",
-      "Aqua Jet"
+      "Flip Turn"
     ],
-    "commonAbilities": [
-      "Speed Boost",
-      "Rough Skin"
-    ],
-    "commonItems": [
-      "Sharpedonite"
-    ]
+    "commonAbilities": ["Speed Boost", "Rough Skin"],
+    "commonItems": ["Sharpedonite", "Focus Sash"]
   },
   {
     "pokemonId": "sharpedomega",
     "defaultItem": "Sharpedonite",
     "defaultAbility": "Strong Jaw",
-    "defaultMove": "Crunch",
+    "defaultMove": "Close Combat",
     "commonMoves": [
       "Crunch",
-      "Liquidation",
-      "Waterfall",
       "Protect",
-      "Rain Dance",
-      "Taunt",
-      "Ice Fang",
+      "Liquidation",
       "Psychic Fangs",
+      "Ice Fang",
+      "Waterfall",
+      "Aqua Jet",
+      "Close Combat",
       "Poison Fang",
-      "Aqua Jet"
+      "Flip Turn"
     ],
     "commonAbilities": [],
-    "commonItems": [
-      "Sharpedonite"
-    ]
+    "commonItems": ["Sharpedonite"]
+  },
+  {
+    "pokemonId": "simipour",
+    "defaultItem": "Mystic Water",
+    "defaultAbility": "Torrent",
+    "defaultMove": "Ice Beam",
+    "commonMoves": [
+      "Scald",
+      "Fake Out",
+      "Flip Turn",
+      "Icy Wind",
+      "Ice Beam",
+      "Helping Hand",
+      "Protect"
+    ],
+    "commonAbilities": ["Torrent"],
+    "commonItems": ["Mystic Water", "Focus Sash", "Bright Powder"]
+  },
+  {
+    "pokemonId": "simisage",
+    "defaultItem": "Sitrus Berry",
+    "defaultAbility": "Gluttony",
+    "defaultMove": "Leaf Storm",
+    "commonMoves": ["Leech Seed", "Protect", "Fake Out", "Leaf Storm"],
+    "commonAbilities": ["Gluttony"],
+    "commonItems": ["Sitrus Berry"]
+  },
+  {
+    "pokemonId": "simisear",
+    "defaultItem": "Focus Sash",
+    "defaultAbility": "Blaze",
+    "defaultMove": "Overheat",
+    "commonMoves": [
+      "Fake Out",
+      "Helping Hand",
+      "Overheat",
+      "Yawn",
+      "Flare Blitz",
+      "Protect",
+      "Rock Slide"
+    ],
+    "commonAbilities": ["Blaze"],
+    "commonItems": ["Focus Sash", "White Herb"]
   },
   {
     "pokemonId": "sinistcha",
@@ -5262,21 +5196,18 @@
       "Calm Mind",
       "Scald"
     ],
-    "commonAbilities": [
-      "Hospitality",
-      "Heatproof"
-    ],
+    "commonAbilities": ["Hospitality", "Heatproof"],
     "commonItems": [
       "Sitrus Berry",
       "Leftovers",
       "Occa Berry",
-      "Mental Herb",
       "Colbur Berry",
-      "Kasib Berry",
       "Coba Berry",
-      "Bright Powder",
+      "Kasib Berry",
+      "Mental Herb",
       "Focus Sash",
-      "Quick Claw"
+      "Bright Powder",
+      "Miracle Seed"
     ]
   },
   {
@@ -5289,22 +5220,20 @@
       "Protect",
       "Brave Bird",
       "Tailwind",
+      "Dual Wingbeat",
       "Body Press",
       "Swords Dance",
-      "Dual Wingbeat",
       "Rock Slide",
-      "Roost",
-      "Iron Defense"
+      "Taunt",
+      "Roost"
     ],
-    "commonAbilities": [
-      "Sturdy",
-      "Weak Armor",
-      "Keen Eye"
-    ],
+    "commonAbilities": ["Sturdy", "Weak Armor", "Keen Eye"],
     "commonItems": [
       "Skarmorite",
+      "Occa Berry",
       "Focus Sash",
-      "Occa Berry"
+      "Sitrus Berry",
+      "Quick Claw"
     ]
   },
   {
@@ -5317,19 +5246,15 @@
       "Protect",
       "Brave Bird",
       "Tailwind",
+      "Dual Wingbeat",
       "Body Press",
       "Swords Dance",
-      "Dual Wingbeat",
       "Rock Slide",
-      "Roost",
-      "Iron Defense"
+      "Taunt",
+      "Roost"
     ],
-    "commonAbilities": [
-      "Stalwart"
-    ],
-    "commonItems": [
-      "Skarmorite"
-    ]
+    "commonAbilities": ["Stalwart"],
+    "commonItems": ["Skarmorite"]
   },
   {
     "pokemonId": "skeledirge",
@@ -5338,25 +5263,18 @@
     "defaultMove": "Torch Song",
     "commonMoves": [
       "Torch Song",
-      "Shadow Ball",
       "Protect",
-      "Slack Off",
+      "Shadow Ball",
       "Earth Power",
-      "Snarl",
+      "Slack Off",
       "Heat Wave",
       "Will-O-Wisp",
-      "Yawn",
-      "Scorching Sands"
+      "Solar Beam",
+      "Snarl",
+      "Yawn"
     ],
-    "commonAbilities": [
-      "Unaware",
-      "Blaze"
-    ],
-    "commonItems": [
-      "Leftovers",
-      "Charcoal",
-      "Sitrus Berry"
-    ]
+    "commonAbilities": ["Unaware", "Blaze"],
+    "commonItems": ["Leftovers", "Sitrus Berry", "Charcoal", "Shuca Berry"]
   },
   {
     "pokemonId": "slowbro",
@@ -5364,55 +5282,50 @@
     "defaultAbility": "Oblivious",
     "defaultMove": "Psychic",
     "commonMoves": [
-      "Trick Room",
       "Scald",
-      "Psychic",
       "Body Press",
+      "Trick Room",
       "Slack Off",
-      "Protect",
-      "Ice Beam",
       "Iron Defense",
+      "Protect",
+      "Psychic",
       "Calm Mind",
-      "Yawn"
+      "Ice Beam",
+      "Stored Power"
     ],
-    "commonAbilities": [
-      "Oblivious",
-      "Regenerator"
-    ],
+    "commonAbilities": ["Oblivious", "Regenerator"],
     "commonItems": [
       "Slowbronite",
       "Leftovers",
-      "Mental Herb",
-      "Focus Sash"
+      "Sitrus Berry",
+      "Bright Powder",
+      "Rindo Berry"
     ]
   },
   {
     "pokemonId": "slowbrogalar",
     "defaultItem": "Quick Claw",
     "defaultAbility": "Quick Draw",
-    "defaultMove": "Sludge Wave",
+    "defaultMove": "Shell Side Arm",
     "commonMoves": [
+      "Trick Room",
       "Shell Side Arm",
       "Psychic",
-      "Trick Room",
-      "Flamethrower",
-      "Sludge Wave",
+      "Ice Beam",
       "Protect",
-      "Psychic Terrain",
-      "Psyshock",
-      "Nasty Plot",
+      "Zen Headbutt",
+      "Heal Pulse",
+      "Drain Punch",
+      "Light Screen",
       "Muddy Water"
     ],
-    "commonAbilities": [
-      "Quick Draw",
-      "Regenerator"
-    ],
+    "commonAbilities": ["Quick Draw", "Regenerator", "Own Tempo"],
     "commonItems": [
       "Quick Claw",
-      "Poison Barb",
+      "Mental Herb",
       "Leftovers",
-      "Sitrus Berry",
-      "Mental Herb"
+      "Focus Sash",
+      "Kasib Berry"
     ]
   },
   {
@@ -5421,27 +5334,23 @@
     "defaultAbility": "Shell Armor",
     "defaultMove": "Psychic",
     "commonMoves": [
-      "Trick Room",
       "Scald",
-      "Psychic",
       "Body Press",
+      "Trick Room",
       "Slack Off",
-      "Protect",
-      "Ice Beam",
       "Iron Defense",
+      "Protect",
+      "Psychic",
       "Calm Mind",
-      "Yawn"
+      "Ice Beam",
+      "Stored Power"
     ],
-    "commonAbilities": [
-      "Shell Armor"
-    ],
-    "commonItems": [
-      "Slowbronite"
-    ]
+    "commonAbilities": [],
+    "commonItems": ["Slowbronite"]
   },
   {
     "pokemonId": "slowking",
-    "defaultItem": "Leftovers",
+    "defaultItem": "Colbur Berry",
     "defaultAbility": "Regenerator",
     "defaultMove": "Psychic",
     "commonMoves": [
@@ -5449,57 +5358,71 @@
       "Chilly Reception",
       "Scald",
       "Psychic",
-      "Rain Dance",
-      "Drain Punch",
-      "Weather Ball",
-      "Muddy Water",
       "Protect",
-      "Thunder Wave"
+      "Muddy Water",
+      "Yawn",
+      "Rain Dance",
+      "Chilling Water",
+      "Power Gem"
     ],
-    "commonAbilities": [
-      "Regenerator",
-      "Own Tempo",
-      "Oblivious"
-    ],
+    "commonAbilities": ["Regenerator", "Oblivious"],
     "commonItems": [
-      "Leftovers",
       "Colbur Berry",
+      "Leftovers",
+      "Mental Herb",
       "Sitrus Berry",
-      "Quick Claw"
+      "Quick Claw",
+      "Bright Powder",
+      "Focus Sash",
+      "Hard Stone"
     ]
   },
   {
     "pokemonId": "slowkinggalar",
-    "defaultItem": "Leftovers",
+    "defaultItem": "Colbur Berry",
     "defaultAbility": "Regenerator",
     "defaultMove": "Sludge Wave",
     "commonMoves": [
       "Trick Room",
-      "Psychic",
       "Sludge Bomb",
-      "Sludge Wave",
       "Chilly Reception",
-      "Ice Beam",
+      "Psychic",
       "Protect",
-      "Eerie Spell",
-      "Psychic Terrain",
-      "Muddy Water"
+      "Psychic Noise",
+      "Helping Hand",
+      "Sludge Wave",
+      "Heal Pulse",
+      "Eerie Spell"
     ],
-    "commonAbilities": [
-      "Regenerator",
-      "Curious Medicine",
-      "Own Tempo"
-    ],
+    "commonAbilities": ["Regenerator", "Curious Medicine"],
     "commonItems": [
-      "Leftovers",
-      "Bright Powder",
-      "Focus Band",
-      "Poison Barb",
-      "Mental Herb",
-      "Shuca Berry",
       "Colbur Berry",
-      "Quick Claw"
+      "Poison Barb",
+      "Sitrus Berry",
+      "Leftovers",
+      "Shuca Berry",
+      "Mental Herb",
+      "Quick Claw",
+      "Lum Berry",
+      "Focus Band"
     ]
+  },
+  {
+    "pokemonId": "slurpuff",
+    "defaultItem": "Sitrus Berry",
+    "defaultAbility": "Unburden",
+    "defaultMove": "Protect",
+    "commonMoves": [
+      "Protect",
+      "Dazzling Gleam",
+      "String Shot",
+      "Helping Hand",
+      "Draining Kiss",
+      "Yawn",
+      "Wish"
+    ],
+    "commonAbilities": ["Unburden", "Sweet Veil"],
+    "commonItems": ["Sitrus Berry", "Leftovers"]
   },
   {
     "pokemonId": "sneasler",
@@ -5512,28 +5435,24 @@
       "Fake Out",
       "Protect",
       "Coaching",
-      "Rock Tomb",
       "Rock Slide",
+      "Rock Tomb",
       "Throat Chop",
-      "Gunk Shot",
-      "Taunt"
+      "U-turn",
+      "Gunk Shot"
     ],
-    "commonAbilities": [
-      "Unburden",
-      "Poison Touch",
-      "Pressure"
-    ],
+    "commonAbilities": ["Unburden", "Poison Touch", "Pressure"],
     "commonItems": [
       "White Herb",
       "Focus Sash",
       "Mental Herb",
       "Sitrus Berry",
-      "Black Belt",
       "Poison Barb",
-      "Focus Band",
+      "Lum Berry",
+      "King's Rock",
+      "Black Belt",
       "Bright Powder",
-      "Choice Scarf",
-      "Lum Berry"
+      "Shuca Berry"
     ]
   },
   {
@@ -5542,161 +5461,141 @@
     "defaultAbility": "Thick Fat",
     "defaultMove": "Earthquake",
     "commonMoves": [
-      "Body Slam",
       "Protect",
-      "Belly Drum",
+      "Body Slam",
       "High Horsepower",
+      "Belly Drum",
       "Yawn",
+      "Facade",
       "Crunch",
+      "Curse",
       "Rock Slide",
-      "Earthquake",
-      "Rest",
-      "Facade"
+      "Earthquake"
     ],
-    "commonAbilities": [
-      "Thick Fat",
-      "Gluttony",
-      "Immunity"
-    ],
-    "commonItems": [
-      "Sitrus Berry",
-      "Leftovers",
-      "Lum Berry",
-      "Chople Berry",
-      "Chesto Berry",
-      "Quick Claw"
-    ]
+    "commonAbilities": ["Thick Fat", "Gluttony"],
+    "commonItems": ["Sitrus Berry", "Leftovers", "Lum Berry", "Chople Berry"]
   },
   {
     "pokemonId": "spiritomb",
-    "defaultItem": "Mental Herb",
-    "defaultAbility": "Pressure",
+    "defaultItem": "Sitrus Berry",
+    "defaultAbility": "Infiltrator",
     "defaultMove": "Foul Play",
     "commonMoves": [
       "Trick Room",
-      "Snarl",
-      "Ally Switch",
-      "Helping Hand",
       "Protect",
+      "Will-O-Wisp",
+      "Snarl",
+      "Helping Hand",
+      "Ally Switch",
+      "Pain Split",
       "Foul Play",
-      "Shadow Ball",
-      "Sunny Day",
-      "Lash Out",
-      "Disable"
+      "Night Shade",
+      "Hypnosis"
     ],
-    "commonAbilities": [
-      "Pressure",
-      "Infiltrator"
-    ],
+    "commonAbilities": ["Infiltrator", "Pressure"],
     "commonItems": [
-      "Mental Herb",
+      "Sitrus Berry",
       "Bright Powder",
-      "Focus Sash",
+      "Roseli Berry",
       "Leftovers",
-      "Lum Berry"
+      "Mental Herb"
     ]
   },
   {
     "pokemonId": "starmie",
     "defaultItem": "Starminite",
     "defaultAbility": "Natural Cure",
-    "defaultMove": "Liquidation",
+    "defaultMove": "Self-Destruct",
     "commonMoves": [
       "Liquidation",
       "Protect",
-      "Aqua Jet",
       "Psycho Cut",
-      "Zen Headbutt",
       "Ice Spinner",
-      "Flip Turn",
-      "Substitute",
+      "Aqua Jet",
+      "Zen Headbutt",
       "Skill Swap",
-      "Waterfall"
+      "Flip Turn",
+      "Self-Destruct",
+      "Substitute"
     ],
-    "commonAbilities": [
-      "Natural Cure",
-      "Illuminate",
-      "Analytic"
-    ],
-    "commonItems": [
-      "Starminite",
-      "Sitrus Berry"
-    ]
+    "commonAbilities": ["Natural Cure", "Illuminate", "Analytic"],
+    "commonItems": ["Starminite", "Choice Scarf", "Sitrus Berry", "Focus Sash"]
   },
   {
     "pokemonId": "starmiemega",
     "defaultItem": "Starminite",
     "defaultAbility": "Huge Power",
-    "defaultMove": "Liquidation",
+    "defaultMove": "Self-Destruct",
     "commonMoves": [
       "Liquidation",
       "Protect",
-      "Aqua Jet",
       "Psycho Cut",
-      "Zen Headbutt",
       "Ice Spinner",
-      "Flip Turn",
-      "Substitute",
+      "Aqua Jet",
+      "Zen Headbutt",
       "Skill Swap",
-      "Waterfall"
+      "Flip Turn",
+      "Self-Destruct",
+      "Substitute"
     ],
-    "commonAbilities": [
-      "Huge Power"
-    ],
-    "commonItems": [
-      "Starminite"
-    ]
+    "commonAbilities": ["Huge Power"],
+    "commonItems": ["Starminite"]
   },
   {
     "pokemonId": "steelix",
     "defaultItem": "Steelixite",
     "defaultAbility": "Sturdy",
-    "defaultMove": "Head Smash",
+    "defaultMove": "Earthquake",
     "commonMoves": [
-      "Earthquake",
-      "Heavy Slam",
       "Body Press",
-      "Stealth Rock",
-      "Rock Slide",
-      "Iron Tail",
-      "Crunch",
+      "Heavy Slam",
       "Protect",
-      "Head Smash",
-      "Iron Head"
+      "Earthquake",
+      "Iron Defense",
+      "Gyro Ball",
+      "Curse",
+      "Stealth Rock",
+      "High Horsepower",
+      "Breaking Swipe"
     ],
-    "commonAbilities": [
-      "Sturdy",
-      "Sheer Force",
-      "Rock Head"
-    ],
-    "commonItems": [
-      "Steelixite",
-      "Quick Claw",
-      "Occa Berry",
-      "Sitrus Berry"
-    ]
+    "commonAbilities": ["Sturdy", "Rock Head"],
+    "commonItems": ["Steelixite", "Leftovers"]
   },
   {
     "pokemonId": "steelixmega",
     "defaultItem": "Steelixite",
     "defaultAbility": "Sand Force",
-    "defaultMove": "Head Smash",
+    "defaultMove": "Earthquake",
     "commonMoves": [
-      "Earthquake",
-      "Heavy Slam",
       "Body Press",
-      "Stealth Rock",
-      "Rock Slide",
-      "Iron Tail",
-      "Crunch",
+      "Heavy Slam",
       "Protect",
-      "Head Smash",
-      "Iron Head"
+      "Earthquake",
+      "Iron Defense",
+      "Gyro Ball",
+      "Curse",
+      "Stealth Rock",
+      "High Horsepower",
+      "Breaking Swipe"
     ],
     "commonAbilities": [],
-    "commonItems": [
-      "Steelixite"
-    ]
+    "commonItems": ["Steelixite"]
+  },
+  {
+    "pokemonId": "stunfisk",
+    "defaultItem": "Focus Sash",
+    "defaultAbility": "Static",
+    "defaultMove": "Thunder",
+    "commonMoves": [
+      "Thunderbolt",
+      "Earth Power",
+      "Protect",
+      "Scald",
+      "Thunder",
+      "Electric Terrain"
+    ],
+    "commonAbilities": ["Static"],
+    "commonItems": ["Focus Sash", "Sitrus Berry", "Leftovers"]
   },
   {
     "pokemonId": "sylveon",
@@ -5708,27 +5607,23 @@
       "Protect",
       "Quick Attack",
       "Hyper Beam",
-      "Calm Mind",
-      "Shadow Ball",
-      "Moonblast",
       "Detect",
-      "Yawn",
-      "Helping Hand"
+      "Calm Mind",
+      "Moonblast",
+      "Shadow Ball",
+      "Helping Hand",
+      "Mystical Fire"
     ],
-    "commonAbilities": [
-      "Pixilate",
-      "Cute Charm"
-    ],
+    "commonAbilities": ["Pixilate", "Cute Charm"],
     "commonItems": [
       "Fairy Feather",
       "Leftovers",
       "Sitrus Berry",
-      "Choice Scarf",
-      "Focus Sash",
       "Quick Claw",
-      "Kebia Berry",
+      "Focus Sash",
+      "Choice Scarf",
       "Shell Bell",
-      "Silk Scarf"
+      "Kebia Berry"
     ]
   },
   {
@@ -5740,51 +5635,46 @@
       "Tailwind",
       "Protect",
       "Flare Blitz",
-      "Brave Bird",
-      "Dual Wingbeat",
-      "Will-O-Wisp",
       "Acrobatics",
+      "Dual Wingbeat",
+      "Brave Bird",
+      "Will-O-Wisp",
+      "Quick Guard",
       "Taunt",
-      "Upper Hand",
-      "Quick Guard"
+      "Upper Hand"
     ],
-    "commonAbilities": [
-      "Gale Wings",
-      "Flame Body"
-    ],
-    "commonItems": [
-      "Sharp Beak",
-      "Focus Sash",
-      "Charti Berry",
-      "Lum Berry",
-      "Charcoal",
-      "Bright Powder",
-      "Leftovers"
-    ]
+    "commonAbilities": ["Gale Wings", "Flame Body"],
+    "commonItems": ["Sharp Beak", "Focus Sash", "Charti Berry", "Lum Berry"]
   },
   {
     "pokemonId": "tauros",
-    "defaultItem": "Leftovers",
+    "defaultItem": "White Herb",
     "defaultAbility": "Intimidate",
     "defaultMove": "Close Combat",
     "commonMoves": [
-      "Raging Bull",
-      "Protect",
-      "Wild Charge",
       "Close Combat",
-      "Curse",
+      "Protect",
+      "Aqua Jet",
+      "Wave Crash",
+      "Raging Bull",
       "Rock Slide",
-      "Body Slam",
-      "Zen Headbutt"
+      "Flare Blitz",
+      "Wild Charge",
+      "Zen Headbutt",
+      "Will-O-Wisp"
     ],
-    "commonAbilities": [
-      "Intimidate",
-      "Sheer Force"
-    ],
+    "commonAbilities": ["Intimidate", "Anger Point", "Sheer Force"],
     "commonItems": [
-      "Leftovers",
       "White Herb",
-      "Choice Scarf"
+      "Mystic Water",
+      "Choice Scarf",
+      "Leftovers",
+      "Focus Sash",
+      "Charcoal",
+      "Sitrus Berry",
+      "Quick Claw",
+      "Mental Herb",
+      "Wacan Berry"
     ]
   },
   {
@@ -5798,22 +5688,24 @@
       "Aqua Jet",
       "Wave Crash",
       "Raging Bull",
+      "Rock Slide",
+      "Flare Blitz",
       "Wild Charge",
       "Zen Headbutt",
-      "Bulldoze",
-      "Body Press",
-      "Rock Slide"
+      "Will-O-Wisp"
     ],
-    "commonAbilities": [
-      "Intimidate"
-    ],
+    "commonAbilities": ["Intimidate", "Anger Point"],
     "commonItems": [
       "White Herb",
       "Mystic Water",
-      "Sitrus Berry",
+      "Choice Scarf",
       "Leftovers",
       "Focus Sash",
-      "Quick Claw"
+      "Charcoal",
+      "Sitrus Berry",
+      "Quick Claw",
+      "Mental Herb",
+      "Wacan Berry"
     ]
   },
   {
@@ -5823,77 +5715,90 @@
     "defaultMove": "Close Combat",
     "commonMoves": [
       "Close Combat",
-      "Raging Bull",
       "Protect",
-      "Trailblaze",
+      "Aqua Jet",
+      "Wave Crash",
+      "Raging Bull",
       "Rock Slide",
-      "High Horsepower",
-      "Flare Blitz"
+      "Flare Blitz",
+      "Wild Charge",
+      "Zen Headbutt",
+      "Will-O-Wisp"
     ],
-    "commonAbilities": [
-      "Intimidate"
-    ],
+    "commonAbilities": ["Intimidate", "Anger Point"],
     "commonItems": [
       "White Herb",
-      "Charcoal"
+      "Mystic Water",
+      "Choice Scarf",
+      "Leftovers",
+      "Focus Sash",
+      "Charcoal",
+      "Sitrus Berry",
+      "Quick Claw",
+      "Mental Herb",
+      "Wacan Berry"
     ]
   },
   {
     "pokemonId": "taurospaldeacombat",
-    "defaultItem": "Leftovers",
+    "defaultItem": "White Herb",
     "defaultAbility": "Intimidate",
     "defaultMove": "Close Combat",
     "commonMoves": [
-      "Raging Bull",
-      "Protect",
-      "Wild Charge",
       "Close Combat",
-      "Curse",
+      "Protect",
+      "Aqua Jet",
+      "Wave Crash",
+      "Raging Bull",
       "Rock Slide",
-      "Body Slam",
-      "Zen Headbutt"
+      "Flare Blitz",
+      "Wild Charge",
+      "Zen Headbutt",
+      "Will-O-Wisp"
     ],
-    "commonAbilities": [
-      "Intimidate"
-    ],
+    "commonAbilities": ["Intimidate", "Anger Point"],
     "commonItems": [
-      "Leftovers",
       "White Herb",
-      "Choice Scarf"
+      "Mystic Water",
+      "Choice Scarf",
+      "Leftovers",
+      "Focus Sash",
+      "Charcoal",
+      "Sitrus Berry",
+      "Quick Claw",
+      "Mental Herb",
+      "Wacan Berry"
     ]
   },
   {
     "pokemonId": "tinkaton",
-    "defaultItem": "Metal Coat",
+    "defaultItem": "Shuca Berry",
     "defaultAbility": "Mold Breaker",
     "defaultMove": "Gigaton Hammer",
     "commonMoves": [
       "Gigaton Hammer",
       "Fake Out",
       "Play Rough",
-      "Knock Off",
       "Protect",
       "Encore",
-      "Thunder Wave",
+      "Knock Off",
       "Helping Hand",
-      "Brick Break",
-      "Feint"
+      "Feint",
+      "Thunder Wave",
+      "Rock Slide"
     ],
-    "commonAbilities": [
-      "Mold Breaker",
-      "Own Tempo"
-    ],
+    "commonAbilities": ["Mold Breaker", "Own Tempo"],
     "commonItems": [
+      "Shuca Berry",
       "Metal Coat",
       "Sitrus Berry",
-      "Focus Sash",
-      "Shuca Berry",
       "Occa Berry",
+      "Focus Sash",
       "Leftovers",
-      "Quick Claw",
-      "Chople Berry",
-      "Shell Bell",
-      "Scope Lens"
+      "Lum Berry",
+      "Bright Powder",
+      "Fairy Feather",
+      "King's Rock"
     ]
   },
   {
@@ -5904,209 +5809,199 @@
     "commonMoves": [
       "Eruption",
       "Protect",
-      "Heat Wave",
       "Weather Ball",
+      "Heat Wave",
       "Earth Power",
-      "Helping Hand",
       "Solar Beam",
-      "Overheat",
-      "Flamethrower",
-      "Yawn"
+      "Helping Hand",
+      "Body Press",
+      "Yawn",
+      "Overheat"
     ],
-    "commonAbilities": [
-      "Drought",
-      "White Smoke"
-    ],
+    "commonAbilities": ["Drought", "White Smoke"],
     "commonItems": [
       "Charcoal",
       "Leftovers",
-      "Quick Claw",
       "Sitrus Berry",
-      "Focus Sash",
-      "White Herb",
-      "Choice Scarf"
+      "Quick Claw",
+      "Bright Powder",
+      "Choice Scarf",
+      "Black Belt",
+      "King's Rock",
+      "Lum Berry",
+      "Shell Bell"
     ]
   },
   {
     "pokemonId": "torterra",
-    "defaultItem": "Sitrus Berry",
+    "defaultItem": "White Herb",
     "defaultAbility": "Shell Armor",
     "defaultMove": "Wood Hammer",
     "commonMoves": [
       "Protect",
-      "Earthquake",
-      "Zen Headbutt",
       "Wood Hammer",
-      "Bullet Seed",
-      "Mud Shot",
-      "Giga Drain",
-      "Wide Guard",
+      "Earthquake",
       "Shell Smash",
-      "Seed Bomb"
+      "Wide Guard",
+      "Headlong Rush",
+      "Iron Head",
+      "Seed Bomb",
+      "High Horsepower",
+      "Bullet Seed"
     ],
-    "commonAbilities": [
-      "Shell Armor",
-      "Overgrow"
-    ],
+    "commonAbilities": ["Shell Armor", "Overgrow"],
     "commonItems": [
-      "Sitrus Berry",
+      "White Herb",
       "Focus Sash",
+      "Sitrus Berry",
       "Leftovers",
-      "White Herb"
+      "Soft Sand",
+      "Chesto Berry",
+      "Hard Stone"
     ]
   },
   {
     "pokemonId": "toucannon",
-    "defaultItem": "Shell Bell",
+    "defaultItem": "Focus Sash",
     "defaultAbility": "Skill Link",
-    "defaultMove": "Beak Blast",
+    "defaultMove": "Brave Bird",
     "commonMoves": [
-      "Rock Blast",
       "Bullet Seed",
+      "Rock Blast",
       "Beak Blast",
-      "Protect"
+      "Protect",
+      "Brave Bird",
+      "Tailwind",
+      "U-turn"
     ],
-    "commonAbilities": [
-      "Skill Link"
-    ],
+    "commonAbilities": ["Skill Link"],
     "commonItems": [
-      "Shell Bell"
+      "Focus Sash",
+      "Shell Bell",
+      "Sharp Beak",
+      "Choice Scarf",
+      "Hard Stone",
+      "King's Rock"
     ]
   },
   {
     "pokemonId": "toxapex",
     "defaultItem": "Leftovers",
     "defaultAbility": "Regenerator",
-    "defaultMove": "Sludge Bomb",
+    "defaultMove": "Muddy Water",
     "commonMoves": [
       "Baneful Bunker",
       "Recover",
-      "Haze",
-      "Sludge Bomb",
-      "Surf",
-      "Hex",
-      "Muddy Water",
       "Toxic",
       "Infestation",
-      "Sludge"
+      "Wide Guard",
+      "Muddy Water",
+      "Toxic Spikes",
+      "Haze",
+      "Stockpile",
+      "Venoshock"
     ],
-    "commonAbilities": [
-      "Regenerator",
-      "Limber"
-    ],
-    "commonItems": [
-      "Leftovers",
-      "Mental Herb",
-      "Sitrus Berry",
-      "Shuca Berry"
-    ]
+    "commonAbilities": ["Regenerator", "Merciless", "Limber"],
+    "commonItems": ["Leftovers", "Sitrus Berry", "Shuca Berry", "Mental Herb"]
   },
   {
     "pokemonId": "toxicroak",
-    "defaultItem": "Black Belt",
+    "defaultItem": "Focus Sash",
     "defaultAbility": "Dry Skin",
     "defaultMove": "Close Combat",
     "commonMoves": [
       "Fake Out",
       "Close Combat",
-      "Protect",
-      "Drain Punch",
-      "Sucker Punch",
-      "Gunk Shot",
       "Poison Jab",
-      "Coaching",
-      "Swords Dance",
+      "Protect",
+      "Sucker Punch",
+      "Drain Punch",
+      "Gunk Shot",
+      "Taunt",
+      "Icy Wind",
       "Ice Punch"
     ],
-    "commonAbilities": [
-      "Dry Skin"
-    ],
+    "commonAbilities": ["Dry Skin", "Poison Touch"],
     "commonItems": [
-      "Black Belt",
       "Focus Sash",
+      "White Herb",
       "Shuca Berry",
-      "Coba Berry",
       "Sitrus Berry",
-      "Payapa Berry"
+      "Payapa Berry",
+      "Bright Powder",
+      "Black Belt"
     ]
   },
   {
     "pokemonId": "trevenant",
-    "defaultItem": "Focus Sash",
-    "defaultAbility": "Frisk",
-    "defaultMove": "Protect",
+    "defaultItem": "Sitrus Berry",
+    "defaultAbility": "Harvest",
+    "defaultMove": "Wood Hammer",
     "commonMoves": [
       "Protect",
       "Trick Room",
+      "Horn Leech",
+      "Poltergeist",
       "Will-O-Wisp",
-      "Horn Leech"
+      "Wood Hammer",
+      "Leech Seed",
+      "Phantom Force",
+      "Substitute",
+      "Destiny Bond"
     ],
-    "commonAbilities": [
-      "Frisk"
-    ],
-    "commonItems": [
-      "Focus Sash"
-    ]
+    "commonAbilities": ["Harvest", "Frisk"],
+    "commonItems": ["Sitrus Berry", "Focus Sash", "Coba Berry"]
   },
   {
     "pokemonId": "tsareena",
     "defaultItem": "Sitrus Berry",
     "defaultAbility": "Queenly Majesty",
-    "defaultMove": "High Jump Kick",
+    "defaultMove": "Triple Axel",
     "commonMoves": [
-      "Trop Kick",
       "Triple Axel",
-      "Protect",
+      "Trop Kick",
       "Low Kick",
-      "Helping Hand",
+      "Protect",
       "Power Whip",
-      "High Jump Kick",
-      "Taunt",
       "U-turn",
-      "Zen Headbutt"
+      "Helping Hand",
+      "Taunt",
+      "Zen Headbutt",
+      "Knock Off"
     ],
-    "commonAbilities": [
-      "Queenly Majesty",
-      "Leaf Guard"
-    ],
+    "commonAbilities": ["Queenly Majesty"],
     "commonItems": [
       "Sitrus Berry",
-      "White Herb",
       "Choice Scarf",
-      "Leftovers",
-      "Focus Sash",
-      "Coba Berry",
+      "White Herb",
       "Kebia Berry",
-      "Lum Berry",
       "Occa Berry",
-      "Black Belt"
+      "Miracle Seed",
+      "Focus Sash",
+      "Leftovers",
+      "Quick Claw",
+      "Coba Berry"
     ]
   },
   {
     "pokemonId": "typhlosion",
-    "defaultItem": "Charcoal",
+    "defaultItem": "Choice Scarf",
     "defaultAbility": "Flash Fire",
     "defaultMove": "Eruption",
     "commonMoves": [
       "Eruption",
-      "Protect",
-      "Solar Beam",
       "Heat Wave",
+      "Solar Beam",
       "Extrasensory",
+      "Shadow Ball",
+      "Protect",
       "Flamethrower",
       "Overheat",
-      "Will-O-Wisp",
-      "Rock Tomb",
-      "Shadow Ball"
+      "Infernal Parade",
+      "Focus Blast"
     ],
-    "commonAbilities": [
-      "Flash Fire",
-      "Blaze"
-    ],
-    "commonItems": [
-      "Charcoal",
-      "Choice Scarf"
-    ]
+    "commonAbilities": ["Flash Fire", "Blaze"],
+    "commonItems": ["Choice Scarf", "Charcoal"]
   },
   {
     "pokemonId": "typhlosionhisui",
@@ -6118,79 +6013,92 @@
       "Shadow Ball",
       "Heat Wave",
       "Overheat",
-      "Focus Blast",
       "Protect",
-      "Infernal Parade",
+      "Focus Blast",
+      "Flamethrower",
       "Solar Beam",
       "Extrasensory",
-      "Flamethrower"
+      "Infernal Parade"
     ],
-    "commonAbilities": [
-      "Blaze",
-      "Frisk"
-    ],
-    "commonItems": [
-      "Choice Scarf",
-      "Charcoal",
-      "Spell Tag"
-    ]
+    "commonAbilities": ["Blaze", "Frisk"],
+    "commonItems": ["Choice Scarf", "Charcoal", "Focus Sash"]
   },
   {
     "pokemonId": "tyranitar",
     "defaultItem": "Tyranitarite",
     "defaultAbility": "Sand Stream",
-    "defaultMove": "Stone Edge",
+    "defaultMove": "Earthquake",
     "commonMoves": [
       "Rock Slide",
       "Protect",
       "Knock Off",
       "Low Kick",
-      "Ice Punch",
       "Crunch",
+      "Ice Punch",
+      "High Horsepower",
       "Dragon Dance",
-      "Stone Edge",
       "Earthquake",
-      "High Horsepower"
+      "Stone Edge"
     ],
-    "commonAbilities": [
-      "Sand Stream",
-      "Unnerve"
-    ],
+    "commonAbilities": ["Sand Stream", "Unnerve"],
     "commonItems": [
       "Tyranitarite",
+      "Focus Sash",
       "Choice Scarf",
       "Chople Berry",
       "Lum Berry",
-      "Leftovers",
-      "Focus Sash",
-      "Shuca Berry",
       "Sitrus Berry",
-      "Quick Claw",
-      "White Herb"
+      "Leftovers",
+      "Shuca Berry",
+      "White Herb",
+      "Hard Stone"
     ]
   },
   {
     "pokemonId": "tyranitarmega",
     "defaultItem": "Tyranitarite",
     "defaultAbility": "Sand Stream",
-    "defaultMove": "Stone Edge",
+    "defaultMove": "Earthquake",
     "commonMoves": [
       "Rock Slide",
       "Protect",
       "Knock Off",
       "Low Kick",
-      "Ice Punch",
       "Crunch",
+      "Ice Punch",
+      "High Horsepower",
       "Dragon Dance",
-      "Stone Edge",
       "Earthquake",
-      "High Horsepower"
+      "Stone Edge"
     ],
-    "commonAbilities": [
-      "Sand Stream"
+    "commonAbilities": ["Sand Stream"],
+    "commonItems": ["Tyranitarite"]
+  },
+  {
+    "pokemonId": "tyrantrum",
+    "defaultItem": "Focus Sash",
+    "defaultAbility": "Rock Head",
+    "defaultMove": "Head Smash",
+    "commonMoves": [
+      "Head Smash",
+      "Protect",
+      "Close Combat",
+      "Rock Slide",
+      "Psychic Fangs",
+      "Dragon Dance",
+      "Earthquake",
+      "High Horsepower",
+      "Outrage",
+      "Horn Drill"
     ],
+    "commonAbilities": ["Rock Head", "Strong Jaw"],
     "commonItems": [
-      "Tyranitarite"
+      "Focus Sash",
+      "Hard Stone",
+      "Sitrus Berry",
+      "Choice Scarf",
+      "Shell Bell",
+      "King's Rock"
     ]
   },
   {
@@ -6199,54 +6107,73 @@
     "defaultAbility": "Inner Focus",
     "defaultMove": "Foul Play",
     "commonMoves": [
-      "Snarl",
       "Foul Play",
-      "Moonlight",
+      "Snarl",
       "Yawn",
-      "Toxic",
+      "Moonlight",
       "Protect",
       "Taunt",
       "Wish",
-      "Baby-Doll Eyes",
-      "Skill Swap"
+      "Helping Hand",
+      "Detect",
+      "Thunder Wave"
     ],
-    "commonAbilities": [
-      "Inner Focus",
-      "Synchronize"
-    ],
+    "commonAbilities": ["Inner Focus", "Synchronize"],
     "commonItems": [
       "Leftovers",
+      "Sitrus Berry",
       "Chople Berry",
-      "Mental Herb",
-      "Focus Band"
+      "Bright Powder",
+      "Focus Band",
+      "Black Glasses",
+      "Roseli Berry"
+    ]
+  },
+  {
+    "pokemonId": "vanilluxe",
+    "defaultItem": "Choice Scarf",
+    "defaultAbility": "Snow Warning",
+    "defaultMove": "Blizzard",
+    "commonMoves": [
+      "Blizzard",
+      "Freeze-Dry",
+      "Icy Wind",
+      "Aurora Veil",
+      "Sheer Cold",
+      "Protect",
+      "Ally Switch",
+      "Flash Cannon",
+      "Frost Breath",
+      "Ice Beam"
+    ],
+    "commonAbilities": ["Snow Warning", "Ice Body"],
+    "commonItems": [
+      "Choice Scarf",
+      "Never-Melt Ice",
+      "Leftovers",
+      "Focus Sash",
+      "Sitrus Berry"
     ]
   },
   {
     "pokemonId": "vaporeon",
     "defaultItem": "Leftovers",
     "defaultAbility": "Water Absorb",
-    "defaultMove": "Ice Beam",
+    "defaultMove": "Blizzard",
     "commonMoves": [
-      "Scald",
       "Protect",
+      "Scald",
+      "Blizzard",
       "Ice Beam",
       "Icy Wind",
-      "Helping Hand",
-      "Wish",
-      "Surf",
-      "Calm Mind",
+      "Hydro Pump",
+      "Dig",
       "Yawn",
-      "Hyper Voice"
+      "Calm Mind",
+      "Haze"
     ],
-    "commonAbilities": [
-      "Water Absorb",
-      "Hydration"
-    ],
-    "commonItems": [
-      "Leftovers",
-      "Mystic Water",
-      "Sitrus Berry"
-    ]
+    "commonAbilities": ["Water Absorb"],
+    "commonItems": ["Leftovers", "Mystic Water", "Sitrus Berry"]
   },
   {
     "pokemonId": "venusaur",
@@ -6257,18 +6184,15 @@
       "Sludge Bomb",
       "Protect",
       "Sleep Powder",
-      "Leaf Storm",
       "Earth Power",
       "Energy Ball",
       "Giga Drain",
+      "Leaf Storm",
       "Leech Seed",
       "Solar Beam",
       "Weather Ball"
     ],
-    "commonAbilities": [
-      "Chlorophyll",
-      "Overgrow"
-    ],
+    "commonAbilities": ["Chlorophyll", "Overgrow"],
     "commonItems": [
       "Focus Sash",
       "Venusaurite",
@@ -6276,10 +6200,10 @@
       "Sitrus Berry",
       "Miracle Seed",
       "Occa Berry",
+      "Coba Berry",
       "Poison Barb",
       "Bright Powder",
-      "Coba Berry",
-      "Scope Lens"
+      "Quick Claw"
     ]
   },
   {
@@ -6291,20 +6215,16 @@
       "Sludge Bomb",
       "Protect",
       "Sleep Powder",
-      "Leaf Storm",
       "Earth Power",
       "Energy Ball",
       "Giga Drain",
+      "Leaf Storm",
       "Leech Seed",
       "Solar Beam",
       "Weather Ball"
     ],
-    "commonAbilities": [
-      "Thick Fat"
-    ],
-    "commonItems": [
-      "Venusaurite"
-    ]
+    "commonAbilities": ["Thick Fat"],
+    "commonItems": ["Venusaurite"]
   },
   {
     "pokemonId": "victreebel",
@@ -6313,25 +6233,24 @@
     "defaultMove": "Power Whip",
     "commonMoves": [
       "Protect",
-      "Sleep Powder",
-      "Power Whip",
       "Sludge Bomb",
-      "Weather Ball",
       "Strength Sap",
-      "Sucker Punch",
-      "Knock Off",
+      "Energy Ball",
+      "Sleep Powder",
       "Poison Jab",
-      "Solar Beam"
+      "Power Whip",
+      "Solar Beam",
+      "Giga Drain",
+      "Sucker Punch"
     ],
-    "commonAbilities": [
-      "Chlorophyll"
-    ],
+    "commonAbilities": ["Chlorophyll"],
     "commonItems": [
       "Victreebelite",
       "Focus Sash",
-      "Sitrus Berry",
+      "Leftovers",
+      "Choice Scarf",
       "Occa Berry",
-      "Choice Scarf"
+      "Bright Powder"
     ]
   },
   {
@@ -6341,22 +6260,18 @@
     "defaultMove": "Power Whip",
     "commonMoves": [
       "Protect",
-      "Sleep Powder",
-      "Power Whip",
       "Sludge Bomb",
-      "Weather Ball",
       "Strength Sap",
-      "Sucker Punch",
-      "Knock Off",
+      "Energy Ball",
+      "Sleep Powder",
       "Poison Jab",
-      "Solar Beam"
+      "Power Whip",
+      "Solar Beam",
+      "Giga Drain",
+      "Sucker Punch"
     ],
-    "commonAbilities": [
-      "Innards Out"
-    ],
-    "commonItems": [
-      "Victreebelite"
-    ]
+    "commonAbilities": [],
+    "commonItems": ["Victreebelite"]
   },
   {
     "pokemonId": "vivillon",
@@ -6364,24 +6279,26 @@
     "defaultAbility": "Compound Eyes",
     "defaultMove": "Hurricane",
     "commonMoves": [
-      "Protect",
       "Sleep Powder",
+      "Protect",
       "Hurricane",
-      "Rage Powder",
       "Tailwind",
+      "Rage Powder",
       "Pollen Puff",
-      "U-turn",
-      "Air Slash"
+      "Bug Buzz",
+      "Air Slash",
+      "Quiver Dance",
+      "Rain Dance"
     ],
-    "commonAbilities": [
-      "Compound Eyes",
-      "Friend Guard",
-      "Shield Dust"
-    ],
+    "commonAbilities": ["Compound Eyes", "Friend Guard", "Shield Dust"],
     "commonItems": [
       "Focus Sash",
-      "Bright Powder",
-      "Quick Claw"
+      "Choice Scarf",
+      "Focus Band",
+      "Mental Herb",
+      "Quick Claw",
+      "Sitrus Berry",
+      "Bright Powder"
     ]
   },
   {
@@ -6394,27 +6311,25 @@
       "Rage Powder",
       "Heat Wave",
       "Quiver Dance",
-      "Tailwind",
-      "Giga Drain",
       "Struggle Bug",
       "Fiery Dance",
-      "Overheat",
-      "Bug Buzz"
+      "Tailwind",
+      "Giga Drain",
+      "Bug Buzz",
+      "Overheat"
     ],
-    "commonAbilities": [
-      "Flame Body"
-    ],
+    "commonAbilities": ["Flame Body"],
     "commonItems": [
       "Sitrus Berry",
       "Leftovers",
-      "Charti Berry",
       "Passho Berry",
+      "Charti Berry",
+      "Charcoal",
       "Focus Sash",
-      "Lum Berry",
       "Bright Powder",
-      "White Herb",
-      "Coba Berry",
-      "Charcoal"
+      "Miracle Seed",
+      "Lum Berry",
+      "Mental Herb"
     ]
   },
   {
@@ -6427,22 +6342,21 @@
       "Knock Off",
       "Triple Axel",
       "Protect",
-      "Ice Spinner",
-      "Throat Chop",
+      "Ice Shard",
       "Low Kick",
+      "Ice Spinner",
       "Icicle Crash",
-      "Icy Wind",
+      "Throat Chop",
       "Taunt"
     ],
-    "commonAbilities": [
-      "Pickpocket",
-      "Pressure"
-    ],
+    "commonAbilities": ["Pickpocket", "Pressure"],
     "commonItems": [
       "Focus Sash",
-      "Shell Bell",
-      "Choice Scarf",
-      "Scope Lens"
+      "Never-Melt Ice",
+      "White Herb",
+      "Occa Berry",
+      "King's Rock",
+      "Black Glasses"
     ]
   },
   {
@@ -6456,106 +6370,95 @@
       "Encore",
       "Protect",
       "Sunny Day",
-      "Fake Tears",
       "Taunt",
+      "Fake Tears",
       "Helping Hand",
-      "Light Screen",
-      "Endeavor"
+      "Endeavor",
+      "Energy Ball"
     ],
-    "commonAbilities": [
-      "Prankster",
-      "Chlorophyll",
-      "Infiltrator"
-    ],
+    "commonAbilities": ["Prankster", "Chlorophyll"],
     "commonItems": [
       "Focus Sash",
       "Mental Herb",
-      "Occa Berry",
-      "Leftovers",
-      "Bright Powder",
       "Sitrus Berry",
+      "Bright Powder",
+      "Occa Berry",
       "Fairy Feather",
       "Kebia Berry",
-      "White Herb"
+      "Coba Berry",
+      "Leftovers",
+      "Babiri Berry"
     ]
   },
   {
     "pokemonId": "wyrdeer",
-    "defaultItem": "Colbur Berry",
+    "defaultItem": "Leftovers",
     "defaultAbility": "Intimidate",
-    "defaultMove": "Double-Edge",
+    "defaultMove": "Thunder",
     "commonMoves": [
-      "Protect",
-      "Trick Room",
       "Psyshield Bash",
-      "High Horsepower",
+      "Trick Room",
+      "Protect",
       "Skill Swap",
-      "Psychic",
-      "Lunge",
-      "Double-Edge"
+      "Hypnosis",
+      "Role Play",
+      "Light Screen",
+      "Reflect",
+      "Thunder",
+      "High Horsepower"
     ],
-    "commonAbilities": [
-      "Intimidate"
-    ],
-    "commonItems": [
-      "Colbur Berry",
-      "Lum Berry",
-      "White Herb"
-    ]
+    "commonAbilities": ["Intimidate"],
+    "commonItems": ["Leftovers", "Bright Powder", "Mental Herb"]
   },
   {
     "pokemonId": "zoroark",
     "defaultItem": "Quick Claw",
     "defaultAbility": "Illusion",
-    "defaultMove": "Psychic",
+    "defaultMove": "Focus Blast",
     "commonMoves": [
-      "Psychic",
-      "Night Daze",
-      "Flamethrower",
-      "U-turn",
-      "Nasty Plot",
-      "Dark Pulse",
       "Protect",
+      "Dark Pulse",
+      "Psychic",
+      "Flamethrower",
+      "Night Daze",
+      "Sludge Bomb",
+      "Taunt",
       "Counter",
-      "Sludge Bomb"
+      "Focus Blast",
+      "Encore"
     ],
-    "commonAbilities": [
-      "Illusion"
-    ],
-    "commonItems": [
-      "Quick Claw",
-      "Black Glasses"
-    ]
+    "commonAbilities": ["Illusion"],
+    "commonItems": ["Quick Claw", "Black Glasses", "Focus Sash", "Choice Scarf"]
   },
   {
     "pokemonId": "zoroarkhisui",
-    "defaultItem": "Focus Sash",
+    "defaultItem": "Choice Scarf",
     "defaultAbility": "Illusion",
-    "defaultMove": "Hyper Beam",
+    "defaultMove": "Hyper Voice",
     "commonMoves": [
       "Hyper Voice",
-      "Bitter Malice",
       "Icy Wind",
-      "Protect",
+      "Bitter Malice",
       "Shadow Ball",
-      "Taunt",
-      "Focus Blast",
-      "Nasty Plot",
+      "Protect",
+      "Psychic",
       "Snarl",
-      "Hyper Beam"
+      "Taunt",
+      "Nasty Plot",
+      "Flamethrower"
     ],
-    "commonAbilities": [
-      "Illusion"
-    ],
+    "commonAbilities": ["Illusion"],
     "commonItems": [
-      "Focus Sash",
       "Choice Scarf",
+      "Focus Sash",
       "Silk Scarf",
       "Spell Tag",
-      "Quick Claw",
-      "Leftovers",
       "Colbur Berry",
-      "Sitrus Berry"
+      "Bright Powder",
+      "Sitrus Berry",
+      "Kasib Berry",
+      "King's Rock",
+      "Poison Barb"
     ]
   }
 ]

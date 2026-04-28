@@ -37,6 +37,12 @@ import {
 } from "./transform/build-vgc-meta";
 
 const REQUEST_CONCURRENCY = 6;
+const FALLBACK_ITEM_ID = "sitrusberry";
+
+type LearnsetEntry = {
+  pokemonId: string;
+  moveIds: string[];
+};
 
 function parseArgs(argv: string[]) {
   const args = new Map<string, string>();
@@ -98,6 +104,120 @@ async function mapWithConcurrency<T, U>(
   return results;
 }
 
+function normalizeId(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, "");
+}
+
+function getFallbackMovePower(move: MoveEntry) {
+  if (move.id === "populationbomb") {
+    return 100;
+  }
+
+  if (move.id === "tripleaxel") {
+    return 120;
+  }
+
+  if (["rockblast", "bulletseed", "scaleshot"].includes(move.id)) {
+    return 75;
+  }
+
+  return move.basePower;
+}
+
+function buildFallbackMoveProfile(
+  pokemon: PokemonEntry,
+  learnset: LearnsetEntry | undefined,
+  moveById: Map<string, MoveEntry>,
+  commonMoveLimit: number,
+) {
+  const damagingMoves = (learnset?.moveIds ?? [])
+    .map((moveId) => moveById.get(moveId) ?? null)
+    .filter((move): move is MoveEntry => {
+      if (!move) {
+        return false;
+      }
+
+      return move.category !== "Status" && getFallbackMovePower(move) > 0;
+    })
+    .sort((left, right) => {
+      const leftStab = pokemon.types.includes(left.type) ? 1 : 0;
+      const rightStab = pokemon.types.includes(right.type) ? 1 : 0;
+      const stabDelta = rightStab - leftStab;
+
+      if (stabDelta !== 0) {
+        return stabDelta;
+      }
+
+      return getFallbackMovePower(right) - getFallbackMovePower(left);
+    });
+
+  const defaultMove = damagingMoves[0]?.name ?? "Tackle";
+
+  return {
+    defaultMove,
+    commonMoves: dedupeStrings([
+      defaultMove,
+      ...damagingMoves.map((move) => move.name),
+    ]).slice(0, commonMoveLimit),
+  };
+}
+
+function buildFallbackMetaProfile({
+  pokemon,
+  previousProfile,
+  override,
+  learnset,
+  moveById,
+  legalItemById,
+  commonMoveLimit,
+  commonAbilityLimit,
+  commonItemLimit,
+}: {
+  pokemon: PokemonEntry;
+  previousProfile: VgcMetaProfile | undefined;
+  override: Partial<VgcMetaProfile> | undefined;
+  learnset: LearnsetEntry | undefined;
+  moveById: Map<string, MoveEntry>;
+  legalItemById: Map<string, string>;
+  commonMoveLimit: number;
+  commonAbilityLimit: number;
+  commonItemLimit: number;
+}) {
+  const fallbackItem =
+    (pokemon.isMega && pokemon.requiredItem
+      ? pokemon.requiredItem
+      : legalItemById.get(FALLBACK_ITEM_ID)) ??
+    legalItemById.values().next().value ??
+    "Sitrus Berry";
+  const moveProfile = buildFallbackMoveProfile(
+    pokemon,
+    learnset,
+    moveById,
+    commonMoveLimit,
+  );
+  const baseProfile: VgcMetaProfile = {
+    pokemonId: pokemon.id,
+    defaultItem: previousProfile?.defaultItem ?? fallbackItem,
+    defaultAbility:
+      previousProfile?.defaultAbility ?? pokemon.abilities[0] ?? "No Ability",
+    defaultMove: previousProfile?.defaultMove ?? moveProfile.defaultMove,
+    commonMoves: dedupeStrings([
+      ...(previousProfile?.commonMoves ?? []),
+      ...moveProfile.commonMoves,
+    ]).slice(0, commonMoveLimit),
+    commonAbilities: dedupeStrings([
+      ...(previousProfile?.commonAbilities ?? []),
+      ...pokemon.abilities,
+    ]).slice(0, commonAbilityLimit),
+    commonItems: dedupeStrings([
+      ...(previousProfile?.commonItems ?? []),
+      fallbackItem,
+    ]).slice(0, commonItemLimit),
+  };
+
+  return mergeProfile(baseProfile, override);
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   const rootDir = process.cwd();
@@ -138,10 +258,18 @@ async function main() {
   );
   const activeRegulation = await readJson<RegulationEntry>(regulationPath);
 
-  const [pokemonData, moveData, formAliasData, legalItemData, previousMeta] =
+  const [
+    pokemonData,
+    moveData,
+    learnsetData,
+    formAliasData,
+    legalItemData,
+    previousMeta,
+  ] =
     await Promise.all([
       readJson<PokemonEntry[]>(path.join(dataDir, "pokemon.gen9.json")),
       readJson<MoveEntry[]>(path.join(dataDir, "moves.gen9.json")),
+      readJson<LearnsetEntry[]>(path.join(dataDir, "learnsets.gen9.json")),
       readJson<FormAliasEntry[]>(path.join(dataDir, "form-aliases.json")),
       readJson<ItemEntry[]>(path.join(dataDir, "champions-items.json")),
       maybeReadJson<VgcMetaProfile[]>(outputPath),
@@ -151,6 +279,10 @@ async function main() {
     (previousMeta ?? []).map((profile) => [profile.pokemonId, profile]),
   );
   const pokemonById = new Map(pokemonData.map((entry) => [entry.id, entry]));
+  const moveById = new Map(moveData.map((entry) => [entry.id, entry]));
+  const learnsetByPokemonId = new Map(
+    learnsetData.map((entry) => [entry.pokemonId, entry]),
+  );
   const legalItemById = new Map(
     legalItemData.map((entry) => [entry.id, entry.name]),
   );
@@ -196,6 +328,7 @@ async function main() {
   }
 
   const skippedSpecies: string[] = [];
+  const fallbackSpecies: string[] = [];
   const fetchFailures: string[] = [];
   const speciesNameByPokemonId = buildSpeciesNameByPokemonId(
     indexEntries,
@@ -238,39 +371,30 @@ async function main() {
         );
 
         if (!resolvedMarkdown.markdown) {
-          if (previousProfile) {
-            const mergedPreviousProfile = mergeProfile(
-              {
-                ...previousProfile,
-                pokemonId: pokemon.id,
-              },
-              overrides.profileOverrides?.[pokemon.id],
-            );
-
-            return {
-              usagePercent: indexEntry?.usagePercent ?? 0,
-              profile: {
-                ...mergedPreviousProfile,
-                commonMoves: dedupeStrings(
-                  mergedPreviousProfile.commonMoves ?? [],
-                ).slice(0, commonMoveLimit),
-                commonAbilities: dedupeStrings(
-                  mergedPreviousProfile.commonAbilities ?? [],
-                ).slice(0, commonAbilityLimit),
-                commonItems: dedupeStrings(
-                  mergedPreviousProfile.commonItems ?? [],
-                ).slice(0, commonItemLimit),
-              },
-            };
-          }
-
           fetchFailures.push(
             `${pokemon.name}: ${
               resolvedMarkdown.error ??
               `No Pikalytics AI page resolved from candidates ${candidateSpeciesNames.join(", ")}`
             }`,
           );
-          return null;
+          fallbackSpecies.push(pokemon.name);
+
+          return {
+            usagePercent: indexEntry?.usagePercent ?? 0,
+            profile: buildFallbackMetaProfile({
+              pokemon,
+              previousProfile,
+              override: overrides.profileOverrides?.[pokemon.id],
+              learnset: learnsetByPokemonId.get(
+                normalizeId(pokemon.defaultFormOf ?? pokemon.id),
+              ),
+              moveById,
+              legalItemById,
+              commonMoveLimit,
+              commonAbilityLimit,
+              commonItemLimit,
+            }),
+          };
         }
 
         const commonMovesSection = parseUsageEntries(
@@ -312,7 +436,24 @@ async function main() {
           skippedSpecies.push(
             `${pokemon.name}${resolvedMarkdown.speciesName ? ` <- ${resolvedMarkdown.speciesName}` : ""}`,
           );
-          return null;
+          fallbackSpecies.push(pokemon.name);
+
+          return {
+            usagePercent: indexEntry?.usagePercent ?? 0,
+            profile: buildFallbackMetaProfile({
+              pokemon,
+              previousProfile,
+              override: overrides.profileOverrides?.[pokemon.id],
+              learnset: learnsetByPokemonId.get(
+                normalizeId(pokemon.defaultFormOf ?? pokemon.id),
+              ),
+              moveById,
+              legalItemById,
+              commonMoveLimit,
+              commonAbilityLimit,
+              commonItemLimit,
+            }),
+          };
         }
 
         const mergedProfile = mergeProfile(
@@ -349,7 +490,24 @@ async function main() {
         fetchFailures.push(
           `${pokemon.name}: ${error instanceof Error ? error.message : String(error)}`,
         );
-        return null;
+        fallbackSpecies.push(pokemon.name);
+
+        return {
+          usagePercent: indexEntry?.usagePercent ?? 0,
+          profile: buildFallbackMetaProfile({
+            pokemon,
+            previousProfile,
+            override: overrides.profileOverrides?.[pokemon.id],
+            learnset: learnsetByPokemonId.get(
+              normalizeId(pokemon.defaultFormOf ?? pokemon.id),
+            ),
+            moveById,
+            legalItemById,
+            commonMoveLimit,
+            commonAbilityLimit,
+            commonItemLimit,
+          }),
+        };
       }
     },
   );
@@ -385,6 +543,9 @@ async function main() {
       skippedSpecies.length
         ? `Skipped species without complete move/item/ability data (${skippedSpecies.length}): ${skippedSpecies.join(", ")}`
         : "Skipped species without complete move/item/ability data: none.",
+      fallbackSpecies.length
+        ? `Fallback profiles generated (${fallbackSpecies.length}): ${dedupeStrings(fallbackSpecies).join(", ")}`
+        : "Fallback profiles generated: none.",
       fetchFailures.length
         ? `Fetch failures (${fetchFailures.length}): ${fetchFailures.join(" | ")}`
         : "Fetch failures: none.",

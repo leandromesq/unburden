@@ -2,9 +2,7 @@
   {
     "id": "absorb",
     "name": "Absorb",
-    "aliases": [
-      "absorb"
-    ],
+    "aliases": ["absorb"],
     "type": "Grass",
     "category": "Special",
     "basePower": 20,
@@ -15,9 +13,7 @@
   {
     "id": "accelerock",
     "name": "Accelerock",
-    "aliases": [
-      "accelerock"
-    ],
+    "aliases": ["accelerock"],
     "type": "Rock",
     "category": "Physical",
     "basePower": 40,
@@ -28,9 +24,7 @@
   {
     "id": "acid",
     "name": "Acid",
-    "aliases": [
-      "acid"
-    ],
+    "aliases": ["acid"],
     "type": "Poison",
     "category": "Special",
     "basePower": 40,
@@ -41,10 +35,7 @@
   {
     "id": "acidarmor",
     "name": "Acid Armor",
-    "aliases": [
-      "acid armor",
-      "acidarmor"
-    ],
+    "aliases": ["acid armor", "acidarmor"],
     "type": "Poison",
     "category": "Status",
     "basePower": 0,
@@ -55,10 +46,7 @@
   {
     "id": "acidspray",
     "name": "Acid Spray",
-    "aliases": [
-      "acid spray",
-      "acidspray"
-    ],
+    "aliases": ["acid spray", "acidspray"],
     "type": "Poison",
     "category": "Special",
     "basePower": 40,
@@ -69,9 +57,7 @@
   {
     "id": "acrobatics",
     "name": "Acrobatics",
-    "aliases": [
-      "acrobatics"
-    ],
+    "aliases": ["acrobatics"],
     "type": "Flying",
     "category": "Physical",
     "basePower": 55,
@@ -82,9 +68,7 @@
   {
     "id": "acupressure",
     "name": "Acupressure",
-    "aliases": [
-      "acupressure"
-    ],
+    "aliases": ["acupressure"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -95,10 +79,7 @@
   {
     "id": "aerialace",
     "name": "Aerial Ace",
-    "aliases": [
-      "aerial ace",
-      "aerialace"
-    ],
+    "aliases": ["aerial ace", "aerialace"],
     "type": "Flying",
     "category": "Physical",
     "basePower": 60,
@@ -109,9 +90,7 @@
   {
     "id": "aeroblast",
     "name": "Aeroblast",
-    "aliases": [
-      "aeroblast"
-    ],
+    "aliases": ["aeroblast"],
     "type": "Flying",
     "category": "Special",
     "basePower": 100,
@@ -122,10 +101,7 @@
   {
     "id": "afteryou",
     "name": "After You",
-    "aliases": [
-      "after you",
-      "afteryou"
-    ],
+    "aliases": ["after you", "afteryou"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -136,9 +112,7 @@
   {
     "id": "agility",
     "name": "Agility",
-    "aliases": [
-      "agility"
-    ],
+    "aliases": ["agility"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -149,10 +123,7 @@
   {
     "id": "aircutter",
     "name": "Air Cutter",
-    "aliases": [
-      "air cutter",
-      "aircutter"
-    ],
+    "aliases": ["air cutter", "aircutter"],
     "type": "Flying",
     "category": "Special",
     "basePower": 60,
@@ -163,10 +134,7 @@
   {
     "id": "airslash",
     "name": "Air Slash",
-    "aliases": [
-      "air slash",
-      "airslash"
-    ],
+    "aliases": ["air slash", "airslash"],
     "type": "Flying",
     "category": "Special",
     "basePower": 75,
@@ -177,10 +145,7 @@
   {
     "id": "alluringvoice",
     "name": "Alluring Voice",
-    "aliases": [
-      "alluring voice",
-      "alluringvoice"
-    ],
+    "aliases": ["alluring voice", "alluringvoice"],
     "type": "Fairy",
     "category": "Special",
     "basePower": 80,
@@ -191,10 +156,7 @@
   {
     "id": "allyswitch",
     "name": "Ally Switch",
-    "aliases": [
-      "ally switch",
-      "allyswitch"
-    ],
+    "aliases": ["ally switch", "allyswitch"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -205,9 +167,7 @@
   {
     "id": "amnesia",
     "name": "Amnesia",
-    "aliases": [
-      "amnesia"
-    ],
+    "aliases": ["amnesia"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -218,10 +178,7 @@
   {
     "id": "ancientpower",
     "name": "Ancient Power",
-    "aliases": [
-      "ancient power",
-      "ancientpower"
-    ],
+    "aliases": ["ancient power", "ancientpower"],
     "type": "Rock",
     "category": "Special",
     "basePower": 60,
@@ -232,13 +189,10 @@
   {
     "id": "appleacid",
     "name": "Apple Acid",
-    "aliases": [
-      "apple acid",
-      "appleacid"
-    ],
+    "aliases": ["apple acid", "appleacid"],
     "type": "Grass",
     "category": "Special",
-    "basePower": 80,
+    "basePower": 90,
     "accuracy": 100,
     "target": "normal",
     "isSpread": false
@@ -246,10 +200,7 @@
   {
     "id": "aquacutter",
     "name": "Aqua Cutter",
-    "aliases": [
-      "aqua cutter",
-      "aquacutter"
-    ],
+    "aliases": ["aqua cutter", "aquacutter"],
     "type": "Water",
     "category": "Physical",
     "basePower": 70,
@@ -260,10 +211,7 @@
   {
     "id": "aquajet",
     "name": "Aqua Jet",
-    "aliases": [
-      "aqua jet",
-      "aquajet"
-    ],
+    "aliases": ["aqua jet", "aquajet"],
     "type": "Water",
     "category": "Physical",
     "basePower": 40,
@@ -274,10 +222,7 @@
   {
     "id": "aquaring",
     "name": "Aqua Ring",
-    "aliases": [
-      "aqua ring",
-      "aquaring"
-    ],
+    "aliases": ["aqua ring", "aquaring"],
     "type": "Water",
     "category": "Status",
     "basePower": 0,
@@ -288,10 +233,7 @@
   {
     "id": "aquastep",
     "name": "Aqua Step",
-    "aliases": [
-      "aqua step",
-      "aquastep"
-    ],
+    "aliases": ["aqua step", "aquastep"],
     "type": "Water",
     "category": "Physical",
     "basePower": 80,
@@ -302,10 +244,7 @@
   {
     "id": "aquatail",
     "name": "Aqua Tail",
-    "aliases": [
-      "aqua tail",
-      "aquatail"
-    ],
+    "aliases": ["aqua tail", "aquatail"],
     "type": "Water",
     "category": "Physical",
     "basePower": 90,
@@ -316,10 +255,7 @@
   {
     "id": "armthrust",
     "name": "Arm Thrust",
-    "aliases": [
-      "arm thrust",
-      "armthrust"
-    ],
+    "aliases": ["arm thrust", "armthrust"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 15,
@@ -330,10 +266,7 @@
   {
     "id": "armorcannon",
     "name": "Armor Cannon",
-    "aliases": [
-      "armor cannon",
-      "armorcannon"
-    ],
+    "aliases": ["armor cannon", "armorcannon"],
     "type": "Fire",
     "category": "Special",
     "basePower": 120,
@@ -344,10 +277,7 @@
   {
     "id": "aromaticmist",
     "name": "Aromatic Mist",
-    "aliases": [
-      "aromatic mist",
-      "aromaticmist"
-    ],
+    "aliases": ["aromatic mist", "aromaticmist"],
     "type": "Fairy",
     "category": "Status",
     "basePower": 0,
@@ -358,9 +288,7 @@
   {
     "id": "assurance",
     "name": "Assurance",
-    "aliases": [
-      "assurance"
-    ],
+    "aliases": ["assurance"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 60,
@@ -371,9 +299,7 @@
   {
     "id": "astonish",
     "name": "Astonish",
-    "aliases": [
-      "astonish"
-    ],
+    "aliases": ["astonish"],
     "type": "Ghost",
     "category": "Physical",
     "basePower": 30,
@@ -384,10 +310,7 @@
   {
     "id": "astralbarrage",
     "name": "Astral Barrage",
-    "aliases": [
-      "astral barrage",
-      "astralbarrage"
-    ],
+    "aliases": ["astral barrage", "astralbarrage"],
     "type": "Ghost",
     "category": "Special",
     "basePower": 120,
@@ -398,10 +321,7 @@
   {
     "id": "attackorder",
     "name": "Attack Order",
-    "aliases": [
-      "attack order",
-      "attackorder"
-    ],
+    "aliases": ["attack order", "attackorder"],
     "type": "Bug",
     "category": "Physical",
     "basePower": 90,
@@ -412,9 +332,7 @@
   {
     "id": "attract",
     "name": "Attract",
-    "aliases": [
-      "attract"
-    ],
+    "aliases": ["attract"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -425,10 +343,7 @@
   {
     "id": "aurasphere",
     "name": "Aura Sphere",
-    "aliases": [
-      "aura sphere",
-      "aurasphere"
-    ],
+    "aliases": ["aura sphere", "aurasphere"],
     "type": "Fighting",
     "category": "Special",
     "basePower": 80,
@@ -439,10 +354,7 @@
   {
     "id": "aurawheel",
     "name": "Aura Wheel",
-    "aliases": [
-      "aura wheel",
-      "aurawheel"
-    ],
+    "aliases": ["aura wheel", "aurawheel"],
     "type": "Electric",
     "category": "Physical",
     "basePower": 110,
@@ -453,10 +365,7 @@
   {
     "id": "aurorabeam",
     "name": "Aurora Beam",
-    "aliases": [
-      "aurora beam",
-      "aurorabeam"
-    ],
+    "aliases": ["aurora beam", "aurorabeam"],
     "type": "Ice",
     "category": "Special",
     "basePower": 65,
@@ -467,10 +376,7 @@
   {
     "id": "auroraveil",
     "name": "Aurora Veil",
-    "aliases": [
-      "aurora veil",
-      "auroraveil"
-    ],
+    "aliases": ["aurora veil", "auroraveil"],
     "type": "Ice",
     "category": "Status",
     "basePower": 0,
@@ -481,9 +387,7 @@
   {
     "id": "avalanche",
     "name": "Avalanche",
-    "aliases": [
-      "avalanche"
-    ],
+    "aliases": ["avalanche"],
     "type": "Ice",
     "category": "Physical",
     "basePower": 60,
@@ -494,10 +398,7 @@
   {
     "id": "axekick",
     "name": "Axe Kick",
-    "aliases": [
-      "axe kick",
-      "axekick"
-    ],
+    "aliases": ["axe kick", "axekick"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 120,
@@ -508,11 +409,7 @@
   {
     "id": "babydolleyes",
     "name": "Baby-Doll Eyes",
-    "aliases": [
-      "baby-doll eyes",
-      "baby doll eyes",
-      "babydolleyes"
-    ],
+    "aliases": ["baby-doll eyes", "baby doll eyes", "babydolleyes"],
     "type": "Fairy",
     "category": "Status",
     "basePower": 0,
@@ -523,10 +420,7 @@
   {
     "id": "banefulbunker",
     "name": "Baneful Bunker",
-    "aliases": [
-      "baneful bunker",
-      "banefulbunker"
-    ],
+    "aliases": ["baneful bunker", "banefulbunker"],
     "type": "Poison",
     "category": "Status",
     "basePower": 0,
@@ -537,10 +431,7 @@
   {
     "id": "barbbarrage",
     "name": "Barb Barrage",
-    "aliases": [
-      "barb barrage",
-      "barbbarrage"
-    ],
+    "aliases": ["barb barrage", "barbbarrage"],
     "type": "Poison",
     "category": "Physical",
     "basePower": 60,
@@ -551,10 +442,7 @@
   {
     "id": "batonpass",
     "name": "Baton Pass",
-    "aliases": [
-      "baton pass",
-      "batonpass"
-    ],
+    "aliases": ["baton pass", "batonpass"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -565,13 +453,10 @@
   {
     "id": "beakblast",
     "name": "Beak Blast",
-    "aliases": [
-      "beak blast",
-      "beakblast"
-    ],
+    "aliases": ["beak blast", "beakblast"],
     "type": "Flying",
     "category": "Physical",
-    "basePower": 100,
+    "basePower": 120,
     "accuracy": 100,
     "target": "normal",
     "isSpread": false
@@ -579,10 +464,7 @@
   {
     "id": "beatup",
     "name": "Beat Up",
-    "aliases": [
-      "beat up",
-      "beatup"
-    ],
+    "aliases": ["beat up", "beatup"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 0,
@@ -593,10 +475,7 @@
   {
     "id": "behemothbash",
     "name": "Behemoth Bash",
-    "aliases": [
-      "behemoth bash",
-      "behemothbash"
-    ],
+    "aliases": ["behemoth bash", "behemothbash"],
     "type": "Steel",
     "category": "Physical",
     "basePower": 100,
@@ -607,10 +486,7 @@
   {
     "id": "behemothblade",
     "name": "Behemoth Blade",
-    "aliases": [
-      "behemoth blade",
-      "behemothblade"
-    ],
+    "aliases": ["behemoth blade", "behemothblade"],
     "type": "Steel",
     "category": "Physical",
     "basePower": 100,
@@ -621,9 +497,7 @@
   {
     "id": "belch",
     "name": "Belch",
-    "aliases": [
-      "belch"
-    ],
+    "aliases": ["belch"],
     "type": "Poison",
     "category": "Special",
     "basePower": 120,
@@ -634,10 +508,7 @@
   {
     "id": "bellydrum",
     "name": "Belly Drum",
-    "aliases": [
-      "belly drum",
-      "bellydrum"
-    ],
+    "aliases": ["belly drum", "bellydrum"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -648,9 +519,7 @@
   {
     "id": "bind",
     "name": "Bind",
-    "aliases": [
-      "bind"
-    ],
+    "aliases": ["bind"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 15,
@@ -661,9 +530,7 @@
   {
     "id": "bite",
     "name": "Bite",
-    "aliases": [
-      "bite"
-    ],
+    "aliases": ["bite"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 60,
@@ -674,10 +541,7 @@
   {
     "id": "bitterblade",
     "name": "Bitter Blade",
-    "aliases": [
-      "bitter blade",
-      "bitterblade"
-    ],
+    "aliases": ["bitter blade", "bitterblade"],
     "type": "Fire",
     "category": "Physical",
     "basePower": 90,
@@ -688,10 +552,7 @@
   {
     "id": "bittermalice",
     "name": "Bitter Malice",
-    "aliases": [
-      "bitter malice",
-      "bittermalice"
-    ],
+    "aliases": ["bitter malice", "bittermalice"],
     "type": "Ghost",
     "category": "Special",
     "basePower": 75,
@@ -702,10 +563,7 @@
   {
     "id": "blastburn",
     "name": "Blast Burn",
-    "aliases": [
-      "blast burn",
-      "blastburn"
-    ],
+    "aliases": ["blast burn", "blastburn"],
     "type": "Fire",
     "category": "Special",
     "basePower": 150,
@@ -716,10 +574,7 @@
   {
     "id": "blazekick",
     "name": "Blaze Kick",
-    "aliases": [
-      "blaze kick",
-      "blazekick"
-    ],
+    "aliases": ["blaze kick", "blazekick"],
     "type": "Fire",
     "category": "Physical",
     "basePower": 85,
@@ -730,10 +585,7 @@
   {
     "id": "bleakwindstorm",
     "name": "Bleakwind Storm",
-    "aliases": [
-      "bleakwind storm",
-      "bleakwindstorm"
-    ],
+    "aliases": ["bleakwind storm", "bleakwindstorm"],
     "type": "Flying",
     "category": "Special",
     "basePower": 100,
@@ -744,9 +596,7 @@
   {
     "id": "blizzard",
     "name": "Blizzard",
-    "aliases": [
-      "blizzard"
-    ],
+    "aliases": ["blizzard"],
     "type": "Ice",
     "category": "Special",
     "basePower": 110,
@@ -757,9 +607,7 @@
   {
     "id": "block",
     "name": "Block",
-    "aliases": [
-      "block"
-    ],
+    "aliases": ["block"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -770,10 +618,7 @@
   {
     "id": "bloodmoon",
     "name": "Blood Moon",
-    "aliases": [
-      "blood moon",
-      "bloodmoon"
-    ],
+    "aliases": ["blood moon", "bloodmoon"],
     "type": "Normal",
     "category": "Special",
     "basePower": 140,
@@ -784,10 +629,7 @@
   {
     "id": "blueflare",
     "name": "Blue Flare",
-    "aliases": [
-      "blue flare",
-      "blueflare"
-    ],
+    "aliases": ["blue flare", "blueflare"],
     "type": "Fire",
     "category": "Special",
     "basePower": 130,
@@ -798,10 +640,7 @@
   {
     "id": "bodypress",
     "name": "Body Press",
-    "aliases": [
-      "body press",
-      "bodypress"
-    ],
+    "aliases": ["body press", "bodypress"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 80,
@@ -812,10 +651,7 @@
   {
     "id": "bodyslam",
     "name": "Body Slam",
-    "aliases": [
-      "body slam",
-      "bodyslam"
-    ],
+    "aliases": ["body slam", "bodyslam"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 85,
@@ -826,10 +662,7 @@
   {
     "id": "boltstrike",
     "name": "Bolt Strike",
-    "aliases": [
-      "bolt strike",
-      "boltstrike"
-    ],
+    "aliases": ["bolt strike", "boltstrike"],
     "type": "Electric",
     "category": "Physical",
     "basePower": 130,
@@ -840,13 +673,10 @@
   {
     "id": "bonerush",
     "name": "Bone Rush",
-    "aliases": [
-      "bone rush",
-      "bonerush"
-    ],
+    "aliases": ["bone rush", "bonerush"],
     "type": "Ground",
     "category": "Physical",
-    "basePower": 25,
+    "basePower": 30,
     "accuracy": 90,
     "target": "normal",
     "isSpread": false
@@ -854,9 +684,7 @@
   {
     "id": "boomburst",
     "name": "Boomburst",
-    "aliases": [
-      "boomburst"
-    ],
+    "aliases": ["boomburst"],
     "type": "Normal",
     "category": "Special",
     "basePower": 140,
@@ -867,9 +695,7 @@
   {
     "id": "bounce",
     "name": "Bounce",
-    "aliases": [
-      "bounce"
-    ],
+    "aliases": ["bounce"],
     "type": "Flying",
     "category": "Physical",
     "basePower": 85,
@@ -880,10 +706,7 @@
   {
     "id": "branchpoke",
     "name": "Branch Poke",
-    "aliases": [
-      "branch poke",
-      "branchpoke"
-    ],
+    "aliases": ["branch poke", "branchpoke"],
     "type": "Grass",
     "category": "Physical",
     "basePower": 40,
@@ -894,10 +717,7 @@
   {
     "id": "bravebird",
     "name": "Brave Bird",
-    "aliases": [
-      "brave bird",
-      "bravebird"
-    ],
+    "aliases": ["brave bird", "bravebird"],
     "type": "Flying",
     "category": "Physical",
     "basePower": 120,
@@ -908,10 +728,7 @@
   {
     "id": "breakingswipe",
     "name": "Breaking Swipe",
-    "aliases": [
-      "breaking swipe",
-      "breakingswipe"
-    ],
+    "aliases": ["breaking swipe", "breakingswipe"],
     "type": "Dragon",
     "category": "Physical",
     "basePower": 60,
@@ -922,10 +739,7 @@
   {
     "id": "brickbreak",
     "name": "Brick Break",
-    "aliases": [
-      "brick break",
-      "brickbreak"
-    ],
+    "aliases": ["brick break", "brickbreak"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 75,
@@ -936,9 +750,7 @@
   {
     "id": "brine",
     "name": "Brine",
-    "aliases": [
-      "brine"
-    ],
+    "aliases": ["brine"],
     "type": "Water",
     "category": "Special",
     "basePower": 65,
@@ -949,10 +761,7 @@
   {
     "id": "brutalswing",
     "name": "Brutal Swing",
-    "aliases": [
-      "brutal swing",
-      "brutalswing"
-    ],
+    "aliases": ["brutal swing", "brutalswing"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 60,
@@ -963,10 +772,7 @@
   {
     "id": "bubblebeam",
     "name": "Bubble Beam",
-    "aliases": [
-      "bubble beam",
-      "bubblebeam"
-    ],
+    "aliases": ["bubble beam", "bubblebeam"],
     "type": "Water",
     "category": "Special",
     "basePower": 65,
@@ -977,10 +783,7 @@
   {
     "id": "bugbite",
     "name": "Bug Bite",
-    "aliases": [
-      "bug bite",
-      "bugbite"
-    ],
+    "aliases": ["bug bite", "bugbite"],
     "type": "Bug",
     "category": "Physical",
     "basePower": 60,
@@ -991,10 +794,7 @@
   {
     "id": "bugbuzz",
     "name": "Bug Buzz",
-    "aliases": [
-      "bug buzz",
-      "bugbuzz"
-    ],
+    "aliases": ["bug buzz", "bugbuzz"],
     "type": "Bug",
     "category": "Special",
     "basePower": 90,
@@ -1005,10 +805,7 @@
   {
     "id": "bulkup",
     "name": "Bulk Up",
-    "aliases": [
-      "bulk up",
-      "bulkup"
-    ],
+    "aliases": ["bulk up", "bulkup"],
     "type": "Fighting",
     "category": "Status",
     "basePower": 0,
@@ -1019,9 +816,7 @@
   {
     "id": "bulldoze",
     "name": "Bulldoze",
-    "aliases": [
-      "bulldoze"
-    ],
+    "aliases": ["bulldoze"],
     "type": "Ground",
     "category": "Physical",
     "basePower": 60,
@@ -1032,10 +827,7 @@
   {
     "id": "bulletpunch",
     "name": "Bullet Punch",
-    "aliases": [
-      "bullet punch",
-      "bulletpunch"
-    ],
+    "aliases": ["bullet punch", "bulletpunch"],
     "type": "Steel",
     "category": "Physical",
     "basePower": 40,
@@ -1046,10 +838,7 @@
   {
     "id": "bulletseed",
     "name": "Bullet Seed",
-    "aliases": [
-      "bullet seed",
-      "bulletseed"
-    ],
+    "aliases": ["bullet seed", "bulletseed"],
     "type": "Grass",
     "category": "Physical",
     "basePower": 25,
@@ -1060,10 +849,7 @@
   {
     "id": "burningbulwark",
     "name": "Burning Bulwark",
-    "aliases": [
-      "burning bulwark",
-      "burningbulwark"
-    ],
+    "aliases": ["burning bulwark", "burningbulwark"],
     "type": "Fire",
     "category": "Status",
     "basePower": 0,
@@ -1074,10 +860,7 @@
   {
     "id": "burningjealousy",
     "name": "Burning Jealousy",
-    "aliases": [
-      "burning jealousy",
-      "burningjealousy"
-    ],
+    "aliases": ["burning jealousy", "burningjealousy"],
     "type": "Fire",
     "category": "Special",
     "basePower": 70,
@@ -1088,10 +871,7 @@
   {
     "id": "calmmind",
     "name": "Calm Mind",
-    "aliases": [
-      "calm mind",
-      "calmmind"
-    ],
+    "aliases": ["calm mind", "calmmind"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -1102,10 +882,7 @@
   {
     "id": "ceaselessedge",
     "name": "Ceaseless Edge",
-    "aliases": [
-      "ceaseless edge",
-      "ceaselessedge"
-    ],
+    "aliases": ["ceaseless edge", "ceaselessedge"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 65,
@@ -1116,9 +893,7 @@
   {
     "id": "celebrate",
     "name": "Celebrate",
-    "aliases": [
-      "celebrate"
-    ],
+    "aliases": ["celebrate"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -1129,9 +904,7 @@
   {
     "id": "charge",
     "name": "Charge",
-    "aliases": [
-      "charge"
-    ],
+    "aliases": ["charge"],
     "type": "Electric",
     "category": "Status",
     "basePower": 0,
@@ -1142,10 +915,7 @@
   {
     "id": "chargebeam",
     "name": "Charge Beam",
-    "aliases": [
-      "charge beam",
-      "chargebeam"
-    ],
+    "aliases": ["charge beam", "chargebeam"],
     "type": "Electric",
     "category": "Special",
     "basePower": 50,
@@ -1156,9 +926,7 @@
   {
     "id": "charm",
     "name": "Charm",
-    "aliases": [
-      "charm"
-    ],
+    "aliases": ["charm"],
     "type": "Fairy",
     "category": "Status",
     "basePower": 0,
@@ -1169,10 +937,7 @@
   {
     "id": "chillingwater",
     "name": "Chilling Water",
-    "aliases": [
-      "chilling water",
-      "chillingwater"
-    ],
+    "aliases": ["chilling water", "chillingwater"],
     "type": "Water",
     "category": "Special",
     "basePower": 50,
@@ -1183,10 +948,7 @@
   {
     "id": "chillyreception",
     "name": "Chilly Reception",
-    "aliases": [
-      "chilly reception",
-      "chillyreception"
-    ],
+    "aliases": ["chilly reception", "chillyreception"],
     "type": "Ice",
     "category": "Status",
     "basePower": 0,
@@ -1197,9 +959,7 @@
   {
     "id": "chloroblast",
     "name": "Chloroblast",
-    "aliases": [
-      "chloroblast"
-    ],
+    "aliases": ["chloroblast"],
     "type": "Grass",
     "category": "Special",
     "basePower": 150,
@@ -1210,10 +970,7 @@
   {
     "id": "circlethrow",
     "name": "Circle Throw",
-    "aliases": [
-      "circle throw",
-      "circlethrow"
-    ],
+    "aliases": ["circle throw", "circlethrow"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 60,
@@ -1224,10 +981,7 @@
   {
     "id": "clangingscales",
     "name": "Clanging Scales",
-    "aliases": [
-      "clanging scales",
-      "clangingscales"
-    ],
+    "aliases": ["clanging scales", "clangingscales"],
     "type": "Dragon",
     "category": "Special",
     "basePower": 110,
@@ -1238,10 +992,7 @@
   {
     "id": "clangoroussoul",
     "name": "Clangorous Soul",
-    "aliases": [
-      "clangorous soul",
-      "clangoroussoul"
-    ],
+    "aliases": ["clangorous soul", "clangoroussoul"],
     "type": "Dragon",
     "category": "Status",
     "basePower": 0,
@@ -1252,10 +1003,7 @@
   {
     "id": "clearsmog",
     "name": "Clear Smog",
-    "aliases": [
-      "clear smog",
-      "clearsmog"
-    ],
+    "aliases": ["clear smog", "clearsmog"],
     "type": "Poison",
     "category": "Special",
     "basePower": 50,
@@ -1266,10 +1014,7 @@
   {
     "id": "closecombat",
     "name": "Close Combat",
-    "aliases": [
-      "close combat",
-      "closecombat"
-    ],
+    "aliases": ["close combat", "closecombat"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 120,
@@ -1280,9 +1025,7 @@
   {
     "id": "coaching",
     "name": "Coaching",
-    "aliases": [
-      "coaching"
-    ],
+    "aliases": ["coaching"],
     "type": "Fighting",
     "category": "Status",
     "basePower": 0,
@@ -1293,9 +1036,7 @@
   {
     "id": "coil",
     "name": "Coil",
-    "aliases": [
-      "coil"
-    ],
+    "aliases": ["coil"],
     "type": "Poison",
     "category": "Status",
     "basePower": 0,
@@ -1306,10 +1047,7 @@
   {
     "id": "collisioncourse",
     "name": "Collision Course",
-    "aliases": [
-      "collision course",
-      "collisioncourse"
-    ],
+    "aliases": ["collision course", "collisioncourse"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 100,
@@ -1320,9 +1058,7 @@
   {
     "id": "comeuppance",
     "name": "Comeuppance",
-    "aliases": [
-      "comeuppance"
-    ],
+    "aliases": ["comeuppance"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 0,
@@ -1333,9 +1069,7 @@
   {
     "id": "confide",
     "name": "Confide",
-    "aliases": [
-      "confide"
-    ],
+    "aliases": ["confide"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -1346,10 +1080,7 @@
   {
     "id": "confuseray",
     "name": "Confuse Ray",
-    "aliases": [
-      "confuse ray",
-      "confuseray"
-    ],
+    "aliases": ["confuse ray", "confuseray"],
     "type": "Ghost",
     "category": "Status",
     "basePower": 0,
@@ -1360,9 +1091,7 @@
   {
     "id": "confusion",
     "name": "Confusion",
-    "aliases": [
-      "confusion"
-    ],
+    "aliases": ["confusion"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 50,
@@ -1373,9 +1102,7 @@
   {
     "id": "conversion",
     "name": "Conversion",
-    "aliases": [
-      "conversion"
-    ],
+    "aliases": ["conversion"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -1386,10 +1113,7 @@
   {
     "id": "conversion2",
     "name": "Conversion 2",
-    "aliases": [
-      "conversion 2",
-      "conversion2"
-    ],
+    "aliases": ["conversion 2", "conversion2"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -1400,9 +1124,7 @@
   {
     "id": "copycat",
     "name": "Copycat",
-    "aliases": [
-      "copycat"
-    ],
+    "aliases": ["copycat"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -1413,10 +1135,7 @@
   {
     "id": "cosmicpower",
     "name": "Cosmic Power",
-    "aliases": [
-      "cosmic power",
-      "cosmicpower"
-    ],
+    "aliases": ["cosmic power", "cosmicpower"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -1427,10 +1146,7 @@
   {
     "id": "cottonguard",
     "name": "Cotton Guard",
-    "aliases": [
-      "cotton guard",
-      "cottonguard"
-    ],
+    "aliases": ["cotton guard", "cottonguard"],
     "type": "Grass",
     "category": "Status",
     "basePower": 0,
@@ -1441,10 +1157,7 @@
   {
     "id": "cottonspore",
     "name": "Cotton Spore",
-    "aliases": [
-      "cotton spore",
-      "cottonspore"
-    ],
+    "aliases": ["cotton spore", "cottonspore"],
     "type": "Grass",
     "category": "Status",
     "basePower": 0,
@@ -1455,9 +1168,7 @@
   {
     "id": "counter",
     "name": "Counter",
-    "aliases": [
-      "counter"
-    ],
+    "aliases": ["counter"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 0,
@@ -1468,10 +1179,7 @@
   {
     "id": "courtchange",
     "name": "Court Change",
-    "aliases": [
-      "court change",
-      "courtchange"
-    ],
+    "aliases": ["court change", "courtchange"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -1482,9 +1190,7 @@
   {
     "id": "covet",
     "name": "Covet",
-    "aliases": [
-      "covet"
-    ],
+    "aliases": ["covet"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 60,
@@ -1495,23 +1201,18 @@
   {
     "id": "crabhammer",
     "name": "Crabhammer",
-    "aliases": [
-      "crabhammer"
-    ],
+    "aliases": ["crabhammer"],
     "type": "Water",
     "category": "Physical",
     "basePower": 100,
-    "accuracy": 90,
+    "accuracy": 95,
     "target": "normal",
     "isSpread": false
   },
   {
     "id": "crosschop",
     "name": "Cross Chop",
-    "aliases": [
-      "cross chop",
-      "crosschop"
-    ],
+    "aliases": ["cross chop", "crosschop"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 100,
@@ -1522,10 +1223,7 @@
   {
     "id": "crosspoison",
     "name": "Cross Poison",
-    "aliases": [
-      "cross poison",
-      "crosspoison"
-    ],
+    "aliases": ["cross poison", "crosspoison"],
     "type": "Poison",
     "category": "Physical",
     "basePower": 70,
@@ -1536,9 +1234,7 @@
   {
     "id": "crunch",
     "name": "Crunch",
-    "aliases": [
-      "crunch"
-    ],
+    "aliases": ["crunch"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 80,
@@ -1549,10 +1245,7 @@
   {
     "id": "crushclaw",
     "name": "Crush Claw",
-    "aliases": [
-      "crush claw",
-      "crushclaw"
-    ],
+    "aliases": ["crush claw", "crushclaw"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 75,
@@ -1563,10 +1256,7 @@
   {
     "id": "crushgrip",
     "name": "Crush Grip",
-    "aliases": [
-      "crush grip",
-      "crushgrip"
-    ],
+    "aliases": ["crush grip", "crushgrip"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 0,
@@ -1577,9 +1267,7 @@
   {
     "id": "curse",
     "name": "Curse",
-    "aliases": [
-      "curse"
-    ],
+    "aliases": ["curse"],
     "type": "Ghost",
     "category": "Status",
     "basePower": 0,
@@ -1590,10 +1278,7 @@
   {
     "id": "darkpulse",
     "name": "Dark Pulse",
-    "aliases": [
-      "dark pulse",
-      "darkpulse"
-    ],
+    "aliases": ["dark pulse", "darkpulse"],
     "type": "Dark",
     "category": "Special",
     "basePower": 80,
@@ -1604,10 +1289,7 @@
   {
     "id": "darkvoid",
     "name": "Dark Void",
-    "aliases": [
-      "dark void",
-      "darkvoid"
-    ],
+    "aliases": ["dark void", "darkvoid"],
     "type": "Dark",
     "category": "Status",
     "basePower": 0,
@@ -1618,10 +1300,7 @@
   {
     "id": "darkestlariat",
     "name": "Darkest Lariat",
-    "aliases": [
-      "darkest lariat",
-      "darkestlariat"
-    ],
+    "aliases": ["darkest lariat", "darkestlariat"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 85,
@@ -1632,10 +1311,7 @@
   {
     "id": "dazzlinggleam",
     "name": "Dazzling Gleam",
-    "aliases": [
-      "dazzling gleam",
-      "dazzlinggleam"
-    ],
+    "aliases": ["dazzling gleam", "dazzlinggleam"],
     "type": "Fairy",
     "category": "Special",
     "basePower": 80,
@@ -1646,9 +1322,7 @@
   {
     "id": "decorate",
     "name": "Decorate",
-    "aliases": [
-      "decorate"
-    ],
+    "aliases": ["decorate"],
     "type": "Fairy",
     "category": "Status",
     "basePower": 0,
@@ -1659,10 +1333,7 @@
   {
     "id": "defendorder",
     "name": "Defend Order",
-    "aliases": [
-      "defend order",
-      "defendorder"
-    ],
+    "aliases": ["defend order", "defendorder"],
     "type": "Bug",
     "category": "Status",
     "basePower": 0,
@@ -1673,10 +1344,7 @@
   {
     "id": "defensecurl",
     "name": "Defense Curl",
-    "aliases": [
-      "defense curl",
-      "defensecurl"
-    ],
+    "aliases": ["defense curl", "defensecurl"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -1687,9 +1355,7 @@
   {
     "id": "defog",
     "name": "Defog",
-    "aliases": [
-      "defog"
-    ],
+    "aliases": ["defog"],
     "type": "Flying",
     "category": "Status",
     "basePower": 0,
@@ -1700,10 +1366,7 @@
   {
     "id": "destinybond",
     "name": "Destiny Bond",
-    "aliases": [
-      "destiny bond",
-      "destinybond"
-    ],
+    "aliases": ["destiny bond", "destinybond"],
     "type": "Ghost",
     "category": "Status",
     "basePower": 0,
@@ -1714,9 +1377,7 @@
   {
     "id": "detect",
     "name": "Detect",
-    "aliases": [
-      "detect"
-    ],
+    "aliases": ["detect"],
     "type": "Fighting",
     "category": "Status",
     "basePower": 0,
@@ -1727,10 +1388,7 @@
   {
     "id": "diamondstorm",
     "name": "Diamond Storm",
-    "aliases": [
-      "diamond storm",
-      "diamondstorm"
-    ],
+    "aliases": ["diamond storm", "diamondstorm"],
     "type": "Rock",
     "category": "Physical",
     "basePower": 100,
@@ -1741,9 +1399,7 @@
   {
     "id": "dig",
     "name": "Dig",
-    "aliases": [
-      "dig"
-    ],
+    "aliases": ["dig"],
     "type": "Ground",
     "category": "Physical",
     "basePower": 80,
@@ -1754,10 +1410,7 @@
   {
     "id": "direclaw",
     "name": "Dire Claw",
-    "aliases": [
-      "dire claw",
-      "direclaw"
-    ],
+    "aliases": ["dire claw", "direclaw"],
     "type": "Poison",
     "category": "Physical",
     "basePower": 80,
@@ -1768,9 +1421,7 @@
   {
     "id": "disable",
     "name": "Disable",
-    "aliases": [
-      "disable"
-    ],
+    "aliases": ["disable"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -1781,10 +1432,7 @@
   {
     "id": "disarmingvoice",
     "name": "Disarming Voice",
-    "aliases": [
-      "disarming voice",
-      "disarmingvoice"
-    ],
+    "aliases": ["disarming voice", "disarmingvoice"],
     "type": "Fairy",
     "category": "Special",
     "basePower": 40,
@@ -1795,9 +1443,7 @@
   {
     "id": "discharge",
     "name": "Discharge",
-    "aliases": [
-      "discharge"
-    ],
+    "aliases": ["discharge"],
     "type": "Electric",
     "category": "Special",
     "basePower": 80,
@@ -1808,9 +1454,7 @@
   {
     "id": "dive",
     "name": "Dive",
-    "aliases": [
-      "dive"
-    ],
+    "aliases": ["dive"],
     "type": "Water",
     "category": "Physical",
     "basePower": 80,
@@ -1821,9 +1465,7 @@
   {
     "id": "doodle",
     "name": "Doodle",
-    "aliases": [
-      "doodle"
-    ],
+    "aliases": ["doodle"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -1834,10 +1476,7 @@
   {
     "id": "doomdesire",
     "name": "Doom Desire",
-    "aliases": [
-      "doom desire",
-      "doomdesire"
-    ],
+    "aliases": ["doom desire", "doomdesire"],
     "type": "Steel",
     "category": "Special",
     "basePower": 140,
@@ -1848,10 +1487,7 @@
   {
     "id": "doublehit",
     "name": "Double Hit",
-    "aliases": [
-      "double hit",
-      "doublehit"
-    ],
+    "aliases": ["double hit", "doublehit"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 35,
@@ -1862,10 +1498,7 @@
   {
     "id": "doublekick",
     "name": "Double Kick",
-    "aliases": [
-      "double kick",
-      "doublekick"
-    ],
+    "aliases": ["double kick", "doublekick"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 30,
@@ -1876,10 +1509,7 @@
   {
     "id": "doubleshock",
     "name": "Double Shock",
-    "aliases": [
-      "double shock",
-      "doubleshock"
-    ],
+    "aliases": ["double shock", "doubleshock"],
     "type": "Electric",
     "category": "Physical",
     "basePower": 120,
@@ -1890,10 +1520,7 @@
   {
     "id": "doubleteam",
     "name": "Double Team",
-    "aliases": [
-      "double team",
-      "doubleteam"
-    ],
+    "aliases": ["double team", "doubleteam"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -1904,11 +1531,7 @@
   {
     "id": "doubleedge",
     "name": "Double-Edge",
-    "aliases": [
-      "double-edge",
-      "double edge",
-      "doubleedge"
-    ],
+    "aliases": ["double-edge", "double edge", "doubleedge"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 120,
@@ -1919,10 +1542,7 @@
   {
     "id": "dracometeor",
     "name": "Draco Meteor",
-    "aliases": [
-      "draco meteor",
-      "dracometeor"
-    ],
+    "aliases": ["draco meteor", "dracometeor"],
     "type": "Dragon",
     "category": "Special",
     "basePower": 130,
@@ -1933,10 +1553,7 @@
   {
     "id": "dragonascent",
     "name": "Dragon Ascent",
-    "aliases": [
-      "dragon ascent",
-      "dragonascent"
-    ],
+    "aliases": ["dragon ascent", "dragonascent"],
     "type": "Flying",
     "category": "Physical",
     "basePower": 120,
@@ -1947,10 +1564,7 @@
   {
     "id": "dragonbreath",
     "name": "Dragon Breath",
-    "aliases": [
-      "dragon breath",
-      "dragonbreath"
-    ],
+    "aliases": ["dragon breath", "dragonbreath"],
     "type": "Dragon",
     "category": "Special",
     "basePower": 60,
@@ -1961,10 +1575,7 @@
   {
     "id": "dragoncheer",
     "name": "Dragon Cheer",
-    "aliases": [
-      "dragon cheer",
-      "dragoncheer"
-    ],
+    "aliases": ["dragon cheer", "dragoncheer"],
     "type": "Dragon",
     "category": "Status",
     "basePower": 0,
@@ -1975,10 +1586,7 @@
   {
     "id": "dragonclaw",
     "name": "Dragon Claw",
-    "aliases": [
-      "dragon claw",
-      "dragonclaw"
-    ],
+    "aliases": ["dragon claw", "dragonclaw"],
     "type": "Dragon",
     "category": "Physical",
     "basePower": 80,
@@ -1989,10 +1597,7 @@
   {
     "id": "dragondance",
     "name": "Dragon Dance",
-    "aliases": [
-      "dragon dance",
-      "dragondance"
-    ],
+    "aliases": ["dragon dance", "dragondance"],
     "type": "Dragon",
     "category": "Status",
     "basePower": 0,
@@ -2003,10 +1608,7 @@
   {
     "id": "dragondarts",
     "name": "Dragon Darts",
-    "aliases": [
-      "dragon darts",
-      "dragondarts"
-    ],
+    "aliases": ["dragon darts", "dragondarts"],
     "type": "Dragon",
     "category": "Physical",
     "basePower": 50,
@@ -2017,10 +1619,7 @@
   {
     "id": "dragonenergy",
     "name": "Dragon Energy",
-    "aliases": [
-      "dragon energy",
-      "dragonenergy"
-    ],
+    "aliases": ["dragon energy", "dragonenergy"],
     "type": "Dragon",
     "category": "Special",
     "basePower": 150,
@@ -2031,10 +1630,7 @@
   {
     "id": "dragonhammer",
     "name": "Dragon Hammer",
-    "aliases": [
-      "dragon hammer",
-      "dragonhammer"
-    ],
+    "aliases": ["dragon hammer", "dragonhammer"],
     "type": "Dragon",
     "category": "Physical",
     "basePower": 90,
@@ -2045,10 +1641,7 @@
   {
     "id": "dragonpulse",
     "name": "Dragon Pulse",
-    "aliases": [
-      "dragon pulse",
-      "dragonpulse"
-    ],
+    "aliases": ["dragon pulse", "dragonpulse"],
     "type": "Dragon",
     "category": "Special",
     "basePower": 85,
@@ -2059,10 +1652,7 @@
   {
     "id": "dragonrush",
     "name": "Dragon Rush",
-    "aliases": [
-      "dragon rush",
-      "dragonrush"
-    ],
+    "aliases": ["dragon rush", "dragonrush"],
     "type": "Dragon",
     "category": "Physical",
     "basePower": 100,
@@ -2073,10 +1663,7 @@
   {
     "id": "dragontail",
     "name": "Dragon Tail",
-    "aliases": [
-      "dragon tail",
-      "dragontail"
-    ],
+    "aliases": ["dragon tail", "dragontail"],
     "type": "Dragon",
     "category": "Physical",
     "basePower": 60,
@@ -2087,10 +1674,7 @@
   {
     "id": "drainpunch",
     "name": "Drain Punch",
-    "aliases": [
-      "drain punch",
-      "drainpunch"
-    ],
+    "aliases": ["drain punch", "drainpunch"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 75,
@@ -2101,10 +1685,7 @@
   {
     "id": "drainingkiss",
     "name": "Draining Kiss",
-    "aliases": [
-      "draining kiss",
-      "drainingkiss"
-    ],
+    "aliases": ["draining kiss", "drainingkiss"],
     "type": "Fairy",
     "category": "Special",
     "basePower": 50,
@@ -2115,10 +1696,7 @@
   {
     "id": "dreameater",
     "name": "Dream Eater",
-    "aliases": [
-      "dream eater",
-      "dreameater"
-    ],
+    "aliases": ["dream eater", "dreameater"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 100,
@@ -2129,10 +1707,7 @@
   {
     "id": "drillpeck",
     "name": "Drill Peck",
-    "aliases": [
-      "drill peck",
-      "drillpeck"
-    ],
+    "aliases": ["drill peck", "drillpeck"],
     "type": "Flying",
     "category": "Physical",
     "basePower": 80,
@@ -2143,10 +1718,7 @@
   {
     "id": "drillrun",
     "name": "Drill Run",
-    "aliases": [
-      "drill run",
-      "drillrun"
-    ],
+    "aliases": ["drill run", "drillrun"],
     "type": "Ground",
     "category": "Physical",
     "basePower": 80,
@@ -2157,10 +1729,7 @@
   {
     "id": "drumbeating",
     "name": "Drum Beating",
-    "aliases": [
-      "drum beating",
-      "drumbeating"
-    ],
+    "aliases": ["drum beating", "drumbeating"],
     "type": "Grass",
     "category": "Physical",
     "basePower": 80,
@@ -2171,10 +1740,7 @@
   {
     "id": "dualwingbeat",
     "name": "Dual Wingbeat",
-    "aliases": [
-      "dual wingbeat",
-      "dualwingbeat"
-    ],
+    "aliases": ["dual wingbeat", "dualwingbeat"],
     "type": "Flying",
     "category": "Physical",
     "basePower": 40,
@@ -2185,10 +1751,7 @@
   {
     "id": "dynamaxcannon",
     "name": "Dynamax Cannon",
-    "aliases": [
-      "dynamax cannon",
-      "dynamaxcannon"
-    ],
+    "aliases": ["dynamax cannon", "dynamaxcannon"],
     "type": "Dragon",
     "category": "Special",
     "basePower": 100,
@@ -2199,10 +1762,7 @@
   {
     "id": "dynamicpunch",
     "name": "Dynamic Punch",
-    "aliases": [
-      "dynamic punch",
-      "dynamicpunch"
-    ],
+    "aliases": ["dynamic punch", "dynamicpunch"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 100,
@@ -2213,10 +1773,7 @@
   {
     "id": "earthpower",
     "name": "Earth Power",
-    "aliases": [
-      "earth power",
-      "earthpower"
-    ],
+    "aliases": ["earth power", "earthpower"],
     "type": "Ground",
     "category": "Special",
     "basePower": 90,
@@ -2227,9 +1784,7 @@
   {
     "id": "earthquake",
     "name": "Earthquake",
-    "aliases": [
-      "earthquake"
-    ],
+    "aliases": ["earthquake"],
     "type": "Ground",
     "category": "Physical",
     "basePower": 100,
@@ -2240,10 +1795,7 @@
   {
     "id": "echoedvoice",
     "name": "Echoed Voice",
-    "aliases": [
-      "echoed voice",
-      "echoedvoice"
-    ],
+    "aliases": ["echoed voice", "echoedvoice"],
     "type": "Normal",
     "category": "Special",
     "basePower": 40,
@@ -2254,10 +1806,7 @@
   {
     "id": "eerieimpulse",
     "name": "Eerie Impulse",
-    "aliases": [
-      "eerie impulse",
-      "eerieimpulse"
-    ],
+    "aliases": ["eerie impulse", "eerieimpulse"],
     "type": "Electric",
     "category": "Status",
     "basePower": 0,
@@ -2268,10 +1817,7 @@
   {
     "id": "eeriespell",
     "name": "Eerie Spell",
-    "aliases": [
-      "eerie spell",
-      "eeriespell"
-    ],
+    "aliases": ["eerie spell", "eeriespell"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 80,
@@ -2282,10 +1828,7 @@
   {
     "id": "electricterrain",
     "name": "Electric Terrain",
-    "aliases": [
-      "electric terrain",
-      "electricterrain"
-    ],
+    "aliases": ["electric terrain", "electricterrain"],
     "type": "Electric",
     "category": "Status",
     "basePower": 0,
@@ -2296,10 +1839,7 @@
   {
     "id": "electroball",
     "name": "Electro Ball",
-    "aliases": [
-      "electro ball",
-      "electroball"
-    ],
+    "aliases": ["electro ball", "electroball"],
     "type": "Electric",
     "category": "Special",
     "basePower": 0,
@@ -2310,10 +1850,7 @@
   {
     "id": "electrodrift",
     "name": "Electro Drift",
-    "aliases": [
-      "electro drift",
-      "electrodrift"
-    ],
+    "aliases": ["electro drift", "electrodrift"],
     "type": "Electric",
     "category": "Special",
     "basePower": 100,
@@ -2324,10 +1861,7 @@
   {
     "id": "electroshot",
     "name": "Electro Shot",
-    "aliases": [
-      "electro shot",
-      "electroshot"
-    ],
+    "aliases": ["electro shot", "electroshot"],
     "type": "Electric",
     "category": "Special",
     "basePower": 130,
@@ -2338,9 +1872,7 @@
   {
     "id": "electroweb",
     "name": "Electroweb",
-    "aliases": [
-      "electroweb"
-    ],
+    "aliases": ["electroweb"],
     "type": "Electric",
     "category": "Special",
     "basePower": 55,
@@ -2351,9 +1883,7 @@
   {
     "id": "ember",
     "name": "Ember",
-    "aliases": [
-      "ember"
-    ],
+    "aliases": ["ember"],
     "type": "Fire",
     "category": "Special",
     "basePower": 40,
@@ -2364,9 +1894,7 @@
   {
     "id": "encore",
     "name": "Encore",
-    "aliases": [
-      "encore"
-    ],
+    "aliases": ["encore"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -2377,9 +1905,7 @@
   {
     "id": "endeavor",
     "name": "Endeavor",
-    "aliases": [
-      "endeavor"
-    ],
+    "aliases": ["endeavor"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 0,
@@ -2390,9 +1916,7 @@
   {
     "id": "endure",
     "name": "Endure",
-    "aliases": [
-      "endure"
-    ],
+    "aliases": ["endure"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -2403,10 +1927,7 @@
   {
     "id": "energyball",
     "name": "Energy Ball",
-    "aliases": [
-      "energy ball",
-      "energyball"
-    ],
+    "aliases": ["energy ball", "energyball"],
     "type": "Grass",
     "category": "Special",
     "basePower": 90,
@@ -2417,9 +1938,7 @@
   {
     "id": "entrainment",
     "name": "Entrainment",
-    "aliases": [
-      "entrainment"
-    ],
+    "aliases": ["entrainment"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -2430,9 +1949,7 @@
   {
     "id": "eruption",
     "name": "Eruption",
-    "aliases": [
-      "eruption"
-    ],
+    "aliases": ["eruption"],
     "type": "Fire",
     "category": "Special",
     "basePower": 150,
@@ -2443,10 +1960,7 @@
   {
     "id": "esperwing",
     "name": "Esper Wing",
-    "aliases": [
-      "esper wing",
-      "esperwing"
-    ],
+    "aliases": ["esper wing", "esperwing"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 80,
@@ -2457,10 +1971,7 @@
   {
     "id": "expandingforce",
     "name": "Expanding Force",
-    "aliases": [
-      "expanding force",
-      "expandingforce"
-    ],
+    "aliases": ["expanding force", "expandingforce"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 80,
@@ -2471,9 +1982,7 @@
   {
     "id": "explosion",
     "name": "Explosion",
-    "aliases": [
-      "explosion"
-    ],
+    "aliases": ["explosion"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 250,
@@ -2484,9 +1993,7 @@
   {
     "id": "extrasensory",
     "name": "Extrasensory",
-    "aliases": [
-      "extrasensory"
-    ],
+    "aliases": ["extrasensory"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 80,
@@ -2497,10 +2004,7 @@
   {
     "id": "extremespeed",
     "name": "Extreme Speed",
-    "aliases": [
-      "extreme speed",
-      "extremespeed"
-    ],
+    "aliases": ["extreme speed", "extremespeed"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 80,
@@ -2511,9 +2015,7 @@
   {
     "id": "facade",
     "name": "Facade",
-    "aliases": [
-      "facade"
-    ],
+    "aliases": ["facade"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 70,
@@ -2524,10 +2026,7 @@
   {
     "id": "fairylock",
     "name": "Fairy Lock",
-    "aliases": [
-      "fairy lock",
-      "fairylock"
-    ],
+    "aliases": ["fairy lock", "fairylock"],
     "type": "Fairy",
     "category": "Status",
     "basePower": 0,
@@ -2538,10 +2037,7 @@
   {
     "id": "fairywind",
     "name": "Fairy Wind",
-    "aliases": [
-      "fairy wind",
-      "fairywind"
-    ],
+    "aliases": ["fairy wind", "fairywind"],
     "type": "Fairy",
     "category": "Special",
     "basePower": 40,
@@ -2552,10 +2048,7 @@
   {
     "id": "fakeout",
     "name": "Fake Out",
-    "aliases": [
-      "fake out",
-      "fakeout"
-    ],
+    "aliases": ["fake out", "fakeout"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 40,
@@ -2566,10 +2059,7 @@
   {
     "id": "faketears",
     "name": "Fake Tears",
-    "aliases": [
-      "fake tears",
-      "faketears"
-    ],
+    "aliases": ["fake tears", "faketears"],
     "type": "Dark",
     "category": "Status",
     "basePower": 0,
@@ -2580,10 +2070,7 @@
   {
     "id": "falsesurrender",
     "name": "False Surrender",
-    "aliases": [
-      "false surrender",
-      "falsesurrender"
-    ],
+    "aliases": ["false surrender", "falsesurrender"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 80,
@@ -2594,10 +2081,7 @@
   {
     "id": "falseswipe",
     "name": "False Swipe",
-    "aliases": [
-      "false swipe",
-      "falseswipe"
-    ],
+    "aliases": ["false swipe", "falseswipe"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 40,
@@ -2608,10 +2092,7 @@
   {
     "id": "featherdance",
     "name": "Feather Dance",
-    "aliases": [
-      "feather dance",
-      "featherdance"
-    ],
+    "aliases": ["feather dance", "featherdance"],
     "type": "Flying",
     "category": "Status",
     "basePower": 0,
@@ -2622,9 +2103,7 @@
   {
     "id": "feint",
     "name": "Feint",
-    "aliases": [
-      "feint"
-    ],
+    "aliases": ["feint"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 30,
@@ -2635,10 +2114,7 @@
   {
     "id": "fellstinger",
     "name": "Fell Stinger",
-    "aliases": [
-      "fell stinger",
-      "fellstinger"
-    ],
+    "aliases": ["fell stinger", "fellstinger"],
     "type": "Bug",
     "category": "Physical",
     "basePower": 50,
@@ -2649,10 +2125,7 @@
   {
     "id": "ficklebeam",
     "name": "Fickle Beam",
-    "aliases": [
-      "fickle beam",
-      "ficklebeam"
-    ],
+    "aliases": ["fickle beam", "ficklebeam"],
     "type": "Dragon",
     "category": "Special",
     "basePower": 80,
@@ -2663,10 +2136,7 @@
   {
     "id": "fierydance",
     "name": "Fiery Dance",
-    "aliases": [
-      "fiery dance",
-      "fierydance"
-    ],
+    "aliases": ["fiery dance", "fierydance"],
     "type": "Fire",
     "category": "Special",
     "basePower": 80,
@@ -2677,10 +2147,7 @@
   {
     "id": "fierywrath",
     "name": "Fiery Wrath",
-    "aliases": [
-      "fiery wrath",
-      "fierywrath"
-    ],
+    "aliases": ["fiery wrath", "fierywrath"],
     "type": "Dark",
     "category": "Special",
     "basePower": 90,
@@ -2691,10 +2158,7 @@
   {
     "id": "filletaway",
     "name": "Fillet Away",
-    "aliases": [
-      "fillet away",
-      "filletaway"
-    ],
+    "aliases": ["fillet away", "filletaway"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -2705,10 +2169,7 @@
   {
     "id": "finalgambit",
     "name": "Final Gambit",
-    "aliases": [
-      "final gambit",
-      "finalgambit"
-    ],
+    "aliases": ["final gambit", "finalgambit"],
     "type": "Fighting",
     "category": "Special",
     "basePower": 0,
@@ -2719,10 +2180,7 @@
   {
     "id": "fireblast",
     "name": "Fire Blast",
-    "aliases": [
-      "fire blast",
-      "fireblast"
-    ],
+    "aliases": ["fire blast", "fireblast"],
     "type": "Fire",
     "category": "Special",
     "basePower": 110,
@@ -2733,10 +2191,7 @@
   {
     "id": "firefang",
     "name": "Fire Fang",
-    "aliases": [
-      "fire fang",
-      "firefang"
-    ],
+    "aliases": ["fire fang", "firefang"],
     "type": "Fire",
     "category": "Physical",
     "basePower": 65,
@@ -2747,13 +2202,10 @@
   {
     "id": "firelash",
     "name": "Fire Lash",
-    "aliases": [
-      "fire lash",
-      "firelash"
-    ],
+    "aliases": ["fire lash", "firelash"],
     "type": "Fire",
     "category": "Physical",
-    "basePower": 80,
+    "basePower": 90,
     "accuracy": 100,
     "target": "normal",
     "isSpread": false
@@ -2761,10 +2213,7 @@
   {
     "id": "firepledge",
     "name": "Fire Pledge",
-    "aliases": [
-      "fire pledge",
-      "firepledge"
-    ],
+    "aliases": ["fire pledge", "firepledge"],
     "type": "Fire",
     "category": "Special",
     "basePower": 80,
@@ -2775,10 +2224,7 @@
   {
     "id": "firepunch",
     "name": "Fire Punch",
-    "aliases": [
-      "fire punch",
-      "firepunch"
-    ],
+    "aliases": ["fire punch", "firepunch"],
     "type": "Fire",
     "category": "Physical",
     "basePower": 75,
@@ -2789,10 +2235,7 @@
   {
     "id": "firespin",
     "name": "Fire Spin",
-    "aliases": [
-      "fire spin",
-      "firespin"
-    ],
+    "aliases": ["fire spin", "firespin"],
     "type": "Fire",
     "category": "Special",
     "basePower": 35,
@@ -2803,13 +2246,10 @@
   {
     "id": "firstimpression",
     "name": "First Impression",
-    "aliases": [
-      "first impression",
-      "firstimpression"
-    ],
+    "aliases": ["first impression", "firstimpression"],
     "type": "Bug",
     "category": "Physical",
-    "basePower": 90,
+    "basePower": 100,
     "accuracy": 100,
     "target": "normal",
     "isSpread": false
@@ -2817,9 +2257,7 @@
   {
     "id": "fissure",
     "name": "Fissure",
-    "aliases": [
-      "fissure"
-    ],
+    "aliases": ["fissure"],
     "type": "Ground",
     "category": "Physical",
     "basePower": 0,
@@ -2830,9 +2268,7 @@
   {
     "id": "flail",
     "name": "Flail",
-    "aliases": [
-      "flail"
-    ],
+    "aliases": ["flail"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 0,
@@ -2843,10 +2279,7 @@
   {
     "id": "flamecharge",
     "name": "Flame Charge",
-    "aliases": [
-      "flame charge",
-      "flamecharge"
-    ],
+    "aliases": ["flame charge", "flamecharge"],
     "type": "Fire",
     "category": "Physical",
     "basePower": 50,
@@ -2857,10 +2290,7 @@
   {
     "id": "flamewheel",
     "name": "Flame Wheel",
-    "aliases": [
-      "flame wheel",
-      "flamewheel"
-    ],
+    "aliases": ["flame wheel", "flamewheel"],
     "type": "Fire",
     "category": "Physical",
     "basePower": 60,
@@ -2871,9 +2301,7 @@
   {
     "id": "flamethrower",
     "name": "Flamethrower",
-    "aliases": [
-      "flamethrower"
-    ],
+    "aliases": ["flamethrower"],
     "type": "Fire",
     "category": "Special",
     "basePower": 90,
@@ -2884,10 +2312,7 @@
   {
     "id": "flareblitz",
     "name": "Flare Blitz",
-    "aliases": [
-      "flare blitz",
-      "flareblitz"
-    ],
+    "aliases": ["flare blitz", "flareblitz"],
     "type": "Fire",
     "category": "Physical",
     "basePower": 120,
@@ -2898,10 +2323,7 @@
   {
     "id": "flashcannon",
     "name": "Flash Cannon",
-    "aliases": [
-      "flash cannon",
-      "flashcannon"
-    ],
+    "aliases": ["flash cannon", "flashcannon"],
     "type": "Steel",
     "category": "Special",
     "basePower": 80,
@@ -2912,9 +2334,7 @@
   {
     "id": "flatter",
     "name": "Flatter",
-    "aliases": [
-      "flatter"
-    ],
+    "aliases": ["flatter"],
     "type": "Dark",
     "category": "Status",
     "basePower": 0,
@@ -2925,10 +2345,7 @@
   {
     "id": "fleurcannon",
     "name": "Fleur Cannon",
-    "aliases": [
-      "fleur cannon",
-      "fleurcannon"
-    ],
+    "aliases": ["fleur cannon", "fleurcannon"],
     "type": "Fairy",
     "category": "Special",
     "basePower": 130,
@@ -2939,9 +2356,7 @@
   {
     "id": "fling",
     "name": "Fling",
-    "aliases": [
-      "fling"
-    ],
+    "aliases": ["fling"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 0,
@@ -2952,10 +2367,7 @@
   {
     "id": "flipturn",
     "name": "Flip Turn",
-    "aliases": [
-      "flip turn",
-      "flipturn"
-    ],
+    "aliases": ["flip turn", "flipturn"],
     "type": "Water",
     "category": "Physical",
     "basePower": 60,
@@ -2966,10 +2378,7 @@
   {
     "id": "floralhealing",
     "name": "Floral Healing",
-    "aliases": [
-      "floral healing",
-      "floralhealing"
-    ],
+    "aliases": ["floral healing", "floralhealing"],
     "type": "Fairy",
     "category": "Status",
     "basePower": 0,
@@ -2980,10 +2389,7 @@
   {
     "id": "flowertrick",
     "name": "Flower Trick",
-    "aliases": [
-      "flower trick",
-      "flowertrick"
-    ],
+    "aliases": ["flower trick", "flowertrick"],
     "type": "Grass",
     "category": "Physical",
     "basePower": 70,
@@ -2994,9 +2400,7 @@
   {
     "id": "fly",
     "name": "Fly",
-    "aliases": [
-      "fly"
-    ],
+    "aliases": ["fly"],
     "type": "Flying",
     "category": "Physical",
     "basePower": 90,
@@ -3007,10 +2411,7 @@
   {
     "id": "flyingpress",
     "name": "Flying Press",
-    "aliases": [
-      "flying press",
-      "flyingpress"
-    ],
+    "aliases": ["flying press", "flyingpress"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 100,
@@ -3021,10 +2422,7 @@
   {
     "id": "focusblast",
     "name": "Focus Blast",
-    "aliases": [
-      "focus blast",
-      "focusblast"
-    ],
+    "aliases": ["focus blast", "focusblast"],
     "type": "Fighting",
     "category": "Special",
     "basePower": 120,
@@ -3035,10 +2433,7 @@
   {
     "id": "focusenergy",
     "name": "Focus Energy",
-    "aliases": [
-      "focus energy",
-      "focusenergy"
-    ],
+    "aliases": ["focus energy", "focusenergy"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -3049,10 +2444,7 @@
   {
     "id": "focuspunch",
     "name": "Focus Punch",
-    "aliases": [
-      "focus punch",
-      "focuspunch"
-    ],
+    "aliases": ["focus punch", "focuspunch"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 150,
@@ -3063,10 +2455,7 @@
   {
     "id": "followme",
     "name": "Follow Me",
-    "aliases": [
-      "follow me",
-      "followme"
-    ],
+    "aliases": ["follow me", "followme"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -3077,10 +2466,7 @@
   {
     "id": "forcepalm",
     "name": "Force Palm",
-    "aliases": [
-      "force palm",
-      "forcepalm"
-    ],
+    "aliases": ["force palm", "forcepalm"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 60,
@@ -3091,11 +2477,7 @@
   {
     "id": "forestscurse",
     "name": "Forest's Curse",
-    "aliases": [
-      "forest's curse",
-      "forests curse",
-      "forestscurse"
-    ],
+    "aliases": ["forest's curse", "forests curse", "forestscurse"],
     "type": "Grass",
     "category": "Status",
     "basePower": 0,
@@ -3106,10 +2488,7 @@
   {
     "id": "foulplay",
     "name": "Foul Play",
-    "aliases": [
-      "foul play",
-      "foulplay"
-    ],
+    "aliases": ["foul play", "foulplay"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 95,
@@ -3120,10 +2499,7 @@
   {
     "id": "freezeshock",
     "name": "Freeze Shock",
-    "aliases": [
-      "freeze shock",
-      "freezeshock"
-    ],
+    "aliases": ["freeze shock", "freezeshock"],
     "type": "Ice",
     "category": "Physical",
     "basePower": 140,
@@ -3134,11 +2510,7 @@
   {
     "id": "freezedry",
     "name": "Freeze-Dry",
-    "aliases": [
-      "freeze-dry",
-      "freeze dry",
-      "freezedry"
-    ],
+    "aliases": ["freeze-dry", "freeze dry", "freezedry"],
     "type": "Ice",
     "category": "Special",
     "basePower": 70,
@@ -3149,10 +2521,7 @@
   {
     "id": "freezingglare",
     "name": "Freezing Glare",
-    "aliases": [
-      "freezing glare",
-      "freezingglare"
-    ],
+    "aliases": ["freezing glare", "freezingglare"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 90,
@@ -3163,10 +2532,7 @@
   {
     "id": "frenzyplant",
     "name": "Frenzy Plant",
-    "aliases": [
-      "frenzy plant",
-      "frenzyplant"
-    ],
+    "aliases": ["frenzy plant", "frenzyplant"],
     "type": "Grass",
     "category": "Special",
     "basePower": 150,
@@ -3177,10 +2543,7 @@
   {
     "id": "frostbreath",
     "name": "Frost Breath",
-    "aliases": [
-      "frost breath",
-      "frostbreath"
-    ],
+    "aliases": ["frost breath", "frostbreath"],
     "type": "Ice",
     "category": "Special",
     "basePower": 60,
@@ -3191,10 +2554,7 @@
   {
     "id": "furyattack",
     "name": "Fury Attack",
-    "aliases": [
-      "fury attack",
-      "furyattack"
-    ],
+    "aliases": ["fury attack", "furyattack"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 15,
@@ -3205,10 +2565,7 @@
   {
     "id": "furycutter",
     "name": "Fury Cutter",
-    "aliases": [
-      "fury cutter",
-      "furycutter"
-    ],
+    "aliases": ["fury cutter", "furycutter"],
     "type": "Bug",
     "category": "Physical",
     "basePower": 40,
@@ -3219,10 +2576,7 @@
   {
     "id": "furyswipes",
     "name": "Fury Swipes",
-    "aliases": [
-      "fury swipes",
-      "furyswipes"
-    ],
+    "aliases": ["fury swipes", "furyswipes"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 18,
@@ -3233,10 +2587,7 @@
   {
     "id": "fusionbolt",
     "name": "Fusion Bolt",
-    "aliases": [
-      "fusion bolt",
-      "fusionbolt"
-    ],
+    "aliases": ["fusion bolt", "fusionbolt"],
     "type": "Electric",
     "category": "Physical",
     "basePower": 100,
@@ -3247,10 +2598,7 @@
   {
     "id": "fusionflare",
     "name": "Fusion Flare",
-    "aliases": [
-      "fusion flare",
-      "fusionflare"
-    ],
+    "aliases": ["fusion flare", "fusionflare"],
     "type": "Fire",
     "category": "Special",
     "basePower": 100,
@@ -3261,10 +2609,7 @@
   {
     "id": "futuresight",
     "name": "Future Sight",
-    "aliases": [
-      "future sight",
-      "futuresight"
-    ],
+    "aliases": ["future sight", "futuresight"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 120,
@@ -3275,10 +2620,7 @@
   {
     "id": "gastroacid",
     "name": "Gastro Acid",
-    "aliases": [
-      "gastro acid",
-      "gastroacid"
-    ],
+    "aliases": ["gastro acid", "gastroacid"],
     "type": "Poison",
     "category": "Status",
     "basePower": 0,
@@ -3289,10 +2631,7 @@
   {
     "id": "gigadrain",
     "name": "Giga Drain",
-    "aliases": [
-      "giga drain",
-      "gigadrain"
-    ],
+    "aliases": ["giga drain", "gigadrain"],
     "type": "Grass",
     "category": "Special",
     "basePower": 75,
@@ -3303,10 +2642,7 @@
   {
     "id": "gigaimpact",
     "name": "Giga Impact",
-    "aliases": [
-      "giga impact",
-      "gigaimpact"
-    ],
+    "aliases": ["giga impact", "gigaimpact"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 150,
@@ -3317,10 +2653,7 @@
   {
     "id": "gigatonhammer",
     "name": "Gigaton Hammer",
-    "aliases": [
-      "gigaton hammer",
-      "gigatonhammer"
-    ],
+    "aliases": ["gigaton hammer", "gigatonhammer"],
     "type": "Steel",
     "category": "Physical",
     "basePower": 160,
@@ -3331,10 +2664,7 @@
   {
     "id": "glaciallance",
     "name": "Glacial Lance",
-    "aliases": [
-      "glacial lance",
-      "glaciallance"
-    ],
+    "aliases": ["glacial lance", "glaciallance"],
     "type": "Ice",
     "category": "Physical",
     "basePower": 120,
@@ -3345,9 +2675,7 @@
   {
     "id": "glaciate",
     "name": "Glaciate",
-    "aliases": [
-      "glaciate"
-    ],
+    "aliases": ["glaciate"],
     "type": "Ice",
     "category": "Special",
     "basePower": 65,
@@ -3358,10 +2686,7 @@
   {
     "id": "glaiverush",
     "name": "Glaive Rush",
-    "aliases": [
-      "glaive rush",
-      "glaiverush"
-    ],
+    "aliases": ["glaive rush", "glaiverush"],
     "type": "Dragon",
     "category": "Physical",
     "basePower": 120,
@@ -3372,9 +2697,7 @@
   {
     "id": "glare",
     "name": "Glare",
-    "aliases": [
-      "glare"
-    ],
+    "aliases": ["glare"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -3385,10 +2708,7 @@
   {
     "id": "grassknot",
     "name": "Grass Knot",
-    "aliases": [
-      "grass knot",
-      "grassknot"
-    ],
+    "aliases": ["grass knot", "grassknot"],
     "type": "Grass",
     "category": "Special",
     "basePower": 0,
@@ -3399,10 +2719,7 @@
   {
     "id": "grasspledge",
     "name": "Grass Pledge",
-    "aliases": [
-      "grass pledge",
-      "grasspledge"
-    ],
+    "aliases": ["grass pledge", "grasspledge"],
     "type": "Grass",
     "category": "Special",
     "basePower": 80,
@@ -3413,10 +2730,7 @@
   {
     "id": "grassyglide",
     "name": "Grassy Glide",
-    "aliases": [
-      "grassy glide",
-      "grassyglide"
-    ],
+    "aliases": ["grassy glide", "grassyglide"],
     "type": "Grass",
     "category": "Physical",
     "basePower": 55,
@@ -3427,10 +2741,7 @@
   {
     "id": "grassyterrain",
     "name": "Grassy Terrain",
-    "aliases": [
-      "grassy terrain",
-      "grassyterrain"
-    ],
+    "aliases": ["grassy terrain", "grassyterrain"],
     "type": "Grass",
     "category": "Status",
     "basePower": 0,
@@ -3441,13 +2752,10 @@
   {
     "id": "gravapple",
     "name": "Grav Apple",
-    "aliases": [
-      "grav apple",
-      "gravapple"
-    ],
+    "aliases": ["grav apple", "gravapple"],
     "type": "Grass",
     "category": "Physical",
-    "basePower": 80,
+    "basePower": 90,
     "accuracy": 100,
     "target": "normal",
     "isSpread": false
@@ -3455,9 +2763,7 @@
   {
     "id": "gravity",
     "name": "Gravity",
-    "aliases": [
-      "gravity"
-    ],
+    "aliases": ["gravity"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -3468,9 +2774,7 @@
   {
     "id": "growl",
     "name": "Growl",
-    "aliases": [
-      "growl"
-    ],
+    "aliases": ["growl"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -3481,10 +2785,8 @@
   {
     "id": "growth",
     "name": "Growth",
-    "aliases": [
-      "growth"
-    ],
-    "type": "Normal",
+    "aliases": ["growth"],
+    "type": "Grass",
     "category": "Status",
     "basePower": 0,
     "accuracy": null,
@@ -3494,10 +2796,7 @@
   {
     "id": "guardsplit",
     "name": "Guard Split",
-    "aliases": [
-      "guard split",
-      "guardsplit"
-    ],
+    "aliases": ["guard split", "guardsplit"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -3508,10 +2807,7 @@
   {
     "id": "guardswap",
     "name": "Guard Swap",
-    "aliases": [
-      "guard swap",
-      "guardswap"
-    ],
+    "aliases": ["guard swap", "guardswap"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -3522,9 +2818,7 @@
   {
     "id": "guillotine",
     "name": "Guillotine",
-    "aliases": [
-      "guillotine"
-    ],
+    "aliases": ["guillotine"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 0,
@@ -3535,10 +2829,7 @@
   {
     "id": "gunkshot",
     "name": "Gunk Shot",
-    "aliases": [
-      "gunk shot",
-      "gunkshot"
-    ],
+    "aliases": ["gunk shot", "gunkshot"],
     "type": "Poison",
     "category": "Physical",
     "basePower": 120,
@@ -3549,9 +2840,7 @@
   {
     "id": "gust",
     "name": "Gust",
-    "aliases": [
-      "gust"
-    ],
+    "aliases": ["gust"],
     "type": "Flying",
     "category": "Special",
     "basePower": 40,
@@ -3562,10 +2851,7 @@
   {
     "id": "gyroball",
     "name": "Gyro Ball",
-    "aliases": [
-      "gyro ball",
-      "gyroball"
-    ],
+    "aliases": ["gyro ball", "gyroball"],
     "type": "Steel",
     "category": "Physical",
     "basePower": 0,
@@ -3576,10 +2862,7 @@
   {
     "id": "hammerarm",
     "name": "Hammer Arm",
-    "aliases": [
-      "hammer arm",
-      "hammerarm"
-    ],
+    "aliases": ["hammer arm", "hammerarm"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 100,
@@ -3590,10 +2873,7 @@
   {
     "id": "happyhour",
     "name": "Happy Hour",
-    "aliases": [
-      "happy hour",
-      "happyhour"
-    ],
+    "aliases": ["happy hour", "happyhour"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -3604,10 +2884,7 @@
   {
     "id": "hardpress",
     "name": "Hard Press",
-    "aliases": [
-      "hard press",
-      "hardpress"
-    ],
+    "aliases": ["hard press", "hardpress"],
     "type": "Steel",
     "category": "Physical",
     "basePower": 0,
@@ -3618,9 +2895,7 @@
   {
     "id": "harden",
     "name": "Harden",
-    "aliases": [
-      "harden"
-    ],
+    "aliases": ["harden"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -3631,9 +2906,7 @@
   {
     "id": "haze",
     "name": "Haze",
-    "aliases": [
-      "haze"
-    ],
+    "aliases": ["haze"],
     "type": "Ice",
     "category": "Status",
     "basePower": 0,
@@ -3644,10 +2917,7 @@
   {
     "id": "headsmash",
     "name": "Head Smash",
-    "aliases": [
-      "head smash",
-      "headsmash"
-    ],
+    "aliases": ["head smash", "headsmash"],
     "type": "Rock",
     "category": "Physical",
     "basePower": 150,
@@ -3658,9 +2928,7 @@
   {
     "id": "headbutt",
     "name": "Headbutt",
-    "aliases": [
-      "headbutt"
-    ],
+    "aliases": ["headbutt"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 70,
@@ -3671,10 +2939,7 @@
   {
     "id": "headlongrush",
     "name": "Headlong Rush",
-    "aliases": [
-      "headlong rush",
-      "headlongrush"
-    ],
+    "aliases": ["headlong rush", "headlongrush"],
     "type": "Ground",
     "category": "Physical",
     "basePower": 120,
@@ -3685,10 +2950,7 @@
   {
     "id": "healbell",
     "name": "Heal Bell",
-    "aliases": [
-      "heal bell",
-      "healbell"
-    ],
+    "aliases": ["heal bell", "healbell"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -3699,10 +2961,7 @@
   {
     "id": "healpulse",
     "name": "Heal Pulse",
-    "aliases": [
-      "heal pulse",
-      "healpulse"
-    ],
+    "aliases": ["heal pulse", "healpulse"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -3713,10 +2972,7 @@
   {
     "id": "healingwish",
     "name": "Healing Wish",
-    "aliases": [
-      "healing wish",
-      "healingwish"
-    ],
+    "aliases": ["healing wish", "healingwish"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -3727,10 +2983,7 @@
   {
     "id": "heartswap",
     "name": "Heart Swap",
-    "aliases": [
-      "heart swap",
-      "heartswap"
-    ],
+    "aliases": ["heart swap", "heartswap"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -3741,10 +2994,7 @@
   {
     "id": "heatcrash",
     "name": "Heat Crash",
-    "aliases": [
-      "heat crash",
-      "heatcrash"
-    ],
+    "aliases": ["heat crash", "heatcrash"],
     "type": "Fire",
     "category": "Physical",
     "basePower": 0,
@@ -3755,10 +3005,7 @@
   {
     "id": "heatwave",
     "name": "Heat Wave",
-    "aliases": [
-      "heat wave",
-      "heatwave"
-    ],
+    "aliases": ["heat wave", "heatwave"],
     "type": "Fire",
     "category": "Special",
     "basePower": 95,
@@ -3769,10 +3016,7 @@
   {
     "id": "heavyslam",
     "name": "Heavy Slam",
-    "aliases": [
-      "heavy slam",
-      "heavyslam"
-    ],
+    "aliases": ["heavy slam", "heavyslam"],
     "type": "Steel",
     "category": "Physical",
     "basePower": 0,
@@ -3783,10 +3027,7 @@
   {
     "id": "helpinghand",
     "name": "Helping Hand",
-    "aliases": [
-      "helping hand",
-      "helpinghand"
-    ],
+    "aliases": ["helping hand", "helpinghand"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -3797,9 +3038,7 @@
   {
     "id": "hex",
     "name": "Hex",
-    "aliases": [
-      "hex"
-    ],
+    "aliases": ["hex"],
     "type": "Ghost",
     "category": "Special",
     "basePower": 65,
@@ -3810,10 +3049,7 @@
   {
     "id": "highhorsepower",
     "name": "High Horsepower",
-    "aliases": [
-      "high horsepower",
-      "highhorsepower"
-    ],
+    "aliases": ["high horsepower", "highhorsepower"],
     "type": "Ground",
     "category": "Physical",
     "basePower": 95,
@@ -3824,10 +3060,7 @@
   {
     "id": "highjumpkick",
     "name": "High Jump Kick",
-    "aliases": [
-      "high jump kick",
-      "highjumpkick"
-    ],
+    "aliases": ["high jump kick", "highjumpkick"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 130,
@@ -3838,10 +3071,7 @@
   {
     "id": "honeclaws",
     "name": "Hone Claws",
-    "aliases": [
-      "hone claws",
-      "honeclaws"
-    ],
+    "aliases": ["hone claws", "honeclaws"],
     "type": "Dark",
     "category": "Status",
     "basePower": 0,
@@ -3852,10 +3082,7 @@
   {
     "id": "hornattack",
     "name": "Horn Attack",
-    "aliases": [
-      "horn attack",
-      "hornattack"
-    ],
+    "aliases": ["horn attack", "hornattack"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 65,
@@ -3866,10 +3093,7 @@
   {
     "id": "horndrill",
     "name": "Horn Drill",
-    "aliases": [
-      "horn drill",
-      "horndrill"
-    ],
+    "aliases": ["horn drill", "horndrill"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 0,
@@ -3880,10 +3104,7 @@
   {
     "id": "hornleech",
     "name": "Horn Leech",
-    "aliases": [
-      "horn leech",
-      "hornleech"
-    ],
+    "aliases": ["horn leech", "hornleech"],
     "type": "Grass",
     "category": "Physical",
     "basePower": 75,
@@ -3894,9 +3115,7 @@
   {
     "id": "howl",
     "name": "Howl",
-    "aliases": [
-      "howl"
-    ],
+    "aliases": ["howl"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -3907,9 +3126,7 @@
   {
     "id": "hurricane",
     "name": "Hurricane",
-    "aliases": [
-      "hurricane"
-    ],
+    "aliases": ["hurricane"],
     "type": "Flying",
     "category": "Special",
     "basePower": 110,
@@ -3920,10 +3137,7 @@
   {
     "id": "hydrocannon",
     "name": "Hydro Cannon",
-    "aliases": [
-      "hydro cannon",
-      "hydrocannon"
-    ],
+    "aliases": ["hydro cannon", "hydrocannon"],
     "type": "Water",
     "category": "Special",
     "basePower": 150,
@@ -3934,10 +3148,7 @@
   {
     "id": "hydropump",
     "name": "Hydro Pump",
-    "aliases": [
-      "hydro pump",
-      "hydropump"
-    ],
+    "aliases": ["hydro pump", "hydropump"],
     "type": "Water",
     "category": "Special",
     "basePower": 110,
@@ -3948,10 +3159,7 @@
   {
     "id": "hydrosteam",
     "name": "Hydro Steam",
-    "aliases": [
-      "hydro steam",
-      "hydrosteam"
-    ],
+    "aliases": ["hydro steam", "hydrosteam"],
     "type": "Water",
     "category": "Special",
     "basePower": 80,
@@ -3962,10 +3170,7 @@
   {
     "id": "hyperbeam",
     "name": "Hyper Beam",
-    "aliases": [
-      "hyper beam",
-      "hyperbeam"
-    ],
+    "aliases": ["hyper beam", "hyperbeam"],
     "type": "Normal",
     "category": "Special",
     "basePower": 150,
@@ -3976,10 +3181,7 @@
   {
     "id": "hyperdrill",
     "name": "Hyper Drill",
-    "aliases": [
-      "hyper drill",
-      "hyperdrill"
-    ],
+    "aliases": ["hyper drill", "hyperdrill"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 100,
@@ -3990,10 +3192,7 @@
   {
     "id": "hypervoice",
     "name": "Hyper Voice",
-    "aliases": [
-      "hyper voice",
-      "hypervoice"
-    ],
+    "aliases": ["hyper voice", "hypervoice"],
     "type": "Normal",
     "category": "Special",
     "basePower": 90,
@@ -4004,10 +3203,7 @@
   {
     "id": "hyperspacefury",
     "name": "Hyperspace Fury",
-    "aliases": [
-      "hyperspace fury",
-      "hyperspacefury"
-    ],
+    "aliases": ["hyperspace fury", "hyperspacefury"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 100,
@@ -4018,10 +3214,7 @@
   {
     "id": "hyperspacehole",
     "name": "Hyperspace Hole",
-    "aliases": [
-      "hyperspace hole",
-      "hyperspacehole"
-    ],
+    "aliases": ["hyperspace hole", "hyperspacehole"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 80,
@@ -4032,9 +3225,7 @@
   {
     "id": "hypnosis",
     "name": "Hypnosis",
-    "aliases": [
-      "hypnosis"
-    ],
+    "aliases": ["hypnosis"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -4045,10 +3236,7 @@
   {
     "id": "icebeam",
     "name": "Ice Beam",
-    "aliases": [
-      "ice beam",
-      "icebeam"
-    ],
+    "aliases": ["ice beam", "icebeam"],
     "type": "Ice",
     "category": "Special",
     "basePower": 90,
@@ -4059,10 +3247,7 @@
   {
     "id": "iceburn",
     "name": "Ice Burn",
-    "aliases": [
-      "ice burn",
-      "iceburn"
-    ],
+    "aliases": ["ice burn", "iceburn"],
     "type": "Ice",
     "category": "Special",
     "basePower": 140,
@@ -4073,10 +3258,7 @@
   {
     "id": "icefang",
     "name": "Ice Fang",
-    "aliases": [
-      "ice fang",
-      "icefang"
-    ],
+    "aliases": ["ice fang", "icefang"],
     "type": "Ice",
     "category": "Physical",
     "basePower": 65,
@@ -4087,10 +3269,7 @@
   {
     "id": "icehammer",
     "name": "Ice Hammer",
-    "aliases": [
-      "ice hammer",
-      "icehammer"
-    ],
+    "aliases": ["ice hammer", "icehammer"],
     "type": "Ice",
     "category": "Physical",
     "basePower": 100,
@@ -4101,10 +3280,7 @@
   {
     "id": "icepunch",
     "name": "Ice Punch",
-    "aliases": [
-      "ice punch",
-      "icepunch"
-    ],
+    "aliases": ["ice punch", "icepunch"],
     "type": "Ice",
     "category": "Physical",
     "basePower": 75,
@@ -4115,10 +3291,7 @@
   {
     "id": "iceshard",
     "name": "Ice Shard",
-    "aliases": [
-      "ice shard",
-      "iceshard"
-    ],
+    "aliases": ["ice shard", "iceshard"],
     "type": "Ice",
     "category": "Physical",
     "basePower": 40,
@@ -4129,10 +3302,7 @@
   {
     "id": "icespinner",
     "name": "Ice Spinner",
-    "aliases": [
-      "ice spinner",
-      "icespinner"
-    ],
+    "aliases": ["ice spinner", "icespinner"],
     "type": "Ice",
     "category": "Physical",
     "basePower": 80,
@@ -4143,10 +3313,7 @@
   {
     "id": "iciclecrash",
     "name": "Icicle Crash",
-    "aliases": [
-      "icicle crash",
-      "iciclecrash"
-    ],
+    "aliases": ["icicle crash", "iciclecrash"],
     "type": "Ice",
     "category": "Physical",
     "basePower": 85,
@@ -4157,10 +3324,7 @@
   {
     "id": "iciclespear",
     "name": "Icicle Spear",
-    "aliases": [
-      "icicle spear",
-      "iciclespear"
-    ],
+    "aliases": ["icicle spear", "iciclespear"],
     "type": "Ice",
     "category": "Physical",
     "basePower": 25,
@@ -4171,10 +3335,7 @@
   {
     "id": "icywind",
     "name": "Icy Wind",
-    "aliases": [
-      "icy wind",
-      "icywind"
-    ],
+    "aliases": ["icy wind", "icywind"],
     "type": "Ice",
     "category": "Special",
     "basePower": 55,
@@ -4185,9 +3346,7 @@
   {
     "id": "imprison",
     "name": "Imprison",
-    "aliases": [
-      "imprison"
-    ],
+    "aliases": ["imprison"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -4198,9 +3357,7 @@
   {
     "id": "incinerate",
     "name": "Incinerate",
-    "aliases": [
-      "incinerate"
-    ],
+    "aliases": ["incinerate"],
     "type": "Fire",
     "category": "Special",
     "basePower": 60,
@@ -4211,13 +3368,10 @@
   {
     "id": "infernalparade",
     "name": "Infernal Parade",
-    "aliases": [
-      "infernal parade",
-      "infernalparade"
-    ],
+    "aliases": ["infernal parade", "infernalparade"],
     "type": "Ghost",
     "category": "Special",
-    "basePower": 60,
+    "basePower": 65,
     "accuracy": 100,
     "target": "normal",
     "isSpread": false
@@ -4225,9 +3379,7 @@
   {
     "id": "inferno",
     "name": "Inferno",
-    "aliases": [
-      "inferno"
-    ],
+    "aliases": ["inferno"],
     "type": "Fire",
     "category": "Special",
     "basePower": 100,
@@ -4238,9 +3390,7 @@
   {
     "id": "infestation",
     "name": "Infestation",
-    "aliases": [
-      "infestation"
-    ],
+    "aliases": ["infestation"],
     "type": "Bug",
     "category": "Special",
     "basePower": 20,
@@ -4251,9 +3401,7 @@
   {
     "id": "ingrain",
     "name": "Ingrain",
-    "aliases": [
-      "ingrain"
-    ],
+    "aliases": ["ingrain"],
     "type": "Grass",
     "category": "Status",
     "basePower": 0,
@@ -4264,9 +3412,7 @@
   {
     "id": "instruct",
     "name": "Instruct",
-    "aliases": [
-      "instruct"
-    ],
+    "aliases": ["instruct"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -4277,10 +3423,7 @@
   {
     "id": "irondefense",
     "name": "Iron Defense",
-    "aliases": [
-      "iron defense",
-      "irondefense"
-    ],
+    "aliases": ["iron defense", "irondefense"],
     "type": "Steel",
     "category": "Status",
     "basePower": 0,
@@ -4291,10 +3434,7 @@
   {
     "id": "ironhead",
     "name": "Iron Head",
-    "aliases": [
-      "iron head",
-      "ironhead"
-    ],
+    "aliases": ["iron head", "ironhead"],
     "type": "Steel",
     "category": "Physical",
     "basePower": 80,
@@ -4305,10 +3445,7 @@
   {
     "id": "irontail",
     "name": "Iron Tail",
-    "aliases": [
-      "iron tail",
-      "irontail"
-    ],
+    "aliases": ["iron tail", "irontail"],
     "type": "Steel",
     "category": "Physical",
     "basePower": 100,
@@ -4319,10 +3456,7 @@
   {
     "id": "ivycudgel",
     "name": "Ivy Cudgel",
-    "aliases": [
-      "ivy cudgel",
-      "ivycudgel"
-    ],
+    "aliases": ["ivy cudgel", "ivycudgel"],
     "type": "Grass",
     "category": "Physical",
     "basePower": 100,
@@ -4333,10 +3467,7 @@
   {
     "id": "jawlock",
     "name": "Jaw Lock",
-    "aliases": [
-      "jaw lock",
-      "jawlock"
-    ],
+    "aliases": ["jaw lock", "jawlock"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 80,
@@ -4347,10 +3478,7 @@
   {
     "id": "jetpunch",
     "name": "Jet Punch",
-    "aliases": [
-      "jet punch",
-      "jetpunch"
-    ],
+    "aliases": ["jet punch", "jetpunch"],
     "type": "Water",
     "category": "Physical",
     "basePower": 60,
@@ -4361,9 +3489,7 @@
   {
     "id": "judgment",
     "name": "Judgment",
-    "aliases": [
-      "judgment"
-    ],
+    "aliases": ["judgment"],
     "type": "Normal",
     "category": "Special",
     "basePower": 100,
@@ -4374,10 +3500,7 @@
   {
     "id": "junglehealing",
     "name": "Jungle Healing",
-    "aliases": [
-      "jungle healing",
-      "junglehealing"
-    ],
+    "aliases": ["jungle healing", "junglehealing"],
     "type": "Grass",
     "category": "Status",
     "basePower": 0,
@@ -4388,10 +3511,7 @@
   {
     "id": "knockoff",
     "name": "Knock Off",
-    "aliases": [
-      "knock off",
-      "knockoff"
-    ],
+    "aliases": ["knock off", "knockoff"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 65,
@@ -4402,10 +3522,7 @@
   {
     "id": "kowtowcleave",
     "name": "Kowtow Cleave",
-    "aliases": [
-      "kowtow cleave",
-      "kowtowcleave"
-    ],
+    "aliases": ["kowtow cleave", "kowtowcleave"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 85,
@@ -4416,10 +3533,7 @@
   {
     "id": "lashout",
     "name": "Lash Out",
-    "aliases": [
-      "lash out",
-      "lashout"
-    ],
+    "aliases": ["lash out", "lashout"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 75,
@@ -4430,10 +3544,7 @@
   {
     "id": "lastresort",
     "name": "Last Resort",
-    "aliases": [
-      "last resort",
-      "lastresort"
-    ],
+    "aliases": ["last resort", "lastresort"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 140,
@@ -4444,10 +3555,7 @@
   {
     "id": "lastrespects",
     "name": "Last Respects",
-    "aliases": [
-      "last respects",
-      "lastrespects"
-    ],
+    "aliases": ["last respects", "lastrespects"],
     "type": "Ghost",
     "category": "Physical",
     "basePower": 50,
@@ -4458,10 +3566,7 @@
   {
     "id": "lavaplume",
     "name": "Lava Plume",
-    "aliases": [
-      "lava plume",
-      "lavaplume"
-    ],
+    "aliases": ["lava plume", "lavaplume"],
     "type": "Fire",
     "category": "Special",
     "basePower": 80,
@@ -4472,10 +3577,7 @@
   {
     "id": "leafblade",
     "name": "Leaf Blade",
-    "aliases": [
-      "leaf blade",
-      "leafblade"
-    ],
+    "aliases": ["leaf blade", "leafblade"],
     "type": "Grass",
     "category": "Physical",
     "basePower": 90,
@@ -4486,10 +3588,7 @@
   {
     "id": "leafstorm",
     "name": "Leaf Storm",
-    "aliases": [
-      "leaf storm",
-      "leafstorm"
-    ],
+    "aliases": ["leaf storm", "leafstorm"],
     "type": "Grass",
     "category": "Special",
     "basePower": 130,
@@ -4500,9 +3599,7 @@
   {
     "id": "leafage",
     "name": "Leafage",
-    "aliases": [
-      "leafage"
-    ],
+    "aliases": ["leafage"],
     "type": "Grass",
     "category": "Physical",
     "basePower": 40,
@@ -4513,10 +3610,7 @@
   {
     "id": "leechlife",
     "name": "Leech Life",
-    "aliases": [
-      "leech life",
-      "leechlife"
-    ],
+    "aliases": ["leech life", "leechlife"],
     "type": "Bug",
     "category": "Physical",
     "basePower": 80,
@@ -4527,10 +3621,7 @@
   {
     "id": "leechseed",
     "name": "Leech Seed",
-    "aliases": [
-      "leech seed",
-      "leechseed"
-    ],
+    "aliases": ["leech seed", "leechseed"],
     "type": "Grass",
     "category": "Status",
     "basePower": 0,
@@ -4541,9 +3632,7 @@
   {
     "id": "leer",
     "name": "Leer",
-    "aliases": [
-      "leer"
-    ],
+    "aliases": ["leer"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -4554,9 +3643,7 @@
   {
     "id": "lick",
     "name": "Lick",
-    "aliases": [
-      "lick"
-    ],
+    "aliases": ["lick"],
     "type": "Ghost",
     "category": "Physical",
     "basePower": 30,
@@ -4567,10 +3654,7 @@
   {
     "id": "lifedew",
     "name": "Life Dew",
-    "aliases": [
-      "life dew",
-      "lifedew"
-    ],
+    "aliases": ["life dew", "lifedew"],
     "type": "Water",
     "category": "Status",
     "basePower": 0,
@@ -4579,12 +3663,20 @@
     "isSpread": false
   },
   {
+    "id": "lightofruin",
+    "name": "Light of Ruin",
+    "aliases": ["light of ruin", "lightofruin"],
+    "type": "Fairy",
+    "category": "Special",
+    "basePower": 140,
+    "accuracy": 90,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
     "id": "lightscreen",
     "name": "Light Screen",
-    "aliases": [
-      "light screen",
-      "lightscreen"
-    ],
+    "aliases": ["light screen", "lightscreen"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -4595,9 +3687,7 @@
   {
     "id": "liquidation",
     "name": "Liquidation",
-    "aliases": [
-      "liquidation"
-    ],
+    "aliases": ["liquidation"],
     "type": "Water",
     "category": "Physical",
     "basePower": 85,
@@ -4608,11 +3698,7 @@
   {
     "id": "lockon",
     "name": "Lock-On",
-    "aliases": [
-      "lock-on",
-      "lock on",
-      "lockon"
-    ],
+    "aliases": ["lock-on", "lock on", "lockon"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -4623,10 +3709,7 @@
   {
     "id": "lowkick",
     "name": "Low Kick",
-    "aliases": [
-      "low kick",
-      "lowkick"
-    ],
+    "aliases": ["low kick", "lowkick"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 0,
@@ -4637,10 +3720,7 @@
   {
     "id": "lowsweep",
     "name": "Low Sweep",
-    "aliases": [
-      "low sweep",
-      "lowsweep"
-    ],
+    "aliases": ["low sweep", "lowsweep"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 65,
@@ -4651,10 +3731,7 @@
   {
     "id": "luminacrash",
     "name": "Lumina Crash",
-    "aliases": [
-      "lumina crash",
-      "luminacrash"
-    ],
+    "aliases": ["lumina crash", "luminacrash"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 80,
@@ -4665,10 +3742,7 @@
   {
     "id": "lunarblessing",
     "name": "Lunar Blessing",
-    "aliases": [
-      "lunar blessing",
-      "lunarblessing"
-    ],
+    "aliases": ["lunar blessing", "lunarblessing"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -4679,10 +3753,7 @@
   {
     "id": "lunardance",
     "name": "Lunar Dance",
-    "aliases": [
-      "lunar dance",
-      "lunardance"
-    ],
+    "aliases": ["lunar dance", "lunardance"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -4693,9 +3764,7 @@
   {
     "id": "lunge",
     "name": "Lunge",
-    "aliases": [
-      "lunge"
-    ],
+    "aliases": ["lunge"],
     "type": "Bug",
     "category": "Physical",
     "basePower": 80,
@@ -4706,10 +3775,7 @@
   {
     "id": "lusterpurge",
     "name": "Luster Purge",
-    "aliases": [
-      "luster purge",
-      "lusterpurge"
-    ],
+    "aliases": ["luster purge", "lusterpurge"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 95,
@@ -4720,10 +3786,7 @@
   {
     "id": "machpunch",
     "name": "Mach Punch",
-    "aliases": [
-      "mach punch",
-      "machpunch"
-    ],
+    "aliases": ["mach punch", "machpunch"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 40,
@@ -4734,10 +3797,7 @@
   {
     "id": "magicpowder",
     "name": "Magic Powder",
-    "aliases": [
-      "magic powder",
-      "magicpowder"
-    ],
+    "aliases": ["magic powder", "magicpowder"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -4748,10 +3808,7 @@
   {
     "id": "magicroom",
     "name": "Magic Room",
-    "aliases": [
-      "magic room",
-      "magicroom"
-    ],
+    "aliases": ["magic room", "magicroom"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -4762,10 +3819,7 @@
   {
     "id": "magicalleaf",
     "name": "Magical Leaf",
-    "aliases": [
-      "magical leaf",
-      "magicalleaf"
-    ],
+    "aliases": ["magical leaf", "magicalleaf"],
     "type": "Grass",
     "category": "Special",
     "basePower": 60,
@@ -4776,10 +3830,7 @@
   {
     "id": "magmastorm",
     "name": "Magma Storm",
-    "aliases": [
-      "magma storm",
-      "magmastorm"
-    ],
+    "aliases": ["magma storm", "magmastorm"],
     "type": "Fire",
     "category": "Special",
     "basePower": 100,
@@ -4790,10 +3841,7 @@
   {
     "id": "magnetrise",
     "name": "Magnet Rise",
-    "aliases": [
-      "magnet rise",
-      "magnetrise"
-    ],
+    "aliases": ["magnet rise", "magnetrise"],
     "type": "Electric",
     "category": "Status",
     "basePower": 0,
@@ -4804,10 +3852,7 @@
   {
     "id": "magneticflux",
     "name": "Magnetic Flux",
-    "aliases": [
-      "magnetic flux",
-      "magneticflux"
-    ],
+    "aliases": ["magnetic flux", "magneticflux"],
     "type": "Electric",
     "category": "Status",
     "basePower": 0,
@@ -4818,10 +3863,7 @@
   {
     "id": "makeitrain",
     "name": "Make It Rain",
-    "aliases": [
-      "make it rain",
-      "makeitrain"
-    ],
+    "aliases": ["make it rain", "makeitrain"],
     "type": "Steel",
     "category": "Special",
     "basePower": 120,
@@ -4832,10 +3874,7 @@
   {
     "id": "malignantchain",
     "name": "Malignant Chain",
-    "aliases": [
-      "malignant chain",
-      "malignantchain"
-    ],
+    "aliases": ["malignant chain", "malignantchain"],
     "type": "Poison",
     "category": "Special",
     "basePower": 100,
@@ -4846,10 +3885,7 @@
   {
     "id": "matchagotcha",
     "name": "Matcha Gotcha",
-    "aliases": [
-      "matcha gotcha",
-      "matchagotcha"
-    ],
+    "aliases": ["matcha gotcha", "matchagotcha"],
     "type": "Grass",
     "category": "Special",
     "basePower": 80,
@@ -4860,10 +3896,7 @@
   {
     "id": "meanlook",
     "name": "Mean Look",
-    "aliases": [
-      "mean look",
-      "meanlook"
-    ],
+    "aliases": ["mean look", "meanlook"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -4874,10 +3907,7 @@
   {
     "id": "megadrain",
     "name": "Mega Drain",
-    "aliases": [
-      "mega drain",
-      "megadrain"
-    ],
+    "aliases": ["mega drain", "megadrain"],
     "type": "Grass",
     "category": "Special",
     "basePower": 40,
@@ -4888,10 +3918,7 @@
   {
     "id": "megakick",
     "name": "Mega Kick",
-    "aliases": [
-      "mega kick",
-      "megakick"
-    ],
+    "aliases": ["mega kick", "megakick"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 120,
@@ -4902,10 +3929,7 @@
   {
     "id": "megapunch",
     "name": "Mega Punch",
-    "aliases": [
-      "mega punch",
-      "megapunch"
-    ],
+    "aliases": ["mega punch", "megapunch"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 80,
@@ -4916,9 +3940,7 @@
   {
     "id": "megahorn",
     "name": "Megahorn",
-    "aliases": [
-      "megahorn"
-    ],
+    "aliases": ["megahorn"],
     "type": "Bug",
     "category": "Physical",
     "basePower": 120,
@@ -4929,9 +3951,7 @@
   {
     "id": "memento",
     "name": "Memento",
-    "aliases": [
-      "memento"
-    ],
+    "aliases": ["memento"],
     "type": "Dark",
     "category": "Status",
     "basePower": 0,
@@ -4942,10 +3962,7 @@
   {
     "id": "metalburst",
     "name": "Metal Burst",
-    "aliases": [
-      "metal burst",
-      "metalburst"
-    ],
+    "aliases": ["metal burst", "metalburst"],
     "type": "Steel",
     "category": "Physical",
     "basePower": 0,
@@ -4956,10 +3973,7 @@
   {
     "id": "metalclaw",
     "name": "Metal Claw",
-    "aliases": [
-      "metal claw",
-      "metalclaw"
-    ],
+    "aliases": ["metal claw", "metalclaw"],
     "type": "Steel",
     "category": "Physical",
     "basePower": 50,
@@ -4970,10 +3984,7 @@
   {
     "id": "metalsound",
     "name": "Metal Sound",
-    "aliases": [
-      "metal sound",
-      "metalsound"
-    ],
+    "aliases": ["metal sound", "metalsound"],
     "type": "Steel",
     "category": "Status",
     "basePower": 0,
@@ -4984,10 +3995,7 @@
   {
     "id": "meteorbeam",
     "name": "Meteor Beam",
-    "aliases": [
-      "meteor beam",
-      "meteorbeam"
-    ],
+    "aliases": ["meteor beam", "meteorbeam"],
     "type": "Rock",
     "category": "Special",
     "basePower": 120,
@@ -4998,10 +4006,7 @@
   {
     "id": "meteormash",
     "name": "Meteor Mash",
-    "aliases": [
-      "meteor mash",
-      "meteormash"
-    ],
+    "aliases": ["meteor mash", "meteormash"],
     "type": "Steel",
     "category": "Physical",
     "basePower": 90,
@@ -5012,9 +4017,7 @@
   {
     "id": "metronome",
     "name": "Metronome",
-    "aliases": [
-      "metronome"
-    ],
+    "aliases": ["metronome"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -5025,10 +4028,7 @@
   {
     "id": "mightycleave",
     "name": "Mighty Cleave",
-    "aliases": [
-      "mighty cleave",
-      "mightycleave"
-    ],
+    "aliases": ["mighty cleave", "mightycleave"],
     "type": "Rock",
     "category": "Physical",
     "basePower": 95,
@@ -5039,10 +4039,7 @@
   {
     "id": "milkdrink",
     "name": "Milk Drink",
-    "aliases": [
-      "milk drink",
-      "milkdrink"
-    ],
+    "aliases": ["milk drink", "milkdrink"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -5053,9 +4050,7 @@
   {
     "id": "mimic",
     "name": "Mimic",
-    "aliases": [
-      "mimic"
-    ],
+    "aliases": ["mimic"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -5066,9 +4061,7 @@
   {
     "id": "minimize",
     "name": "Minimize",
-    "aliases": [
-      "minimize"
-    ],
+    "aliases": ["minimize"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -5079,10 +4072,7 @@
   {
     "id": "mirrorcoat",
     "name": "Mirror Coat",
-    "aliases": [
-      "mirror coat",
-      "mirrorcoat"
-    ],
+    "aliases": ["mirror coat", "mirrorcoat"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 0,
@@ -5093,9 +4083,7 @@
   {
     "id": "mist",
     "name": "Mist",
-    "aliases": [
-      "mist"
-    ],
+    "aliases": ["mist"],
     "type": "Ice",
     "category": "Status",
     "basePower": 0,
@@ -5106,10 +4094,7 @@
   {
     "id": "mistball",
     "name": "Mist Ball",
-    "aliases": [
-      "mist ball",
-      "mistball"
-    ],
+    "aliases": ["mist ball", "mistball"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 95,
@@ -5120,10 +4105,7 @@
   {
     "id": "mistyexplosion",
     "name": "Misty Explosion",
-    "aliases": [
-      "misty explosion",
-      "mistyexplosion"
-    ],
+    "aliases": ["misty explosion", "mistyexplosion"],
     "type": "Fairy",
     "category": "Special",
     "basePower": 100,
@@ -5134,10 +4116,7 @@
   {
     "id": "mistyterrain",
     "name": "Misty Terrain",
-    "aliases": [
-      "misty terrain",
-      "mistyterrain"
-    ],
+    "aliases": ["misty terrain", "mistyterrain"],
     "type": "Fairy",
     "category": "Status",
     "basePower": 0,
@@ -5148,9 +4127,7 @@
   {
     "id": "moonblast",
     "name": "Moonblast",
-    "aliases": [
-      "moonblast"
-    ],
+    "aliases": ["moonblast"],
     "type": "Fairy",
     "category": "Special",
     "basePower": 95,
@@ -5161,10 +4138,7 @@
   {
     "id": "moongeistbeam",
     "name": "Moongeist Beam",
-    "aliases": [
-      "moongeist beam",
-      "moongeistbeam"
-    ],
+    "aliases": ["moongeist beam", "moongeistbeam"],
     "type": "Ghost",
     "category": "Special",
     "basePower": 100,
@@ -5175,9 +4149,7 @@
   {
     "id": "moonlight",
     "name": "Moonlight",
-    "aliases": [
-      "moonlight"
-    ],
+    "aliases": ["moonlight"],
     "type": "Fairy",
     "category": "Status",
     "basePower": 0,
@@ -5188,10 +4160,7 @@
   {
     "id": "morningsun",
     "name": "Morning Sun",
-    "aliases": [
-      "morning sun",
-      "morningsun"
-    ],
+    "aliases": ["morning sun", "morningsun"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -5202,10 +4171,7 @@
   {
     "id": "mortalspin",
     "name": "Mortal Spin",
-    "aliases": [
-      "mortal spin",
-      "mortalspin"
-    ],
+    "aliases": ["mortal spin", "mortalspin"],
     "type": "Poison",
     "category": "Physical",
     "basePower": 30,
@@ -5216,13 +4182,10 @@
   {
     "id": "mountaingale",
     "name": "Mountain Gale",
-    "aliases": [
-      "mountain gale",
-      "mountaingale"
-    ],
+    "aliases": ["mountain gale", "mountaingale"],
     "type": "Ice",
     "category": "Physical",
-    "basePower": 100,
+    "basePower": 120,
     "accuracy": 85,
     "target": "normal",
     "isSpread": false
@@ -5230,10 +4193,7 @@
   {
     "id": "mudshot",
     "name": "Mud Shot",
-    "aliases": [
-      "mud shot",
-      "mudshot"
-    ],
+    "aliases": ["mud shot", "mudshot"],
     "type": "Ground",
     "category": "Special",
     "basePower": 55,
@@ -5244,11 +4204,7 @@
   {
     "id": "mudslap",
     "name": "Mud-Slap",
-    "aliases": [
-      "mud-slap",
-      "mud slap",
-      "mudslap"
-    ],
+    "aliases": ["mud-slap", "mud slap", "mudslap"],
     "type": "Ground",
     "category": "Special",
     "basePower": 20,
@@ -5259,10 +4215,7 @@
   {
     "id": "muddywater",
     "name": "Muddy Water",
-    "aliases": [
-      "muddy water",
-      "muddywater"
-    ],
+    "aliases": ["muddy water", "muddywater"],
     "type": "Water",
     "category": "Special",
     "basePower": 90,
@@ -5273,10 +4226,7 @@
   {
     "id": "mysticalfire",
     "name": "Mystical Fire",
-    "aliases": [
-      "mystical fire",
-      "mysticalfire"
-    ],
+    "aliases": ["mystical fire", "mysticalfire"],
     "type": "Fire",
     "category": "Special",
     "basePower": 75,
@@ -5287,10 +4237,7 @@
   {
     "id": "mysticalpower",
     "name": "Mystical Power",
-    "aliases": [
-      "mystical power",
-      "mysticalpower"
-    ],
+    "aliases": ["mystical power", "mysticalpower"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 70,
@@ -5301,10 +4248,7 @@
   {
     "id": "nastyplot",
     "name": "Nasty Plot",
-    "aliases": [
-      "nasty plot",
-      "nastyplot"
-    ],
+    "aliases": ["nasty plot", "nastyplot"],
     "type": "Dark",
     "category": "Status",
     "basePower": 0,
@@ -5315,13 +4259,10 @@
   {
     "id": "nightdaze",
     "name": "Night Daze",
-    "aliases": [
-      "night daze",
-      "nightdaze"
-    ],
+    "aliases": ["night daze", "nightdaze"],
     "type": "Dark",
     "category": "Special",
-    "basePower": 85,
+    "basePower": 90,
     "accuracy": 95,
     "target": "normal",
     "isSpread": false
@@ -5329,10 +4270,7 @@
   {
     "id": "nightshade",
     "name": "Night Shade",
-    "aliases": [
-      "night shade",
-      "nightshade"
-    ],
+    "aliases": ["night shade", "nightshade"],
     "type": "Ghost",
     "category": "Special",
     "basePower": 0,
@@ -5343,10 +4281,7 @@
   {
     "id": "nightslash",
     "name": "Night Slash",
-    "aliases": [
-      "night slash",
-      "nightslash"
-    ],
+    "aliases": ["night slash", "nightslash"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 70,
@@ -5357,10 +4292,7 @@
   {
     "id": "noretreat",
     "name": "No Retreat",
-    "aliases": [
-      "no retreat",
-      "noretreat"
-    ],
+    "aliases": ["no retreat", "noretreat"],
     "type": "Fighting",
     "category": "Status",
     "basePower": 0,
@@ -5371,10 +4303,7 @@
   {
     "id": "nobleroar",
     "name": "Noble Roar",
-    "aliases": [
-      "noble roar",
-      "nobleroar"
-    ],
+    "aliases": ["noble roar", "nobleroar"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -5385,9 +4314,7 @@
   {
     "id": "nuzzle",
     "name": "Nuzzle",
-    "aliases": [
-      "nuzzle"
-    ],
+    "aliases": ["nuzzle"],
     "type": "Electric",
     "category": "Physical",
     "basePower": 20,
@@ -5398,10 +4325,7 @@
   {
     "id": "orderup",
     "name": "Order Up",
-    "aliases": [
-      "order up",
-      "orderup"
-    ],
+    "aliases": ["order up", "orderup"],
     "type": "Dragon",
     "category": "Physical",
     "basePower": 80,
@@ -5412,10 +4336,7 @@
   {
     "id": "originpulse",
     "name": "Origin Pulse",
-    "aliases": [
-      "origin pulse",
-      "originpulse"
-    ],
+    "aliases": ["origin pulse", "originpulse"],
     "type": "Water",
     "category": "Special",
     "basePower": 110,
@@ -5426,9 +4347,7 @@
   {
     "id": "outrage",
     "name": "Outrage",
-    "aliases": [
-      "outrage"
-    ],
+    "aliases": ["outrage"],
     "type": "Dragon",
     "category": "Physical",
     "basePower": 120,
@@ -5439,9 +4358,7 @@
   {
     "id": "overdrive",
     "name": "Overdrive",
-    "aliases": [
-      "overdrive"
-    ],
+    "aliases": ["overdrive"],
     "type": "Electric",
     "category": "Special",
     "basePower": 80,
@@ -5452,9 +4369,7 @@
   {
     "id": "overheat",
     "name": "Overheat",
-    "aliases": [
-      "overheat"
-    ],
+    "aliases": ["overheat"],
     "type": "Fire",
     "category": "Special",
     "basePower": 130,
@@ -5465,10 +4380,7 @@
   {
     "id": "painsplit",
     "name": "Pain Split",
-    "aliases": [
-      "pain split",
-      "painsplit"
-    ],
+    "aliases": ["pain split", "painsplit"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -5479,10 +4391,7 @@
   {
     "id": "paraboliccharge",
     "name": "Parabolic Charge",
-    "aliases": [
-      "parabolic charge",
-      "paraboliccharge"
-    ],
+    "aliases": ["parabolic charge", "paraboliccharge"],
     "type": "Electric",
     "category": "Special",
     "basePower": 65,
@@ -5493,10 +4402,7 @@
   {
     "id": "partingshot",
     "name": "Parting Shot",
-    "aliases": [
-      "parting shot",
-      "partingshot"
-    ],
+    "aliases": ["parting shot", "partingshot"],
     "type": "Dark",
     "category": "Status",
     "basePower": 0,
@@ -5507,10 +4413,7 @@
   {
     "id": "payday",
     "name": "Pay Day",
-    "aliases": [
-      "pay day",
-      "payday"
-    ],
+    "aliases": ["pay day", "payday"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 40,
@@ -5521,9 +4424,7 @@
   {
     "id": "payback",
     "name": "Payback",
-    "aliases": [
-      "payback"
-    ],
+    "aliases": ["payback"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 50,
@@ -5534,9 +4435,7 @@
   {
     "id": "peck",
     "name": "Peck",
-    "aliases": [
-      "peck"
-    ],
+    "aliases": ["peck"],
     "type": "Flying",
     "category": "Physical",
     "basePower": 35,
@@ -5547,10 +4446,7 @@
   {
     "id": "perishsong",
     "name": "Perish Song",
-    "aliases": [
-      "perish song",
-      "perishsong"
-    ],
+    "aliases": ["perish song", "perishsong"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -5561,10 +4457,7 @@
   {
     "id": "petalblizzard",
     "name": "Petal Blizzard",
-    "aliases": [
-      "petal blizzard",
-      "petalblizzard"
-    ],
+    "aliases": ["petal blizzard", "petalblizzard"],
     "type": "Grass",
     "category": "Physical",
     "basePower": 90,
@@ -5575,10 +4468,7 @@
   {
     "id": "petaldance",
     "name": "Petal Dance",
-    "aliases": [
-      "petal dance",
-      "petaldance"
-    ],
+    "aliases": ["petal dance", "petaldance"],
     "type": "Grass",
     "category": "Special",
     "basePower": 120,
@@ -5589,10 +4479,7 @@
   {
     "id": "phantomforce",
     "name": "Phantom Force",
-    "aliases": [
-      "phantom force",
-      "phantomforce"
-    ],
+    "aliases": ["phantom force", "phantomforce"],
     "type": "Ghost",
     "category": "Physical",
     "basePower": 90,
@@ -5603,10 +4490,7 @@
   {
     "id": "photongeyser",
     "name": "Photon Geyser",
-    "aliases": [
-      "photon geyser",
-      "photongeyser"
-    ],
+    "aliases": ["photon geyser", "photongeyser"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 100,
@@ -5617,10 +4501,7 @@
   {
     "id": "pinmissile",
     "name": "Pin Missile",
-    "aliases": [
-      "pin missile",
-      "pinmissile"
-    ],
+    "aliases": ["pin missile", "pinmissile"],
     "type": "Bug",
     "category": "Physical",
     "basePower": 25,
@@ -5631,10 +4512,7 @@
   {
     "id": "playnice",
     "name": "Play Nice",
-    "aliases": [
-      "play nice",
-      "playnice"
-    ],
+    "aliases": ["play nice", "playnice"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -5645,10 +4523,7 @@
   {
     "id": "playrough",
     "name": "Play Rough",
-    "aliases": [
-      "play rough",
-      "playrough"
-    ],
+    "aliases": ["play rough", "playrough"],
     "type": "Fairy",
     "category": "Physical",
     "basePower": 90,
@@ -5659,9 +4534,7 @@
   {
     "id": "pluck",
     "name": "Pluck",
-    "aliases": [
-      "pluck"
-    ],
+    "aliases": ["pluck"],
     "type": "Flying",
     "category": "Physical",
     "basePower": 60,
@@ -5672,10 +4545,7 @@
   {
     "id": "poisonfang",
     "name": "Poison Fang",
-    "aliases": [
-      "poison fang",
-      "poisonfang"
-    ],
+    "aliases": ["poison fang", "poisonfang"],
     "type": "Poison",
     "category": "Physical",
     "basePower": 50,
@@ -5686,10 +4556,7 @@
   {
     "id": "poisongas",
     "name": "Poison Gas",
-    "aliases": [
-      "poison gas",
-      "poisongas"
-    ],
+    "aliases": ["poison gas", "poisongas"],
     "type": "Poison",
     "category": "Status",
     "basePower": 0,
@@ -5700,10 +4567,7 @@
   {
     "id": "poisonjab",
     "name": "Poison Jab",
-    "aliases": [
-      "poison jab",
-      "poisonjab"
-    ],
+    "aliases": ["poison jab", "poisonjab"],
     "type": "Poison",
     "category": "Physical",
     "basePower": 80,
@@ -5714,10 +4578,7 @@
   {
     "id": "poisonpowder",
     "name": "Poison Powder",
-    "aliases": [
-      "poison powder",
-      "poisonpowder"
-    ],
+    "aliases": ["poison powder", "poisonpowder"],
     "type": "Poison",
     "category": "Status",
     "basePower": 0,
@@ -5728,10 +4589,7 @@
   {
     "id": "poisonsting",
     "name": "Poison Sting",
-    "aliases": [
-      "poison sting",
-      "poisonsting"
-    ],
+    "aliases": ["poison sting", "poisonsting"],
     "type": "Poison",
     "category": "Physical",
     "basePower": 15,
@@ -5742,10 +4600,7 @@
   {
     "id": "poisontail",
     "name": "Poison Tail",
-    "aliases": [
-      "poison tail",
-      "poisontail"
-    ],
+    "aliases": ["poison tail", "poisontail"],
     "type": "Poison",
     "category": "Physical",
     "basePower": 50,
@@ -5756,10 +4611,7 @@
   {
     "id": "pollenpuff",
     "name": "Pollen Puff",
-    "aliases": [
-      "pollen puff",
-      "pollenpuff"
-    ],
+    "aliases": ["pollen puff", "pollenpuff"],
     "type": "Bug",
     "category": "Special",
     "basePower": 90,
@@ -5770,9 +4622,7 @@
   {
     "id": "poltergeist",
     "name": "Poltergeist",
-    "aliases": [
-      "poltergeist"
-    ],
+    "aliases": ["poltergeist"],
     "type": "Ghost",
     "category": "Physical",
     "basePower": 110,
@@ -5783,10 +4633,7 @@
   {
     "id": "populationbomb",
     "name": "Population Bomb",
-    "aliases": [
-      "population bomb",
-      "populationbomb"
-    ],
+    "aliases": ["population bomb", "populationbomb"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 20,
@@ -5797,9 +4644,7 @@
   {
     "id": "pounce",
     "name": "Pounce",
-    "aliases": [
-      "pounce"
-    ],
+    "aliases": ["pounce"],
     "type": "Bug",
     "category": "Physical",
     "basePower": 50,
@@ -5810,9 +4655,7 @@
   {
     "id": "pound",
     "name": "Pound",
-    "aliases": [
-      "pound"
-    ],
+    "aliases": ["pound"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 40,
@@ -5823,10 +4666,7 @@
   {
     "id": "powdersnow",
     "name": "Powder Snow",
-    "aliases": [
-      "powder snow",
-      "powdersnow"
-    ],
+    "aliases": ["powder snow", "powdersnow"],
     "type": "Ice",
     "category": "Special",
     "basePower": 40,
@@ -5837,10 +4677,7 @@
   {
     "id": "powergem",
     "name": "Power Gem",
-    "aliases": [
-      "power gem",
-      "powergem"
-    ],
+    "aliases": ["power gem", "powergem"],
     "type": "Rock",
     "category": "Special",
     "basePower": 80,
@@ -5851,10 +4688,7 @@
   {
     "id": "powersplit",
     "name": "Power Split",
-    "aliases": [
-      "power split",
-      "powersplit"
-    ],
+    "aliases": ["power split", "powersplit"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -5865,10 +4699,7 @@
   {
     "id": "powerswap",
     "name": "Power Swap",
-    "aliases": [
-      "power swap",
-      "powerswap"
-    ],
+    "aliases": ["power swap", "powerswap"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -5879,10 +4710,7 @@
   {
     "id": "powertrick",
     "name": "Power Trick",
-    "aliases": [
-      "power trick",
-      "powertrick"
-    ],
+    "aliases": ["power trick", "powertrick"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -5893,10 +4721,7 @@
   {
     "id": "powertrip",
     "name": "Power Trip",
-    "aliases": [
-      "power trip",
-      "powertrip"
-    ],
+    "aliases": ["power trip", "powertrip"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 20,
@@ -5907,10 +4732,7 @@
   {
     "id": "powerwhip",
     "name": "Power Whip",
-    "aliases": [
-      "power whip",
-      "powerwhip"
-    ],
+    "aliases": ["power whip", "powerwhip"],
     "type": "Grass",
     "category": "Physical",
     "basePower": 120,
@@ -5921,10 +4743,7 @@
   {
     "id": "precipiceblades",
     "name": "Precipice Blades",
-    "aliases": [
-      "precipice blades",
-      "precipiceblades"
-    ],
+    "aliases": ["precipice blades", "precipiceblades"],
     "type": "Ground",
     "category": "Physical",
     "basePower": 120,
@@ -5935,9 +4754,7 @@
   {
     "id": "present",
     "name": "Present",
-    "aliases": [
-      "present"
-    ],
+    "aliases": ["present"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 0,
@@ -5948,10 +4765,7 @@
   {
     "id": "prismaticlaser",
     "name": "Prismatic Laser",
-    "aliases": [
-      "prismatic laser",
-      "prismaticlaser"
-    ],
+    "aliases": ["prismatic laser", "prismaticlaser"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 160,
@@ -5962,9 +4776,7 @@
   {
     "id": "protect",
     "name": "Protect",
-    "aliases": [
-      "protect"
-    ],
+    "aliases": ["protect"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -5975,9 +4787,7 @@
   {
     "id": "psybeam",
     "name": "Psybeam",
-    "aliases": [
-      "psybeam"
-    ],
+    "aliases": ["psybeam"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 65,
@@ -5988,9 +4798,7 @@
   {
     "id": "psyblade",
     "name": "Psyblade",
-    "aliases": [
-      "psyblade"
-    ],
+    "aliases": ["psyblade"],
     "type": "Psychic",
     "category": "Physical",
     "basePower": 80,
@@ -6001,10 +4809,7 @@
   {
     "id": "psychup",
     "name": "Psych Up",
-    "aliases": [
-      "psych up",
-      "psychup"
-    ],
+    "aliases": ["psych up", "psychup"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -6015,9 +4820,7 @@
   {
     "id": "psychic",
     "name": "Psychic",
-    "aliases": [
-      "psychic"
-    ],
+    "aliases": ["psychic"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 90,
@@ -6028,10 +4831,7 @@
   {
     "id": "psychicfangs",
     "name": "Psychic Fangs",
-    "aliases": [
-      "psychic fangs",
-      "psychicfangs"
-    ],
+    "aliases": ["psychic fangs", "psychicfangs"],
     "type": "Psychic",
     "category": "Physical",
     "basePower": 85,
@@ -6042,10 +4842,7 @@
   {
     "id": "psychicnoise",
     "name": "Psychic Noise",
-    "aliases": [
-      "psychic noise",
-      "psychicnoise"
-    ],
+    "aliases": ["psychic noise", "psychicnoise"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 75,
@@ -6056,10 +4853,7 @@
   {
     "id": "psychicterrain",
     "name": "Psychic Terrain",
-    "aliases": [
-      "psychic terrain",
-      "psychicterrain"
-    ],
+    "aliases": ["psychic terrain", "psychicterrain"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -6070,10 +4864,7 @@
   {
     "id": "psychoboost",
     "name": "Psycho Boost",
-    "aliases": [
-      "psycho boost",
-      "psychoboost"
-    ],
+    "aliases": ["psycho boost", "psychoboost"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 140,
@@ -6084,10 +4875,7 @@
   {
     "id": "psychocut",
     "name": "Psycho Cut",
-    "aliases": [
-      "psycho cut",
-      "psychocut"
-    ],
+    "aliases": ["psycho cut", "psychocut"],
     "type": "Psychic",
     "category": "Physical",
     "basePower": 70,
@@ -6098,13 +4886,10 @@
   {
     "id": "psyshieldbash",
     "name": "Psyshield Bash",
-    "aliases": [
-      "psyshield bash",
-      "psyshieldbash"
-    ],
+    "aliases": ["psyshield bash", "psyshieldbash"],
     "type": "Psychic",
     "category": "Physical",
-    "basePower": 70,
+    "basePower": 90,
     "accuracy": 90,
     "target": "normal",
     "isSpread": false
@@ -6112,9 +4897,7 @@
   {
     "id": "psyshock",
     "name": "Psyshock",
-    "aliases": [
-      "psyshock"
-    ],
+    "aliases": ["psyshock"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 80,
@@ -6125,9 +4908,7 @@
   {
     "id": "psystrike",
     "name": "Psystrike",
-    "aliases": [
-      "psystrike"
-    ],
+    "aliases": ["psystrike"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 100,
@@ -6138,10 +4919,7 @@
   {
     "id": "pyroball",
     "name": "Pyro Ball",
-    "aliases": [
-      "pyro ball",
-      "pyroball"
-    ],
+    "aliases": ["pyro ball", "pyroball"],
     "type": "Fire",
     "category": "Physical",
     "basePower": 120,
@@ -6152,9 +4930,7 @@
   {
     "id": "quash",
     "name": "Quash",
-    "aliases": [
-      "quash"
-    ],
+    "aliases": ["quash"],
     "type": "Dark",
     "category": "Status",
     "basePower": 0,
@@ -6165,10 +4941,7 @@
   {
     "id": "quickattack",
     "name": "Quick Attack",
-    "aliases": [
-      "quick attack",
-      "quickattack"
-    ],
+    "aliases": ["quick attack", "quickattack"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 40,
@@ -6179,10 +4952,7 @@
   {
     "id": "quickguard",
     "name": "Quick Guard",
-    "aliases": [
-      "quick guard",
-      "quickguard"
-    ],
+    "aliases": ["quick guard", "quickguard"],
     "type": "Fighting",
     "category": "Status",
     "basePower": 0,
@@ -6193,10 +4963,7 @@
   {
     "id": "quiverdance",
     "name": "Quiver Dance",
-    "aliases": [
-      "quiver dance",
-      "quiverdance"
-    ],
+    "aliases": ["quiver dance", "quiverdance"],
     "type": "Bug",
     "category": "Status",
     "basePower": 0,
@@ -6207,10 +4974,7 @@
   {
     "id": "ragefist",
     "name": "Rage Fist",
-    "aliases": [
-      "rage fist",
-      "ragefist"
-    ],
+    "aliases": ["rage fist", "ragefist"],
     "type": "Ghost",
     "category": "Physical",
     "basePower": 50,
@@ -6221,10 +4985,7 @@
   {
     "id": "ragepowder",
     "name": "Rage Powder",
-    "aliases": [
-      "rage powder",
-      "ragepowder"
-    ],
+    "aliases": ["rage powder", "ragepowder"],
     "type": "Bug",
     "category": "Status",
     "basePower": 0,
@@ -6235,10 +4996,7 @@
   {
     "id": "ragingbull",
     "name": "Raging Bull",
-    "aliases": [
-      "raging bull",
-      "ragingbull"
-    ],
+    "aliases": ["raging bull", "ragingbull"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 90,
@@ -6249,10 +5007,7 @@
   {
     "id": "ragingfury",
     "name": "Raging Fury",
-    "aliases": [
-      "raging fury",
-      "ragingfury"
-    ],
+    "aliases": ["raging fury", "ragingfury"],
     "type": "Fire",
     "category": "Physical",
     "basePower": 120,
@@ -6263,10 +5018,7 @@
   {
     "id": "raindance",
     "name": "Rain Dance",
-    "aliases": [
-      "rain dance",
-      "raindance"
-    ],
+    "aliases": ["rain dance", "raindance"],
     "type": "Water",
     "category": "Status",
     "basePower": 0,
@@ -6277,10 +5029,7 @@
   {
     "id": "rapidspin",
     "name": "Rapid Spin",
-    "aliases": [
-      "rapid spin",
-      "rapidspin"
-    ],
+    "aliases": ["rapid spin", "rapidspin"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 50,
@@ -6291,10 +5040,7 @@
   {
     "id": "razorleaf",
     "name": "Razor Leaf",
-    "aliases": [
-      "razor leaf",
-      "razorleaf"
-    ],
+    "aliases": ["razor leaf", "razorleaf"],
     "type": "Grass",
     "category": "Physical",
     "basePower": 55,
@@ -6305,10 +5051,7 @@
   {
     "id": "razorshell",
     "name": "Razor Shell",
-    "aliases": [
-      "razor shell",
-      "razorshell"
-    ],
+    "aliases": ["razor shell", "razorshell"],
     "type": "Water",
     "category": "Physical",
     "basePower": 75,
@@ -6319,9 +5062,7 @@
   {
     "id": "recover",
     "name": "Recover",
-    "aliases": [
-      "recover"
-    ],
+    "aliases": ["recover"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -6332,9 +5073,7 @@
   {
     "id": "recycle",
     "name": "Recycle",
-    "aliases": [
-      "recycle"
-    ],
+    "aliases": ["recycle"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -6345,9 +5084,7 @@
   {
     "id": "reflect",
     "name": "Reflect",
-    "aliases": [
-      "reflect"
-    ],
+    "aliases": ["reflect"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -6358,10 +5095,7 @@
   {
     "id": "reflecttype",
     "name": "Reflect Type",
-    "aliases": [
-      "reflect type",
-      "reflecttype"
-    ],
+    "aliases": ["reflect type", "reflecttype"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -6372,10 +5106,7 @@
   {
     "id": "relicsong",
     "name": "Relic Song",
-    "aliases": [
-      "relic song",
-      "relicsong"
-    ],
+    "aliases": ["relic song", "relicsong"],
     "type": "Normal",
     "category": "Special",
     "basePower": 75,
@@ -6386,9 +5117,7 @@
   {
     "id": "rest",
     "name": "Rest",
-    "aliases": [
-      "rest"
-    ],
+    "aliases": ["rest"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -6399,9 +5128,7 @@
   {
     "id": "retaliate",
     "name": "Retaliate",
-    "aliases": [
-      "retaliate"
-    ],
+    "aliases": ["retaliate"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 70,
@@ -6412,10 +5139,7 @@
   {
     "id": "revelationdance",
     "name": "Revelation Dance",
-    "aliases": [
-      "revelation dance",
-      "revelationdance"
-    ],
+    "aliases": ["revelation dance", "revelationdance"],
     "type": "Normal",
     "category": "Special",
     "basePower": 90,
@@ -6426,9 +5150,7 @@
   {
     "id": "reversal",
     "name": "Reversal",
-    "aliases": [
-      "reversal"
-    ],
+    "aliases": ["reversal"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 0,
@@ -6439,10 +5161,7 @@
   {
     "id": "revivalblessing",
     "name": "Revival Blessing",
-    "aliases": [
-      "revival blessing",
-      "revivalblessing"
-    ],
+    "aliases": ["revival blessing", "revivalblessing"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -6453,10 +5172,7 @@
   {
     "id": "risingvoltage",
     "name": "Rising Voltage",
-    "aliases": [
-      "rising voltage",
-      "risingvoltage"
-    ],
+    "aliases": ["rising voltage", "risingvoltage"],
     "type": "Electric",
     "category": "Special",
     "basePower": 70,
@@ -6467,9 +5183,7 @@
   {
     "id": "roar",
     "name": "Roar",
-    "aliases": [
-      "roar"
-    ],
+    "aliases": ["roar"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -6480,10 +5194,7 @@
   {
     "id": "roaroftime",
     "name": "Roar of Time",
-    "aliases": [
-      "roar of time",
-      "roaroftime"
-    ],
+    "aliases": ["roar of time", "roaroftime"],
     "type": "Dragon",
     "category": "Special",
     "basePower": 150,
@@ -6494,10 +5205,7 @@
   {
     "id": "rockblast",
     "name": "Rock Blast",
-    "aliases": [
-      "rock blast",
-      "rockblast"
-    ],
+    "aliases": ["rock blast", "rockblast"],
     "type": "Rock",
     "category": "Physical",
     "basePower": 25,
@@ -6508,10 +5216,7 @@
   {
     "id": "rockpolish",
     "name": "Rock Polish",
-    "aliases": [
-      "rock polish",
-      "rockpolish"
-    ],
+    "aliases": ["rock polish", "rockpolish"],
     "type": "Rock",
     "category": "Status",
     "basePower": 0,
@@ -6522,10 +5227,7 @@
   {
     "id": "rockslide",
     "name": "Rock Slide",
-    "aliases": [
-      "rock slide",
-      "rockslide"
-    ],
+    "aliases": ["rock slide", "rockslide"],
     "type": "Rock",
     "category": "Physical",
     "basePower": 75,
@@ -6536,10 +5238,7 @@
   {
     "id": "rocksmash",
     "name": "Rock Smash",
-    "aliases": [
-      "rock smash",
-      "rocksmash"
-    ],
+    "aliases": ["rock smash", "rocksmash"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 40,
@@ -6550,10 +5249,7 @@
   {
     "id": "rockthrow",
     "name": "Rock Throw",
-    "aliases": [
-      "rock throw",
-      "rockthrow"
-    ],
+    "aliases": ["rock throw", "rockthrow"],
     "type": "Rock",
     "category": "Physical",
     "basePower": 50,
@@ -6564,10 +5260,7 @@
   {
     "id": "rocktomb",
     "name": "Rock Tomb",
-    "aliases": [
-      "rock tomb",
-      "rocktomb"
-    ],
+    "aliases": ["rock tomb", "rocktomb"],
     "type": "Rock",
     "category": "Physical",
     "basePower": 60,
@@ -6578,10 +5271,7 @@
   {
     "id": "rockwrecker",
     "name": "Rock Wrecker",
-    "aliases": [
-      "rock wrecker",
-      "rockwrecker"
-    ],
+    "aliases": ["rock wrecker", "rockwrecker"],
     "type": "Rock",
     "category": "Physical",
     "basePower": 150,
@@ -6592,10 +5282,7 @@
   {
     "id": "roleplay",
     "name": "Role Play",
-    "aliases": [
-      "role play",
-      "roleplay"
-    ],
+    "aliases": ["role play", "roleplay"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -6606,9 +5293,7 @@
   {
     "id": "rollout",
     "name": "Rollout",
-    "aliases": [
-      "rollout"
-    ],
+    "aliases": ["rollout"],
     "type": "Rock",
     "category": "Physical",
     "basePower": 30,
@@ -6619,9 +5304,7 @@
   {
     "id": "roost",
     "name": "Roost",
-    "aliases": [
-      "roost"
-    ],
+    "aliases": ["roost"],
     "type": "Flying",
     "category": "Status",
     "basePower": 0,
@@ -6632,9 +5315,7 @@
   {
     "id": "round",
     "name": "Round",
-    "aliases": [
-      "round"
-    ],
+    "aliases": ["round"],
     "type": "Normal",
     "category": "Special",
     "basePower": 60,
@@ -6645,9 +5326,7 @@
   {
     "id": "ruination",
     "name": "Ruination",
-    "aliases": [
-      "ruination"
-    ],
+    "aliases": ["ruination"],
     "type": "Dark",
     "category": "Special",
     "basePower": 0,
@@ -6658,10 +5337,7 @@
   {
     "id": "sacredfire",
     "name": "Sacred Fire",
-    "aliases": [
-      "sacred fire",
-      "sacredfire"
-    ],
+    "aliases": ["sacred fire", "sacredfire"],
     "type": "Fire",
     "category": "Physical",
     "basePower": 100,
@@ -6672,10 +5348,7 @@
   {
     "id": "sacredsword",
     "name": "Sacred Sword",
-    "aliases": [
-      "sacred sword",
-      "sacredsword"
-    ],
+    "aliases": ["sacred sword", "sacredsword"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 90,
@@ -6686,9 +5359,7 @@
   {
     "id": "safeguard",
     "name": "Safeguard",
-    "aliases": [
-      "safeguard"
-    ],
+    "aliases": ["safeguard"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -6699,10 +5370,7 @@
   {
     "id": "saltcure",
     "name": "Salt Cure",
-    "aliases": [
-      "salt cure",
-      "saltcure"
-    ],
+    "aliases": ["salt cure", "saltcure"],
     "type": "Rock",
     "category": "Physical",
     "basePower": 40,
@@ -6713,10 +5381,7 @@
   {
     "id": "sandattack",
     "name": "Sand Attack",
-    "aliases": [
-      "sand attack",
-      "sandattack"
-    ],
+    "aliases": ["sand attack", "sandattack"],
     "type": "Ground",
     "category": "Status",
     "basePower": 0,
@@ -6727,10 +5392,7 @@
   {
     "id": "sandtomb",
     "name": "Sand Tomb",
-    "aliases": [
-      "sand tomb",
-      "sandtomb"
-    ],
+    "aliases": ["sand tomb", "sandtomb"],
     "type": "Ground",
     "category": "Physical",
     "basePower": 35,
@@ -6741,10 +5403,7 @@
   {
     "id": "sandsearstorm",
     "name": "Sandsear Storm",
-    "aliases": [
-      "sandsear storm",
-      "sandsearstorm"
-    ],
+    "aliases": ["sandsear storm", "sandsearstorm"],
     "type": "Ground",
     "category": "Special",
     "basePower": 100,
@@ -6755,9 +5414,7 @@
   {
     "id": "sandstorm",
     "name": "Sandstorm",
-    "aliases": [
-      "sandstorm"
-    ],
+    "aliases": ["sandstorm"],
     "type": "Rock",
     "category": "Status",
     "basePower": 0,
@@ -6768,9 +5425,7 @@
   {
     "id": "scald",
     "name": "Scald",
-    "aliases": [
-      "scald"
-    ],
+    "aliases": ["scald"],
     "type": "Water",
     "category": "Special",
     "basePower": 80,
@@ -6781,10 +5436,7 @@
   {
     "id": "scaleshot",
     "name": "Scale Shot",
-    "aliases": [
-      "scale shot",
-      "scaleshot"
-    ],
+    "aliases": ["scale shot", "scaleshot"],
     "type": "Dragon",
     "category": "Physical",
     "basePower": 25,
@@ -6795,10 +5447,7 @@
   {
     "id": "scaryface",
     "name": "Scary Face",
-    "aliases": [
-      "scary face",
-      "scaryface"
-    ],
+    "aliases": ["scary face", "scaryface"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -6809,10 +5458,7 @@
   {
     "id": "scorchingsands",
     "name": "Scorching Sands",
-    "aliases": [
-      "scorching sands",
-      "scorchingsands"
-    ],
+    "aliases": ["scorching sands", "scorchingsands"],
     "type": "Ground",
     "category": "Special",
     "basePower": 70,
@@ -6823,9 +5469,7 @@
   {
     "id": "scratch",
     "name": "Scratch",
-    "aliases": [
-      "scratch"
-    ],
+    "aliases": ["scratch"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 40,
@@ -6836,9 +5480,7 @@
   {
     "id": "screech",
     "name": "Screech",
-    "aliases": [
-      "screech"
-    ],
+    "aliases": ["screech"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -6849,10 +5491,7 @@
   {
     "id": "secretsword",
     "name": "Secret Sword",
-    "aliases": [
-      "secret sword",
-      "secretsword"
-    ],
+    "aliases": ["secret sword", "secretsword"],
     "type": "Fighting",
     "category": "Special",
     "basePower": 85,
@@ -6863,10 +5502,7 @@
   {
     "id": "seedbomb",
     "name": "Seed Bomb",
-    "aliases": [
-      "seed bomb",
-      "seedbomb"
-    ],
+    "aliases": ["seed bomb", "seedbomb"],
     "type": "Grass",
     "category": "Physical",
     "basePower": 80,
@@ -6877,10 +5513,7 @@
   {
     "id": "seedflare",
     "name": "Seed Flare",
-    "aliases": [
-      "seed flare",
-      "seedflare"
-    ],
+    "aliases": ["seed flare", "seedflare"],
     "type": "Grass",
     "category": "Special",
     "basePower": 120,
@@ -6891,10 +5524,7 @@
   {
     "id": "seismictoss",
     "name": "Seismic Toss",
-    "aliases": [
-      "seismic toss",
-      "seismictoss"
-    ],
+    "aliases": ["seismic toss", "seismictoss"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 0,
@@ -6905,11 +5535,7 @@
   {
     "id": "selfdestruct",
     "name": "Self-Destruct",
-    "aliases": [
-      "self-destruct",
-      "self destruct",
-      "selfdestruct"
-    ],
+    "aliases": ["self-destruct", "self destruct", "selfdestruct"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 200,
@@ -6920,10 +5546,7 @@
   {
     "id": "shadowball",
     "name": "Shadow Ball",
-    "aliases": [
-      "shadow ball",
-      "shadowball"
-    ],
+    "aliases": ["shadow ball", "shadowball"],
     "type": "Ghost",
     "category": "Special",
     "basePower": 80,
@@ -6934,10 +5557,7 @@
   {
     "id": "shadowclaw",
     "name": "Shadow Claw",
-    "aliases": [
-      "shadow claw",
-      "shadowclaw"
-    ],
+    "aliases": ["shadow claw", "shadowclaw"],
     "type": "Ghost",
     "category": "Physical",
     "basePower": 70,
@@ -6948,10 +5568,7 @@
   {
     "id": "shadowforce",
     "name": "Shadow Force",
-    "aliases": [
-      "shadow force",
-      "shadowforce"
-    ],
+    "aliases": ["shadow force", "shadowforce"],
     "type": "Ghost",
     "category": "Physical",
     "basePower": 120,
@@ -6962,10 +5579,7 @@
   {
     "id": "shadowpunch",
     "name": "Shadow Punch",
-    "aliases": [
-      "shadow punch",
-      "shadowpunch"
-    ],
+    "aliases": ["shadow punch", "shadowpunch"],
     "type": "Ghost",
     "category": "Physical",
     "basePower": 60,
@@ -6976,10 +5590,7 @@
   {
     "id": "shadowsneak",
     "name": "Shadow Sneak",
-    "aliases": [
-      "shadow sneak",
-      "shadowsneak"
-    ],
+    "aliases": ["shadow sneak", "shadowsneak"],
     "type": "Ghost",
     "category": "Physical",
     "basePower": 40,
@@ -6990,10 +5601,7 @@
   {
     "id": "shedtail",
     "name": "Shed Tail",
-    "aliases": [
-      "shed tail",
-      "shedtail"
-    ],
+    "aliases": ["shed tail", "shedtail"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -7004,10 +5612,7 @@
   {
     "id": "sheercold",
     "name": "Sheer Cold",
-    "aliases": [
-      "sheer cold",
-      "sheercold"
-    ],
+    "aliases": ["sheer cold", "sheercold"],
     "type": "Ice",
     "category": "Special",
     "basePower": 0,
@@ -7018,10 +5623,7 @@
   {
     "id": "shellsidearm",
     "name": "Shell Side Arm",
-    "aliases": [
-      "shell side arm",
-      "shellsidearm"
-    ],
+    "aliases": ["shell side arm", "shellsidearm"],
     "type": "Poison",
     "category": "Special",
     "basePower": 90,
@@ -7032,10 +5634,7 @@
   {
     "id": "shellsmash",
     "name": "Shell Smash",
-    "aliases": [
-      "shell smash",
-      "shellsmash"
-    ],
+    "aliases": ["shell smash", "shellsmash"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -7046,9 +5645,7 @@
   {
     "id": "shelter",
     "name": "Shelter",
-    "aliases": [
-      "shelter"
-    ],
+    "aliases": ["shelter"],
     "type": "Steel",
     "category": "Status",
     "basePower": 0,
@@ -7059,10 +5656,7 @@
   {
     "id": "shiftgear",
     "name": "Shift Gear",
-    "aliases": [
-      "shift gear",
-      "shiftgear"
-    ],
+    "aliases": ["shift gear", "shiftgear"],
     "type": "Steel",
     "category": "Status",
     "basePower": 0,
@@ -7073,10 +5667,7 @@
   {
     "id": "shockwave",
     "name": "Shock Wave",
-    "aliases": [
-      "shock wave",
-      "shockwave"
-    ],
+    "aliases": ["shock wave", "shockwave"],
     "type": "Electric",
     "category": "Special",
     "basePower": 60,
@@ -7087,10 +5678,7 @@
   {
     "id": "shoreup",
     "name": "Shore Up",
-    "aliases": [
-      "shore up",
-      "shoreup"
-    ],
+    "aliases": ["shore up", "shoreup"],
     "type": "Ground",
     "category": "Status",
     "basePower": 0,
@@ -7101,10 +5689,7 @@
   {
     "id": "silktrap",
     "name": "Silk Trap",
-    "aliases": [
-      "silk trap",
-      "silktrap"
-    ],
+    "aliases": ["silk trap", "silktrap"],
     "type": "Bug",
     "category": "Status",
     "basePower": 0,
@@ -7115,10 +5700,7 @@
   {
     "id": "simplebeam",
     "name": "Simple Beam",
-    "aliases": [
-      "simple beam",
-      "simplebeam"
-    ],
+    "aliases": ["simple beam", "simplebeam"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -7129,9 +5711,7 @@
   {
     "id": "sing",
     "name": "Sing",
-    "aliases": [
-      "sing"
-    ],
+    "aliases": ["sing"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -7142,9 +5722,7 @@
   {
     "id": "sketch",
     "name": "Sketch",
-    "aliases": [
-      "sketch"
-    ],
+    "aliases": ["sketch"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -7155,10 +5733,7 @@
   {
     "id": "skillswap",
     "name": "Skill Swap",
-    "aliases": [
-      "skill swap",
-      "skillswap"
-    ],
+    "aliases": ["skill swap", "skillswap"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -7169,10 +5744,7 @@
   {
     "id": "skittersmack",
     "name": "Skitter Smack",
-    "aliases": [
-      "skitter smack",
-      "skittersmack"
-    ],
+    "aliases": ["skitter smack", "skittersmack"],
     "type": "Bug",
     "category": "Physical",
     "basePower": 70,
@@ -7183,10 +5755,7 @@
   {
     "id": "skyattack",
     "name": "Sky Attack",
-    "aliases": [
-      "sky attack",
-      "skyattack"
-    ],
+    "aliases": ["sky attack", "skyattack"],
     "type": "Flying",
     "category": "Physical",
     "basePower": 140,
@@ -7197,10 +5766,7 @@
   {
     "id": "slackoff",
     "name": "Slack Off",
-    "aliases": [
-      "slack off",
-      "slackoff"
-    ],
+    "aliases": ["slack off", "slackoff"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -7211,9 +5777,7 @@
   {
     "id": "slam",
     "name": "Slam",
-    "aliases": [
-      "slam"
-    ],
+    "aliases": ["slam"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 80,
@@ -7224,9 +5788,7 @@
   {
     "id": "slash",
     "name": "Slash",
-    "aliases": [
-      "slash"
-    ],
+    "aliases": ["slash"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 70,
@@ -7237,10 +5799,7 @@
   {
     "id": "sleeppowder",
     "name": "Sleep Powder",
-    "aliases": [
-      "sleep powder",
-      "sleeppowder"
-    ],
+    "aliases": ["sleep powder", "sleeppowder"],
     "type": "Grass",
     "category": "Status",
     "basePower": 0,
@@ -7251,10 +5810,7 @@
   {
     "id": "sleeptalk",
     "name": "Sleep Talk",
-    "aliases": [
-      "sleep talk",
-      "sleeptalk"
-    ],
+    "aliases": ["sleep talk", "sleeptalk"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -7265,9 +5821,7 @@
   {
     "id": "sludge",
     "name": "Sludge",
-    "aliases": [
-      "sludge"
-    ],
+    "aliases": ["sludge"],
     "type": "Poison",
     "category": "Special",
     "basePower": 65,
@@ -7278,10 +5832,7 @@
   {
     "id": "sludgebomb",
     "name": "Sludge Bomb",
-    "aliases": [
-      "sludge bomb",
-      "sludgebomb"
-    ],
+    "aliases": ["sludge bomb", "sludgebomb"],
     "type": "Poison",
     "category": "Special",
     "basePower": 90,
@@ -7292,10 +5843,7 @@
   {
     "id": "sludgewave",
     "name": "Sludge Wave",
-    "aliases": [
-      "sludge wave",
-      "sludgewave"
-    ],
+    "aliases": ["sludge wave", "sludgewave"],
     "type": "Poison",
     "category": "Special",
     "basePower": 95,
@@ -7306,10 +5854,7 @@
   {
     "id": "smackdown",
     "name": "Smack Down",
-    "aliases": [
-      "smack down",
-      "smackdown"
-    ],
+    "aliases": ["smack down", "smackdown"],
     "type": "Rock",
     "category": "Physical",
     "basePower": 50,
@@ -7320,10 +5865,7 @@
   {
     "id": "smartstrike",
     "name": "Smart Strike",
-    "aliases": [
-      "smart strike",
-      "smartstrike"
-    ],
+    "aliases": ["smart strike", "smartstrike"],
     "type": "Steel",
     "category": "Physical",
     "basePower": 70,
@@ -7334,9 +5876,7 @@
   {
     "id": "smog",
     "name": "Smog",
-    "aliases": [
-      "smog"
-    ],
+    "aliases": ["smog"],
     "type": "Poison",
     "category": "Special",
     "basePower": 30,
@@ -7347,9 +5887,7 @@
   {
     "id": "smokescreen",
     "name": "Smokescreen",
-    "aliases": [
-      "smokescreen"
-    ],
+    "aliases": ["smokescreen"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -7358,11 +5896,20 @@
     "isSpread": false
   },
   {
+    "id": "snaptrap",
+    "name": "Snap Trap",
+    "aliases": ["snap trap", "snaptrap"],
+    "type": "Steel",
+    "category": "Physical",
+    "basePower": 35,
+    "accuracy": 100,
+    "target": "normal",
+    "isSpread": false
+  },
+  {
     "id": "snarl",
     "name": "Snarl",
-    "aliases": [
-      "snarl"
-    ],
+    "aliases": ["snarl"],
     "type": "Dark",
     "category": "Special",
     "basePower": 55,
@@ -7373,10 +5920,7 @@
   {
     "id": "snipeshot",
     "name": "Snipe Shot",
-    "aliases": [
-      "snipe shot",
-      "snipeshot"
-    ],
+    "aliases": ["snipe shot", "snipeshot"],
     "type": "Water",
     "category": "Special",
     "basePower": 80,
@@ -7387,9 +5931,7 @@
   {
     "id": "snore",
     "name": "Snore",
-    "aliases": [
-      "snore"
-    ],
+    "aliases": ["snore"],
     "type": "Normal",
     "category": "Special",
     "basePower": 50,
@@ -7400,9 +5942,7 @@
   {
     "id": "snowscape",
     "name": "Snowscape",
-    "aliases": [
-      "snowscape"
-    ],
+    "aliases": ["snowscape"],
     "type": "Ice",
     "category": "Status",
     "basePower": 0,
@@ -7413,9 +5953,7 @@
   {
     "id": "soak",
     "name": "Soak",
-    "aliases": [
-      "soak"
-    ],
+    "aliases": ["soak"],
     "type": "Water",
     "category": "Status",
     "basePower": 0,
@@ -7426,11 +5964,7 @@
   {
     "id": "softboiled",
     "name": "Soft-Boiled",
-    "aliases": [
-      "soft-boiled",
-      "soft boiled",
-      "softboiled"
-    ],
+    "aliases": ["soft-boiled", "soft boiled", "softboiled"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -7441,10 +5975,7 @@
   {
     "id": "solarbeam",
     "name": "Solar Beam",
-    "aliases": [
-      "solar beam",
-      "solarbeam"
-    ],
+    "aliases": ["solar beam", "solarbeam"],
     "type": "Grass",
     "category": "Special",
     "basePower": 120,
@@ -7455,10 +5986,7 @@
   {
     "id": "solarblade",
     "name": "Solar Blade",
-    "aliases": [
-      "solar blade",
-      "solarblade"
-    ],
+    "aliases": ["solar blade", "solarblade"],
     "type": "Grass",
     "category": "Physical",
     "basePower": 125,
@@ -7469,10 +5997,7 @@
   {
     "id": "spacialrend",
     "name": "Spacial Rend",
-    "aliases": [
-      "spacial rend",
-      "spacialrend"
-    ],
+    "aliases": ["spacial rend", "spacialrend"],
     "type": "Dragon",
     "category": "Special",
     "basePower": 100,
@@ -7483,9 +6008,7 @@
   {
     "id": "spark",
     "name": "Spark",
-    "aliases": [
-      "spark"
-    ],
+    "aliases": ["spark"],
     "type": "Electric",
     "category": "Physical",
     "basePower": 65,
@@ -7496,10 +6019,7 @@
   {
     "id": "sparklingaria",
     "name": "Sparkling Aria",
-    "aliases": [
-      "sparkling aria",
-      "sparklingaria"
-    ],
+    "aliases": ["sparkling aria", "sparklingaria"],
     "type": "Water",
     "category": "Special",
     "basePower": 90,
@@ -7510,10 +6030,7 @@
   {
     "id": "speedswap",
     "name": "Speed Swap",
-    "aliases": [
-      "speed swap",
-      "speedswap"
-    ],
+    "aliases": ["speed swap", "speedswap"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -7524,10 +6041,7 @@
   {
     "id": "spicyextract",
     "name": "Spicy Extract",
-    "aliases": [
-      "spicy extract",
-      "spicyextract"
-    ],
+    "aliases": ["spicy extract", "spicyextract"],
     "type": "Grass",
     "category": "Status",
     "basePower": 0,
@@ -7538,9 +6052,7 @@
   {
     "id": "spikes",
     "name": "Spikes",
-    "aliases": [
-      "spikes"
-    ],
+    "aliases": ["spikes"],
     "type": "Ground",
     "category": "Status",
     "basePower": 0,
@@ -7551,10 +6063,7 @@
   {
     "id": "spikyshield",
     "name": "Spiky Shield",
-    "aliases": [
-      "spiky shield",
-      "spikyshield"
-    ],
+    "aliases": ["spiky shield", "spikyshield"],
     "type": "Grass",
     "category": "Status",
     "basePower": 0,
@@ -7565,10 +6074,7 @@
   {
     "id": "spinout",
     "name": "Spin Out",
-    "aliases": [
-      "spin out",
-      "spinout"
-    ],
+    "aliases": ["spin out", "spinout"],
     "type": "Steel",
     "category": "Physical",
     "basePower": 100,
@@ -7579,10 +6085,7 @@
   {
     "id": "spiritbreak",
     "name": "Spirit Break",
-    "aliases": [
-      "spirit break",
-      "spiritbreak"
-    ],
+    "aliases": ["spirit break", "spiritbreak"],
     "type": "Fairy",
     "category": "Physical",
     "basePower": 75,
@@ -7593,13 +6096,10 @@
   {
     "id": "spiritshackle",
     "name": "Spirit Shackle",
-    "aliases": [
-      "spirit shackle",
-      "spiritshackle"
-    ],
+    "aliases": ["spirit shackle", "spiritshackle"],
     "type": "Ghost",
     "category": "Physical",
-    "basePower": 80,
+    "basePower": 90,
     "accuracy": 100,
     "target": "normal",
     "isSpread": false
@@ -7607,10 +6107,7 @@
   {
     "id": "spitup",
     "name": "Spit Up",
-    "aliases": [
-      "spit up",
-      "spitup"
-    ],
+    "aliases": ["spit up", "spitup"],
     "type": "Normal",
     "category": "Special",
     "basePower": 0,
@@ -7621,9 +6118,7 @@
   {
     "id": "spite",
     "name": "Spite",
-    "aliases": [
-      "spite"
-    ],
+    "aliases": ["spite"],
     "type": "Ghost",
     "category": "Status",
     "basePower": 0,
@@ -7634,9 +6129,7 @@
   {
     "id": "splash",
     "name": "Splash",
-    "aliases": [
-      "splash"
-    ],
+    "aliases": ["splash"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -7647,9 +6140,7 @@
   {
     "id": "spore",
     "name": "Spore",
-    "aliases": [
-      "spore"
-    ],
+    "aliases": ["spore"],
     "type": "Grass",
     "category": "Status",
     "basePower": 0,
@@ -7660,10 +6151,7 @@
   {
     "id": "springtidestorm",
     "name": "Springtide Storm",
-    "aliases": [
-      "springtide storm",
-      "springtidestorm"
-    ],
+    "aliases": ["springtide storm", "springtidestorm"],
     "type": "Fairy",
     "category": "Special",
     "basePower": 100,
@@ -7674,10 +6162,7 @@
   {
     "id": "stealthrock",
     "name": "Stealth Rock",
-    "aliases": [
-      "stealth rock",
-      "stealthrock"
-    ],
+    "aliases": ["stealth rock", "stealthrock"],
     "type": "Rock",
     "category": "Status",
     "basePower": 0,
@@ -7688,10 +6173,7 @@
   {
     "id": "steameruption",
     "name": "Steam Eruption",
-    "aliases": [
-      "steam eruption",
-      "steameruption"
-    ],
+    "aliases": ["steam eruption", "steameruption"],
     "type": "Water",
     "category": "Special",
     "basePower": 110,
@@ -7702,10 +6184,7 @@
   {
     "id": "steelbeam",
     "name": "Steel Beam",
-    "aliases": [
-      "steel beam",
-      "steelbeam"
-    ],
+    "aliases": ["steel beam", "steelbeam"],
     "type": "Steel",
     "category": "Special",
     "basePower": 140,
@@ -7716,10 +6195,7 @@
   {
     "id": "steelroller",
     "name": "Steel Roller",
-    "aliases": [
-      "steel roller",
-      "steelroller"
-    ],
+    "aliases": ["steel roller", "steelroller"],
     "type": "Steel",
     "category": "Physical",
     "basePower": 130,
@@ -7730,10 +6206,7 @@
   {
     "id": "steelwing",
     "name": "Steel Wing",
-    "aliases": [
-      "steel wing",
-      "steelwing"
-    ],
+    "aliases": ["steel wing", "steelwing"],
     "type": "Steel",
     "category": "Physical",
     "basePower": 70,
@@ -7744,10 +6217,7 @@
   {
     "id": "stickyweb",
     "name": "Sticky Web",
-    "aliases": [
-      "sticky web",
-      "stickyweb"
-    ],
+    "aliases": ["sticky web", "stickyweb"],
     "type": "Bug",
     "category": "Status",
     "basePower": 0,
@@ -7758,9 +6228,7 @@
   {
     "id": "stockpile",
     "name": "Stockpile",
-    "aliases": [
-      "stockpile"
-    ],
+    "aliases": ["stockpile"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -7771,9 +6239,7 @@
   {
     "id": "stomp",
     "name": "Stomp",
-    "aliases": [
-      "stomp"
-    ],
+    "aliases": ["stomp"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 65,
@@ -7784,10 +6250,7 @@
   {
     "id": "stompingtantrum",
     "name": "Stomping Tantrum",
-    "aliases": [
-      "stomping tantrum",
-      "stompingtantrum"
-    ],
+    "aliases": ["stomping tantrum", "stompingtantrum"],
     "type": "Ground",
     "category": "Physical",
     "basePower": 75,
@@ -7798,10 +6261,7 @@
   {
     "id": "stoneaxe",
     "name": "Stone Axe",
-    "aliases": [
-      "stone axe",
-      "stoneaxe"
-    ],
+    "aliases": ["stone axe", "stoneaxe"],
     "type": "Rock",
     "category": "Physical",
     "basePower": 65,
@@ -7812,10 +6272,7 @@
   {
     "id": "stoneedge",
     "name": "Stone Edge",
-    "aliases": [
-      "stone edge",
-      "stoneedge"
-    ],
+    "aliases": ["stone edge", "stoneedge"],
     "type": "Rock",
     "category": "Physical",
     "basePower": 100,
@@ -7826,10 +6283,7 @@
   {
     "id": "storedpower",
     "name": "Stored Power",
-    "aliases": [
-      "stored power",
-      "storedpower"
-    ],
+    "aliases": ["stored power", "storedpower"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 20,
@@ -7840,10 +6294,7 @@
   {
     "id": "strangesteam",
     "name": "Strange Steam",
-    "aliases": [
-      "strange steam",
-      "strangesteam"
-    ],
+    "aliases": ["strange steam", "strangesteam"],
     "type": "Fairy",
     "category": "Special",
     "basePower": 90,
@@ -7854,9 +6305,7 @@
   {
     "id": "strength",
     "name": "Strength",
-    "aliases": [
-      "strength"
-    ],
+    "aliases": ["strength"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 80,
@@ -7867,10 +6316,7 @@
   {
     "id": "strengthsap",
     "name": "Strength Sap",
-    "aliases": [
-      "strength sap",
-      "strengthsap"
-    ],
+    "aliases": ["strength sap", "strengthsap"],
     "type": "Grass",
     "category": "Status",
     "basePower": 0,
@@ -7881,10 +6327,7 @@
   {
     "id": "stringshot",
     "name": "String Shot",
-    "aliases": [
-      "string shot",
-      "stringshot"
-    ],
+    "aliases": ["string shot", "stringshot"],
     "type": "Bug",
     "category": "Status",
     "basePower": 0,
@@ -7895,9 +6338,7 @@
   {
     "id": "struggle",
     "name": "Struggle",
-    "aliases": [
-      "struggle"
-    ],
+    "aliases": ["struggle"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 50,
@@ -7908,10 +6349,7 @@
   {
     "id": "strugglebug",
     "name": "Struggle Bug",
-    "aliases": [
-      "struggle bug",
-      "strugglebug"
-    ],
+    "aliases": ["struggle bug", "strugglebug"],
     "type": "Bug",
     "category": "Special",
     "basePower": 50,
@@ -7922,10 +6360,7 @@
   {
     "id": "stuffcheeks",
     "name": "Stuff Cheeks",
-    "aliases": [
-      "stuff cheeks",
-      "stuffcheeks"
-    ],
+    "aliases": ["stuff cheeks", "stuffcheeks"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -7936,10 +6371,7 @@
   {
     "id": "stunspore",
     "name": "Stun Spore",
-    "aliases": [
-      "stun spore",
-      "stunspore"
-    ],
+    "aliases": ["stun spore", "stunspore"],
     "type": "Grass",
     "category": "Status",
     "basePower": 0,
@@ -7950,9 +6382,7 @@
   {
     "id": "substitute",
     "name": "Substitute",
-    "aliases": [
-      "substitute"
-    ],
+    "aliases": ["substitute"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -7963,10 +6393,7 @@
   {
     "id": "suckerpunch",
     "name": "Sucker Punch",
-    "aliases": [
-      "sucker punch",
-      "suckerpunch"
-    ],
+    "aliases": ["sucker punch", "suckerpunch"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 70,
@@ -7977,10 +6404,7 @@
   {
     "id": "sunnyday",
     "name": "Sunny Day",
-    "aliases": [
-      "sunny day",
-      "sunnyday"
-    ],
+    "aliases": ["sunny day", "sunnyday"],
     "type": "Fire",
     "category": "Status",
     "basePower": 0,
@@ -7991,10 +6415,7 @@
   {
     "id": "sunsteelstrike",
     "name": "Sunsteel Strike",
-    "aliases": [
-      "sunsteel strike",
-      "sunsteelstrike"
-    ],
+    "aliases": ["sunsteel strike", "sunsteelstrike"],
     "type": "Steel",
     "category": "Physical",
     "basePower": 100,
@@ -8005,10 +6426,7 @@
   {
     "id": "superfang",
     "name": "Super Fang",
-    "aliases": [
-      "super fang",
-      "superfang"
-    ],
+    "aliases": ["super fang", "superfang"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 0,
@@ -8019,10 +6437,7 @@
   {
     "id": "supercellslam",
     "name": "Supercell Slam",
-    "aliases": [
-      "supercell slam",
-      "supercellslam"
-    ],
+    "aliases": ["supercell slam", "supercellslam"],
     "type": "Electric",
     "category": "Physical",
     "basePower": 100,
@@ -8033,9 +6448,7 @@
   {
     "id": "superpower",
     "name": "Superpower",
-    "aliases": [
-      "superpower"
-    ],
+    "aliases": ["superpower"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 120,
@@ -8046,9 +6459,7 @@
   {
     "id": "supersonic",
     "name": "Supersonic",
-    "aliases": [
-      "supersonic"
-    ],
+    "aliases": ["supersonic"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -8059,9 +6470,7 @@
   {
     "id": "surf",
     "name": "Surf",
-    "aliases": [
-      "surf"
-    ],
+    "aliases": ["surf"],
     "type": "Water",
     "category": "Special",
     "basePower": 90,
@@ -8072,10 +6481,7 @@
   {
     "id": "surgingstrikes",
     "name": "Surging Strikes",
-    "aliases": [
-      "surging strikes",
-      "surgingstrikes"
-    ],
+    "aliases": ["surging strikes", "surgingstrikes"],
     "type": "Water",
     "category": "Physical",
     "basePower": 25,
@@ -8086,9 +6492,7 @@
   {
     "id": "swagger",
     "name": "Swagger",
-    "aliases": [
-      "swagger"
-    ],
+    "aliases": ["swagger"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -8099,9 +6503,7 @@
   {
     "id": "swallow",
     "name": "Swallow",
-    "aliases": [
-      "swallow"
-    ],
+    "aliases": ["swallow"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -8112,10 +6514,7 @@
   {
     "id": "sweetkiss",
     "name": "Sweet Kiss",
-    "aliases": [
-      "sweet kiss",
-      "sweetkiss"
-    ],
+    "aliases": ["sweet kiss", "sweetkiss"],
     "type": "Fairy",
     "category": "Status",
     "basePower": 0,
@@ -8126,10 +6525,7 @@
   {
     "id": "sweetscent",
     "name": "Sweet Scent",
-    "aliases": [
-      "sweet scent",
-      "sweetscent"
-    ],
+    "aliases": ["sweet scent", "sweetscent"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -8140,9 +6536,7 @@
   {
     "id": "swift",
     "name": "Swift",
-    "aliases": [
-      "swift"
-    ],
+    "aliases": ["swift"],
     "type": "Normal",
     "category": "Special",
     "basePower": 60,
@@ -8153,9 +6547,7 @@
   {
     "id": "switcheroo",
     "name": "Switcheroo",
-    "aliases": [
-      "switcheroo"
-    ],
+    "aliases": ["switcheroo"],
     "type": "Dark",
     "category": "Status",
     "basePower": 0,
@@ -8166,10 +6558,7 @@
   {
     "id": "swordsdance",
     "name": "Swords Dance",
-    "aliases": [
-      "swords dance",
-      "swordsdance"
-    ],
+    "aliases": ["swords dance", "swordsdance"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -8180,9 +6569,7 @@
   {
     "id": "synthesis",
     "name": "Synthesis",
-    "aliases": [
-      "synthesis"
-    ],
+    "aliases": ["synthesis"],
     "type": "Grass",
     "category": "Status",
     "basePower": 0,
@@ -8193,24 +6580,18 @@
   {
     "id": "syrupbomb",
     "name": "Syrup Bomb",
-    "aliases": [
-      "syrup bomb",
-      "syrupbomb"
-    ],
+    "aliases": ["syrup bomb", "syrupbomb"],
     "type": "Grass",
     "category": "Special",
     "basePower": 60,
-    "accuracy": 85,
+    "accuracy": 90,
     "target": "normal",
     "isSpread": false
   },
   {
     "id": "tachyoncutter",
     "name": "Tachyon Cutter",
-    "aliases": [
-      "tachyon cutter",
-      "tachyoncutter"
-    ],
+    "aliases": ["tachyon cutter", "tachyoncutter"],
     "type": "Steel",
     "category": "Special",
     "basePower": 50,
@@ -8221,9 +6602,7 @@
   {
     "id": "tackle",
     "name": "Tackle",
-    "aliases": [
-      "tackle"
-    ],
+    "aliases": ["tackle"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 40,
@@ -8234,10 +6613,7 @@
   {
     "id": "tailglow",
     "name": "Tail Glow",
-    "aliases": [
-      "tail glow",
-      "tailglow"
-    ],
+    "aliases": ["tail glow", "tailglow"],
     "type": "Bug",
     "category": "Status",
     "basePower": 0,
@@ -8248,10 +6624,7 @@
   {
     "id": "tailslap",
     "name": "Tail Slap",
-    "aliases": [
-      "tail slap",
-      "tailslap"
-    ],
+    "aliases": ["tail slap", "tailslap"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 25,
@@ -8262,10 +6635,7 @@
   {
     "id": "tailwhip",
     "name": "Tail Whip",
-    "aliases": [
-      "tail whip",
-      "tailwhip"
-    ],
+    "aliases": ["tail whip", "tailwhip"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -8276,9 +6646,7 @@
   {
     "id": "tailwind",
     "name": "Tailwind",
-    "aliases": [
-      "tailwind"
-    ],
+    "aliases": ["tailwind"],
     "type": "Flying",
     "category": "Status",
     "basePower": 0,
@@ -8289,10 +6657,7 @@
   {
     "id": "takedown",
     "name": "Take Down",
-    "aliases": [
-      "take down",
-      "takedown"
-    ],
+    "aliases": ["take down", "takedown"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 90,
@@ -8303,10 +6668,7 @@
   {
     "id": "takeheart",
     "name": "Take Heart",
-    "aliases": [
-      "take heart",
-      "takeheart"
-    ],
+    "aliases": ["take heart", "takeheart"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -8317,10 +6679,7 @@
   {
     "id": "tarshot",
     "name": "Tar Shot",
-    "aliases": [
-      "tar shot",
-      "tarshot"
-    ],
+    "aliases": ["tar shot", "tarshot"],
     "type": "Rock",
     "category": "Status",
     "basePower": 0,
@@ -8331,9 +6690,7 @@
   {
     "id": "taunt",
     "name": "Taunt",
-    "aliases": [
-      "taunt"
-    ],
+    "aliases": ["taunt"],
     "type": "Dark",
     "category": "Status",
     "basePower": 0,
@@ -8344,10 +6701,7 @@
   {
     "id": "tearfullook",
     "name": "Tearful Look",
-    "aliases": [
-      "tearful look",
-      "tearfullook"
-    ],
+    "aliases": ["tearful look", "tearfullook"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -8358,9 +6712,7 @@
   {
     "id": "teatime",
     "name": "Teatime",
-    "aliases": [
-      "teatime"
-    ],
+    "aliases": ["teatime"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -8371,10 +6723,7 @@
   {
     "id": "teeterdance",
     "name": "Teeter Dance",
-    "aliases": [
-      "teeter dance",
-      "teeterdance"
-    ],
+    "aliases": ["teeter dance", "teeterdance"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -8385,9 +6734,7 @@
   {
     "id": "teleport",
     "name": "Teleport",
-    "aliases": [
-      "teleport"
-    ],
+    "aliases": ["teleport"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -8398,10 +6745,7 @@
   {
     "id": "temperflare",
     "name": "Temper Flare",
-    "aliases": [
-      "temper flare",
-      "temperflare"
-    ],
+    "aliases": ["temper flare", "temperflare"],
     "type": "Fire",
     "category": "Physical",
     "basePower": 75,
@@ -8412,10 +6756,7 @@
   {
     "id": "terablast",
     "name": "Tera Blast",
-    "aliases": [
-      "tera blast",
-      "terablast"
-    ],
+    "aliases": ["tera blast", "terablast"],
     "type": "Normal",
     "category": "Special",
     "basePower": 80,
@@ -8426,10 +6767,7 @@
   {
     "id": "terastarstorm",
     "name": "Tera Starstorm",
-    "aliases": [
-      "tera starstorm",
-      "terastarstorm"
-    ],
+    "aliases": ["tera starstorm", "terastarstorm"],
     "type": "Normal",
     "category": "Special",
     "basePower": 120,
@@ -8440,10 +6778,7 @@
   {
     "id": "terrainpulse",
     "name": "Terrain Pulse",
-    "aliases": [
-      "terrain pulse",
-      "terrainpulse"
-    ],
+    "aliases": ["terrain pulse", "terrainpulse"],
     "type": "Normal",
     "category": "Special",
     "basePower": 50,
@@ -8454,9 +6789,7 @@
   {
     "id": "thief",
     "name": "Thief",
-    "aliases": [
-      "thief"
-    ],
+    "aliases": ["thief"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 60,
@@ -8467,9 +6800,7 @@
   {
     "id": "thrash",
     "name": "Thrash",
-    "aliases": [
-      "thrash"
-    ],
+    "aliases": ["thrash"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 120,
@@ -8480,10 +6811,7 @@
   {
     "id": "throatchop",
     "name": "Throat Chop",
-    "aliases": [
-      "throat chop",
-      "throatchop"
-    ],
+    "aliases": ["throat chop", "throatchop"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 80,
@@ -8494,9 +6822,7 @@
   {
     "id": "thunder",
     "name": "Thunder",
-    "aliases": [
-      "thunder"
-    ],
+    "aliases": ["thunder"],
     "type": "Electric",
     "category": "Special",
     "basePower": 110,
@@ -8507,10 +6833,7 @@
   {
     "id": "thundercage",
     "name": "Thunder Cage",
-    "aliases": [
-      "thunder cage",
-      "thundercage"
-    ],
+    "aliases": ["thunder cage", "thundercage"],
     "type": "Electric",
     "category": "Special",
     "basePower": 80,
@@ -8521,10 +6844,7 @@
   {
     "id": "thunderfang",
     "name": "Thunder Fang",
-    "aliases": [
-      "thunder fang",
-      "thunderfang"
-    ],
+    "aliases": ["thunder fang", "thunderfang"],
     "type": "Electric",
     "category": "Physical",
     "basePower": 65,
@@ -8535,10 +6855,7 @@
   {
     "id": "thunderpunch",
     "name": "Thunder Punch",
-    "aliases": [
-      "thunder punch",
-      "thunderpunch"
-    ],
+    "aliases": ["thunder punch", "thunderpunch"],
     "type": "Electric",
     "category": "Physical",
     "basePower": 75,
@@ -8549,10 +6866,7 @@
   {
     "id": "thundershock",
     "name": "Thunder Shock",
-    "aliases": [
-      "thunder shock",
-      "thundershock"
-    ],
+    "aliases": ["thunder shock", "thundershock"],
     "type": "Electric",
     "category": "Special",
     "basePower": 40,
@@ -8563,10 +6877,7 @@
   {
     "id": "thunderwave",
     "name": "Thunder Wave",
-    "aliases": [
-      "thunder wave",
-      "thunderwave"
-    ],
+    "aliases": ["thunder wave", "thunderwave"],
     "type": "Electric",
     "category": "Status",
     "basePower": 0,
@@ -8577,9 +6888,7 @@
   {
     "id": "thunderbolt",
     "name": "Thunderbolt",
-    "aliases": [
-      "thunderbolt"
-    ],
+    "aliases": ["thunderbolt"],
     "type": "Electric",
     "category": "Special",
     "basePower": 90,
@@ -8590,9 +6899,7 @@
   {
     "id": "thunderclap",
     "name": "Thunderclap",
-    "aliases": [
-      "thunderclap"
-    ],
+    "aliases": ["thunderclap"],
     "type": "Electric",
     "category": "Special",
     "basePower": 70,
@@ -8603,10 +6910,7 @@
   {
     "id": "thunderouskick",
     "name": "Thunderous Kick",
-    "aliases": [
-      "thunderous kick",
-      "thunderouskick"
-    ],
+    "aliases": ["thunderous kick", "thunderouskick"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 90,
@@ -8617,9 +6921,7 @@
   {
     "id": "tickle",
     "name": "Tickle",
-    "aliases": [
-      "tickle"
-    ],
+    "aliases": ["tickle"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -8630,10 +6932,7 @@
   {
     "id": "tidyup",
     "name": "Tidy Up",
-    "aliases": [
-      "tidy up",
-      "tidyup"
-    ],
+    "aliases": ["tidy up", "tidyup"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -8644,11 +6943,7 @@
   {
     "id": "topsyturvy",
     "name": "Topsy-Turvy",
-    "aliases": [
-      "topsy-turvy",
-      "topsy turvy",
-      "topsyturvy"
-    ],
+    "aliases": ["topsy-turvy", "topsy turvy", "topsyturvy"],
     "type": "Dark",
     "category": "Status",
     "basePower": 0,
@@ -8659,10 +6954,7 @@
   {
     "id": "torchsong",
     "name": "Torch Song",
-    "aliases": [
-      "torch song",
-      "torchsong"
-    ],
+    "aliases": ["torch song", "torchsong"],
     "type": "Fire",
     "category": "Special",
     "basePower": 80,
@@ -8673,9 +6965,7 @@
   {
     "id": "torment",
     "name": "Torment",
-    "aliases": [
-      "torment"
-    ],
+    "aliases": ["torment"],
     "type": "Dark",
     "category": "Status",
     "basePower": 0,
@@ -8686,9 +6976,7 @@
   {
     "id": "toxic",
     "name": "Toxic",
-    "aliases": [
-      "toxic"
-    ],
+    "aliases": ["toxic"],
     "type": "Poison",
     "category": "Status",
     "basePower": 0,
@@ -8699,10 +6987,7 @@
   {
     "id": "toxicspikes",
     "name": "Toxic Spikes",
-    "aliases": [
-      "toxic spikes",
-      "toxicspikes"
-    ],
+    "aliases": ["toxic spikes", "toxicspikes"],
     "type": "Poison",
     "category": "Status",
     "basePower": 0,
@@ -8713,10 +6998,7 @@
   {
     "id": "toxicthread",
     "name": "Toxic Thread",
-    "aliases": [
-      "toxic thread",
-      "toxicthread"
-    ],
+    "aliases": ["toxic thread", "toxicthread"],
     "type": "Poison",
     "category": "Status",
     "basePower": 0,
@@ -8727,9 +7009,7 @@
   {
     "id": "trailblaze",
     "name": "Trailblaze",
-    "aliases": [
-      "trailblaze"
-    ],
+    "aliases": ["trailblaze"],
     "type": "Grass",
     "category": "Physical",
     "basePower": 50,
@@ -8740,9 +7020,7 @@
   {
     "id": "transform",
     "name": "Transform",
-    "aliases": [
-      "transform"
-    ],
+    "aliases": ["transform"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -8753,10 +7031,7 @@
   {
     "id": "triattack",
     "name": "Tri Attack",
-    "aliases": [
-      "tri attack",
-      "triattack"
-    ],
+    "aliases": ["tri attack", "triattack"],
     "type": "Normal",
     "category": "Special",
     "basePower": 80,
@@ -8767,9 +7042,7 @@
   {
     "id": "trick",
     "name": "Trick",
-    "aliases": [
-      "trick"
-    ],
+    "aliases": ["trick"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -8780,10 +7053,7 @@
   {
     "id": "trickroom",
     "name": "Trick Room",
-    "aliases": [
-      "trick room",
-      "trickroom"
-    ],
+    "aliases": ["trick room", "trickroom"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -8794,10 +7064,7 @@
   {
     "id": "triplearrows",
     "name": "Triple Arrows",
-    "aliases": [
-      "triple arrows",
-      "triplearrows"
-    ],
+    "aliases": ["triple arrows", "triplearrows"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 90,
@@ -8808,10 +7075,7 @@
   {
     "id": "tripleaxel",
     "name": "Triple Axel",
-    "aliases": [
-      "triple axel",
-      "tripleaxel"
-    ],
+    "aliases": ["triple axel", "tripleaxel"],
     "type": "Ice",
     "category": "Physical",
     "basePower": 20,
@@ -8822,10 +7086,7 @@
   {
     "id": "tripledive",
     "name": "Triple Dive",
-    "aliases": [
-      "triple dive",
-      "tripledive"
-    ],
+    "aliases": ["triple dive", "tripledive"],
     "type": "Water",
     "category": "Physical",
     "basePower": 30,
@@ -8836,10 +7097,7 @@
   {
     "id": "triplekick",
     "name": "Triple Kick",
-    "aliases": [
-      "triple kick",
-      "triplekick"
-    ],
+    "aliases": ["triple kick", "triplekick"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 10,
@@ -8850,13 +7108,10 @@
   {
     "id": "tropkick",
     "name": "Trop Kick",
-    "aliases": [
-      "trop kick",
-      "tropkick"
-    ],
+    "aliases": ["trop kick", "tropkick"],
     "type": "Grass",
     "category": "Physical",
-    "basePower": 70,
+    "basePower": 85,
     "accuracy": 100,
     "target": "normal",
     "isSpread": false
@@ -8864,10 +7119,7 @@
   {
     "id": "twinbeam",
     "name": "Twin Beam",
-    "aliases": [
-      "twin beam",
-      "twinbeam"
-    ],
+    "aliases": ["twin beam", "twinbeam"],
     "type": "Psychic",
     "category": "Special",
     "basePower": 40,
@@ -8878,9 +7130,7 @@
   {
     "id": "twister",
     "name": "Twister",
-    "aliases": [
-      "twister"
-    ],
+    "aliases": ["twister"],
     "type": "Dragon",
     "category": "Special",
     "basePower": 40,
@@ -8891,11 +7141,7 @@
   {
     "id": "uturn",
     "name": "U-turn",
-    "aliases": [
-      "u-turn",
-      "u turn",
-      "uturn"
-    ],
+    "aliases": ["u-turn", "u turn", "uturn"],
     "type": "Bug",
     "category": "Physical",
     "basePower": 70,
@@ -8906,10 +7152,7 @@
   {
     "id": "upperhand",
     "name": "Upper Hand",
-    "aliases": [
-      "upper hand",
-      "upperhand"
-    ],
+    "aliases": ["upper hand", "upperhand"],
     "type": "Fighting",
     "category": "Physical",
     "basePower": 65,
@@ -8920,9 +7163,7 @@
   {
     "id": "uproar",
     "name": "Uproar",
-    "aliases": [
-      "uproar"
-    ],
+    "aliases": ["uproar"],
     "type": "Normal",
     "category": "Special",
     "basePower": 90,
@@ -8933,10 +7174,7 @@
   {
     "id": "vacuumwave",
     "name": "Vacuum Wave",
-    "aliases": [
-      "vacuum wave",
-      "vacuumwave"
-    ],
+    "aliases": ["vacuum wave", "vacuumwave"],
     "type": "Fighting",
     "category": "Special",
     "basePower": 40,
@@ -8947,9 +7185,7 @@
   {
     "id": "venoshock",
     "name": "Venoshock",
-    "aliases": [
-      "venoshock"
-    ],
+    "aliases": ["venoshock"],
     "type": "Poison",
     "category": "Special",
     "basePower": 65,
@@ -8960,10 +7196,7 @@
   {
     "id": "victorydance",
     "name": "Victory Dance",
-    "aliases": [
-      "victory dance",
-      "victorydance"
-    ],
+    "aliases": ["victory dance", "victorydance"],
     "type": "Fighting",
     "category": "Status",
     "basePower": 0,
@@ -8974,10 +7207,7 @@
   {
     "id": "vinewhip",
     "name": "Vine Whip",
-    "aliases": [
-      "vine whip",
-      "vinewhip"
-    ],
+    "aliases": ["vine whip", "vinewhip"],
     "type": "Grass",
     "category": "Physical",
     "basePower": 45,
@@ -8988,10 +7218,7 @@
   {
     "id": "visegrip",
     "name": "Vise Grip",
-    "aliases": [
-      "vise grip",
-      "visegrip"
-    ],
+    "aliases": ["vise grip", "visegrip"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 55,
@@ -9002,10 +7229,7 @@
   {
     "id": "voltswitch",
     "name": "Volt Switch",
-    "aliases": [
-      "volt switch",
-      "voltswitch"
-    ],
+    "aliases": ["volt switch", "voltswitch"],
     "type": "Electric",
     "category": "Special",
     "basePower": 70,
@@ -9016,10 +7240,7 @@
   {
     "id": "volttackle",
     "name": "Volt Tackle",
-    "aliases": [
-      "volt tackle",
-      "volttackle"
-    ],
+    "aliases": ["volt tackle", "volttackle"],
     "type": "Electric",
     "category": "Physical",
     "basePower": 120,
@@ -9030,10 +7251,7 @@
   {
     "id": "watergun",
     "name": "Water Gun",
-    "aliases": [
-      "water gun",
-      "watergun"
-    ],
+    "aliases": ["water gun", "watergun"],
     "type": "Water",
     "category": "Special",
     "basePower": 40,
@@ -9044,10 +7262,7 @@
   {
     "id": "waterpledge",
     "name": "Water Pledge",
-    "aliases": [
-      "water pledge",
-      "waterpledge"
-    ],
+    "aliases": ["water pledge", "waterpledge"],
     "type": "Water",
     "category": "Special",
     "basePower": 80,
@@ -9058,10 +7273,7 @@
   {
     "id": "waterpulse",
     "name": "Water Pulse",
-    "aliases": [
-      "water pulse",
-      "waterpulse"
-    ],
+    "aliases": ["water pulse", "waterpulse"],
     "type": "Water",
     "category": "Special",
     "basePower": 60,
@@ -9072,10 +7284,7 @@
   {
     "id": "watershuriken",
     "name": "Water Shuriken",
-    "aliases": [
-      "water shuriken",
-      "watershuriken"
-    ],
+    "aliases": ["water shuriken", "watershuriken"],
     "type": "Water",
     "category": "Special",
     "basePower": 15,
@@ -9086,10 +7295,7 @@
   {
     "id": "waterspout",
     "name": "Water Spout",
-    "aliases": [
-      "water spout",
-      "waterspout"
-    ],
+    "aliases": ["water spout", "waterspout"],
     "type": "Water",
     "category": "Special",
     "basePower": 150,
@@ -9100,9 +7306,7 @@
   {
     "id": "waterfall",
     "name": "Waterfall",
-    "aliases": [
-      "waterfall"
-    ],
+    "aliases": ["waterfall"],
     "type": "Water",
     "category": "Physical",
     "basePower": 80,
@@ -9113,10 +7317,7 @@
   {
     "id": "wavecrash",
     "name": "Wave Crash",
-    "aliases": [
-      "wave crash",
-      "wavecrash"
-    ],
+    "aliases": ["wave crash", "wavecrash"],
     "type": "Water",
     "category": "Physical",
     "basePower": 120,
@@ -9127,10 +7328,7 @@
   {
     "id": "weatherball",
     "name": "Weather Ball",
-    "aliases": [
-      "weather ball",
-      "weatherball"
-    ],
+    "aliases": ["weather ball", "weatherball"],
     "type": "Normal",
     "category": "Special",
     "basePower": 50,
@@ -9141,9 +7339,7 @@
   {
     "id": "whirlpool",
     "name": "Whirlpool",
-    "aliases": [
-      "whirlpool"
-    ],
+    "aliases": ["whirlpool"],
     "type": "Water",
     "category": "Special",
     "basePower": 35,
@@ -9154,9 +7350,7 @@
   {
     "id": "whirlwind",
     "name": "Whirlwind",
-    "aliases": [
-      "whirlwind"
-    ],
+    "aliases": ["whirlwind"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -9167,10 +7361,7 @@
   {
     "id": "wickedblow",
     "name": "Wicked Blow",
-    "aliases": [
-      "wicked blow",
-      "wickedblow"
-    ],
+    "aliases": ["wicked blow", "wickedblow"],
     "type": "Dark",
     "category": "Physical",
     "basePower": 75,
@@ -9181,10 +7372,7 @@
   {
     "id": "wideguard",
     "name": "Wide Guard",
-    "aliases": [
-      "wide guard",
-      "wideguard"
-    ],
+    "aliases": ["wide guard", "wideguard"],
     "type": "Rock",
     "category": "Status",
     "basePower": 0,
@@ -9195,10 +7383,7 @@
   {
     "id": "wildcharge",
     "name": "Wild Charge",
-    "aliases": [
-      "wild charge",
-      "wildcharge"
-    ],
+    "aliases": ["wild charge", "wildcharge"],
     "type": "Electric",
     "category": "Physical",
     "basePower": 90,
@@ -9209,10 +7394,7 @@
   {
     "id": "wildboltstorm",
     "name": "Wildbolt Storm",
-    "aliases": [
-      "wildbolt storm",
-      "wildboltstorm"
-    ],
+    "aliases": ["wildbolt storm", "wildboltstorm"],
     "type": "Electric",
     "category": "Special",
     "basePower": 100,
@@ -9223,11 +7405,7 @@
   {
     "id": "willowisp",
     "name": "Will-O-Wisp",
-    "aliases": [
-      "will-o-wisp",
-      "will o wisp",
-      "willowisp"
-    ],
+    "aliases": ["will-o-wisp", "will o wisp", "willowisp"],
     "type": "Fire",
     "category": "Status",
     "basePower": 0,
@@ -9238,10 +7416,7 @@
   {
     "id": "wingattack",
     "name": "Wing Attack",
-    "aliases": [
-      "wing attack",
-      "wingattack"
-    ],
+    "aliases": ["wing attack", "wingattack"],
     "type": "Flying",
     "category": "Physical",
     "basePower": 60,
@@ -9252,9 +7427,7 @@
   {
     "id": "wish",
     "name": "Wish",
-    "aliases": [
-      "wish"
-    ],
+    "aliases": ["wish"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -9265,9 +7438,7 @@
   {
     "id": "withdraw",
     "name": "Withdraw",
-    "aliases": [
-      "withdraw"
-    ],
+    "aliases": ["withdraw"],
     "type": "Water",
     "category": "Status",
     "basePower": 0,
@@ -9278,10 +7449,7 @@
   {
     "id": "wonderroom",
     "name": "Wonder Room",
-    "aliases": [
-      "wonder room",
-      "wonderroom"
-    ],
+    "aliases": ["wonder room", "wonderroom"],
     "type": "Psychic",
     "category": "Status",
     "basePower": 0,
@@ -9292,10 +7460,7 @@
   {
     "id": "woodhammer",
     "name": "Wood Hammer",
-    "aliases": [
-      "wood hammer",
-      "woodhammer"
-    ],
+    "aliases": ["wood hammer", "woodhammer"],
     "type": "Grass",
     "category": "Physical",
     "basePower": 120,
@@ -9306,10 +7471,7 @@
   {
     "id": "workup",
     "name": "Work Up",
-    "aliases": [
-      "work up",
-      "workup"
-    ],
+    "aliases": ["work up", "workup"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -9320,10 +7482,7 @@
   {
     "id": "worryseed",
     "name": "Worry Seed",
-    "aliases": [
-      "worry seed",
-      "worryseed"
-    ],
+    "aliases": ["worry seed", "worryseed"],
     "type": "Grass",
     "category": "Status",
     "basePower": 0,
@@ -9334,9 +7493,7 @@
   {
     "id": "wrap",
     "name": "Wrap",
-    "aliases": [
-      "wrap"
-    ],
+    "aliases": ["wrap"],
     "type": "Normal",
     "category": "Physical",
     "basePower": 15,
@@ -9347,11 +7504,7 @@
   {
     "id": "xscissor",
     "name": "X-Scissor",
-    "aliases": [
-      "x-scissor",
-      "x scissor",
-      "xscissor"
-    ],
+    "aliases": ["x-scissor", "x scissor", "xscissor"],
     "type": "Bug",
     "category": "Physical",
     "basePower": 80,
@@ -9362,9 +7515,7 @@
   {
     "id": "yawn",
     "name": "Yawn",
-    "aliases": [
-      "yawn"
-    ],
+    "aliases": ["yawn"],
     "type": "Normal",
     "category": "Status",
     "basePower": 0,
@@ -9375,10 +7526,7 @@
   {
     "id": "zapcannon",
     "name": "Zap Cannon",
-    "aliases": [
-      "zap cannon",
-      "zapcannon"
-    ],
+    "aliases": ["zap cannon", "zapcannon"],
     "type": "Electric",
     "category": "Special",
     "basePower": 120,
@@ -9389,10 +7537,7 @@
   {
     "id": "zenheadbutt",
     "name": "Zen Headbutt",
-    "aliases": [
-      "zen headbutt",
-      "zenheadbutt"
-    ],
+    "aliases": ["zen headbutt", "zenheadbutt"],
     "type": "Psychic",
     "category": "Physical",
     "basePower": 80,
@@ -9403,10 +7548,7 @@
   {
     "id": "zingzap",
     "name": "Zing Zap",
-    "aliases": [
-      "zing zap",
-      "zingzap"
-    ],
+    "aliases": ["zing zap", "zingzap"],
     "type": "Electric",
     "category": "Physical",
     "basePower": 80,
