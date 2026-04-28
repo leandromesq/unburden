@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import {
   SITE_NAME,
@@ -17,10 +19,8 @@ export const shareImageAlt = SITE_SHARE_IMAGE_ALT;
 const BG = "#141414";
 const BG_ELEVATED = "#181818";
 const SURFACE = "#1c1c1c";
-const SURFACE_2 = "#232323";
 const LINE = "rgba(255, 255, 255, 0.08)";
 const LINE_STRONG = "rgba(255, 255, 255, 0.14)";
-const ACCENT = "#e3bf81";
 const TEXT = "#f3f3f1";
 const TEXT_MUTED = "#cbc7bf";
 const TEXT_DIM = "#a8a39a";
@@ -28,6 +28,9 @@ const TEXT_FAINT = "#7f7a72";
 
 const DOMAIN = new URL(SITE_URL).host;
 const PROMPT_PLACEHOLDER = "#gliscor !earthquake adamant x incineroar bold ~rain";
+const APP_LOGO_SRC = `data:image/png;base64,${readFileSync(
+  join(process.cwd(), "src/app/unburden-logo.png"),
+).toString("base64")}`;
 
 export function generateShareImage() {
   return new ImageResponse(
@@ -72,14 +75,23 @@ export function generateShareImage() {
                 height: 38,
                 borderRadius: 8,
                 border: `1px solid ${LINE_STRONG}`,
-                background: SURFACE_2,
-                color: ACCENT,
-                fontSize: 23,
-                fontWeight: 700,
-                letterSpacing: "-0.06em",
+                background: SURFACE,
+                padding: 4,
               }}
             >
-              U
+              {/* eslint-disable-next-line @next/next/no-img-element -- next/og ImageResponse renders plain image elements. */}
+              <img
+                src={APP_LOGO_SRC}
+                alt=""
+                width="30"
+                height="30"
+                style={{
+                  display: "flex",
+                  width: 30,
+                  height: 30,
+                  objectFit: "contain",
+                }}
+              />
             </div>
             <div
               style={{
