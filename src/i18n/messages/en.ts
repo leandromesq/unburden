@@ -2,8 +2,7 @@ import type { AppDictionary } from "@/i18n/types";
 
 export const enDictionary: AppDictionary = {
   metadata: {
-    description:
-      "Fast Pokemon VGC damage calculation in a chat-like composer.",
+    description: "Fast Pokemon VGC damage calculation in a chat-like composer.",
   },
   localeToggle: {
     label: "UI language",
@@ -20,7 +19,7 @@ export const enDictionary: AppDictionary = {
     kicker: "VGC Damage Calculator",
     about: "About",
     heroDescription:
-      "Text-based Pokemon VGC damage calculator for doubles matchups, Champions SP spreads, and saved sets.",
+      "Build the calc from a prompt, then tune the matchup to your liking.",
     toggleModifiers: "Toggle modifiers panel",
     modifiers: "Modifiers",
     swapSides: "Swap attacker and defender",

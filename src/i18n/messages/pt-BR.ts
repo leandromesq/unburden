@@ -20,7 +20,7 @@ export const ptBRDictionary: AppDictionary = {
     kicker: "Calculadora de Dano para VGC",
     about: "Sobre",
     heroDescription:
-      "Calculadora de dano Pokemon VGC em texto para matchups de doubles, spreads SP do Champions e sets salvos.",
+      "Monte o cálculo pelo prompt e ajuste a matchup da sua maneira.",
     toggleModifiers: "Alternar painel de modificadores",
     modifiers: "Modificadores",
     swapSides: "Trocar atacante e defensor",

@@ -119,7 +119,7 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
           "Web/mobile developer and competitive Pokemon/VGC enthusiast.",
         bullets: [
           "Computer Science student",
-          "Hardstuck 2000 points on Pokemon Champions",
+          "Hardstuck Master Ball 2000 points on Pokemon Champions",
           "Big Tinkaton enjoyer",
         ],
         links: [
