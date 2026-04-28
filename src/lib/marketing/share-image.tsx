@@ -18,18 +18,16 @@ const BG = "#141414";
 const BG_ELEVATED = "#181818";
 const SURFACE = "#1c1c1c";
 const SURFACE_2 = "#232323";
-const SURFACE_3 = "#2b2b2b";
 const LINE = "rgba(255, 255, 255, 0.08)";
 const LINE_STRONG = "rgba(255, 255, 255, 0.14)";
-const ACCENT = "#d6a85f";
-const ACCENT_STRONG = "#e3bf81";
-const ACCENT_SOFT = "rgba(214, 168, 95, 0.14)";
+const ACCENT = "#e3bf81";
 const TEXT = "#f3f3f1";
 const TEXT_MUTED = "#cbc7bf";
 const TEXT_DIM = "#a8a39a";
-const SUCCESS = "#6e9b7f";
+const TEXT_FAINT = "#7f7a72";
 
 const DOMAIN = new URL(SITE_URL).host;
+const PROMPT_PLACEHOLDER = "#gliscor !earthquake adamant x incineroar bold ~rain";
 
 export function generateShareImage() {
   return new ImageResponse(
@@ -41,7 +39,7 @@ export function generateShareImage() {
         background: BG,
         color: TEXT,
         fontFamily: "IBM Plex Sans, ui-sans-serif, sans-serif",
-        padding: 36,
+        padding: 40,
       }}
     >
       <div
@@ -50,10 +48,11 @@ export function generateShareImage() {
           height: "100%",
           display: "flex",
           flexDirection: "column",
+          justifyContent: "space-between",
           borderRadius: 10,
           border: `1px solid ${LINE}`,
           background: BG_ELEVATED,
-          padding: "28px 30px",
+          padding: "36px 40px 38px",
         }}
       >
         <div
@@ -61,8 +60,6 @@ export function generateShareImage() {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            paddingBottom: 24,
-            borderBottom: `1px solid ${LINE}`,
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -76,7 +73,7 @@ export function generateShareImage() {
                 borderRadius: 8,
                 border: `1px solid ${LINE_STRONG}`,
                 background: SURFACE_2,
-                color: ACCENT_STRONG,
+                color: ACCENT,
                 fontSize: 23,
                 fontWeight: 700,
                 letterSpacing: "-0.06em",
@@ -87,6 +84,7 @@ export function generateShareImage() {
             <div
               style={{
                 display: "flex",
+                color: TEXT,
                 fontSize: 30,
                 lineHeight: 1,
                 fontWeight: 600,
@@ -100,7 +98,7 @@ export function generateShareImage() {
           <div
             style={{
               display: "flex",
-              color: TEXT_DIM,
+              color: TEXT_FAINT,
               fontSize: 18,
               fontWeight: 500,
             }}
@@ -114,236 +112,74 @@ export function generateShareImage() {
             display: "flex",
             flexDirection: "column",
             gap: 22,
-            flex: 1,
-            paddingTop: 36,
+            marginTop: 56,
           }}
         >
           <div
             style={{
               display: "flex",
-              maxWidth: 900,
-              fontSize: 66,
-              lineHeight: 0.96,
+              maxWidth: 930,
+              color: TEXT,
+              fontSize: 72,
+              lineHeight: 0.98,
               fontWeight: 700,
               letterSpacing: "-0.06em",
             }}
           >
-            Damage calcs that stay readable.
+            Fast Pokemon VGC damage calculation.
           </div>
 
           <div
             style={{
               display: "flex",
-              color: TEXT_MUTED,
               maxWidth: 760,
+              color: TEXT_MUTED,
               fontSize: 27,
               lineHeight: 1.25,
             }}
           >
-            Type a calc, adjust the summary, and keep every modifier visible in
-            the prompt.
+            Build the calc from a prompt, then tune the matchup to your liking.
           </div>
+        </div>
 
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 12,
+            marginTop: 58,
+            borderRadius: 10,
+            border: `1px solid ${LINE_STRONG}`,
+            background: SURFACE,
+            padding: "20px 22px 22px",
+          }}
+        >
           <div
             style={{
               display: "flex",
-              gap: 18,
-              marginTop: 6,
+              color: TEXT_DIM,
+              fontSize: 18,
+              fontWeight: 600,
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                flex: 1,
-                borderRadius: 10,
-                border: `1px solid ${LINE_STRONG}`,
-                background: SURFACE,
-                overflow: "hidden",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "14px 16px",
-                  borderBottom: `1px solid ${LINE}`,
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    color: TEXT_DIM,
-                    fontSize: 17,
-                    fontWeight: 600,
-                  }}
-                >
-                  Prompt
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    color: ACCENT_STRONG,
-                    fontSize: 16,
-                    fontWeight: 600,
-                  }}
-                >
-                  suggestions ready
-                </div>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 12,
-                  padding: "22px 18px 24px",
-                  fontFamily: "IBM Plex Mono, ui-monospace, monospace",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    color: TEXT,
-                    fontSize: 27,
-                    lineHeight: 1.35,
-                  }}
-                >
-                  incineroar !flare-blitz x gholdengo
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    color: TEXT_DIM,
-                    fontSize: 21,
-                    lineHeight: 1.25,
-                  }}
-                >
-                  ~sun atk+1 %75
-                </div>
-              </div>
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                width: 360,
-                borderRadius: 10,
-                border: `1px solid ${LINE_STRONG}`,
-                background: SURFACE,
-                overflow: "hidden",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "14px 16px",
-                  borderBottom: `1px solid ${LINE}`,
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    color: TEXT_DIM,
-                    fontSize: 17,
-                    fontWeight: 600,
-                  }}
-                >
-                  Calc
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    color: SUCCESS,
-                    fontSize: 16,
-                    fontWeight: 600,
-                  }}
-                >
-                  2HKO
-                </div>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 14,
-                  padding: "20px 16px 21px",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    color: TEXT,
-                    fontSize: 42,
-                    lineHeight: 1,
-                    fontWeight: 700,
-                    letterSpacing: "-0.045em",
-                  }}
-                >
-                  64.8 - 78.1%
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    height: 12,
-                    borderRadius: 6,
-                    overflow: "hidden",
-                    background: SURFACE_3,
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      width: "72%",
-                      background: ACCENT,
-                    }}
-                  />
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    color: TEXT_DIM,
-                    fontSize: 17,
-                    lineHeight: 1.25,
-                  }}
-                >
-                  16 rolls, summary edits reflected in prompt.
-                </div>
-              </div>
-            </div>
+            Prompt
           </div>
-
           <div
             style={{
               display: "flex",
-              gap: 10,
-              marginTop: 6,
+              minHeight: 92,
+              alignItems: "center",
+              borderRadius: 8,
+              border: `1px solid ${LINE}`,
+              background: BG,
+              padding: "0 20px",
+              color: TEXT_DIM,
+              fontFamily: "IBM Plex Mono, ui-monospace, monospace",
+              fontSize: 30,
+              lineHeight: 1.3,
             }}
           >
-            {["Prompt-first", "Saved sets", "Battle modifiers"].map((label) => (
-              <div
-                key={label}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: "9px 12px",
-                  borderRadius: 8,
-                  border: `1px solid ${LINE}`,
-                  background: label === "Prompt-first" ? ACCENT_SOFT : SURFACE,
-                  color: label === "Prompt-first" ? ACCENT_STRONG : TEXT_DIM,
-                  fontSize: 17,
-                  fontWeight: 600,
-                }}
-              >
-                {label}
-              </div>
-            ))}
+            {PROMPT_PLACEHOLDER}
           </div>
         </div>
       </div>
