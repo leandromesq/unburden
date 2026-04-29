@@ -2,12 +2,14 @@ import { resolveAttackerRepresentativeNature } from "@/lib/calc/move-stat-contex
 import {
   allowedItemIds,
   itemDisplayById,
-  moveById,
+} from "@/lib/data/items";
+import { moveById } from "@/lib/data/moves";
+import {
   normalizeAlias,
   normalizeId,
-  pokemonById,
-  vgcMetaByPokemonId,
-} from "@/lib/data/loaders";
+} from "@/lib/data/normalization";
+import { pokemonById } from "@/lib/data/pokemon";
+import { vgcMetaByPokemonId } from "@/lib/data/vgc-meta";
 import { analyzeCommandStructure, isKnownModifierToken } from "@/lib/parser/command-structure";
 import {
   ATTACKER_MODIFIER_MAP,

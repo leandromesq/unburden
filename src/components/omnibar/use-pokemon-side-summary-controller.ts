@@ -8,14 +8,14 @@ import { EMPTY_STAT_SPREAD } from "@/lib/calc/stat-calc";
 import { resolveAttackingStatKey } from "@/lib/calc/move-stat-context";
 import {
   getCanonicalPromptPokemonName,
-  itemDisplayById,
   legalPokemonData,
-  learnsetByPokemonId,
-  moveById,
-  normalizeId,
   pokemonById,
-  vgcMetaByPokemonId,
-} from "@/lib/data/loaders";
+} from "@/lib/data/pokemon";
+import { itemDisplayById } from "@/lib/data/items";
+import { learnsetByPokemonId } from "@/lib/data/learnsets";
+import { moveById } from "@/lib/data/moves";
+import { normalizeId } from "@/lib/data/normalization";
+import { vgcMetaByPokemonId } from "@/lib/data/vgc-meta";
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
 import { resolveExactPokemonEntity } from "@/lib/parser/fuse-indexes";
 import {

@@ -4,7 +4,8 @@ import { type ReactNode, useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { useI18n } from "@/i18n/I18nProvider";
-import { normalizeId, pokemonById } from "@/lib/data/loaders";
+import { normalizeId } from "@/lib/data/normalization";
+import { pokemonById } from "@/lib/data/pokemon";
 import {
   ATTACKER_MODIFIER_MAP,
   ATTACKER_CHIP_DEFINITIONS,

@@ -1,7 +1,9 @@
 import {
   normalizeId,
+} from "@/lib/data/normalization";
+import {
   pokemonById,
-} from "@/lib/data/loaders";
+} from "@/lib/data/pokemon";
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
 import { resolveExactPokemonEntity } from "@/lib/parser/fuse-indexes";
 import { getSuggestedMoves } from "@/lib/parser/inference";

@@ -1,13 +1,15 @@
 import {
   allowedItemIds,
   itemDisplayById,
-  learnsetByPokemonId,
-  moveById,
+} from "@/lib/data/items";
+import { learnsetByPokemonId } from "@/lib/data/learnsets";
+import { moveById } from "@/lib/data/moves";
+import {
   normalizeAlias,
   normalizeId,
-  pokemonById,
-  vgcMetaByPokemonId,
-} from "@/lib/data/loaders";
+} from "@/lib/data/normalization";
+import { pokemonById } from "@/lib/data/pokemon";
+import { vgcMetaByPokemonId } from "@/lib/data/vgc-meta";
 import { buildCommonAbilities } from "@/lib/parser/grammar";
 import type { MoveEntry } from "@/lib/types";
 

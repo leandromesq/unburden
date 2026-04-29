@@ -1,8 +1,8 @@
 import {
   normalizeAlias,
-  pokemonById,
-  vgcMetaByPokemonId,
-} from "@/lib/data/loaders";
+} from "@/lib/data/normalization";
+import { pokemonById } from "@/lib/data/pokemon";
+import { vgcMetaByPokemonId } from "@/lib/data/vgc-meta";
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
 import { parseCommand } from "@/lib/parser/command-parser";
 import {

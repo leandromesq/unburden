@@ -40,7 +40,7 @@ export function SummaryEmptyState({
   return (
     <aside
       data-testid={`${side}-summary`}
-      className="theme-panel min-w-0 overflow-hidden rounded-xl p-4 sm:p-5"
+      className="theme-panel min-w-0 overflow-visible rounded-xl p-4 sm:p-5"
     >
       <div className="text-sm font-medium">
         {sideLabel}

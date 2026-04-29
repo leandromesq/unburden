@@ -1,12 +1,9 @@
 import Fuse from "fuse.js";
 
-import {
-  formAliasMap,
-  legalPokemonData,
-  moveData,
-  pokemonById,
-  normalizeAlias,
-} from "@/lib/data/loaders";
+import { formAliasMap } from "@/lib/data/form-aliases";
+import { moveData } from "@/lib/data/moves";
+import { normalizeAlias } from "@/lib/data/normalization";
+import { legalPokemonData, pokemonById } from "@/lib/data/pokemon";
 import type { MoveEntry, PokemonEntry } from "@/lib/types";
 
 interface ResolvedMatch<T> {

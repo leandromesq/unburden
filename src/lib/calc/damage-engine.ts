@@ -12,7 +12,9 @@ import {
   statPointsToCalcEvs,
 } from "@/lib/calc/stat-calc";
 import { normalizeKoText } from "@/lib/calc/ko-text";
-import { moveById, normalizeId, pokemonById } from "@/lib/data/loaders";
+import { moveById } from "@/lib/data/moves";
+import { normalizeId } from "@/lib/data/normalization";
+import { pokemonById } from "@/lib/data/pokemon";
 import { inferDefaultAbility, inferDefaultItem } from "@/lib/parser/inference";
 import { resolveReferencedImportedSet } from "@/lib/team/set-references";
 import type {

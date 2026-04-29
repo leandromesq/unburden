@@ -1,6 +1,5 @@
 import { create } from "zustand";
 
-import { calculateDamageResults } from "@/lib/calc/damage-engine";
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
 import {
   buildInitialChipState,
@@ -80,6 +79,30 @@ const initialState = {
 
 const TYPING_PREVIEW_DEBOUNCE_MS = 72;
 
+type DamageEngineModule = typeof import("@/lib/calc/damage-engine");
+type CalculateDamageResults = DamageEngineModule["calculateDamageResults"];
+
+let damageEnginePromise: Promise<DamageEngineModule> | null = null;
+
+declare global {
+  var __UNBURDEN_TEST_CALCULATE_DAMAGE_RESULTS__:
+    | CalculateDamageResults
+    | undefined;
+}
+
+function loadDamageEngine() {
+  damageEnginePromise ??= import("@/lib/calc/damage-engine");
+  return damageEnginePromise;
+}
+
+function getTestCalculateDamageResults() {
+  if (process.env.NODE_ENV !== "test") {
+    return undefined;
+  }
+
+  return globalThis.__UNBURDEN_TEST_CALCULATE_DAMAGE_RESULTS__;
+}
+
 export const useOmniStore = create<OmniStore>((set, get) => {
   const commitState = (
     nextInput: string,
@@ -112,6 +135,7 @@ export const useOmniStore = create<OmniStore>((set, get) => {
             currentState.dismissedAutoGlobalContextKey,
           cursorIndex: nextCursorIndex,
           applyAutoGlobalTokens,
+          calculateDamageResults: getTestCalculateDamageResults(),
         }),
       );
       return;
@@ -154,8 +178,17 @@ export const useOmniStore = create<OmniStore>((set, get) => {
       version: number,
       parsed: ParsedCommand,
     ) => {
-      omniScheduler.scheduleCalculation(version, () => {
-        const results = calculateDamageResults(parsed, useTeamStore.getState().importedSets);
+      omniScheduler.scheduleCalculation(version, async () => {
+        const { calculateDamageResults } = await loadDamageEngine();
+
+        if (version !== omniScheduler.getVersion()) {
+          return;
+        }
+
+        const results = calculateDamageResults(
+          parsed,
+          useTeamStore.getState().importedSets,
+        );
 
         if (version !== omniScheduler.getVersion()) {
           return;

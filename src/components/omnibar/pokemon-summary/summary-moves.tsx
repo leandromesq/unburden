@@ -4,7 +4,8 @@ import { Circle, CircleDot } from "lucide-react";
 
 import { MoveTypeIcon } from "@/components/omnibar/move-type-icon";
 import { SearchableCombobox } from "@/components/omnibar/searchable-combobox";
-import { moveById, normalizeId } from "@/lib/data/loaders";
+import { moveById } from "@/lib/data/moves";
+import { normalizeId } from "@/lib/data/normalization";
 import { resolveMoveEntity } from "@/lib/parser/fuse-indexes";
 import type { SummarySide } from "@/lib/parser/input-mutations";
 

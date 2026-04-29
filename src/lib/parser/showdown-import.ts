@@ -4,7 +4,9 @@ import {
   cloneStatSpread,
   statPointsToCalcEvs,
 } from "@/lib/calc/stat-calc";
-import { formAliasMap, normalizeAlias, normalizeId, pokemonById } from "@/lib/data/loaders";
+import { formAliasMap } from "@/lib/data/form-aliases";
+import { normalizeAlias, normalizeId } from "@/lib/data/normalization";
+import { pokemonById } from "@/lib/data/pokemon";
 import { resolvePokemonEntity } from "@/lib/parser/fuse-indexes";
 import { normalizeImportedSet } from "@/lib/team/imported-set-utils";
 import type { ImportedSet, StatSpread } from "@/lib/types";

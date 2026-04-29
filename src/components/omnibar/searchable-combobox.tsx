@@ -12,7 +12,7 @@ import {
 } from "react";
 
 import { useI18n } from "@/i18n/I18nProvider";
-import { normalizeAlias } from "@/lib/data/loaders";
+import { normalizeAlias } from "@/lib/data/normalization";
 import { getCssDurationMs } from "@/lib/ui/transition-duration";
 
 interface SearchableComboboxProps {

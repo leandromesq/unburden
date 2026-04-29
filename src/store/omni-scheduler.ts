@@ -8,7 +8,7 @@ interface OmniScheduler {
     callback: () => void,
     debounceMs?: number,
   ): void;
-  scheduleCalculation(version: number, callback: () => void): void;
+  scheduleCalculation(version: number, callback: () => void | Promise<void>): void;
   cancelPreview(): void;
   cancelCalculation(): void;
   cancelAll(): void;

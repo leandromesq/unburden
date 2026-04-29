@@ -1,4 +1,4 @@
-import { normalizeId } from "@/lib/data/loaders";
+import { normalizeId } from "@/lib/data/normalization";
 import type { ImportedSet } from "@/lib/types";
 
 function normalizeReferenceValue(value: string) {

@@ -192,7 +192,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
   return (
     <aside
       data-testid={`${side}-summary`}
-      className="theme-panel min-w-0 overflow-hidden rounded-xl p-4 sm:p-5"
+      className="theme-panel min-w-0 overflow-visible rounded-xl p-4 sm:p-5"
     >
       <SummaryHeader
         title={summary.title}

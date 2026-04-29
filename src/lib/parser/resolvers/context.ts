@@ -1,7 +1,9 @@
 import {
   normalizeId,
+} from "@/lib/data/normalization";
+import {
   pokemonById,
-} from "@/lib/data/loaders";
+} from "@/lib/data/pokemon";
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
 import type { SuggestionContext } from "@/lib/parser/resolvers/types";
 import { type LexToken } from "@/lib/parser/tokenize";

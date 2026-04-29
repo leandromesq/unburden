@@ -1,7 +1,3 @@
-import {
-  calculateDamageResults,
-  getCalculationIssues,
-} from "@/lib/calc/damage-engine";
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
 import { parseCommand } from "@/lib/parser/command-parser";
 import { getAutocompleteState } from "@/lib/parser/inline-suggestions";
@@ -38,6 +34,10 @@ interface ComputeStateInput {
     autoGlobalContextKey: string | null;
     dismissedAutoGlobalContextKey: string | null;
   };
+  calculateDamageResults?: (
+    parsed: ParsedCommand,
+    importedSets: Record<string, ImportedSet>,
+  ) => DamageResult[];
 }
 
 interface ComputedOmniState {
@@ -66,6 +66,7 @@ export function computeOmniState({
   cursorIndex = input.length,
   includeResults = true,
   applyAutoGlobalTokens,
+  calculateDamageResults,
 }: ComputeStateInput): ComputedOmniState {
   const normalizedInput = input.replace(/\s+$/g, (match) => match);
   const withAutoTokens = applyAutoGlobalTokens(
@@ -78,9 +79,7 @@ export function computeOmniState({
 
   const commandStructure = analyzeCommandStructure(withAutoTokens.input);
   const parsedResult = parseCommand(withAutoTokens.input, importedSets);
-  const calculationIssues = parsedResult.parsed
-    ? getCalculationIssues(parsedResult.parsed, importedSets)
-    : [];
+  const calculationIssues: OmniIssue[] = [];
   const issues = uniqueIssues([...parsedResult.issues, ...calculationIssues]);
   const nextCursorIndex = Math.min(cursorIndex, withAutoTokens.input.length);
   const autocomplete = getAutocompleteState(
@@ -111,7 +110,7 @@ export function computeOmniState({
     activeChipTokens: buildActiveChipTokens(commandStructure),
     issues,
     results:
-      includeResults && canCalculate && parsedCommand
+      includeResults && canCalculate && parsedCommand && calculateDamageResults
         ? calculateDamageResults(parsedCommand, importedSets)
         : [],
   };

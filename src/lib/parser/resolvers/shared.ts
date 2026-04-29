@@ -1,4 +1,4 @@
-import { normalizeAlias } from "@/lib/data/loaders";
+import { normalizeAlias } from "@/lib/data/normalization";
 import {
   ATTACKER_MODIFIER_MAP,
   DEFENDER_MODIFIER_MAP,

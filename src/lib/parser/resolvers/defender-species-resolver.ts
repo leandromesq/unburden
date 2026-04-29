@@ -1,4 +1,4 @@
-import { normalizeAlias } from "@/lib/data/loaders";
+import { normalizeAlias } from "@/lib/data/normalization";
 import { searchPokemonEntities } from "@/lib/parser/fuse-indexes";
 import { joinTokenValues } from "@/lib/parser/tokenize";
 import { searchSetReferences } from "@/lib/team/set-references";

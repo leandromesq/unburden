@@ -1,14 +1,10 @@
 import { useMemo } from "react";
 
 import { useI18n } from "@/i18n/I18nProvider";
-import {
-  itemDisplayById,
-  moveById,
-  normalizeAlias,
-  normalizeId,
-  pokemonById,
-  resolveMegaEvolution,
-} from "@/lib/data/loaders";
+import { itemDisplayById } from "@/lib/data/items";
+import { moveById } from "@/lib/data/moves";
+import { normalizeAlias, normalizeId } from "@/lib/data/normalization";
+import { pokemonById, resolveMegaEvolution } from "@/lib/data/pokemon";
 import {
   DEFAULT_IV_SPREAD,
   EMPTY_STAT_SPREAD,

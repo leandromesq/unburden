@@ -1,4 +1,4 @@
-import { activeRegulation } from "@/lib/data/loaders";
+import { activeRegulation } from "@/lib/data/regulations";
 
 export function RegulationBadge() {
   return (
