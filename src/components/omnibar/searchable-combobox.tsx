@@ -13,6 +13,7 @@ import {
 
 import { useI18n } from "@/i18n/I18nProvider";
 import { normalizeAlias } from "@/lib/data/loaders";
+import { getCssDurationMs } from "@/lib/ui/transition-duration";
 
 interface SearchableComboboxProps {
   label: string;
@@ -108,6 +109,7 @@ export function SearchableCombobox({
   const listboxId = useId();
   const optionIdBase = useId();
   const [open, setOpen] = useState(false);
+  const [dropdownClosing, setDropdownClosing] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [inputValue, setInputValue] = useState(value);
   const [isFocused, setIsFocused] = useState(false);
@@ -116,12 +118,40 @@ export function SearchableCombobox({
   const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const inputValueRef = useRef(value);
   const committedSelectionRef = useRef<string | null>(null);
+  const closeTimeoutRef = useRef<number | null>(null);
   const deferredQuery = useDeferredValue(inputValue);
-  const handlePointerDown = useCallback((event: MouseEvent) => {
-    if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
-      setOpen(false);
+
+  const openDropdown = useCallback(() => {
+    if (closeTimeoutRef.current !== null) {
+      window.clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
     }
+
+    setDropdownClosing(false);
+    setOpen(true);
   }, []);
+
+  const closeDropdown = useCallback(() => {
+    if (closeTimeoutRef.current !== null) {
+      window.clearTimeout(closeTimeoutRef.current);
+    }
+
+    setOpen(false);
+    setDropdownClosing(true);
+    closeTimeoutRef.current = window.setTimeout(() => {
+      setDropdownClosing(false);
+      closeTimeoutRef.current = null;
+    }, getCssDurationMs("--dropdown-close-dur", 150));
+  }, []);
+
+  const handlePointerDown = useCallback(
+    (event: MouseEvent) => {
+      if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
+        closeDropdown();
+      }
+    },
+    [closeDropdown],
+  );
 
   useEffect(() => {
     if (!open) {
@@ -131,6 +161,14 @@ export function SearchableCombobox({
     document.addEventListener("mousedown", handlePointerDown);
     return () => document.removeEventListener("mousedown", handlePointerDown);
   }, [handlePointerDown, open]);
+
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current !== null) {
+        window.clearTimeout(closeTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const filteredOptions = useMemo(
     () => rankOptions(options, deferredQuery, showAllOptions),
@@ -165,9 +203,12 @@ export function SearchableCombobox({
     if (!onInputChange && !onSelectOption) {
       onChange(option);
     }
-    setOpen(false);
+    closeDropdown();
     inputRef.current?.blur();
   };
+
+  const listboxVisible =
+    (open || dropdownClosing) && filteredOptions.length > 0;
 
   return (
     <div ref={rootRef} className={hideLabel ? "text-sm" : "space-y-1 text-sm"}>
@@ -203,7 +244,7 @@ export function SearchableCombobox({
               inputValueRef.current,
             );
             setHighlightedIndex(exactMatchIndex >= 0 ? exactMatchIndex : 0);
-            setOpen(true);
+            openDropdown();
           }}
           onChange={(event) => {
             const nextValue = event.currentTarget.value;
@@ -215,12 +256,12 @@ export function SearchableCombobox({
             } else {
               onChange(nextValue);
             }
-            setOpen(true);
+            openDropdown();
             setHighlightedIndex(0);
           }}
           onBlur={() => {
             setIsFocused(false);
-            setOpen(false);
+            closeDropdown();
             const blurValue = inputValueRef.current;
             const selectedValue = committedSelectionRef.current;
             committedSelectionRef.current = null;
@@ -238,7 +279,7 @@ export function SearchableCombobox({
             if (event.key === "ArrowDown") {
               event.preventDefault();
               if (!open) {
-                setOpen(true);
+                openDropdown();
                 setHighlightedIndex(0);
                 return;
               }
@@ -253,7 +294,7 @@ export function SearchableCombobox({
             if (event.key === "ArrowUp") {
               event.preventDefault();
               if (!open) {
-                setOpen(true);
+                openDropdown();
                 setHighlightedIndex(
                   filteredOptions.length > 0 ? filteredOptions.length - 1 : 0,
                 );
@@ -290,7 +331,7 @@ export function SearchableCombobox({
 
             if (event.key === "Escape" && open) {
               event.preventDefault();
-              setOpen(false);
+              closeDropdown();
             }
           }}
           className={`theme-control theme-input w-full rounded-md px-3 py-2 ${
@@ -303,11 +344,15 @@ export function SearchableCombobox({
             {endAdornment}
           </div>
         ) : null}
-        {open && filteredOptions.length > 0 ? (
+        {listboxVisible ? (
           <div
             id={listboxId}
             role="listbox"
-            className="theme-menu absolute left-0 right-0 top-[calc(100%+0.35rem)] z-20 max-h-64 overflow-y-auto rounded-lg py-1"
+            aria-hidden={!open}
+            data-origin="top-left"
+            className={`theme-menu t-dropdown absolute left-0 right-0 top-[calc(100%+0.35rem)] z-20 max-h-64 overflow-y-auto rounded-lg py-1 ${
+              open ? "is-open" : "is-closing"
+            }`}
             style={{ scrollbarGutter: "stable" }}
           >
             {filteredOptions.map((option, index) => (

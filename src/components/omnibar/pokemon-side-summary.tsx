@@ -267,11 +267,24 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
                 copiedSet ? "theme-icon-button-active" : ""
               }`}
             >
-              {copiedSet ? (
-                <Check aria-hidden="true" size={15} strokeWidth={2.1} />
-              ) : (
-                <ClipboardCopy aria-hidden="true" size={15} strokeWidth={1.9} />
-              )}
+              <span
+                className="t-icon-swap"
+                data-state={copiedSet ? "b" : "a"}
+                aria-hidden="true"
+              >
+                <ClipboardCopy
+                  className="t-icon"
+                  data-icon="a"
+                  size={15}
+                  strokeWidth={1.9}
+                />
+                <Check
+                  className="t-icon"
+                  data-icon="b"
+                  size={15}
+                  strokeWidth={2.1}
+                />
+              </span>
             </button>
             {importedSet && resolvedSetId ? (
               <button

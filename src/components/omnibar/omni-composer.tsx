@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { ArrowLeftRight, Settings2 } from "lucide-react";
+import { ArrowLeftRight, Settings2, X } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
 import { BugReportButton } from "@/components/bug-report-button";
@@ -144,7 +144,24 @@ export function OmniComposer() {
                     : "theme-icon-button"
                 }`}
               >
-                <Settings2 aria-hidden="true" size={14} strokeWidth={1.9} />
+                <span
+                  className="t-icon-swap"
+                  data-state={modifiersOpen ? "b" : "a"}
+                  aria-hidden="true"
+                >
+                  <Settings2
+                    className="t-icon"
+                    data-icon="a"
+                    size={14}
+                    strokeWidth={1.9}
+                  />
+                  <X
+                    className="t-icon"
+                    data-icon="b"
+                    size={14}
+                    strokeWidth={2.1}
+                  />
+                </span>
                 <span>{dictionary.home.modifiers}</span>
               </button>
               <button

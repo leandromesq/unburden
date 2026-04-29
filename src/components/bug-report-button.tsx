@@ -3,6 +3,7 @@
 import {
   startTransition,
   useActionState,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -11,6 +12,7 @@ import { Bug, X } from "lucide-react";
 
 import { reportBug } from "@/app/actions/report-bug";
 import { useI18n } from "@/i18n/I18nProvider";
+import { getCssDurationMs } from "@/lib/ui/transition-duration";
 import { useOmniStore } from "@/store/use-omni-store";
 
 const initialReportBugState = {
@@ -41,6 +43,7 @@ function SubmitButton({
 export function BugReportButton() {
   const { locale, dictionary } = useI18n();
   const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
   const [state, formAction, pending] = useActionState(
     reportBug,
     initialReportBugState,
@@ -49,6 +52,7 @@ export function BugReportButton() {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const openedRef = useRef(false);
+  const closeTimeoutRef = useRef<number | null>(null);
   const titleId = "bug-report-title";
   const descriptionId = "bug-report-description";
   const statusId = "bug-report-status";
@@ -56,13 +60,26 @@ export function BugReportButton() {
   const userAgent =
     typeof window === "undefined" ? "" : window.navigator.userAgent;
 
-  const close = () => {
-    startTransition(() => {
-      setOpen(false);
-    });
-  };
+  const close = useCallback(() => {
+    if (closeTimeoutRef.current !== null) {
+      return;
+    }
+
+    setClosing(true);
+    closeTimeoutRef.current = window.setTimeout(() => {
+      startTransition(() => {
+        setOpen(false);
+        setClosing(false);
+      });
+      closeTimeoutRef.current = null;
+    }, getCssDurationMs("--modal-close-dur", 150));
+  }, []);
 
   useEffect(() => {
+    if (closing) {
+      return;
+    }
+
     if (!open) {
       if (openedRef.current) {
         buttonRef.current?.focus();
@@ -76,7 +93,7 @@ export function BugReportButton() {
     requestAnimationFrame(() => {
       textareaRef.current?.focus();
     });
-  }, [open]);
+  }, [closing, open]);
 
   useEffect(() => {
     if (!open) {
@@ -91,7 +108,15 @@ export function BugReportButton() {
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [open]);
+  }, [close, open]);
+
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current !== null) {
+        window.clearTimeout(closeTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <>
@@ -102,7 +127,13 @@ export function BugReportButton() {
         aria-expanded={open}
         aria-controls="bug-report-dialog"
         onClick={() => {
+          if (closeTimeoutRef.current !== null) {
+            window.clearTimeout(closeTimeoutRef.current);
+            closeTimeoutRef.current = null;
+          }
+
           startTransition(() => {
+            setClosing(false);
             setOpen(true);
           });
         }}
@@ -131,7 +162,9 @@ export function BugReportButton() {
         >
           <div
             id="bug-report-dialog"
-            className="theme-panel w-full max-w-xl overflow-hidden rounded-xl"
+            className={`theme-panel t-modal w-full max-w-xl overflow-hidden rounded-xl ${
+              closing ? "is-closing" : "is-open"
+            }`}
             style={{ boxShadow: "var(--shadow-overlay)" }}
             onClick={(event) => event.stopPropagation()}
           >

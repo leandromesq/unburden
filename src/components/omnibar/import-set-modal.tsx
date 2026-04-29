@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
@@ -8,6 +8,7 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { formatStatPointSpread } from "@/lib/calc/stat-calc";
 import { parseShowdownSets } from "@/lib/parser/showdown-import";
 import type { ImportedSet } from "@/lib/types";
+import { getCssDurationMs } from "@/lib/ui/transition-duration";
 import { useOmniStore } from "@/store/use-omni-store";
 import { useTeamStore } from "@/store/use-team-store";
 
@@ -60,8 +61,22 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
   const [text, setText] = useState("");
   const [parsed, setParsed] = useState<ImportedSet[]>([]);
   const [parseError, setParseError] = useState<string | null>(null);
+  const [closing, setClosing] = useState(false);
+  const closeTimeoutRef = useRef<number | null>(null);
   const saveSets = useTeamStore((state) => state.saveSets);
   const recompute = useOmniStore((state) => state.recompute);
+
+  const close = useCallback(() => {
+    if (closeTimeoutRef.current !== null) {
+      return;
+    }
+
+    setClosing(true);
+    closeTimeoutRef.current = window.setTimeout(
+      onClose,
+      getCssDurationMs("--modal-close-dur", 150),
+    );
+  }, [onClose]);
 
   useEffect(() => {
     const { body } = document;
@@ -69,6 +84,10 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
     body.style.overflow = "hidden";
 
     return () => {
+      if (closeTimeoutRef.current !== null) {
+        window.clearTimeout(closeTimeoutRef.current);
+      }
+
       body.style.overflow = previousOverflow;
     };
   }, []);
@@ -97,16 +116,16 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
 
     saveSets(parsed);
     recompute();
-    onClose();
-  }, [onClose, parsed, recompute, saveSets]);
+    close();
+  }, [close, parsed, recompute, saveSets]);
 
   const handleBackdropClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
       if (event.target === event.currentTarget) {
-        onClose();
+        close();
       }
     },
-    [onClose],
+    [close],
   );
 
   const portalTarget = typeof document === "undefined" ? null : document.body;
@@ -125,7 +144,9 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
       onClick={handleBackdropClick}
     >
       <div
-        className="theme-panel theme-modal-shell max-w-lg overflow-hidden"
+        className={`theme-panel theme-modal-shell t-modal max-w-lg overflow-hidden ${
+          closing ? "is-closing" : "is-open"
+        }`}
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-center justify-between px-6 pt-5 pb-4">
@@ -140,7 +161,7 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
           <button
             type="button"
             aria-label={dictionary.importSetModal.closeAria}
-            onClick={onClose}
+            onClick={close}
             className="theme-icon-button theme-icon-button-sm -mr-1"
           >
             <X aria-hidden="true" size={15} strokeWidth={2.1} />
@@ -191,7 +212,7 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
             ) : null}
             <button
               type="button"
-              onClick={onClose}
+              onClick={close}
               className="theme-icon-button theme-toolbar-button ml-auto"
             >
               {dictionary.importSetModal.cancel}

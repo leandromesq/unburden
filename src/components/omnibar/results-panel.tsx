@@ -308,11 +308,26 @@ export function ResultsPanel() {
                       : dictionary.resultsPanel.copyResultText(resultLabel)
                   }
                 >
-                  {copiedAction === `text:${result.archetype}` ? (
-                    <Check aria-hidden="true" size={15} strokeWidth={2.2} />
-                  ) : (
-                    <FileText aria-hidden="true" size={15} strokeWidth={1.9} />
-                  )}
+                  <span
+                    className="t-icon-swap"
+                    data-state={
+                      copiedAction === `text:${result.archetype}` ? "b" : "a"
+                    }
+                    aria-hidden="true"
+                  >
+                    <FileText
+                      className="t-icon"
+                      data-icon="a"
+                      size={15}
+                      strokeWidth={1.9}
+                    />
+                    <Check
+                      className="t-icon"
+                      data-icon="b"
+                      size={15}
+                      strokeWidth={2.2}
+                    />
+                  </span>
                 </button>
                 <button
                   type="button"
@@ -329,11 +344,26 @@ export function ResultsPanel() {
                       : dictionary.resultsPanel.copyShareUrl(resultLabel)
                   }
                 >
-                  {copiedAction === `url:${result.archetype}` ? (
-                    <Check aria-hidden="true" size={15} strokeWidth={2.2} />
-                  ) : (
-                    <Link2 aria-hidden="true" size={15} strokeWidth={1.9} />
-                  )}
+                  <span
+                    className="t-icon-swap"
+                    data-state={
+                      copiedAction === `url:${result.archetype}` ? "b" : "a"
+                    }
+                    aria-hidden="true"
+                  >
+                    <Link2
+                      className="t-icon"
+                      data-icon="a"
+                      size={15}
+                      strokeWidth={1.9}
+                    />
+                    <Check
+                      className="t-icon"
+                      data-icon="b"
+                      size={15}
+                      strokeWidth={2.2}
+                    />
+                  </span>
                 </button>
               </div>
             </div>
