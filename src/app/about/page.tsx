@@ -38,12 +38,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: SITE_ABOUT_TITLE,
     description: SITE_ABOUT_DESCRIPTION,
-    images: [
-      {
-        url: absoluteUrl(SITE_TWITTER_IMAGE_URL),
-        alt: SITE_SHARE_IMAGE_ALT,
-      },
-    ],
+    images: [absoluteUrl(SITE_TWITTER_IMAGE_URL)],
   },
 };
 

@@ -91,12 +91,7 @@ export const metadata: Metadata = {
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     creator: SITE_X_HANDLE,
-    images: [
-      {
-        url: absoluteUrl(SITE_TWITTER_IMAGE_URL),
-        alt: SITE_SHARE_IMAGE_ALT,
-      },
-    ],
+    images: [absoluteUrl(SITE_TWITTER_IMAGE_URL)],
   },
 };
 
