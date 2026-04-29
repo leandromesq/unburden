@@ -1,20 +1,12 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
-import {
-  SITE_NAME,
-  SITE_SHARE_IMAGE_ALT,
-  SITE_URL,
-} from "@/lib/marketing/seo";
+import { SITE_NAME, SITE_URL } from "@/lib/marketing/seo";
 
-export const shareImageSize = {
+const shareImageSize = {
   width: 1200,
   height: 630,
 } as const;
-
-export const shareImageContentType = "image/png";
-
-export const shareImageAlt = SITE_SHARE_IMAGE_ALT;
 
 const BG = "#141414";
 const BG_ELEVATED = "#181818";
