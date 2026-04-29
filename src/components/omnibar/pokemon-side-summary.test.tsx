@@ -214,6 +214,29 @@ describe("PokemonSideSummary nature marker synchronization", () => {
     );
   });
 
+  test("Alt+S saves the active unsaved summary set", () => {
+    render(<OmniComposer />);
+
+    act(() => {
+      useOmniStore.getState().setInput("politoed !muddy-water x incineroar");
+    });
+
+    const summary = screen.getByTestId("attacker-summary");
+    const speciesInput = within(summary).getByRole("combobox", {
+      name: "Pokemon",
+    });
+
+    fireEvent.focus(speciesInput);
+    fireEvent.keyDown(window, { altKey: true, code: "KeyS", key: "s" });
+
+    expect(useTeamStore.getState().importedSets.politoed?.speciesName).toBe(
+      "Politoed",
+    );
+    expect(useOmniStore.getState().input).toBe(
+      "#politoed !muddy-water x incineroar",
+    );
+  });
+
   test("explicit prompt natures show on the identity card without custom SPs", () => {
     render(<OmniComposer />);
 
@@ -371,7 +394,7 @@ describe("PokemonSideSummary nature marker synchronization", () => {
     fireEvent.focus(defInput);
     fireEvent.change(defInput, { target: { value: "0+" } });
 
-    expect(useOmniStore.getState().input).toContain("x incineroar +nature");
+    expect(useOmniStore.getState().input).toContain("x incineroar bold");
     expect(useOmniStore.getState().parsed?.defenderNature).toBe("Bold");
     expect(useOmniStore.getState().results[0]?.maxPercentage).toBeLessThan(
       startingMax,
@@ -396,8 +419,8 @@ describe("PokemonSideSummary nature marker synchronization", () => {
     fireEvent.focus(defInput);
     fireEvent.change(defInput, { target: { value: "0+" } });
 
-    expect(useOmniStore.getState().input).toContain("!body-press +nature");
-    expect(useOmniStore.getState().parsed?.attackerNature).toBe("Impish");
+    expect(useOmniStore.getState().input).toContain("!body-press bold");
+    expect(useOmniStore.getState().parsed?.attackerNature).toBe("Bold");
     expect(useOmniStore.getState().results[0]?.maxPercentage).toBeGreaterThan(
       startingMax,
     );

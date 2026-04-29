@@ -113,6 +113,7 @@ export function SearchableCombobox({
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [inputValue, setInputValue] = useState(value);
   const [isFocused, setIsFocused] = useState(false);
+  const [hasEditedOpenQuery, setHasEditedOpenQuery] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -171,8 +172,8 @@ export function SearchableCombobox({
   }, []);
 
   const filteredOptions = useMemo(
-    () => rankOptions(options, deferredQuery, showAllOptions),
-    [deferredQuery, options, showAllOptions],
+    () => rankOptions(options, deferredQuery, showAllOptions && !hasEditedOpenQuery),
+    [deferredQuery, hasEditedOpenQuery, options, showAllOptions],
   );
   const displayValue = isFocused ? inputValue : value;
   const resolvedHighlightedIndex = open
@@ -197,6 +198,7 @@ export function SearchableCombobox({
   const selectOption = (option: string) => {
     inputValueRef.current = option;
     setInputValue(option);
+    setHasEditedOpenQuery(false);
     committedSelectionRef.current = option;
     onInputChange?.(option);
     onSelectOption?.(option);
@@ -230,6 +232,7 @@ export function SearchableCombobox({
           inputMode={inputMode}
           onFocus={() => {
             setIsFocused(true);
+            setHasEditedOpenQuery(false);
             if (inputValueRef.current !== value) {
               inputValueRef.current = value;
               setInputValue(value);
@@ -251,6 +254,7 @@ export function SearchableCombobox({
             inputValueRef.current = nextValue;
             committedSelectionRef.current = null;
             setInputValue(nextValue);
+            setHasEditedOpenQuery(true);
             if (onInputChange) {
               onInputChange(nextValue);
             } else {
@@ -261,6 +265,7 @@ export function SearchableCombobox({
           }}
           onBlur={() => {
             setIsFocused(false);
+            setHasEditedOpenQuery(false);
             closeDropdown();
             const blurValue = inputValueRef.current;
             const selectedValue = committedSelectionRef.current;

@@ -24,6 +24,8 @@ import { SearchableCombobox } from "@/components/omnibar/searchable-combobox";
 import { getNatureEffect } from "@/components/omnibar/pokemon-summary/shared";
 import { usePokemonSideSummaryController } from "@/components/omnibar/use-pokemon-side-summary-controller";
 
+let activeSummaryShortcutSide: SummarySide | null = null;
+
 function fallbackCopyText(text: string) {
   const textarea = document.createElement("textarea");
   textarea.value = text;
@@ -91,6 +93,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
     toggleSwitch,
   } = usePokemonSideSummaryController(side);
   const [copiedSet, setCopiedSet] = useState(false);
+  const summaryRef = useRef<HTMLElement>(null);
   const copiedTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -100,6 +103,37 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (!summary || !canSaveSet) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (
+        event.defaultPrevented ||
+        !event.altKey ||
+        event.ctrlKey ||
+        event.metaKey ||
+        (event.code !== "KeyS" && event.key.toLowerCase() !== "s")
+      ) {
+        return;
+      }
+
+      const activeElement = document.activeElement;
+      const hasSummaryFocus =
+        activeElement instanceof Node &&
+        summaryRef.current?.contains(activeElement);
+
+      if (hasSummaryFocus || activeSummaryShortcutSide === side) {
+        event.preventDefault();
+        handleSaveCurrentSet();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [canSaveSet, handleSaveCurrentSet, side, summary]);
 
   if (!summary) {
     return (
@@ -191,7 +225,14 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
 
   return (
     <aside
+      ref={summaryRef}
       data-testid={`${side}-summary`}
+      onFocusCapture={() => {
+        activeSummaryShortcutSide = side;
+      }}
+      onPointerDown={() => {
+        activeSummaryShortcutSide = side;
+      }}
       className="theme-panel min-w-0 overflow-visible rounded-xl p-4 sm:p-5"
     >
       <SummaryHeader
@@ -241,7 +282,8 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
               <button
                 type="button"
                 aria-label="Save"
-                title="Save set"
+                aria-keyshortcuts="Alt+S"
+                title="Save set (Alt+S)"
                 onClick={handleSaveCurrentSet}
                 className="theme-icon-button theme-icon-button-sm shrink-0 text-sm"
                 style={{ color: "var(--accent-text-mid)" }}

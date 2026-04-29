@@ -1,7 +1,3 @@
-import {
-  getNatureEffectDirectionForStat,
-  resolveAttackingStatKey,
-} from "@/lib/calc/move-stat-context";
 import { analyzeCommandStructure } from "@/lib/parser/command-structure";
 import {
   ATTACKER_MODIFIER_MAP,
@@ -529,43 +525,15 @@ export function setNamedStageModifierToken(
 
 function resolveNatureModifierToken(
   scope: "attacker" | "defender",
-  moveId: string | null | undefined,
-  moveCategory: string | null | undefined,
+  _moveId: string | null | undefined,
+  _moveCategory: string | null | undefined,
   nature: string | null | undefined,
 ) {
-  if (!nature) {
+  if (!nature || nature === "Hardy") {
     return null;
   }
 
-  if (scope === "attacker") {
-    const attackingStatKey = resolveAttackingStatKey(moveId, moveCategory);
-    const natureEffect = getNatureEffectDirectionForStat(
-      nature,
-      attackingStatKey,
-    );
-
-    if (natureEffect) {
-      return natureEffect === "boost" ? "+nature" : "-nature";
-    }
-
-    return null;
-  }
-
-  if (!moveCategory) {
-    return null;
-  }
-
-  const defendingStatKey = moveCategory === "Physical" ? "def" : "spd";
-  const natureEffect = getNatureEffectDirectionForStat(
-    nature,
-    defendingStatKey,
-  );
-
-  if (natureEffect) {
-    return natureEffect === "boost" ? "+nature" : "-nature";
-  }
-
-  return null;
+  return formatModifierToken(scope, slugifySymbolValue(nature));
 }
 
 export function setNatureModifierToken(

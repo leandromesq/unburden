@@ -77,6 +77,7 @@ export const ptBRDictionary: AppDictionary = {
       },
       { keys: ["Alt", "K"], description: "Focar o chat principal" },
       { keys: ["Alt", "X"], description: "Trocar atacante e defensor" },
+      { keys: ["Alt", "S"], description: "Salvar o set ativo do resumo" },
       { keys: ["Esc"], description: "Fechar esta janela de ajuda" },
     ],
     syntaxRows: [

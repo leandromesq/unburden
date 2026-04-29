@@ -350,7 +350,7 @@ describe("input mutations", () => {
   });
 
   describe("setNatureModifierToken", () => {
-    test("maps defense-boosting attacker natures to +nature for body press", () => {
+    test("writes explicit attacker nature tokens instead of representative aliases", () => {
       expect(
         setNatureModifierToken(
           "zamazenta !body-press x incineroar",
@@ -359,10 +359,10 @@ describe("input mutations", () => {
           "Physical",
           "Bold",
         ),
-      ).toBe("zamazenta !body-press +nature x incineroar");
+      ).toBe("zamazenta !body-press bold x incineroar");
     });
 
-    test("maps defender defensive natures by the active move category", () => {
+    test("writes explicit defender nature tokens instead of representative aliases", () => {
       expect(
         setNatureModifierToken(
           "snorlax !body-slam x incineroar",
@@ -371,7 +371,7 @@ describe("input mutations", () => {
           "Physical",
           "Bold",
         ),
-      ).toBe("snorlax !body-slam x incineroar +nature");
+      ).toBe("snorlax !body-slam x incineroar bold");
     });
   });
 

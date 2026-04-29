@@ -70,6 +70,7 @@ export const enDictionary: AppDictionary = {
       { keys: ["Enter"], description: "Scroll to results (when ready)" },
       { keys: ["Alt", "K"], description: "Focus the main prompt input" },
       { keys: ["Alt", "X"], description: "Swap attacker and defender" },
+      { keys: ["Alt", "S"], description: "Save the active summary set" },
       { keys: ["Esc"], description: "Close this help dialog" },
     ],
     syntaxRows: [

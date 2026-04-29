@@ -352,6 +352,31 @@ describe("omnibar components", () => {
     expect(combobox).not.toHaveFocus();
   });
 
+  test("searchable combobox show-all mode still filters after typing", () => {
+    render(
+      <SearchableCombobox
+        label="Ability"
+        value=""
+        options={["Poison Heal", "Hyper Cutter", "Sand Veil"]}
+        onChange={() => {}}
+        showAllOptions
+      />,
+    );
+
+    const combobox = screen.getByRole("combobox", { name: "Ability" });
+
+    fireEvent.focus(combobox);
+    expect(screen.getByRole("option", { name: "Poison Heal" })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "Hyper Cutter" })).toBeInTheDocument();
+
+    fireEvent.change(combobox, { target: { value: "poi" } });
+
+    expect(screen.getByRole("option", { name: "Poison Heal" })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("option", { name: "Hyper Cutter" }),
+    ).not.toBeInTheDocument();
+  });
+
   test("Alt+X swaps sides from the main textarea", () => {
     render(<OmniComposer />);
 
