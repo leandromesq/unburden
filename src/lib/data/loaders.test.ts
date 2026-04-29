@@ -1,8 +1,5 @@
-import {
-  itemDisplayById,
-  legalPokemonData,
-  pokemonById,
-} from "@/lib/data/loaders";
+import { itemDisplayById } from "@/lib/data/items";
+import { legalPokemonData, pokemonById } from "@/lib/data/pokemon";
 
 describe("champions species data", () => {
   test("uses updated Champions mega abilities for newer megas", () => {

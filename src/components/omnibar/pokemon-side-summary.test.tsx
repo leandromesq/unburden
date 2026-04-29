@@ -2,7 +2,8 @@ import { act, fireEvent, render, screen, within } from "@testing-library/react";
 
 import { OmniComposer } from "@/components/omnibar/omni-composer";
 import { SUMMARY_NATURES } from "@/components/omnibar/pokemon-summary/shared";
-import { pokemonById, vgcMetaByPokemonId } from "@/lib/data/loaders";
+import { pokemonById } from "@/lib/data/pokemon";
+import { vgcMetaByPokemonId } from "@/lib/data/vgc-meta";
 import { createImportedSet } from "@/lib/team/imported-set-utils";
 import { buildCommonAbilities } from "@/lib/parser/grammar";
 import { useOmniStore } from "@/store/use-omni-store";
