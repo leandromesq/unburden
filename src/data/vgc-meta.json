@@ -1202,12 +1202,7 @@
       "Knock Off"
     ],
     "commonAbilities": ["Bulletproof", "Overgrow"],
-    "commonItems": [
-      "Chesnaughtite",
-      "Sitrus Berry",
-      "Leftovers",
-      "Miracle Seed"
-    ]
+    "commonItems": ["Chesnaughtite", "Sitrus Berry", "Leftovers", "Miracle Seed"]
   },
   {
     "pokemonId": "chesnaughtmega",
@@ -2061,7 +2056,6 @@
       "Protect",
       "Dazzling Gleam",
       "Moonblast",
-      "Light of Ruin",
       "Calm Mind",
       "Draining Kiss",
       "Psychic",
@@ -2081,7 +2075,6 @@
       "Protect",
       "Dazzling Gleam",
       "Moonblast",
-      "Light of Ruin",
       "Calm Mind",
       "Draining Kiss",
       "Psychic",
@@ -2437,12 +2430,7 @@
       "Snowscape"
     ],
     "commonAbilities": ["Snow Cloak", "Ice Body"],
-    "commonItems": [
-      "Bright Powder",
-      "Never-Melt Ice",
-      "Quick Claw",
-      "Leftovers"
-    ]
+    "commonItems": ["Bright Powder", "Never-Melt Ice", "Quick Claw", "Leftovers"]
   },
   {
     "pokemonId": "glalie",
@@ -5864,7 +5852,7 @@
     "pokemonId": "toucannon",
     "defaultItem": "Focus Sash",
     "defaultAbility": "Skill Link",
-    "defaultMove": "Brave Bird",
+    "defaultMove": "Beak Blast",
     "commonMoves": [
       "Bullet Seed",
       "Rock Blast",

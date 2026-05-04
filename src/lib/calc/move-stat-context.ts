@@ -1,9 +1,7 @@
-import { NATURE_MODIFIERS } from "@/lib/calc/stat-calc";
 import { normalizeId } from "@/lib/data/normalization";
 
 type AttackingStatKey = "atk" | "def" | "spa";
 type NatureEffectDirection = "boost" | "nerf";
-type NatureStatKey = "atk" | "def" | "spa" | "spd" | "spe";
 
 export function resolveAttackingStatKey(
   moveId: string | null | undefined,
@@ -14,23 +12,6 @@ export function resolveAttackingStatKey(
   }
 
   return moveCategory === "Special" ? "spa" : "atk";
-}
-
-export function getNatureEffectDirectionForStat(
-  nature: string | null | undefined,
-  statKey: NatureStatKey,
-): NatureEffectDirection | null {
-  if (!nature) {
-    return null;
-  }
-
-  const multiplier = NATURE_MODIFIERS[nature]?.[statKey];
-
-  if (multiplier === undefined || multiplier === 1) {
-    return null;
-  }
-
-  return multiplier > 1 ? "boost" : "nerf";
 }
 
 export function resolveAttackerRepresentativeNature(

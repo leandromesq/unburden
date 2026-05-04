@@ -1,8 +1,6 @@
 import { Generations } from "@pkmn/data";
 import { Dex } from "@pkmn/dex";
 
-import regulationVerification from "../../src/lib/data/regulation-verification";
-
 export type PokemonEntry = {
   id: string;
   name: string;
@@ -68,7 +66,6 @@ type StaticDataBuildOptions = {
   championSpeciesNames: string[];
   championsMegaAbilities: Map<string, string>;
   itemEntries: ItemEntry[];
-  liveRosterNames: string[];
   regulationAllowedPokemonIds: string[];
 };
 
@@ -100,9 +97,6 @@ const SPECIAL_BASE_SPECIES_IDS = new Map<string, string>([
   ["floettemega", "floetteeternal"],
 ]);
 const MEGA_SPECIES_ID_PATTERN = /mega(x|y)?$/i;
-const { compareRegulationRosters, resolveRegulationRosterIds } =
-  regulationVerification;
-
 function normalizeAlias(value: string) {
   return value
     .toLowerCase()
@@ -338,7 +332,6 @@ export async function buildStaticDataSnapshot({
   championSpeciesNames,
   championsMegaAbilities,
   itemEntries,
-  liveRosterNames,
   regulationAllowedPokemonIds,
 }: StaticDataBuildOptions) {
   const gens = new Generations(Dex);
@@ -389,14 +382,6 @@ export async function buildStaticDataSnapshot({
   }
 
   const speciesIdIndex = buildSpeciesIdIndex(speciesPool.values());
-  const { liveRosterIds, unresolvedSpeciesNames } = resolveRegulationRosterIds(
-    liveRosterNames,
-    speciesIdIndex,
-  );
-  const { missingFromLocal, extraInLocal } = compareRegulationRosters(
-    liveRosterIds,
-    regulationAllowedPokemonIds,
-  );
 
   for (const [displayName, abilityName] of championsMegaAbilities) {
     const speciesId = speciesIdIndex.get(compactAlias(displayName));
@@ -550,8 +535,5 @@ export async function buildStaticDataSnapshot({
     moveEntries,
     learnsetEntries,
     itemEntries,
-    missingFromLocal,
-    extraInLocal,
-    unresolvedSpeciesNames,
   };
 }

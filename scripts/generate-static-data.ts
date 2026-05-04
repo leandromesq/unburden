@@ -1,8 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-import type { ActiveRegulationConfig } from "../src/lib/types";
-import regulationVerification from "../src/lib/data/regulation-verification";
 import regulationMA from "../src/data/regulations/regulation-m-a.json";
 import {
   fetchPikalyticsFormatIndex,
@@ -11,7 +9,6 @@ import {
 import {
   fetchChampionsItems,
   fetchChampionsMegaAbilities,
-  fetchRegulationMARosterNames,
 } from "./fetch/fetch-serebii";
 import {
   buildStaticDataSnapshot,
@@ -20,6 +17,7 @@ import {
   type MoveEntry,
   type PokemonEntry,
 } from "./transform/build-static-data";
+import { formatJsonWithCompactArrays } from "./transform/format-json";
 
 const DEFAULT_CHAMPIONS_FORMAT = "championspreview";
 const MIN_POKEMON_ENTRY_COUNT = 400;
@@ -27,7 +25,6 @@ const MIN_MOVE_ENTRY_COUNT = 200;
 const MIN_LEARNSET_ENTRY_COUNT = 350;
 const MIN_ITEM_ENTRY_COUNT = 50;
 const MAX_ENTRY_COUNT_DELTA = 75;
-const { buildRosterHash, formatVerificationDate } = regulationVerification;
 
 async function readExistingJson<T>(filepath: string): Promise<T | null> {
   try {
@@ -200,19 +197,15 @@ function warnOnLargeCountDelta(
 
 async function main() {
   const dataDir = path.join(process.cwd(), "src", "data");
-  const regulationsDir = path.join(dataDir, "regulations");
-  const activeRegulationPath = path.join(regulationsDir, "active.json");
 
   const [
     championsIndexMarkdown,
     championsMegaAbilities,
     itemEntries,
-    liveRosterNames,
   ] = await Promise.all([
     fetchPikalyticsFormatIndex(DEFAULT_CHAMPIONS_FORMAT),
     fetchChampionsMegaAbilities(),
     fetchChampionsItems(),
-    fetchRegulationMARosterNames(),
   ]);
   const championSpeciesNames = parseIndexSpeciesNames(championsIndexMarkdown);
 
@@ -223,22 +216,12 @@ async function main() {
     moveEntries,
     learnsetEntries,
     itemEntries: builtItemEntries,
-    missingFromLocal,
-    extraInLocal,
-    unresolvedSpeciesNames,
   } = await buildStaticDataSnapshot({
     championSpeciesNames,
     championsMegaAbilities,
     itemEntries,
-    liveRosterNames,
     regulationAllowedPokemonIds: regulationMA.allowedPokemonIds,
   });
-
-  if (unresolvedSpeciesNames.length > 0) {
-    throw new Error(
-      `Failed to resolve live Serebii roster entries: ${unresolvedSpeciesNames.join(", ")}`,
-    );
-  }
 
   validateGeneratedData(
     pokemonEntries,
@@ -247,13 +230,12 @@ async function main() {
     builtItemEntries,
   );
 
-  const [previousPokemonEntries, previousMoveEntries, previousLearnsetEntries, previousItemEntries, previousActiveRegulationConfig] =
+  const [previousPokemonEntries, previousMoveEntries, previousLearnsetEntries, previousItemEntries] =
     await Promise.all([
       readExistingJson<PokemonEntry[]>(path.join(dataDir, "pokemon.gen9.json")),
       readExistingJson<MoveEntry[]>(path.join(dataDir, "moves.gen9.json")),
       readExistingJson<LearnsetEntry[]>(path.join(dataDir, "learnsets.gen9.json")),
       readExistingJson<ItemEntry[]>(path.join(dataDir, "champions-items.json")),
-      readExistingJson<ActiveRegulationConfig>(activeRegulationPath),
     ]);
 
   warnOnLargeCountDelta(
@@ -277,52 +259,25 @@ async function main() {
     builtItemEntries.length,
   );
 
-  const rosterHash = await buildRosterHash(regulationMA.allowedPokemonIds);
-  const isRosterVerified =
-    missingFromLocal.length === 0 && extraInLocal.length === 0;
-
-  if (!isRosterVerified) {
-    console.warn("regulation-m-a.json may be out of date:");
-
-    if (missingFromLocal.length > 0) {
-      console.warn(`  + missing from local: ${missingFromLocal.join(", ")}`);
-    }
-
-    if (extraInLocal.length > 0) {
-      console.warn(`  - extra in local: ${extraInLocal.join(", ")}`);
-    }
-
-    console.warn(
-      "  active regulation verification date was left unchanged because the live roster does not match local data.",
-    );
-  }
-
-  const nextActiveRegulationConfig: ActiveRegulationConfig = {
-    regulationId: regulationMA.id,
-    rosterHash,
-  };
-
-  if (isRosterVerified) {
-    nextActiveRegulationConfig.lastVerified = formatVerificationDate();
-  } else if (previousActiveRegulationConfig?.lastVerified) {
-    nextActiveRegulationConfig.lastVerified =
-      previousActiveRegulationConfig.lastVerified;
-  }
+  const compactArrayKeysByFile = new Map<string, ReadonlySet<string>>([
+    ["moves.gen9.json", new Set(["aliases"])],
+  ]);
 
   const writeJson = async (filename: string, data: unknown) => {
     const target = path.join(dataDir, filename);
-    await writeFile(target, `${JSON.stringify(data, null, 2)}\n`, "utf8");
+    await writeFile(
+      target,
+      `${formatJsonWithCompactArrays(data, {
+        compactArrayKeys: compactArrayKeysByFile.get(filename),
+      })}\n`,
+      "utf8",
+    );
   };
 
   await writeJson("pokemon.gen9.json", pokemonEntries);
   await writeJson("moves.gen9.json", moveEntries);
   await writeJson("learnsets.gen9.json", learnsetEntries);
   await writeJson("champions-items.json", builtItemEntries);
-  await writeFile(
-    activeRegulationPath,
-    `${JSON.stringify(nextActiveRegulationConfig, null, 2)}\n`,
-    "utf8",
-  );
 }
 
 void main();

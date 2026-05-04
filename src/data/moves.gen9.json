@@ -3663,17 +3663,6 @@
     "isSpread": false
   },
   {
-    "id": "lightofruin",
-    "name": "Light of Ruin",
-    "aliases": ["light of ruin", "lightofruin"],
-    "type": "Fairy",
-    "category": "Special",
-    "basePower": 140,
-    "accuracy": 90,
-    "target": "normal",
-    "isSpread": false
-  },
-  {
     "id": "lightscreen",
     "name": "Light Screen",
     "aliases": ["light screen", "lightscreen"],

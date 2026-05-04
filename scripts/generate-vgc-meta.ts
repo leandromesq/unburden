@@ -35,6 +35,7 @@ import {
   type VgcMetaOverrides,
   type VgcMetaProfile,
 } from "./transform/build-vgc-meta";
+import { formatJsonWithCompactArrays } from "./transform/format-json";
 
 const REQUEST_CONCURRENCY = 6;
 const FALLBACK_ITEM_ID = "sitrusberry";
@@ -529,7 +530,17 @@ async function main() {
   warnOnLargeProfileDelta(previousMeta?.length ?? null, nextMeta.length);
 
   await mkdir(dataDir, { recursive: true });
-  await writeFile(outputPath, `${JSON.stringify(nextMeta, null, 2)}\n`, "utf8");
+  await writeFile(
+    outputPath,
+    `${formatJsonWithCompactArrays(nextMeta, {
+      compactArrayKeys: new Set(["commonAbilities"]),
+      compactArrayMaxLengthByKey: new Map([
+        ["commonItems", 4],
+        ["commonMoves", 4],
+      ]),
+    })}\n`,
+    "utf8",
+  );
 
   console.log(
     [

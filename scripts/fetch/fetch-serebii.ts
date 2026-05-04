@@ -1,12 +1,7 @@
-import regulationVerification from "../../src/lib/data/regulation-verification";
-
 const SEREBII_CHAMPIONS_MEGA_ABILITIES_URL =
   "https://www.serebii.net/pokemonchampions/megaabilities.shtml";
 const SEREBII_CHAMPIONS_ITEMS_URL =
   "https://www.serebii.net/pokemonchampions/items.shtml";
-const SEREBII_CHAMPIONS_REGULATION_MA_URL =
-  "https://www.serebii.net/pokemonchampions/rankedbattle/regulationm-a.shtml";
-const { parseSerebiiRegulationRosterNames } = regulationVerification;
 
 type ItemEntry = {
   id: string;
@@ -92,10 +87,5 @@ export async function fetchChampionsMegaAbilities() {
 export async function fetchChampionsItems() {
   const html = await fetchText(SEREBII_CHAMPIONS_ITEMS_URL);
   return parseChampionsItems(html);
-}
-
-export async function fetchRegulationMARosterNames() {
-  const html = await fetchText(SEREBII_CHAMPIONS_REGULATION_MA_URL);
-  return parseSerebiiRegulationRosterNames(html);
 }
 
