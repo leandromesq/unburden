@@ -52,18 +52,22 @@ export function GhostSuggestion({ value, ghostText, textareaRef }: GhostSuggesti
       return;
     }
 
-    const computedStyle = window.getComputedStyle(textarea);
+    const frame = window.requestAnimationFrame(() => {
+      const computedStyle = window.getComputedStyle(textarea);
 
-    flow.style.width = `${textarea.clientWidth}px`;
-    flow.style.transform = `translate(${-textarea.scrollLeft}px, ${-textarea.scrollTop}px)`;
+      flow.style.width = `${textarea.clientWidth}px`;
+      flow.style.transform = `translate(${-textarea.scrollLeft}px, ${-textarea.scrollTop}px)`;
 
-    for (const key of TEXT_MIRROR_STYLE_KEYS) {
-      flow.style[key] = computedStyle[key];
-    }
+      for (const key of TEXT_MIRROR_STYLE_KEYS) {
+        flow.style[key] = computedStyle[key];
+      }
 
-    flow.style.whiteSpace = "pre-wrap";
-    flow.style.wordBreak = "break-word";
-    flow.style.overflowWrap = "break-word";
+      flow.style.whiteSpace = "pre-wrap";
+      flow.style.wordBreak = "break-word";
+      flow.style.overflowWrap = "break-word";
+    });
+
+    return () => window.cancelAnimationFrame(frame);
   }, [ghostText, textareaRef, value]);
 
   if (!ghostText) {

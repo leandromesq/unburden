@@ -5,6 +5,7 @@ import {
   useActionState,
   useCallback,
   useEffect,
+  useEffectEvent,
   useRef,
   useState,
 } from "react";
@@ -74,6 +75,7 @@ export function BugReportButton() {
       closeTimeoutRef.current = null;
     }, getCssDurationMs("--modal-close-dur", 150));
   }, []);
+  const closeFromDocumentEvent = useEffectEvent(close);
 
   useEffect(() => {
     if (closing) {
@@ -102,13 +104,13 @@ export function BugReportButton() {
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        close();
+        closeFromDocumentEvent();
       }
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [close, open]);
+  }, [open]);
 
   useEffect(() => {
     return () => {
@@ -149,24 +151,19 @@ export function BugReportButton() {
           aria-modal="true"
           aria-labelledby={titleId}
           aria-describedby={descriptionId}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{
-            background: "rgba(0,0,0,0.65)",
-            backdropFilter: "blur(6px)",
-          }}
-          onClick={(event) => {
-            if (event.target === event.currentTarget) {
-              close();
-            }
-          }}
+          className="fixed inset-0 z-[var(--z-modal)] flex items-center justify-center p-4"
         >
+          <button
+            type="button"
+            aria-label={dictionary.bugReport.closeAria}
+            className="absolute inset-0 cursor-default bg-[var(--overlay-scrim)]"
+            onClick={() => close()}
+          />
           <div
             id="bug-report-dialog"
-            className={`theme-panel t-modal w-full max-w-xl overflow-hidden rounded-xl ${
+            className={`theme-panel theme-modal-shell t-modal relative max-w-xl overflow-hidden ${
               closing ? "is-closing" : "is-open"
             }`}
-            style={{ boxShadow: "var(--shadow-overlay)" }}
-            onClick={(event) => event.stopPropagation()}
           >
             <div className="flex items-center justify-between px-6 pt-5 pb-4">
               <div>

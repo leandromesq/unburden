@@ -1,4 +1,4 @@
-import type { ImportedSet, ShareState } from "@/lib/types";
+import type { ImportedSet, ShareState, SpeedBenchmarkShareState } from "@/lib/types";
 
 function encodeBase64Url(value: string) {
   if (typeof Buffer !== "undefined") {
@@ -26,6 +26,16 @@ export function serializeShareState(sets: ImportedSet[]) {
   const payload: ShareState = {
     v: 1,
     sets,
+  };
+
+  return encodeBase64Url(JSON.stringify(payload));
+}
+
+export function serializeSpeedShareState(state: SpeedBenchmarkShareState) {
+  const payload: ShareState = {
+    v: 2,
+    page: "speed",
+    state,
   };
 
   return encodeBase64Url(JSON.stringify(payload));

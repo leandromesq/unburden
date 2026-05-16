@@ -64,6 +64,7 @@ describe("theme and locale controls", () => {
   });
 
   test("hydrates locale from the legacy persisted storage key", async () => {
+    // Compatibility can be removed after the legacy omniboost-locale key is no longer supported.
     window.localStorage.setItem("omniboost-locale", "en");
     document.documentElement.lang = "pt-BR";
 

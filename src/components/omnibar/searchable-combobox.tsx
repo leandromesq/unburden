@@ -116,7 +116,7 @@ export function SearchableCombobox({
   const [hasEditedOpenQuery, setHasEditedOpenQuery] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const optionRefs = useRef<Array<HTMLDivElement | null>>([]);
   const inputValueRef = useRef(value);
   const committedSelectionRef = useRef<string | null>(null);
   const closeTimeoutRef = useRef<number | null>(null);
@@ -355,16 +355,15 @@ export function SearchableCombobox({
             role="listbox"
             aria-hidden={!open}
             data-origin="top-left"
-            className={`theme-menu t-dropdown absolute left-0 right-0 top-[calc(100%+0.35rem)] z-20 max-h-64 overflow-y-auto rounded-lg py-1 ${
+            className={`theme-menu t-dropdown absolute left-0 right-0 top-[calc(100%+0.35rem)] z-[var(--z-dropdown)] max-h-64 overflow-y-auto rounded-lg py-1 ${
               open ? "is-open" : "is-closing"
             }`}
             style={{ scrollbarGutter: "stable" }}
           >
             {filteredOptions.map((option, index) => (
-              <button
+              <div
                 key={option}
                 id={`${optionIdBase}-${index}`}
-                type="button"
                 role="option"
                 aria-selected={index === resolvedHighlightedIndex}
                 ref={(node) => {
@@ -375,14 +374,14 @@ export function SearchableCombobox({
                   selectOption(option);
                 }}
                 onMouseEnter={() => setHighlightedIndex(index)}
-                className={`theme-menu-item w-full text-left ${
+                className={`theme-menu-item w-full cursor-default text-left ${
                   compact ? "px-3 py-2 text-[13px]" : "px-3 py-2.5 text-sm"
                 } ${
                   index === resolvedHighlightedIndex ? "theme-menu-item-active" : ""
                 }`}
               >
                 {renderOption ? renderOption(option) : option}
-              </button>
+              </div>
             ))}
           </div>
         ) : null}

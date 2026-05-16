@@ -232,9 +232,15 @@ Runtime external assets:
 - Pokemon Showdown sprite CDN
 - PokemonDB image fallback URLs
 
-Main aggregation layer:
+Runtime data modules:
 
-- `src/lib/data/loaders.ts`
+- `src/lib/data/pokemon.ts`
+- `src/lib/data/moves.ts`
+- `src/lib/data/learnsets.ts`
+- `src/lib/data/items.ts`
+- `src/lib/data/regulations.ts`
+- `src/lib/data/form-aliases.ts`
+- `src/lib/data/vgc-meta.ts`
 
 ## Project Structure
 

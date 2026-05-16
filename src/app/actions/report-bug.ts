@@ -2,6 +2,7 @@
 
 import { createHash } from "node:crypto";
 import { headers } from "next/headers";
+import { after } from "next/server";
 
 import {
   consumeBugReportRateLimit,
@@ -19,6 +20,12 @@ interface ReportBugState {
 const APP_BUG_REPORT_MARKER = "<!-- source: app-bug-report -->";
 const DEFAULT_GITHUB_BUG_REPORT_REPO = "leandromesq/unburden-issues";
 const HONEYPOT_FIELD_NAME = "teamName";
+const TRUSTED_ORIGIN_HOSTS: readonly string[] = [
+  "localhost:3000",
+  "127.0.0.1:3000",
+  "unburden.app",
+  "www.unburden.app",
+];
 
 function getClientAddressKey(headersList: Headers) {
   const forwardedFor = headersList.get("x-forwarded-for");
@@ -36,6 +43,25 @@ function getClientAddressKey(headersList: Headers) {
 
 function readTrimmedString(value: FormDataEntryValue | null) {
   return typeof value === "string" ? value.trim() : "";
+}
+
+async function auth(headersList: Headers) {
+  const origin = headersList.get("origin");
+  const host = headersList.get("x-forwarded-host") ?? headersList.get("host");
+
+  if (!origin || !host) {
+    return { authorized: false };
+  }
+
+  try {
+    const originUrl = new URL(origin);
+    return {
+      authorized:
+        originUrl.host === host || TRUSTED_ORIGIN_HOSTS.includes(originUrl.host),
+    };
+  } catch {
+    return { authorized: false };
+  }
 }
 
 function truncate(value: string, maxLength: number) {
@@ -112,6 +138,21 @@ export async function reportBug(
 ): Promise<ReportBugState> {
   const locale = coerceLocale(readTrimmedString(formData.get("locale")));
   const messages = getDictionary(locale).bugReport.server;
+  const headersList = await headers();
+  const session = await auth(headersList);
+  const rateLimitKey = getClientAddressKey(headersList);
+
+  if (!session.authorized) {
+    after(() => {
+      console.warn("Bug report rejected by untrusted origin.", { rateLimitKey });
+    });
+
+    return {
+      status: "error",
+      message: messages.unexpected,
+    };
+  }
+
   const token = process.env.GITHUB_BUG_REPORT_TOKEN?.trim();
   const repo =
     process.env.GITHUB_BUG_REPORT_REPO?.trim() ??
@@ -129,8 +170,6 @@ export async function reportBug(
   const pageUrl = readTrimmedString(formData.get("pageUrl"));
   const userAgent = readTrimmedString(formData.get("userAgent"));
   const honeypotValue = readTrimmedString(formData.get(HONEYPOT_FIELD_NAME));
-  const headersList = await headers();
-  const rateLimitKey = getClientAddressKey(headersList);
 
   if (description.length < 10) {
     return {
@@ -147,9 +186,11 @@ export async function reportBug(
   }
 
   if (honeypotValue) {
-    console.warn("Bug report rejected by honeypot.", {
-      rateLimitKey,
-      pageUrl,
+    after(() => {
+      console.warn("Bug report rejected by honeypot.", {
+        rateLimitKey,
+        pageUrl,
+      });
     });
     return {
       status: "success",
@@ -164,9 +205,11 @@ export async function reportBug(
       Math.ceil(rateLimit.retryAfterMs / 60_000),
     );
 
-    console.warn("Bug report rate limited.", {
-      rateLimitKey,
-      retryAfterMs: rateLimit.retryAfterMs,
+    after(() => {
+      console.warn("Bug report rate limited.", {
+        rateLimitKey,
+        retryAfterMs: rateLimit.retryAfterMs,
+      });
     });
 
     return {

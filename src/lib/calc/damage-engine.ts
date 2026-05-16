@@ -5,16 +5,15 @@ import { resolveAttackingStatKey } from "@/lib/calc/move-stat-context";
 import {
   DEFAULT_IV_SPREAD,
   EMPTY_STAT_SPREAD,
-  applyStage,
   cloneStatSpread,
-  computeStats,
   evToStatPointsValue,
   statPointsToCalcEvs,
 } from "@/lib/calc/stat-calc";
+import { buildEffectiveSpeed } from "@/lib/calc/speed-engine";
 import { normalizeKoText } from "@/lib/calc/ko-text";
 import { moveById } from "@/lib/data/moves";
 import { normalizeId } from "@/lib/data/normalization";
-import { pokemonById } from "@/lib/data/pokemon";
+import { pokemonById, resolveMegaEvolution } from "@/lib/data/pokemon";
 import { inferDefaultAbility, inferDefaultItem } from "@/lib/parser/inference";
 import { resolveReferencedImportedSet } from "@/lib/team/set-references";
 import type {
@@ -321,115 +320,6 @@ function getResolvedMoveHitCount(parsed: ParsedCommand) {
   return {
     moveHitMetadata,
     moveHitCount: parsed.moveHitCount ?? moveHitMetadata.hitCount,
-  };
-}
-
-function getSpeedRelevantAbilityMultiplier(
-  ability: string | undefined,
-  weather: ReturnType<typeof getWeather>,
-  terrain: ReturnType<typeof getTerrain>,
-  status: PokemonStatus | undefined,
-) {
-  const normalizedAbility = normalizeId(ability ?? "");
-  const hasStatus = Boolean(status);
-
-  if (normalizedAbility === "quickfeet" && hasStatus) {
-    return 1.5;
-  }
-
-  if (normalizedAbility === "swiftswim" && weather === "Rain") {
-    return 2;
-  }
-
-  if (normalizedAbility === "chlorophyll" && weather === "Sun") {
-    return 2;
-  }
-
-  if (normalizedAbility === "sandrush" && weather === "Sand") {
-    return 2;
-  }
-
-  if (normalizedAbility === "slushrush" && weather === "Snow") {
-    return 2;
-  }
-
-  if (normalizedAbility === "surgesurfer" && terrain === "Electric") {
-    return 2;
-  }
-
-  return 1;
-}
-
-function getSpeedRelevantItemMultiplier(item: string | undefined) {
-  const normalizedItem = normalizeId(item ?? "");
-
-  if (normalizedItem === "choicescarf") {
-    return 1.5;
-  }
-
-  if (
-    new Set([
-      "ironball",
-      "machobrace",
-      "poweranklet",
-      "powerband",
-      "powerbelt",
-      "powerbracer",
-      "powerlens",
-      "powerweight",
-    ]).has(normalizedItem)
-  ) {
-    return 0.5;
-  }
-
-  return 1;
-}
-
-function buildEffectiveSpeed(
-  pokemon: { baseStats: { hp: number; atk: number; def: number; spa: number; spd: number; spe: number } },
-  options: {
-    evs: StatSpread;
-    ivs: StatSpread;
-    nature: string;
-    level: number;
-    speedStage: number;
-    status: PokemonStatus | undefined;
-    hasTailwind: boolean;
-    ability: string | undefined;
-    item: string | undefined;
-    weather: ReturnType<typeof getWeather>;
-    terrain: ReturnType<typeof getTerrain>;
-  },
-) {
-  const stats = computeStats(pokemon.baseStats, options.evs, options.ivs, options.nature, options.level);
-  let effectiveSpeed = applyStage(stats.spe, options.speedStage);
-  const quickFeetActive =
-    normalizeId(options.ability ?? "") === "quickfeet" && Boolean(options.status);
-
-  if (options.status === "par" && !quickFeetActive) {
-    effectiveSpeed = Math.floor(effectiveSpeed * 0.5);
-  }
-
-  effectiveSpeed = Math.floor(
-    effectiveSpeed *
-    getSpeedRelevantAbilityMultiplier(
-      options.ability,
-      options.weather,
-      options.terrain,
-      options.status,
-    ),
-  );
-  effectiveSpeed = Math.floor(
-    effectiveSpeed * getSpeedRelevantItemMultiplier(options.item),
-  );
-
-  if (options.hasTailwind) {
-    effectiveSpeed *= 2;
-  }
-
-  return {
-    rawSpeed: stats.spe,
-    effectiveSpeed,
   };
 }
 
@@ -959,8 +849,6 @@ export function buildCalculationContext(
     return null;
   }
 
-  const attacker = parsedAttacker;
-  const defender = parsedDefender;
   const parsedAttackerSet = resolveReferencedImportedSet(
     parsed.attackerSetReferenceId,
     importedSets,
@@ -974,9 +862,19 @@ export function buildCalculationContext(
   const defenderItem = getResolvedDefenderItem(
     parsed,
     parsedDefenderSet,
-    defender.id,
+    parsedDefender.id,
     requiresTargetItem,
   );
+
+  // Resolve Mega Form from base species + item when not explicitly named
+  const resolvedAttacker = (!parsedAttacker.isMega && attackerItem)
+    ? (resolveMegaEvolution(parsedAttacker.id, attackerItem) ?? parsedAttacker)
+    : parsedAttacker;
+  const resolvedDefender = (!parsedDefender.isMega && defenderItem)
+    ? (resolveMegaEvolution(parsedDefender.id, defenderItem) ?? parsedDefender)
+    : parsedDefender;
+  const attacker = resolvedAttacker;
+  const defender = resolvedDefender;
   const attackerSet = buildPromptStatPointSet(
     attacker.id,
     attacker.name,

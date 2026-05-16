@@ -171,7 +171,9 @@ export function PromptHighlightLayer({
       return;
     }
 
-    const syncMirror = () => {
+    let frame: number | null = null;
+
+    const syncMirrorNow = () => {
       const computedStyle = window.getComputedStyle(textarea);
 
       flow.style.width = `${textarea.clientWidth}px`;
@@ -186,15 +188,29 @@ export function PromptHighlightLayer({
       flow.style.overflowWrap = "break-word";
     };
 
-    syncMirror();
+    const syncMirror = () => {
+      if (frame !== null) {
+        return;
+      }
+
+      frame = window.requestAnimationFrame(() => {
+        frame = null;
+        syncMirrorNow();
+      });
+    };
+
+    syncMirrorNow();
     textarea.addEventListener("scroll", syncMirror, { passive: true });
     window.addEventListener("resize", syncMirror);
 
     return () => {
+      if (frame !== null) {
+        window.cancelAnimationFrame(frame);
+      }
       textarea.removeEventListener("scroll", syncMirror);
       window.removeEventListener("resize", syncMirror);
     };
-  }, [textareaRef, value]);
+  }, [textareaRef]);
 
   if (!value) {
     return null;

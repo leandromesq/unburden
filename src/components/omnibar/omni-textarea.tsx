@@ -189,7 +189,7 @@ export function OmniTextarea({
           aria-label="Clear prompt"
           title="Clear prompt (Alt+Backspace)"
           onClick={clearPrompt}
-          className="theme-icon-button theme-icon-button-sm absolute right-3 top-3 z-20 md:right-4 md:top-4"
+          className="theme-icon-button theme-icon-button-sm absolute right-3 top-3 z-[var(--z-dropdown)] md:right-4 md:top-4"
         >
           <X aria-hidden="true" size={15} strokeWidth={2} />
         </button>
@@ -202,6 +202,7 @@ export function OmniTextarea({
         value={input}
         spellCheck={false}
         placeholder="#gliscor !earthquake adamant x incineroar bold ~rain"
+        aria-label="Calc prompt"
         aria-keyshortcuts="Alt+K Alt+X Alt+Backspace"
         className="theme-input theme-prompt-input relative z-10 block min-h-18 w-full min-w-0 resize-none border-0 bg-transparent px-4 py-3 pr-12 text-left outline-none md:min-h-20 md:px-5 md:pr-14"
         onChange={(event) =>

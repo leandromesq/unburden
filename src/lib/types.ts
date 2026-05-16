@@ -76,6 +76,8 @@ export type SuggestionSlot =
 
 export interface VgcMetaProfile {
   pokemonId: string;
+  usageRank: number;
+  usagePercent?: number;
   defaultItem: string;
   defaultAbility: string;
   defaultMove: string;
@@ -240,7 +242,55 @@ export interface ImportedSet {
   teraType?: string;
 }
 
-export interface ShareState {
-  v: 1;
-  sets: ImportedSet[];
+export type SpeedNatureBucket = "plus" | "neutral" | "minus";
+
+export type SpeedBenchmarkSource =
+  | "species"
+  | "saved-set"
+  | "shared-snapshot";
+
+export type SpeedAbilityActiveState = "unburden-active";
+
+export interface SpeedSideState {
+  source: SpeedBenchmarkSource;
+  sourceLabel?: string;
+  setSnapshot?: ImportedSet;
+  speciesId: string;
+  item?: string;
+  ability?: string;
+  abilityActiveStates: SpeedAbilityActiveState[];
+  nature: SpeedNatureBucket;
+  speSp: number;
+  speedStage: number;
+  tailwind: boolean;
+  paralysis: boolean;
+  overrides: string[];
 }
+
+export interface SpeedGlobalState {
+  sun: boolean;
+  rain: boolean;
+  sand: boolean;
+  snow: boolean;
+  electricTerrain: boolean;
+  trickRoom: boolean;
+}
+
+export interface SpeedBenchmarkShareState {
+  command: string;
+  subject: SpeedSideState | null;
+  comparator: SpeedSideState | null;
+  globals: SpeedGlobalState;
+  focusedTierSpeed: number | null;
+}
+
+export type ShareState =
+  | {
+      v: 1;
+      sets: ImportedSet[];
+    }
+  | {
+      v: 2;
+      page: "speed";
+      state: SpeedBenchmarkShareState;
+    };

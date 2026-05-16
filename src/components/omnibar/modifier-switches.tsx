@@ -330,11 +330,9 @@ function SideColumn({
 }) {
   return (
     <section
-      className={`theme-panel min-w-0 rounded-xl p-4 ${
-        disabled ? "opacity-75" : ""
-      }`}
+      className={`min-w-0 ${disabled ? "opacity-75" : ""}`}
     >
-      <div className="mb-3 flex min-w-0 flex-wrap items-center justify-between gap-2">
+      <div className="mb-3 flex min-w-0 flex-wrap items-center justify-between gap-2 border-b border-[var(--line)] pb-3">
         <SectionLabel>{title}</SectionLabel>
         {subtitle ? (
           <div className="theme-section-meta min-w-0 truncate">
@@ -346,8 +344,8 @@ function SideColumn({
           </div>
         ) : null}
       </div>
-      <div className="grid gap-3">
-        <section className="theme-subpanel min-w-0 rounded-lg p-3">
+      <div className="grid gap-4">
+        <section className="min-w-0">
           <div className="grid gap-3">
             <StageControl
               title={labels.multipliers}
@@ -386,7 +384,7 @@ function SideColumn({
             </div>
           </div>
         </section>
-        <section className="theme-subpanel min-w-0 rounded-lg p-3">
+        <section className="theme-divider border-t pt-4">
           <div className="grid gap-4">
             <TokenGroup
               title={labels.stats}
@@ -641,7 +639,7 @@ export function ModifierSwitches() {
 
   return (
     <div className="min-w-0 px-4 py-4 md:px-5 md:py-5">
-      <section className="mb-4 min-w-0 rounded-lg border border-[var(--line)] bg-[var(--surface)] px-4 py-3">
+      <section className="mb-5 min-w-0 border-b border-[var(--line)] pb-5">
         <div className="mb-3">
           <SectionLabel>{dictionary.modifierSwitches.global}</SectionLabel>
         </div>
@@ -691,24 +689,26 @@ export function ModifierSwitches() {
           onHpChange={(value) => handleHpChange("attacker", value)}
           labels={dictionary.modifierSwitches}
         />
-        <SideColumn
-          side="defender"
-          title={dictionary.modifierSwitches.defender}
-          subtitle={defenderPokemon?.name}
-          activeTokens={activeChipTokens.defender}
-          disabled={!defenderReady}
-          stageValue={defenderStage}
-          speedValue={defenderSpeedStage}
-          hpPercent={defenderHpPercent}
-          statTokens={DEFENDER_STAT_TOKENS}
-          effectTokens={DEFENDER_EFFECT_TOKENS}
-          abilityTokens={defenderAbilityTokens}
-          onInsert={(token) => handleInsert("defender", token)}
-          onStageChange={(value) => handleStageChange("defender", value)}
-          onSpeedChange={(value) => handleSpeedChange("defender", value)}
-          onHpChange={(value) => handleHpChange("defender", value)}
-          labels={dictionary.modifierSwitches}
-        />
+        <div className="min-w-0 md:border-l md:border-[var(--line)] md:pl-5">
+          <SideColumn
+            side="defender"
+            title={dictionary.modifierSwitches.defender}
+            subtitle={defenderPokemon?.name}
+            activeTokens={activeChipTokens.defender}
+            disabled={!defenderReady}
+            stageValue={defenderStage}
+            speedValue={defenderSpeedStage}
+            hpPercent={defenderHpPercent}
+            statTokens={DEFENDER_STAT_TOKENS}
+            effectTokens={DEFENDER_EFFECT_TOKENS}
+            abilityTokens={defenderAbilityTokens}
+            onInsert={(token) => handleInsert("defender", token)}
+            onStageChange={(value) => handleStageChange("defender", value)}
+            onSpeedChange={(value) => handleSpeedChange("defender", value)}
+            onHpChange={(value) => handleHpChange("defender", value)}
+            labels={dictionary.modifierSwitches}
+          />
+        </div>
       </div>
     </div>
   );

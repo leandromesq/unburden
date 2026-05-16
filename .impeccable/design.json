@@ -1,0 +1,306 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-16T00:00:00.000Z",
+  "title": "Design System: Unburden VGC",
+  "extensions": {
+    "colorMeta": {
+      "charcoal-felt": {
+        "role": "neutral",
+        "displayName": "Charcoal Felt",
+        "canonical": "#141414",
+        "tonalRamp": [
+          "#141414",
+          "#181818",
+          "#1c1c1c",
+          "#232323",
+          "#2b2b2b",
+          "#323232",
+          "#7f7a72",
+          "#f3f3f1"
+        ]
+      },
+      "brass-signal": {
+        "role": "primary",
+        "displayName": "Brass Signal",
+        "canonical": "#d6a85f",
+        "tonalRamp": [
+          "#33230f",
+          "#5a3d18",
+          "#80531f",
+          "#9a6a2c",
+          "#d6a85f",
+          "#e3bf81",
+          "#e8d0a6",
+          "#f0cf96"
+        ]
+      },
+      "danger-clay": {
+        "role": "secondary",
+        "displayName": "Danger Clay",
+        "canonical": "#c96b5c",
+        "tonalRamp": [
+          "#331614",
+          "#5d2823",
+          "#8e453b",
+          "#b1594c",
+          "#c96b5c",
+          "#db948a",
+          "#edbeb8",
+          "#f8e4e1"
+        ]
+      },
+      "success-sage": {
+        "role": "secondary",
+        "displayName": "Success Sage",
+        "canonical": "#6e9b7f",
+        "tonalRamp": [
+          "#142319",
+          "#263d2e",
+          "#3d5b47",
+          "#557862",
+          "#6e9b7f",
+          "#94b79f",
+          "#c0d4c6",
+          "#e8f0ea"
+        ]
+      },
+      "parchment-field": {
+        "role": "neutral",
+        "displayName": "Parchment Field",
+        "canonical": "#f3f0ea",
+        "tonalRamp": [
+          "#1f1d1a",
+          "#4a453f",
+          "#655f58",
+          "#817a72",
+          "#e5dece",
+          "#ece8e0",
+          "#f3f0ea",
+          "#fdfbf7"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Product title and rare screen-level headings."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Readable UI copy and panel explanations."
+      },
+      "label": {
+        "displayName": "Data Label",
+        "purpose": "Stat labels, prompt metadata, and compact machine-readable labels."
+      },
+      "prompt": {
+        "displayName": "Prompt",
+        "purpose": "Command bars and highlighted prompt mirrors."
+      }
+    },
+    "shadows": [
+      {
+        "name": "workbench",
+        "value": "0 10px 24px rgba(0, 0, 0, 0.22)",
+        "purpose": "Anchors the main composer or large work surfaces."
+      },
+      {
+        "name": "soft",
+        "value": "0 2px 8px rgba(0, 0, 0, 0.14)",
+        "purpose": "Quiet lift for panels and logo surfaces."
+      },
+      {
+        "name": "overlay",
+        "value": "0 14px 32px rgba(0, 0, 0, 0.3)",
+        "purpose": "Menus, popovers, skip link, and modals."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-fast",
+        "value": "140ms ease",
+        "purpose": "Hover, focus, and color state transitions."
+      },
+      {
+        "name": "dropdown-open",
+        "value": "250ms cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Dropdown reveal."
+      },
+      {
+        "name": "modal-open",
+        "value": "250ms cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Modal scale and fade."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ],
+    "zIndex": [
+      {
+        "name": "content",
+        "value": "10",
+        "purpose": "Local layered content above mirrors and backgrounds."
+      },
+      {
+        "name": "dropdown",
+        "value": "20",
+        "purpose": "Combobox lists and dropdown menus."
+      },
+      {
+        "name": "popover",
+        "value": "30",
+        "purpose": "Help bubbles and floating inspection panels."
+      },
+      {
+        "name": "modal",
+        "value": "50",
+        "purpose": "Modal dialogs and scrims."
+      },
+      {
+        "name": "toast",
+        "value": "60",
+        "purpose": "Transient notifications above modals when needed."
+      }
+    ],
+    "componentTokens": {
+      "focus-ring": "0 0 0 3px var(--accent-softer)",
+      "control-bg": "var(--surface)",
+      "control-bg-hover": "var(--surface-2)",
+      "control-bg-active": "var(--surface-3)",
+      "control-border": "var(--line-strong)",
+      "control-border-active": "var(--accent-border)",
+      "outcome-favorable": "var(--success)",
+      "outcome-unfavorable": "var(--danger)",
+      "outcome-tie": "var(--status-paralysis)",
+      "outcome-neutral": "var(--line)"
+    }
+  },
+  "components": [
+    {
+      "name": "Icon Button",
+      "kind": "button",
+      "refersTo": "button-icon",
+      "description": "Compact toolbar action with neutral rest state and brass focus.",
+      "html": "<button class=\"ds-icon-button\">Action</button>",
+      "css": ".ds-icon-button { border: 1px solid rgba(255,255,255,.12); background: #232323; color: #a8a39a; border-radius: 8px; min-height: 2rem; padding: 0 .625rem; font: 500 14px IBM Plex Sans, system-ui, sans-serif; transition: border-color 140ms ease, background-color 140ms ease, color 140ms ease, box-shadow 140ms ease; } .ds-icon-button:hover { border-color: rgba(214,168,95,.3); background: #2b2b2b; color: #f3f3f1; } .ds-icon-button:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(214,168,95,.08); }"
+    },
+    {
+      "name": "Modifier Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Small reversible state toggle for modifiers and quick suggestions.",
+      "html": "<button class=\"ds-chip\" aria-pressed=\"false\">Rain</button><button class=\"ds-chip ds-chip-active\" aria-pressed=\"true\">Tailwind</button>",
+      "css": ".ds-chip { border: 1px solid rgba(255,255,255,.12); background: #232323; color: #a8a39a; border-radius: 8px; padding: .375rem .75rem; font: 400 14px IBM Plex Sans, system-ui, sans-serif; transition: border-color 140ms ease, background-color 140ms ease, color 140ms ease; } .ds-chip:hover { border-color: rgba(214,168,95,.3); color: #f3f3f1; } .ds-chip:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(214,168,95,.08); } .ds-chip-active { border-color: rgba(214,168,95,.3); background: rgba(214,168,95,.14); color: #f3f3f1; }"
+    },
+    {
+      "name": "Panel Card",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Standard bordered product panel for results and summaries.",
+      "html": "<article class=\"ds-panel\"><div class=\"ds-panel-title\">Max Bulk</div><p>252-296 (82.3-96.7%)</p></article>",
+      "css": ".ds-panel { border: 1px solid rgba(255,255,255,.12); background: #1c1c1c; color: #f3f3f1; border-radius: 10px; padding: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,.14); font-family: IBM Plex Sans, system-ui, sans-serif; } .ds-panel-title { color: #f3f3f1; font-size: .8125rem; font-weight: 600; line-height: 1.25rem; letter-spacing: .01em; } .ds-panel p { color: #cbc7bf; margin: .5rem 0 0; font-family: IBM Plex Mono, monospace; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Standard searchable input with brass focus ring.",
+      "html": "<label class=\"ds-field\"><span>Species</span><input value=\"Incineroar\" /></label>",
+      "css": ".ds-field { display: grid; gap: .25rem; color: #a8a39a; font: 400 14px IBM Plex Sans, system-ui, sans-serif; } .ds-field input { border: 1px solid rgba(255,255,255,.12); background: #1c1c1c; color: #f3f3f1; border-radius: 8px; padding: .5rem .75rem; font: inherit; transition: border-color 140ms ease, background-color 140ms ease, box-shadow 140ms ease; } .ds-field input:hover { border-color: rgba(214,168,95,.3); background: #232323; } .ds-field input:focus-visible { outline: none; border-color: rgba(214,168,95,.3); box-shadow: 0 0 0 3px rgba(214,168,95,.08); }"
+    },
+    {
+      "name": "Tool Tabs",
+      "kind": "nav",
+      "refersTo": "button-icon",
+      "description": "Peer workspace mode switcher for Damage and Speed.",
+      "html": "<nav class=\"ds-tabs\"><a class=\"ds-tab ds-tab-active\">Damage</a><a class=\"ds-tab\">Speed</a></nav>",
+      "css": ".ds-tabs { display: flex; flex-wrap: wrap; gap: .375rem; font-family: IBM Plex Sans, system-ui, sans-serif; } .ds-tab { border: 1px solid transparent; color: #a8a39a; border-radius: 8px; padding: .375rem .75rem; text-decoration: none; font-size: 14px; transition: border-color 140ms ease, background-color 140ms ease, color 140ms ease; } .ds-tab:hover { border-color: rgba(255,255,255,.12); background: #232323; color: #f3f3f1; } .ds-tab:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(214,168,95,.08); } .ds-tab-active { border-color: rgba(214,168,95,.3); background: rgba(214,168,95,.08); color: #f3f3f1; }"
+    },
+    {
+      "name": "Command Composer",
+      "kind": "custom",
+      "refersTo": "input",
+      "description": "The main prompt-first workbench surface.",
+      "html": "<section class=\"ds-composer\"><div class=\"ds-strip\"><span>Attacker</span><strong>Gliscor</strong><span>x</span><strong>Incineroar</strong></div><div class=\"ds-prompt\">#gliscor !earthquake adamant x incineroar</div><div class=\"ds-status\">Ready to calculate</div></section>",
+      "css": ".ds-composer { overflow: hidden; border: 1px solid rgba(255,255,255,.12); background: #181818; color: #f3f3f1; border-radius: 10px; box-shadow: 0 10px 24px rgba(0,0,0,.22); font-family: IBM Plex Sans, system-ui, sans-serif; } .ds-composer:focus-within { border-color: rgba(214,168,95,.3); box-shadow: 0 0 0 3px rgba(214,168,95,.08); } .ds-strip { display: flex; gap: .75rem; align-items: center; border-bottom: 1px solid rgba(255,255,255,.06); background: #1c1c1c; padding: .5rem 1rem; color: #7f7a72; font-size: 12px; } .ds-strip strong { color: #f3f3f1; font-family: IBM Plex Mono, monospace; font-weight: 500; } .ds-prompt { padding: 1rem; color: #cbc7bf; font: 400 .9375rem/1.75 IBM Plex Mono, monospace; } .ds-status { border-top: 1px solid rgba(255,255,255,.06); background: #232323; color: #a8a39a; padding: .75rem 1rem; font: 400 13px IBM Plex Mono, monospace; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Tournament Workbench",
+    "overview": "Unburden looks like a serious competitive work surface: compact, warm, and built for rapid iteration under pressure. The interface should feel like a tactical editor where every control either clarifies the prompt, exposes an assumption, or moves the user toward a decision.",
+    "keyCharacteristics": [
+      "Warm charcoal surfaces with a rare brass accent.",
+      "IBM Plex Sans for interface clarity and IBM Plex Mono for prompt/data trust.",
+      "Compact controls with explicit hover, focus, active, disabled, and selected states.",
+      "Tonal layering first, shadows only when depth or overlay behavior matters.",
+      "Motion for state feedback only, never decoration."
+    ],
+    "rules": [
+      {
+        "name": "The Brass Rarity Rule",
+        "body": "Brass Signal is not decoration. If more than one thing in a local region is brass, only the selected or decisive thing keeps it.",
+        "section": "colors"
+      },
+      {
+        "name": "The Warm Neutral Rule",
+        "body": "Neutrals must stay warm and tinted. Never introduce pure black, pure white, or cold blue-gray defaults.",
+        "section": "colors"
+      },
+      {
+        "name": "The Editor Type Rule",
+        "body": "Prompt text, data values, and stat labels use mono. Buttons, tabs, prose, and navigation use sans. Do not mix them for flavor.",
+        "section": "typography"
+      },
+      {
+        "name": "The Layer Before Shadow Rule",
+        "body": "Try surface color, border, and spacing before adding a shadow. Shadows mean elevation, not decoration.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Outcome Token Rule",
+        "body": "Speed and damage relation colors use domain tokens: --outcome-favorable, --outcome-unfavorable, --outcome-tie, and --outcome-neutral. Do not style battle relations directly with generic --success or --danger unless the relation token does not exist.",
+        "section": "colors"
+      },
+      {
+        "name": "The Type Token Rule",
+        "body": "Pokemon type badges use --type-* CSS variables through getPokemonTypeColor(). Do not reintroduce component-local hex maps for types.",
+        "section": "colors"
+      }
+    ],
+    "dos": [
+      "Do keep the interface prompt-first, not prompt-only.",
+      "Do use Brass Signal only for action, selection, focus, and decisive result emphasis.",
+      "Do keep Damage Calculator and Speed Benchmark visually peer-level inside one workspace.",
+      "Do show assumptions explicitly.",
+      "Do respect reduced motion and keep transitions in the 120ms to 250ms range.",
+      "Do use labels or copy alongside color for damage outcome, legality, and Speed relation.",
+      "Do route new overlay, control, type, and outcome styling through existing semantic tokens before adding new values."
+    ],
+    "donts": [
+      "Don't recreate old-school form-heavy Pokemon calculators where users hunt through long fields.",
+      "Don't use generic SaaS dashboards with decorative cards, hero metrics, vague productivity styling, or repeated icon-card grids.",
+      "Don't use flashy gamer or neon esports UI that competes with tactical work.",
+      "Don't use cute Pokedex toy UI that treats the data as decoration instead of decision support.",
+      "Don't make the interface prompt-only in a way that hides too much state or forces grammar memorization.",
+      "Don't make silent assumptions around abilities, activation conditions, forms, legality, or set values.",
+      "Don't use gradient text, glassmorphism, decorative blur, or colored side-stripe borders.",
+      "Don't invent a new button, chip, or field vocabulary for a single screen.",
+      "Don't add component-local color maps, arbitrary z-index values, or custom focus rings when design-system tokens already exist."
+    ]
+  }
+}

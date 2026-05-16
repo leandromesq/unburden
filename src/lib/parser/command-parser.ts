@@ -318,12 +318,7 @@ export function parseCommand(
       ? pokemonById.get(normalizeId(defenderReferenceSet.speciesId))
       : null) ?? defenderMatch?.entry ?? null;
   const moveToken = structure.attacker.moveToken;
-  const referencedMove = !moveToken ? attackerReferenceSet?.moves[0] : undefined;
-  const move = moveToken
-    ? resolveMoveName(moveToken.value)
-    : referencedMove
-      ? resolveMoveName(referencedMove)
-      : null;
+  const move = moveToken ? resolveMoveName(moveToken.value) : null;
   const attackerItem = resolveItemDisplay(structure.attacker.itemToken?.value);
   const defenderItem = resolveItemDisplay(structure.defender.itemToken?.value);
 
@@ -375,9 +370,9 @@ export function parseCommand(
     issues.push(createIssue("parser.use_explicit_move_token"));
   }
 
-  if (!moveToken && !referencedMove) {
+  if (!moveToken) {
     issues.push(createIssue("parser.add_attacker_move"));
-  } else if ((moveToken || referencedMove) && !move) {
+  } else if (moveToken && !move) {
     issues.push(createIssue("parser.could_not_resolve_move"));
   }
 

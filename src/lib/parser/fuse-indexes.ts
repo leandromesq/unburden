@@ -3,7 +3,7 @@ import Fuse from "fuse.js";
 import { formAliasMap } from "@/lib/data/form-aliases";
 import { moveData } from "@/lib/data/moves";
 import { normalizeAlias } from "@/lib/data/normalization";
-import { legalPokemonData, pokemonById } from "@/lib/data/pokemon";
+import { legalPokemonData } from "@/lib/data/pokemon";
 import type { MoveEntry, PokemonEntry } from "@/lib/types";
 
 interface ResolvedMatch<T> {
@@ -73,7 +73,7 @@ export function resolvePokemonEntity(
   const formAliasId = formAliasMap.get(normalized);
 
   if (formAliasId) {
-    const entry = pokemonById.get(formAliasId);
+    const entry = pokemonExactMap.get(normalizeAlias(formAliasId)) ?? null;
     if (entry) {
       return { entry, score: 0, matchType: "form_alias" };
     }
@@ -169,7 +169,7 @@ export function resolveExactPokemonEntity(
   const formAliasId = formAliasMap.get(normalized);
 
   if (formAliasId) {
-    const entry = pokemonById.get(formAliasId);
+    const entry = pokemonExactMap.get(normalizeAlias(formAliasId)) ?? null;
     if (entry) {
       return { entry, score: 0, matchType: "form_alias" };
     }

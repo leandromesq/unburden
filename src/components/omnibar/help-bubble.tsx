@@ -121,7 +121,7 @@ export function HelpBubble() {
   }, [open]);
 
   return (
-    <div ref={containerRef} className="relative z-30">
+    <div ref={containerRef} className="relative z-[var(--z-popover)]">
       <button
         ref={buttonRef}
         type="button"
@@ -149,12 +149,12 @@ export function HelpBubble() {
           aria-labelledby={titleId}
           aria-describedby={descriptionId}
           tabIndex={-1}
-          className="theme-panel absolute right-0 top-full z-50 mt-2 w-[24rem] overflow-hidden rounded-xl text-left outline-none"
+          className="theme-panel absolute right-0 top-full z-[var(--z-popover)] mt-2 w-[min(calc(100vw-2rem),24rem)] overflow-hidden rounded-xl text-left outline-none"
           style={{ boxShadow: "var(--shadow-overlay)" }}
         >
           <div
             aria-hidden="true"
-            className={`pointer-events-none absolute inset-x-0 top-0 z-10 h-6 transition-opacity ${
+            className={`pointer-events-none absolute inset-x-0 top-0 z-[var(--z-content)] h-6 transition-opacity ${
               canScrollUp ? "opacity-100" : "opacity-0"
             }`}
             style={{
@@ -323,7 +323,7 @@ export function HelpBubble() {
 
           <div
             aria-hidden="true"
-            className={`pointer-events-none absolute inset-x-0 bottom-0 z-10 h-6 transition-opacity ${
+            className={`pointer-events-none absolute inset-x-0 bottom-0 z-[var(--z-content)] h-6 transition-opacity ${
               canScrollDown ? "opacity-100" : "opacity-0"
             }`}
             style={{

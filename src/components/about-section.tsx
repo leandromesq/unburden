@@ -45,6 +45,7 @@ export function AboutSection() {
   return (
     <section aria-labelledby="about-title" className="space-y-6">
       <div className="max-w-3xl">
+        <div className="theme-data-label mb-3">{aboutContent.intro.eyebrow}</div>
         <h2
           id="about-title"
           className="text-2xl font-semibold tracking-[-0.03em] sm:text-3xl"
@@ -56,9 +57,12 @@ export function AboutSection() {
         </p>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
-        {aboutContent.intro.highlights.map((highlight) => (
-          <div key={highlight} className="theme-subpanel rounded-xl p-4">
+      <div className="grid gap-4 border-y border-[var(--line)] py-5 sm:grid-cols-3">
+        {aboutContent.intro.highlights.map((highlight, index) => (
+          <div key={highlight} className="min-w-0">
+            <div className="theme-data-label mb-2 tabular-nums">
+              {String(index + 1).padStart(2, "0")}
+            </div>
             <p className="text-sm leading-6">{highlight}</p>
           </div>
         ))}
@@ -70,6 +74,7 @@ export function AboutSection() {
             key={card.title}
             className="theme-panel flex h-full flex-col rounded-xl p-5"
           >
+            <div className="theme-data-label mb-2">{card.eyebrow}</div>
             <h3 className="text-lg font-semibold tracking-[-0.02em]">
               {card.title}
             </h3>
@@ -103,11 +108,55 @@ export function AboutSection() {
       </div>
 
       <section
+        aria-labelledby="about-data-sources-title"
+        className="theme-panel rounded-xl p-5"
+      >
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(18rem,0.8fr)]">
+          <div>
+            <div className="theme-data-label mb-2">{aboutContent.dataSources.eyebrow}</div>
+            <h3
+              id="about-data-sources-title"
+              className="text-lg font-semibold tracking-[-0.02em]"
+            >
+              {aboutContent.dataSources.title}
+            </h3>
+            <p className="theme-text-dim mt-2 text-sm leading-6">
+              {aboutContent.dataSources.description}
+            </p>
+          </div>
+
+          <div className="border-t border-[var(--line)] pt-4 lg:border-t-0 lg:border-l lg:pl-5 lg:pt-0">
+            <ul className="theme-text-dim space-y-2 text-sm leading-6">
+              {aboutContent.dataSources.notes.map((note) => (
+                <li key={note}>{note}</li>
+              ))}
+            </ul>
+            {aboutContent.dataSources.links?.length ? (
+              <div className="mt-4 flex flex-wrap gap-2">
+                {aboutContent.dataSources.links.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="theme-icon-button inline-flex h-8 items-center rounded-lg px-3 text-sm"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </section>
+
+      <section
         aria-labelledby="about-support-title"
         className="theme-panel rounded-xl p-5"
       >
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(18rem,0.8fr)]">
           <div>
+            <div className="theme-data-label mb-2">{aboutContent.support.eyebrow}</div>
             <h3
               id="about-support-title"
               className="text-lg font-semibold tracking-[-0.02em]"
@@ -124,7 +173,7 @@ export function AboutSection() {
             </ul>
           </div>
 
-          <div className="theme-subpanel rounded-lg p-4">
+          <div className="border-t border-[var(--line)] pt-4 lg:border-t-0 lg:border-l lg:pl-5 lg:pt-0">
             <div className="theme-text-dim text-sm leading-6">
               {dictionary.aboutSection.actionsDescription}
             </div>

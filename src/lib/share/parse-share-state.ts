@@ -1,5 +1,11 @@
 import { normalizeImportedSet } from "@/lib/team/imported-set-utils";
-import type { ImportedSet, ShareState } from "@/lib/types";
+import type {
+  ImportedSet,
+  ShareState,
+  SpeedBenchmarkShareState,
+  SpeedGlobalState,
+  SpeedSideState,
+} from "@/lib/types";
 
 function decodeBase64Url(value: string) {
   const normalized = value.replace(/-/g, "+").replace(/_/g, "/");
@@ -12,6 +18,63 @@ function decodeBase64Url(value: string) {
   const binary = atob(padded);
   const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
   return new TextDecoder().decode(bytes);
+}
+
+function isSpeedGlobalsLike(value: unknown): value is SpeedGlobalState {
+  if (!value || typeof value !== "object") return false;
+
+  const candidate = value as Record<string, unknown>;
+  return [
+    "sun",
+    "rain",
+    "sand",
+    "snow",
+    "electricTerrain",
+    "trickRoom",
+  ].every((key) => typeof candidate[key] === "boolean");
+}
+
+function isSpeedSideLike(value: unknown): value is SpeedSideState {
+  if (!value || typeof value !== "object") return false;
+
+  const candidate = value as Record<string, unknown>;
+  return (
+    typeof candidate.source === "string" &&
+    typeof candidate.speciesId === "string" &&
+    Array.isArray(candidate.abilityActiveStates) &&
+    ["plus", "neutral", "minus"].includes(String(candidate.nature)) &&
+    typeof candidate.speSp === "number" &&
+    typeof candidate.speedStage === "number" &&
+    typeof candidate.tailwind === "boolean" &&
+    typeof candidate.paralysis === "boolean" &&
+    Array.isArray(candidate.overrides)
+  );
+}
+
+function isSpeedShareStateLike(value: unknown): value is SpeedBenchmarkShareState {
+  if (!value || typeof value !== "object") return false;
+
+  const candidate = value as Record<string, unknown>;
+  return (
+    typeof candidate.command === "string" &&
+    (candidate.subject === null || isSpeedSideLike(candidate.subject)) &&
+    (candidate.comparator === null || isSpeedSideLike(candidate.comparator)) &&
+    isSpeedGlobalsLike(candidate.globals) &&
+    (candidate.focusedTierSpeed === null ||
+      typeof candidate.focusedTierSpeed === "number")
+  );
+}
+
+function parseRawShareState(encoded: string | null): ShareState | null {
+  if (!encoded) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(decodeBase64Url(encoded)) as ShareState;
+  } catch {
+    return null;
+  }
 }
 
 function isImportedSetLike(value: unknown): value is ImportedSet {
@@ -32,10 +95,9 @@ export function parseShareState(encoded: string | null) {
   }
 
   try {
-    const decoded = decodeBase64Url(encoded);
-    const parsed = JSON.parse(decoded) as ShareState;
+    const parsed = parseRawShareState(encoded);
 
-    if (parsed.v !== 1 || !Array.isArray(parsed.sets)) {
+    if (!parsed || parsed.v !== 1 || !Array.isArray(parsed.sets)) {
       return [];
     }
 
@@ -45,4 +107,14 @@ export function parseShareState(encoded: string | null) {
   } catch {
     return [];
   }
+}
+
+export function parseSpeedShareState(encoded: string | null) {
+  const parsed = parseRawShareState(encoded);
+
+  if (!parsed || parsed.v !== 2 || parsed.page !== "speed") {
+    return null;
+  }
+
+  return isSpeedShareStateLike(parsed.state) ? parsed.state : null;
 }

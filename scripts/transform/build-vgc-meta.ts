@@ -36,6 +36,8 @@ export type ItemEntry = {
 
 export type VgcMetaProfile = {
   pokemonId: string;
+  usageRank: number;
+  usagePercent?: number;
   defaultItem: string;
   defaultAbility: string;
   defaultMove: string;
@@ -470,7 +472,19 @@ export function mergeProfile(
 export function finalizeMetaProfiles(
   baseProfiles: Array<{ usagePercent: number; profile: VgcMetaProfile }>,
 ) {
-  return dedupeStrings(baseProfiles.map(({ profile }) => JSON.stringify(profile)))
+  return dedupeStrings(
+    baseProfiles.map(({ usagePercent, profile }, index) =>
+      JSON.stringify({
+        ...profile,
+        usageRank:
+          Number.isFinite(profile.usageRank) &&
+          profile.usageRank !== Number.MAX_SAFE_INTEGER
+            ? profile.usageRank
+            : index + 1,
+        usagePercent,
+      }),
+    ),
+  )
     .map((profileText) => JSON.parse(profileText) as VgcMetaProfile)
     .sort((left, right) => left.pokemonId.localeCompare(right.pokemonId));
 }

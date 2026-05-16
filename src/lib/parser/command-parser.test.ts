@@ -354,6 +354,10 @@ describe("parseCommand", () => {
       referencedSets,
     );
     const referenced = parseCommand(
+      "#rain-toed !muddy-water x incineroar",
+      referencedSets,
+    );
+    const noMove = parseCommand(
       "#rain-toed x incineroar",
       referencedSets,
     );
@@ -367,11 +371,13 @@ describe("parseCommand", () => {
       attackerSetReferenceId: "politoed",
       move: "Muddy Water",
     });
+    expect(noMove.parsed).toBeNull();
+    expect(noMove.issues).toContainEqual({ id: "parser.add_attacker_move" });
   });
 
   test("parses side modifiers directly after a saved set reference", () => {
     const result = parseCommand(
-      "#rain-toed max-spa +nature x incineroar",
+      "#rain-toed !muddy-water max-spa +nature x incineroar",
       referencedSets,
     );
 
@@ -466,14 +472,17 @@ describe("parseCommand", () => {
     });
   });
 
-  test("resolves saved set references by nickname and uses the saved move when omitted", () => {
-    const result = parseCommand("#rain-toed x incineroar", referencedSets);
+  test("resolves saved set references by nickname and requires an explicit move", () => {
+    const withMove = parseCommand("#rain-toed !muddy-water x incineroar", referencedSets);
+    const noMove = parseCommand("#rain-toed x incineroar", referencedSets);
 
-    expect(result.parsed).toMatchObject({
+    expect(withMove.parsed).toMatchObject({
       attacker: "Politoed",
       defender: "Incineroar",
       move: "Muddy Water",
     });
+    expect(noMove.parsed).toBeNull();
+    expect(noMove.issues).toContainEqual({ id: "parser.add_attacker_move" });
   });
 
   test("reports unknown saved set references", () => {

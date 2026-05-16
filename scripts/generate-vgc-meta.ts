@@ -198,6 +198,8 @@ function buildFallbackMetaProfile({
   );
   const baseProfile: VgcMetaProfile = {
     pokemonId: pokemon.id,
+    usageRank: previousProfile?.usageRank ?? Number.MAX_SAFE_INTEGER,
+    usagePercent: previousProfile?.usagePercent,
     defaultItem: previousProfile?.defaultItem ?? fallbackItem,
     defaultAbility:
       previousProfile?.defaultAbility ?? pokemon.abilities[0] ?? "No Ability",
@@ -460,6 +462,8 @@ async function main() {
         const mergedProfile = mergeProfile(
           {
             pokemonId: pokemon.id,
+            usageRank: Number.MAX_SAFE_INTEGER,
+            usagePercent: indexEntry?.usagePercent,
             defaultItem,
             defaultAbility,
             defaultMove,
@@ -474,6 +478,8 @@ async function main() {
           usagePercent: indexEntry?.usagePercent ?? 0,
           profile: {
             ...mergedProfile,
+            usageRank: Number.MAX_SAFE_INTEGER,
+            usagePercent: indexEntry?.usagePercent,
             commonMoves: dedupeStrings(mergedProfile.commonMoves ?? []).slice(
               0,
               commonMoveLimit,
@@ -523,7 +529,15 @@ async function main() {
       }
 
       return left.profile.pokemonId.localeCompare(right.profile.pokemonId);
-    });
+    })
+    .map((entry, index) => ({
+      usagePercent: entry.usagePercent,
+      profile: {
+        ...entry.profile,
+        usageRank: index + 1,
+        usagePercent: entry.usagePercent,
+      },
+    }));
   const nextMeta = finalizeMetaProfiles(baseProfiles);
 
   validateMetaProfiles(nextMeta, pokemonById, legalItemById, moveIndex);

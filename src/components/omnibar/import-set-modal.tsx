@@ -119,15 +119,6 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
     close();
   }, [close, parsed, recompute, saveSets]);
 
-  const handleBackdropClick = useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
-      if (event.target === event.currentTarget) {
-        close();
-      }
-    },
-    [close],
-  );
-
   const portalTarget = typeof document === "undefined" ? null : document.body;
 
   if (!portalTarget) {
@@ -139,15 +130,18 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
       role="dialog"
       aria-modal="true"
       aria-label={dictionary.importSetModal.dialogAria}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background: "rgba(0,0,0,0.65)", backdropFilter: "blur(6px)" }}
-      onClick={handleBackdropClick}
+      className="fixed inset-0 z-[var(--z-modal)] flex items-center justify-center p-4"
     >
+      <button
+        type="button"
+        aria-label={dictionary.importSetModal.closeAria}
+        className="absolute inset-0 cursor-default bg-[var(--overlay-scrim)]"
+        onClick={close}
+      />
       <div
-        className={`theme-panel theme-modal-shell t-modal max-w-lg overflow-hidden ${
+        className={`theme-panel theme-modal-shell t-modal relative max-w-lg overflow-hidden ${
           closing ? "is-closing" : "is-open"
         }`}
-        onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-center justify-between px-6 pt-5 pb-4">
           <div>
@@ -225,9 +219,9 @@ export function ImportSetModal({ onClose }: ImportSetModalProps) {
                 {dictionary.importSetModal.preview(parsed.length)}
               </div>
               <ul className="space-y-2">
-                {parsed.map((set, index) => (
+                {parsed.map((set) => (
                   <SetPreviewCard
-                    key={`${set.speciesId}-${set.nickname ?? ""}-${index}`}
+                    key={`${set.speciesId}-${set.nickname ?? ""}-${set.moves.join("|")}`}
                     set={set}
                   />
                 ))}

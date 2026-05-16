@@ -265,17 +265,18 @@ describe("damage engine", () => {
     });
   });
 
-  test("does not resolve mega evolution from a mega stone item alone", () => {
+  test("resolves mega evolution from a mega stone item", () => {
     const parsed = parseCommand(
       "charizard !heat-wave @charizardite-y x tinkaton",
     ).parsed;
     const context = buildCalculationContext(parsed!);
 
-    expect(context?.attacker.name).toBe("Charizard");
-    expect(context?.attackerAbility).toBe("Blaze");
+    expect(context?.attacker.name).toBe("Charizard-Mega-Y");
+    expect(context?.attackerAbility).toBe("Drought");
+    expect(context?.assumptions).toContain("Mega Evolution: Charizard-Mega-Y");
   });
 
-  test("resolves mega evolution only when the mega form is explicit in the prompt", () => {
+  test("resolves mega evolution when mega form is explicit in the prompt", () => {
     const parsed = parseCommand(
       "charizard-mega-y !heat-wave @charizardite-y x tinkaton",
     ).parsed;
@@ -301,7 +302,7 @@ describe("damage engine", () => {
     const eternalMegaContext = buildCalculationContext(eternalMega!);
 
     expect(regularContext?.attacker.name).toBe("Floette");
-    expect(eternalBaseContext?.attacker.name).toBe("Floette-Eternal");
+    expect(eternalBaseContext?.attacker.name).toBe("Floette-Mega");
     expect(eternalMegaContext?.attacker.name).toBe("Floette-Mega");
   });
 
@@ -310,7 +311,7 @@ describe("damage engine", () => {
     const context = buildCalculationContext(parsed!);
 
     expect(context?.attacker.name).toBe("Charizard");
-    expect(context?.attackerAbility).toBe("Blaze");
+    expect(context?.attackerAbility).not.toBe("Drought");
   });
 
   test("applies defender items that mitigate or bulk special damage", () => {
@@ -350,7 +351,7 @@ describe("damage engine", () => {
         moves: ["Muddy Water", "Ice Beam", "Protect", "Helping Hand"],
       }),
     };
-    const parsed = parseCommand("#politoed x incineroar", importedSets).parsed;
+    const parsed = parseCommand("#politoed !muddy-water x incineroar", importedSets).parsed;
 
     const context = buildCalculationContext(parsed!, importedSets);
     const [result] = calculateDamageResults(parsed!, importedSets);

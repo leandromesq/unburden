@@ -1,27 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
-const TYPE_COLORS: Record<string, string> = {
-  bug: "#8aa11a",
-  dark: "#5a5366",
-  dragon: "#0f6ac0",
-  electric: "#f2c94c",
-  fairy: "#ef90e6",
-  fighting: "#ce416b",
-  fire: "#ff7f50",
-  flying: "#89aae3",
-  ghost: "#5269ad",
-  grass: "#63bc5a",
-  ground: "#d97845",
-  ice: "#73cec0",
-  normal: "#919aa2",
-  poison: "#b567ce",
-  psychic: "#fa7179",
-  rock: "#c5b78c",
-  steel: "#5a8ea2",
-  water: "#539ddf",
-};
+import { getPokemonTypeColor } from "@/lib/ui/type-colors";
 
 function getFallbackInitials(name: string) {
   const words = name
@@ -48,10 +29,9 @@ function PokemonSpriteFallback({
     <div
       role="img"
       aria-label={`${name} sprite fallback`}
-      className="flex h-18 w-18 items-center justify-center rounded-xl font-mono text-lg font-bold tracking-[0.08em] text-white"
+      className="flex h-18 w-18 items-center justify-center rounded-xl font-mono text-lg font-bold tracking-[0.08em] text-[var(--text)]"
       style={{
-        background:
-          TYPE_COLORS[primaryType?.toLowerCase() ?? ""] ?? "var(--surface-3)",
+        background: getPokemonTypeColor(primaryType),
       }}
     >
       {getFallbackInitials(name)}
@@ -63,14 +43,21 @@ interface PokemonSpriteProps {
   sources: string[];
   name: string;
   primaryType: string | null;
+  loading?: "eager" | "lazy";
 }
 
 export function PokemonSprite({
   sources,
   name,
   primaryType,
+  loading = "eager",
 }: PokemonSpriteProps) {
-  const [failedSources, setFailedSources] = useState<string[]>([]);
+  const sourceKey = useMemo(() => sources.join("\n"), [sources]);
+  const [failedState, setFailedState] = useState<{
+    sourceKey: string;
+    sources: string[];
+  }>({ sourceKey, sources: [] });
+  const failedSources = failedState.sourceKey === sourceKey ? failedState.sources : [];
   const activeSource = sources.find((source) => !failedSources.includes(source));
 
   if (!activeSource) {
@@ -84,16 +71,18 @@ export function PokemonSprite({
       alt={name}
       width={72}
       height={72}
-      loading="eager"
+      loading={loading}
       className="h-18 w-18 object-contain"
       style={{ imageRendering: "pixelated" }}
       onError={(event) => {
         const nextFailedSource = event.currentTarget.currentSrc || activeSource;
-        setFailedSources((current) =>
-          current.includes(nextFailedSource)
-            ? current
-            : [...current, nextFailedSource],
-        );
+        setFailedState((current) => {
+          const currentSources = current.sourceKey === sourceKey ? current.sources : [];
+
+          return currentSources.includes(nextFailedSource)
+            ? { sourceKey, sources: currentSources }
+            : { sourceKey, sources: [...currentSources, nextFailedSource] };
+        });
       }}
     />
   );

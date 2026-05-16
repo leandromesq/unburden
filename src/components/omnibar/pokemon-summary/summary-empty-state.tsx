@@ -4,6 +4,7 @@ import type { ImportedSet } from "@/lib/types";
 
 import { useI18n } from "@/i18n/I18nProvider";
 import { SearchableCombobox } from "@/components/omnibar/searchable-combobox";
+import { SummaryHeader } from "@/components/omnibar/pokemon-summary/summary-header";
 import { SummarySavedSetList } from "@/components/omnibar/pokemon-summary/summary-saved-set-list";
 
 interface SummaryEmptyStateProps {
@@ -42,9 +43,7 @@ export function SummaryEmptyState({
       data-testid={`${side}-summary`}
       className="theme-panel min-w-0 overflow-visible rounded-xl p-4 sm:p-5"
     >
-      <div className="text-sm font-medium">
-        {sideLabel}
-      </div>
+      <SummaryHeader title={sideLabel} />
 
       <div className="mt-3 flex min-w-0 items-start gap-3 sm:items-center">
         <div className="theme-subpanel flex h-18 w-18 shrink-0 items-center justify-center rounded-xl p-2 sm:h-20 sm:w-20">

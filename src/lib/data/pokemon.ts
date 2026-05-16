@@ -25,6 +25,17 @@ const megaEvolutionPool = pokemonData
   );
 
 const megaEvolutionByBaseIdAndItem = new Map(megaEvolutionPool);
+const megaEvolutionTargetsByBaseId = new Map<string, PokemonEntry[]>();
+
+for (const entry of pokemonData) {
+  if (!entry.isMega || !entry.baseSpeciesId) {
+    continue;
+  }
+
+  const targets = megaEvolutionTargetsByBaseId.get(entry.baseSpeciesId) ?? [];
+  targets.push(entry);
+  megaEvolutionTargetsByBaseId.set(entry.baseSpeciesId, targets);
+}
 
 export function resolveMegaEvolution(
   pokemonId: string,
@@ -53,6 +64,25 @@ export function resolveMegaEvolution(
   }
 
   return pokemonById.get(megaId) ?? null;
+}
+
+export function getBaseSpeciesForMega(pokemonId: string) {
+  const pokemon = pokemonById.get(pokemonId);
+
+  if (!pokemon?.isMega || !pokemon.baseSpeciesId) {
+    return null;
+  }
+
+  return pokemonById.get(pokemon.baseSpeciesId) ?? null;
+}
+
+export function getMegaEvolutionTargets(pokemonId: string) {
+  const pokemon = pokemonById.get(pokemonId);
+  const baseId = pokemon?.isMega && pokemon.baseSpeciesId
+    ? pokemon.baseSpeciesId
+    : pokemon?.id ?? pokemonId;
+
+  return megaEvolutionTargetsByBaseId.get(baseId) ?? [];
 }
 
 function slugifySpriteCandidate(value: string) {

@@ -21,6 +21,13 @@ export interface AboutContent {
     highlights: string[];
   };
   cards: AboutCardContent[];
+  dataSources: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    notes: string[];
+    links?: AboutLink[];
+  };
   support: {
     eyebrow: string;
     title: string;
@@ -34,13 +41,13 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
     intro: {
       eyebrow: "Sobre o Projeto",
       title:
-        "Uma plataforma de calculadora de dano otimizada e veloz para Pokemon Champions.",
+        "Um workspace prompt-first para cálculos de dano e benchmarks de Speed em Pokemon Champions.",
       description:
-        "O Unburden foi projetado para agilizar o processo de teambuilding, permitindo que você simule cenarios de uma partida rapidamente por meio de cálculos rapidos e simples na forma de texto.",
+        "O Unburden foi projetado para agilizar o teambuilding competitivo. Em vez de preencher formulários longos, você descreve matchups e interações de Speed em texto, ajusta as premissas visíveis e compartilha o estado completo. É feito para responder rapidamente: isto sobrevive, isto passa na Speed, e qual premissa mudou o resultado?",
       highlights: [
-        "Gramática de prompt simples e intuitiva para matchups rápidos.",
-        "Cálculo de dano comparando Min, Mid e Max bulk simultaneamente.",
-        "Totalmente integrado às mecânicas de double battles e do Pokemon Champions.",
+        "Gramática de prompt simples para matchups, modificadores e checagens rápidas.",
+        "Cálculo de dano com comparação simultânea entre Min, Mid e Max bulk.",
+        "Ladder de Speed para visualizar tiers, empates e thresholds de move order.",
       ],
     },
     cards: [
@@ -48,10 +55,10 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
         eyebrow: "O Desenvolvedor",
         title: "Leandro Mesquita",
         description:
-          "Desenvolvedor web/mobile e entusiasta do cenario competitivo de Pokemon/VGC.",
+          "Desenvolvedor web/mobile e entusiasta do cenário competitivo de Pokemon/VGC.",
         bullets: [
           "Estudante de Ciência da Computação",
-          "Preso no Master Ball 2000 pontos no Pokemon Champions",
+          "Jogador competitivo de Pokemon Champions e VGC",
           "Grande entusiasta de Tinkaton",
         ],
         links: [
@@ -65,28 +72,40 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
       },
       {
         eyebrow: "O App",
-        title: "Cálculos em Tempo Real",
+        title: "Premissas Visíveis",
         description:
-          "O Unburden utiliza o motor de cálculos do Showdown para garantir precisão, enquanto a interface age como um editor de texto inteligente.",
+          "O Unburden utiliza o motor de cálculos do Showdown para precisão, enquanto a interface mantém espécies, sets, modificadores e contexto de batalha fáceis de revisar.",
         bullets: [
           "Fuzzy matching para Pokemon e golpes, reduzindo erros de digitação.",
-          "Suporte para Mega Evoluções e estados de campo como Weather, Terrain etc.",
-          "Compartilhamento via URL que preserva o estado completo do cálculo ou compartilhamento de texto dos resultados.",
+          "Suporte para Mega Evoluções, Weather, Terrain, Trick Room e modificadores de Speed.",
+          "Compartilhamento via URL que preserva o estado completo do cálculo ou benchmark.",
         ],
       },
       {
         eyebrow: "Fluxo de Trabalho",
-        title: "Editor Orientado por Prompt",
+        title: "Loop de Iteração Rápida",
         description:
           "O Unburden foi projetado para reduzir atrito durante testes de matchup e criação de sets, mantendo o foco em velocidade e clareza.",
         bullets: [
           "Autocomplete e edição rápida para espécies, itens, abilities, golpes e spreads.",
           "Resumo lateral para ajustar set, stats, forma e contexto de batalha sem trocar de tela.",
-          "Comparação imediata entre Min, Mid e Max bulk para acelerar decisões de teambuilding.",
+          "Comparação imediata de dano e tiers de Speed para acelerar decisões de teambuilding.",
           "Fluxo pensado para testes curtos, revisão de calcs e compartilhamento rápido por URL ou texto.",
         ],
       },
     ],
+    dataSources: {
+      eyebrow: "Dados de Meta",
+      title: "Benchmarks e sets informados por Pikalytics",
+      description:
+        "Os dados atuais de meta do Pokemon Champions VGC, incluindo uso, itens comuns, abilities e padrões usados em benchmarks, são informados pelo Pikalytics quando disponíveis.",
+      notes: [
+        "O Unburden usa esses dados para acelerar o ponto de partida de resumos, sugestões e tiers de Speed.",
+        "Dados do Pikalytics são um ponto de partida, não uma garantia de legalidade, otimização ou uso atual em torneios.",
+        "O Unburden não é afiliado ao Pikalytics.",
+      ],
+      links: [{ label: "Pikalytics", href: "https://www.pikalytics.com/" }],
+    },
     support: {
       eyebrow: "Suporte e Comunidade",
       title: "Contribua com o Projeto",
@@ -102,13 +121,13 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
   en: {
     intro: {
       eyebrow: "About the Project",
-      title: "A damage-calculation workspace optimized for Pokemon Champions.",
+      title: "A prompt-first VGC workspace for damage calcs and Speed benchmarks.",
       description:
-        "Unburden is designed to speed up the teambuilding workflow. Instead of filling long forms, you use a fast prompt grammar to simulate VGC-style doubles scenarios in seconds.",
+        "Unburden is designed to speed up competitive teambuilding. Instead of filling long forms, you describe matchups and Speed interactions in text, tune visible assumptions, and share the full state. It is built for quickly answering: does this survive, what outspeeds this, and which assumption changed the result?",
       highlights: [
-        "High-speed prompt grammar for rapid matchup checks.",
-        "Client-side damage calculation comparing Min, Mid, and Max bulk at the same time.",
-        "Built around Champions SP spreads and battle mechanics.",
+        "Fast prompt grammar for matchups, modifiers, and quick checks.",
+        "Damage calculation comparing Min, Mid, and Max bulk at the same time.",
+        "Speed ladder for reading tiers, ties, and move-order thresholds.",
       ],
     },
     cards: [
@@ -119,7 +138,7 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
           "Web/mobile developer and competitive Pokemon/VGC enthusiast.",
         bullets: [
           "Computer Science student",
-          "Hardstuck Master Ball 2000 points on Pokemon Champions",
+          "Competitive Pokemon Champions and VGC player",
           "Big Tinkaton enjoyer",
         ],
         links: [
@@ -133,28 +152,40 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
       },
       {
         eyebrow: "The App",
-        title: "Real-Time Calculations",
+        title: "Visible Assumptions",
         description:
-          "Unburden utilizes the Showdown calculator for accuracy while the interface behaves like an intelligent text editor.",
+          "Unburden uses the Showdown calculator for accuracy while keeping species, sets, modifiers, and battle context easy to inspect.",
         bullets: [
           "Fuzzy matching for Pokemon and moves to reduce typing errors.",
-          "Native support for Mega Evolutions and field states like Weather, Terrain, etc.",
-          "URL sharing that preserves the full calc state or plain text result sharing.",
+          "Native support for Mega Evolutions, Weather, Terrain, Trick Room, and Speed modifiers.",
+          "URL sharing that preserves the full calc or benchmark state.",
         ],
       },
       {
         eyebrow: "Workflow",
-        title: "Prompt-First Editing",
+        title: "Fast Iteration Loop",
         description:
           "Unburden is built to cut friction while testing matchups and creating sets, with the interface staying focused on speed and readability.",
         bullets: [
           "Fast autocomplete and editing for species, items, abilities, moves, and spreads.",
           "Side summaries let you tune set, stats, form, and battle context without leaving the calc flow.",
-          "Immediate Min, Mid, and Max bulk comparison helps with quick team-building decisions.",
+          "Immediate damage ranges and Speed tiers help with quick team-building decisions.",
           "Sharing stays lightweight through URL state and plain-text result output.",
         ],
       },
     ],
+    dataSources: {
+      eyebrow: "Meta Data",
+      title: "Benchmarks and sets informed by Pikalytics",
+      description:
+        "Current Pokemon Champions VGC meta data, including usage, common items, abilities, and benchmark defaults, is informed by Pikalytics where available.",
+      notes: [
+        "Unburden uses this data to make summaries, suggestions, and Speed tiers faster to start from.",
+        "Pikalytics data is a starting point, not a guarantee of legality, optimality, or current tournament usage.",
+        "Unburden is not affiliated with Pikalytics.",
+      ],
+      links: [{ label: "Pikalytics", href: "https://www.pikalytics.com/" }],
+    },
     support: {
       eyebrow: "Support and Community",
       title: "Help Grow the Ecosystem",

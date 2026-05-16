@@ -6,10 +6,12 @@ import {
 } from "@/lib/calc/stat-calc";
 import { formAliasMap } from "@/lib/data/form-aliases";
 import { normalizeAlias, normalizeId } from "@/lib/data/normalization";
-import { pokemonById } from "@/lib/data/pokemon";
+import { legalPokemonData, pokemonById } from "@/lib/data/pokemon";
 import { resolvePokemonEntity } from "@/lib/parser/fuse-indexes";
 import { normalizeImportedSet } from "@/lib/team/imported-set-utils";
 import type { ImportedSet, StatSpread } from "@/lib/types";
+
+const legalIds = new Set(legalPokemonData.map((entry) => entry.id));
 
 function parseFirstLine(line: string): {
   nickname?: string;
@@ -69,19 +71,19 @@ function parseStatLine(line: string): Partial<StatSpread> {
 }
 
 function resolveSpeciesId(speciesName: string): { id: string; name: string } | null {
-  // Direct ID lookup
+  // Direct ID lookup — legal only
   const directId = normalizeId(speciesName);
   const direct = pokemonById.get(directId);
-  if (direct) return { id: direct.id, name: direct.name };
+  if (direct && legalIds.has(direct.id)) return { id: direct.id, name: direct.name };
 
-  // Form alias lookup
+  // Form alias lookup — legal only (formAliasMap is already legal-filtered)
   const aliasId = formAliasMap.get(normalizeAlias(speciesName));
   if (aliasId) {
     const entry = pokemonById.get(aliasId);
-    if (entry) return { id: entry.id, name: entry.name };
+    if (entry && legalIds.has(entry.id)) return { id: entry.id, name: entry.name };
   }
 
-  // Fuzzy match via fuse-indexes
+  // Fuzzy match via fuse-indexes (already legal-only pool)
   const fuzzy = resolvePokemonEntity(speciesName);
   if (fuzzy) return { id: fuzzy.entry.id, name: fuzzy.entry.name };
 

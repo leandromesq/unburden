@@ -98,26 +98,26 @@ Jolly Nature
   });
 
   test("parses nickname, tera type, IVs, aliases, fuzzy matches, and skips invalid sets", () => {
-    const sets = parseShowdownSets(`Pivot Bird (Landorus-Therian) @ Choice Scarf
-Ability: Intimidate
+    const sets = parseShowdownSets(`Slowking Classic (Slowking) @ Leftovers
+Ability: Regenerator
 Level: 50
-Tera Type: Flying
+Tera Type: Poison
 IVs: 31 HP / 0 Atk / 30 Def / 29 SpA / 28 SpD / 27 Spe
-Jolly Nature
-- Earthquake
-- Rock Slide
-- U-turn
+Calm Nature
+- Scald
+- Future Sight
+- Slack Off
 - Protect
 
-Lando T @ Sitrus Berry
-Ability: Intimidate
-Level: 50
-- Stomping Tantrum
-
-Incineroa @ Safety Goggles
+Incin @ Safety Goggles
 Ability: Intimidate
 Level: 50
 - Fake Out
+
+Slowkingg @ Sitrus Berry
+Ability: Regenerator
+Level: 50
+- Future Sight
 
 NotAPokemon @ Leftovers
 Ability: Pressure
@@ -126,9 +126,9 @@ Ability: Pressure
     expect(sets).toHaveLength(3);
 
     expect(sets[0]).toMatchObject({
-      speciesId: "landorustherian",
-      nickname: "Pivot Bird",
-      teraType: "Flying",
+      speciesId: "slowking",
+      nickname: "Slowking Classic",
+      teraType: "Poison",
       ivs: {
         hp: 31,
         atk: 0,
@@ -139,7 +139,7 @@ Ability: Pressure
       },
     });
 
-    expect(sets[1].speciesId).toBe("landorustherian");
-    expect(sets[2].speciesId).toBe("incineroar");
+    expect(sets[1].speciesId).toBe("incineroar");
+    expect(sets[2].speciesId).toBe("slowkinggalar");
   });
 });

@@ -50,7 +50,7 @@ export function SummarySetActions({
       </button>
 
       {switchOpen ? (
-        <div className="theme-menu absolute left-0 top-full z-30 mt-1.5 min-w-40 max-w-[calc(100vw-3rem)] overflow-hidden rounded-xl p-1">
+        <div className="theme-menu absolute left-0 top-full z-[var(--z-dropdown)] mt-1.5 min-w-40 max-w-[calc(100vw-3rem)] overflow-hidden rounded-xl p-1">
           {otherSets.map((set) => (
             <button
               key={set.speciesId}

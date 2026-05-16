@@ -1,18 +1,31 @@
 # Sintaxe do Prompt do Unburden
 
-Este doc define sintaxe canônica do prompt do Unburden.
+Este documento define a sintaxe canônica dos prompts do Unburden.
 
-## Visão Geral
+Há duas gramáticas relacionadas:
 
-Unburden usa gramática compacta, separada por lados:
+1. **Calculadora de dano** em `/`
+2. **Speed Benchmark** em `/speed`
 
-- tudo antes de `x` ou `vs` = atacante
-- tudo depois de `x` ou `vs` = defensor
-- token que começa com `~` = global
-- só nome do Pokémon é texto livre
-- resto segue gramática abaixo
+Os tokens continuam em inglês/canônicos mesmo na interface em português.
 
-Estrutura base:
+---
+
+## 1. Calculadora de dano `/`
+
+### Forma mínima
+
+```txt
+{atacante} !{move} x {defensor}
+```
+
+Exemplo:
+
+```txt
+politoed !muddy-water x incineroar
+```
+
+### Forma completa
 
 ```txt
 {atacante} !{move} [tokens do atacante...] x {defensor} [tokens do defensor...] [tokens globais...]
@@ -21,72 +34,37 @@ Estrutura base:
 Exemplo:
 
 ```txt
-politoed !muddy-water @mystic-water x incineroar @assault-vest %75 ~rain
+politoed !muddy-water @mystic-water +1 x incineroar @assault-vest %75 light-screen ~rain
 ```
 
-## Regras de Escopo
+### Escopo
 
-### Segmento do atacante
+- Tudo antes de `x` ou `vs` pertence ao atacante.
+- Tudo depois de `x` ou `vs` pertence ao defensor.
+- Tokens que começam com `~` são globais e podem aparecer em qualquer lado.
+- `*` marca crítico e também pode aparecer em qualquer lado.
+- O nome do Pokémon é texto livre; o restante segue tokens explícitos.
 
-Trecho antes de `x` ou `vs`.
-
-Exemplo:
+Separadores aceitos:
 
 ```txt
-politoed !muddy-water @mystic-water +1 +nature
+x
+vs
 ```
 
-### Segmento do defensor
-
-Trecho depois de `x` ou `vs`.
-
-Exemplo:
+Separador recomendado:
 
 ```txt
-incineroar @assault-vest %75 reflect
+x
 ```
 
-### Tokens globais
+---
 
-Todo token que começa com `~` = global, não importa posição.
+## Tokens principais da calculadora de dano
 
-Exemplo:
+### Pokémon
 
-```txt
-~rain
-~trick-room
-```
-
-### Crítico
-
-Token `*` = golpe crítico. Sistema trata como global. Pode aparecer em qualquer ponto.
-
-Exemplo:
-
-```txt
-politoed !muddy-water * x incineroar
-```
-
-## Separador
-
-Sistema aceita:
-
-- `x`
-- `vs`
-
-Separador canônico recomendado = `x`.
-
-Exemplo:
-
-```txt
-politoed !muddy-water x incineroar
-```
-
-## Tokens Canônicos
-
-### 1. Pokémon
-
-Nome do Pokémon = único elemento de texto livre.
+Nome livre, com fuzzy match.
 
 Exemplos:
 
@@ -96,14 +74,32 @@ incineroar
 charizard-mega-y
 ```
 
-Observações:
+Formas especiais devem preferir o slug canônico quando houver ambiguidade.
 
-- sistema usa fuzzy match para nomes parciais ou com erro pequeno
-- formas especiais podem usar formato canônico com hífen, como `charizard-mega-y`
+### Referência a Set
 
-### 2. Move
+Uma **Referência a Set** usa `#` para resolver um Set disponível no workspace, como um **Imported Set** ou **Shared Set**.
 
-Sintaxe:
+```txt
+#set
+```
+
+Exemplos:
+
+```txt
+#raintoed
+#avincin
+```
+
+Regras:
+
+- Pode ocupar o slot de atacante ou defensor.
+- Resolve preferencialmente por nickname.
+- Pode resolver por espécie somente quando houver exatamente um Set atualmente acessível para aquela espécie.
+- Se mais de um Set da mesma espécie existir, a referência por espécie deve gerar um problema de prompt em vez de escolher silenciosamente.
+- Tokens explícitos no prompt têm prioridade sobre o Set referenciado.
+
+### Move do atacante
 
 ```txt
 !move
@@ -119,35 +115,26 @@ Exemplos:
 
 Regras:
 
-- só atacante pode ter `!move`
-- move é obrigatório para cálculo
-- move usa slug com hífens
+- Só o atacante tem move explícito.
+- Move é obrigatório para calcular dano.
+- O defensor não aceita `!move`.
 
-### 2.5. Referência a set salvo
+### Multi-hit e parâmetros de move
 
-Sintaxe:
-
-```txt
-#nome-do-set
-```
-
-Exemplos:
+Multi-hit explícito:
 
 ```txt
-#raintoed
-#avincin
+!bullet-seed(3)
+!triple-axel[3]
 ```
 
-Regras:
+Last Respects usa o parâmetro como stacks/fainted allies suportados pelo app:
 
-- `#set` pode ocupar slot do atacante ou do defensor
-- resolve set salvo ou compartilhado por `nickname` ou `speciesId`
-- quando `#set` resolve, sistema usa espécie e dados do set salvo
-- token explícito no prompt ainda tem prioridade sobre dado vindo do set
+```txt
+!last-respects[3]
+```
 
-### 3. Item
-
-Sintaxe:
+### Item
 
 ```txt
 @item
@@ -161,14 +148,9 @@ Exemplos:
 @life-orb
 ```
 
-Regras:
+O item vale para o lado onde aparece.
 
-- `@item` vale para segmento onde foi escrito
-- pode aparecer no atacante ou no defensor
-
-### 4. HP atual
-
-Sintaxe:
+### HP atual
 
 ```txt
 %N
@@ -182,14 +164,9 @@ Exemplos:
 %25
 ```
 
-Regras:
+`N` deve ficar entre `1` e `100`.
 
-- `N` entre `1` e `100`
-- `%N` vale para segmento onde foi escrito
-
-### 5. Ability explícita
-
-Sintaxe:
+### Ability explícita
 
 ```txt
 [Ability Name]
@@ -203,14 +180,9 @@ Exemplos:
 [Grassy Surge]
 ```
 
-Regras:
+A ability vale para o lado onde aparece.
 
-- ability vale para segmento onde foi escrita
-- ao digitar `[` na UI, sistema fecha para `[]` e põe cursor no meio
-
-### 6. Spread de SPs
-
-Sintaxe:
+### SP spread de Champions
 
 ```txt
 sp:hp/atk/def/spa/spd/spe
@@ -224,38 +196,11 @@ sp:32/0/1/13/1/19
 
 Regras:
 
-- sempre exige 6 valores
-- cada stat vai de `0` a `32`
-- total não pode passar de `66`
-- token vale para segmento onde foi escrito
+- Sempre exige 6 valores.
+- Cada valor vai de `0` a `32`.
+- Total não pode passar de `66`.
 
-### 7. Efeitos globais
-
-Sintaxe:
-
-```txt
-~efeito
-```
-
-Exemplos:
-
-```txt
-~rain
-~sun
-~grassy-terrain
-~trick-room
-~gravity
-```
-
-Regras:
-
-- `~efeito` sempre global
-- weather e terrain vindos de abilities como `Drizzle`, `Drought`, `Grassy Surge` não entram mais no prompt sozinhos
-- sistema oferece `~token` correspondente como sugestão opt-in
-
-### 8. Crítico
-
-Sintaxe:
+### Crítico
 
 ```txt
 *
@@ -267,58 +212,80 @@ Exemplo:
 politoed !muddy-water * x incineroar
 ```
 
-## Tokens de Segmento
+### Status
 
-Tokens de segmento não usam prefixo extra. Sistema decide se pertencem ao atacante ou defensor pela posição.
+Tokens canônicos:
 
-## Modificadores do Atacante
+```txt
+burn
+paralysis
+poison
+sleep
+freeze
+```
 
-### Multiplicadores ofensivos
+Aliases aceitos:
 
-Faixa:
+```txt
+brn
+par
+psn
+slp
+frz
+```
+
+O status vale para o lado onde aparece.
+
+---
+
+## Modificadores da calculadora de dano
+
+### Stages relevantes por contexto
+
+Tokens curtos:
 
 ```txt
 +1 até +6
 -1 até -6
 ```
 
-Exemplos:
-
-```txt
-+1
--2
-+6
-```
-
 Interpretação:
 
-- se move for físico, afeta `Atk`
-- se move for especial, afeta `SpA`
+- No atacante: afeta Atk ou SpA conforme a categoria do move.
+- No defensor: afeta Def ou SpD conforme a categoria do move.
 
-### Multiplicadores de Speed
+### Stages nomeados
 
-Faixa:
+Também é possível indicar o stat diretamente:
+
+```txt
+atk+1
+atk-1
+def+1
+def-1
+spa+1
+spa-1
+spd+1
+spd-1
+```
+
+### Speed stages
 
 ```txt
 spe+1 até spe+6
 spe-1 até spe-6
 ```
 
-Exemplos:
+Aliases aceitos:
 
 ```txt
-spe+2
-spe-6
+speed+1
+speed-1
 ```
 
-Importante para golpes como:
+Útil para efeitos dependentes de Speed, como `Electro Ball` e `Gyro Ball`.
 
-- `Electro Ball`
-- `Gyro Ball`
-
-### Nature
-
-Sintaxe:
+### Nature genérica
 
 ```txt
 +nature
@@ -327,30 +294,72 @@ Sintaxe:
 
 Interpretação no atacante:
 
-- `+nature` = nature ofensiva positiva
-- `-nature` = nature ofensiva negativa
+- `+nature`: nature ofensiva positiva para a categoria do move.
+- `-nature`: nature ofensiva negativa para a categoria do move.
 
-Mapeamento atual:
+Interpretação no defensor:
 
-- move físico:
-  - `+nature` => `Adamant`
-  - `-nature` => `Modest`
-- move especial:
-  - `+nature` => `Modest`
-  - `-nature` => `Adamant`
+- `+nature`: nature defensiva positiva contra a categoria do move.
+- `-nature`: nature defensiva negativa contra a categoria do move.
 
-### Investimento ofensivo
+Aliases:
 
-Tokens:
+```txt
+positive-nature
+pos-nature
+negative-nature
+neg-nature
+```
+
+### Nature explícita
+
+Natures por nome também são aceitas como tokens, por exemplo:
+
+```txt
+adamant
+modest
+bold
+calm
+timid
+jolly
+brave
+sassy
+```
+
+### Investimento
+
+Atacante:
 
 ```txt
 max-atk
 max-spa
 ```
 
-### Efeitos de suporte ofensivo
+Defensor:
 
-Tokens:
+```txt
+max-def
+max-spd
+```
+
+### Target do move em doubles
+
+```txt
+single-target
+multi-target
+```
+
+Aliases aceitos para `multi-target`:
+
+```txt
+multi
+double-target
+spread
+```
+
+Use quando precisar forçar o modo de alvo de um move de spread/single-target no cálculo.
+
+### Efeitos de suporte do atacante
 
 ```txt
 helping-hand
@@ -359,66 +368,7 @@ battery
 power-spot
 ```
 
-## Modificadores do Defensor
-
-### Multiplicadores defensivos
-
-Faixa:
-
-```txt
-+1 até +6
--1 até -6
-```
-
-Interpretação:
-
-- se move do atacante for físico, afeta `Def`
-- se move do atacante for especial, afeta `SpD`
-
-### Multiplicadores de Speed
-
-Faixa:
-
-```txt
-spe+1 até spe+6
-spe-1 até spe-6
-```
-
-### Nature
-
-Sintaxe:
-
-```txt
-+nature
--nature
-```
-
-Interpretação no defensor:
-
-- `+nature` = nature defensiva positiva
-- `-nature` = nature defensiva negativa
-
-Mapeamento atual:
-
-- contra move físico:
-  - `+nature` => `Bold`
-  - `-nature` => `Mild`
-- contra move especial:
-  - `+nature` => `Calm`
-  - `-nature` => `Rash`
-
-### Investimento defensivo
-
-Tokens:
-
-```txt
-max-def
-max-spd
-```
-
 ### Efeitos defensivos
-
-Tokens:
 
 ```txt
 reflect
@@ -429,9 +379,11 @@ friend-guard
 tailwind
 ```
 
-## Efeitos Globais Suportados
+### Efeitos globais
 
-### Weather
+Sempre usam `~`.
+
+Weather:
 
 ```txt
 ~rain
@@ -440,7 +392,7 @@ tailwind
 ~snow
 ```
 
-### Terrain
+Terrain:
 
 ```txt
 ~electric-terrain
@@ -449,193 +401,224 @@ tailwind
 ~misty-terrain
 ```
 
-### Outros field effects
+Outros:
 
 ```txt
 ~trick-room
 ~gravity
 ```
 
-## Regras Importantes de Interpretação
+Abilities que ativam weather ou terrain não inserem o token sozinhas. O app pode sugerir o `~token`, mas o prompt só muda se o usuário aceitar.
 
-### 1. Só atacante tem move
+---
 
-Válido:
+## Exemplos da calculadora de dano
 
-```txt
-politoed !muddy-water x incineroar
-```
-
-Inválido:
-
-```txt
-politoed !muddy-water x incineroar !flare-blitz
-```
-
-### 2. Itens, HP e abilities são posicionais
-
-Mesmo token troca de dono conforme lado:
-
-```txt
-politoed !muddy-water @mystic-water x incineroar
-```
-
-Aqui `@mystic-water` = atacante.
-
-```txt
-politoed !muddy-water x incineroar @assault-vest
-```
-
-Aqui `@assault-vest` = defensor.
-
-### 3. Species é livre. Resto é gramática
-
-Depois que Pokémon resolve em segmento, token solto passa a ser interpretado como possível modificador daquele lado, não como outro Pokémon.
-
-## Exemplos Completos
-
-### Exemplo mínimo
+Mínimo:
 
 ```txt
 politoed !muddy-water x incineroar
 ```
 
-### Exemplo com item nos dois lados
+Item nos dois lados:
 
 ```txt
 politoed !muddy-water @mystic-water x incineroar @assault-vest
 ```
 
-### Exemplo com HP atual e weather
+HP atual e weather:
 
 ```txt
 politoed !muddy-water x incineroar %75 ~rain
 ```
 
-### Exemplo com stages, screens e crítico
+Stages, screen e crítico:
 
 ```txt
 incineroar !flare-blitz +1 x tinkaton +nature reflect *
 ```
 
-### Exemplo com Speed relevante
+Stage nomeado:
+
+```txt
+gholdengo !make-it-rain spa+2 x incineroar spd+1
+```
+
+Speed relevante:
 
 ```txt
 regieleki !electro-ball spe+6 x amoonguss spe-6
 ```
 
-### Exemplo com ability explícita
+Ability explícita:
 
 ```txt
 politoed !muddy-water [Drizzle] x incineroar [Intimidate]
 ```
 
-### Exemplo com mega forma explícita
+Multi-hit:
 
 ```txt
-charizard-mega-y !heat-wave x tinkaton
+breloom !bullet-seed(3) x primarina
 ```
 
-## Exemplos Inválidos
+Target forçado:
 
-### Sem move explícito
+```txt
+charizard !heat-wave single-target x tinkaton
+```
+
+Inválido porque falta move:
 
 ```txt
 politoed x incineroar
 ```
 
-Motivo:
-
-- cálculo exige `!move`
-
-### Move no defensor
+Inválido porque o defensor não aceita move:
 
 ```txt
 politoed !muddy-water x incineroar !flare-blitz
 ```
 
-Motivo:
+---
 
-- defensor não tem slot de move nesta gramática
+## 2. Speed Benchmark `/speed`
 
-## Como o Autocomplete Trabalha
+Speed Benchmark tem gramática própria. Ela não usa `!move` e não calcula dano.
 
-Autocomplete é sensível ao slot atual.
+### Forma com só o subject
 
-Ordem de leitura:
-
-1. Pokémon atacante
-2. `!move`
-3. tokens do atacante
-4. separador `x`
-5. Pokémon defensor
-6. tokens do defensor
-7. tokens globais
-
-Isso evita ambiguidades como:
-
-- sugerir Pokémon quando slot atual espera move
-- completar `blitz` para `blitzle` depois de `!flare-blitz`
-
-## Sugestões Automáticas de Campo
-
-Abilities que ativam weather ou terrain não alteram mais prompt sozinhas.
-
-Em vez disso:
-
-- sistema detecta ability relevante
-- calcula weather/terrain aplicável
-- oferece `~token` correspondente como sugestão prioritária
+```txt
+{subject} [tokens do subject...] [globais...]
+```
 
 Exemplo:
 
 ```txt
-torkoal !heat-wave x incineroar
+basculegion @choice-scarf
 ```
 
-Pode sugerir:
+Sem comparador explícito, o app compara contra a ladder/meta e foca o benchmark relevante mais próximo.
+
+### Forma com comparador explícito
+
+```txt
+{subject} [tokens do subject...] x {comparador} [tokens do comparador...] [globais...]
+```
+
+Exemplos:
+
+```txt
+basculegion @choice-scarf x aerodactyl spe-1 tailwind
+venusaur [Chlorophyll] ~sun x aerodactyl
+basculegion spe-sp:20 x aerodactyl
+```
+
+### Escopo em `/speed`
+
+- Tokens antes de `x` afetam o subject.
+- Tokens depois de `x` afetam o comparador explícito.
+- Tokens globais usam `~` e afetam o contexto global.
+- `tailwind` é side-specific, não global.
+- Edições são locais e não mutam sets importados/salvos.
+
+### Tokens side-specific em `/speed`
+
+Item:
+
+```txt
+@choice-scarf
+choice scarf
+```
+
+Ability:
+
+```txt
+[Chlorophyll]
+[Swift Swim]
+[Unburden]
+```
+
+Nature de Speed:
+
+```txt
++speed
+-speed
+neutral
+```
+
+Também são aceitos alguns aliases, como `+nature`, `-nature`, `jolly`, `timid`, `brave`, `relaxed`, `quiet`, `sassy`.
+
+Speed SP:
+
+```txt
+spe-sp:0
+spe-sp:20
+spe-sp:32
+```
+
+Speed stage:
+
+```txt
+spe+1
+spe-1
++1
+-1
+```
+
+No `/speed`, stages curtos (`+1`, `-1`) significam Speed stage.
+
+Outros modificadores:
+
+```txt
+tailwind
+paralysis
+par
+unburden-active
+```
+
+`[Unburden]` apenas seleciona a ability. O boost exige `unburden-active`.
+
+### Globais em `/speed`
 
 ```txt
 ~sun
-```
-
-Mas prompt só muda se usuário aceitar sugestão.
-
-## Atalhos de Teclado Relacionados à Gramática
-
-- `↑` / `↓` - navega pelas sugestões
-- `Tab` - aceita sugestão atual
-- `Enter` - rola até resultados quando cálculo já é válido
-- `Shift + Enter` - quebra de linha
-
-## Resumo Rápido
-
-Estrutura mínima:
-
-```txt
-pokemon !move x pokemon
-```
-
-Tokens principais:
-
-```txt
-#set
-!move
-@item
-%75
-[Ability]
 ~rain
-*
-+1 / -1
-spe+1 / spe-1
-+nature / -nature
-max-atk / max-spa / max-def / max-spd
-reflect / helping-hand / tailwind / protect / etc.
+~sand
+~snow
+~electric-terrain
+~trick-room
 ```
 
-Forma recomendada:
+Weather/terrain ativam abilities condicionais quando aplicável, por exemplo:
 
-```txt
-politoed !muddy-water @mystic-water x incineroar @assault-vest %75 ~rain
-```
+- `[Chlorophyll] ~sun`
+- `[Swift Swim] ~rain`
+- `[Sand Rush] ~sand`
+- `[Slush Rush] ~snow`
+- `[Surge Surfer] ~electric-terrain`
 
+`~trick-room` muda a semântica de quem move primeiro, mas a ladder continua ordenada por Speed efetiva.
+
+### Comando canônico em `/speed`
+
+A UI tenta manter o comando compacto:
+
+- omite `spe-sp:32` quando é o default
+- omite nature neutra quando não é override relevante
+- canonicaliza natures de Speed para `+speed` / `-speed`
+- canonicaliza globais no final
+
+---
+
+## Autocomplete
+
+Atalhos principais:
+
+- `↑` / `↓`: navega sugestões
+- `Tab`: aceita sugestão atual
+- `Enter`: confirma/avança quando aplicável
+- `Escape`: fecha sugestões/modais quando aplicável
+- `Shift + Enter`: quebra linha no prompt de dano
+
+A calculadora de dano e o Speed Benchmark têm sugestões específicas para suas gramáticas.

@@ -5,8 +5,14 @@ jest.mock("next/headers", () => ({
   headers: jest.fn(async () => {
     const requestHeaders = new Headers();
     requestHeaders.set("x-forwarded-for", "127.0.0.1");
+    requestHeaders.set("host", "localhost:3000");
+    requestHeaders.set("origin", "http://localhost:3000");
     return requestHeaders;
   }),
+}));
+
+jest.mock("next/server", () => ({
+  after: jest.fn((callback: () => void) => callback()),
 }));
 
 const initialReportBugState = {
@@ -18,6 +24,7 @@ describe("reportBug", () => {
   const originalToken = process.env.GITHUB_BUG_REPORT_TOKEN;
   const originalRepo = process.env.GITHUB_BUG_REPORT_REPO;
   const originalFetch = global.fetch;
+  let warnSpy: jest.SpyInstance;
 
   beforeEach(() => {
     process.env.GITHUB_BUG_REPORT_TOKEN = "github-token";
@@ -30,12 +37,14 @@ describe("reportBug", () => {
         html_url: "https://github.com/leandromesq/unburden-issues/issues/42",
       }),
     } as unknown as Response);
+    warnSpy = jest.spyOn(console, "warn").mockImplementation(() => undefined);
   });
 
   afterEach(() => {
     process.env.GITHUB_BUG_REPORT_TOKEN = originalToken;
     process.env.GITHUB_BUG_REPORT_REPO = originalRepo;
     global.fetch = originalFetch;
+    warnSpy.mockRestore();
   });
 
   test("rejects reports that are too short", async () => {

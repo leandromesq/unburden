@@ -72,7 +72,7 @@ export function LocaleToggle() {
   };
 
   return (
-    <div ref={containerRef} className="relative z-30">
+    <div ref={containerRef} className="relative z-[var(--z-popover)]">
       <button
         ref={buttonRef}
         type="button"
@@ -116,7 +116,7 @@ export function LocaleToggle() {
           id={menuId}
           role="menu"
           aria-label={dictionary.localeToggle.label}
-          className="theme-menu absolute left-0 top-[calc(100%+0.35rem)] z-20 min-w-full overflow-hidden rounded-xl p-1"
+          className="theme-menu absolute left-0 top-[calc(100%+0.35rem)] z-[var(--z-dropdown)] min-w-full overflow-hidden rounded-xl p-1"
           style={{ background: "var(--surface-3)" }}
         >
           {options.map((option) => {

@@ -1,48 +1,60 @@
 # Unburden Data Sources
 
-This doc list every data source Unburden use, what each source own, where app consume it.
+This document lists the data sources Unburden uses, what each source owns, and where the app consumes the generated snapshots.
 
-## Source-Of-Truth Diagram
+## Source-of-truth policy
+
+- Runtime gameplay and meta data is local. The app reads committed JSON snapshots under `src/data/`.
+- Runtime network access is only for Pokemon images/sprites.
+- Structural Pokemon, move, and learnset data comes from `@pkmn/dex` and `@pkmn/data`.
+- Pokemon Champions meta defaults come from Pikalytics Champions AI pages, normalized into `src/data/vgc-meta.json`.
+- Champions legal held items and mega ability gaps come from Serebii during data generation.
+- Regulation legality is local in `src/data/regulations/regulation-m-a.json`, with live Serebii verification during generation.
+
+## Source-of-truth diagram
 
 ```mermaid
 flowchart TD
-  subgraph External["External Sources"]
-    PKMN["@pkmn/dex + @pkmn/data"]
-    PIKA["Pikalytics Champions AI pages"]
-    SEREBII_MEGA["Serebii Champions mega abilities"]
-    SEREBII_ITEMS["Serebii Champions legal items"]
-    SEREBII_REG["Serebii Regulation M-A roster"]
-    SPRITES["Pokemon Showdown / PokemonDB image CDNs"]
+  subgraph External[External sources]
+    PKMN[@pkmn/dex + @pkmn/data]
+    PIKA[Pikalytics Champions AI pages]
+    SEREBII_MEGA[Serebii Champions mega abilities]
+    SEREBII_ITEMS[Serebii Champions legal items]
+    SEREBII_REG[Serebii Regulation M-A roster]
+    SPRITES[Pokemon Showdown / PokemonDB image CDNs]
   end
 
-  subgraph LocalConfig["Local Config / Overrides"]
-    REG["src/data/regulations/regulation-m-a.json"]
-    ACTIVE["src/data/regulations/active.json"]
-    ALIASES["src/data/form-aliases.json"]
-    META_OVR["src/data/vgc-meta.overrides.json"]
+  subgraph Local[Local config / overrides]
+    REG[src/data/regulations/regulation-m-a.json]
+    ACTIVE[src/data/regulations/active.json]
+    ALIASES[src/data/form-aliases.json]
+    META_OVR[src/data/vgc-meta.overrides.json]
   end
 
-  subgraph Generators["Build-Time Generators"]
-    GEN_STATIC["scripts/generate-static-data.ts"]
-    GEN_META["scripts/generate-vgc-meta.ts"]
+  subgraph Generators[Build-time generators]
+    GEN_STATIC[scripts/generate-static-data.ts]
+    GEN_META[scripts/generate-vgc-meta.ts]
+    FETCH[scripts/fetch/*]
+    TRANSFORM[scripts/transform/*]
   end
 
-  subgraph Snapshots["Committed Runtime Snapshots"]
-    POKEMON["src/data/pokemon.gen9.json"]
-    MOVES["src/data/moves.gen9.json"]
-    LEARNSETS["src/data/learnsets.gen9.json"]
-    ITEMS["src/data/champions-items.json"]
-    META["src/data/vgc-meta.json"]
+  subgraph Snapshots[Committed runtime snapshots]
+    POKEMON[src/data/pokemon.gen9.json]
+    MOVES[src/data/moves.gen9.json]
+    LEARNSETS[src/data/learnsets.gen9.json]
+    ITEMS[src/data/champions-items.json]
+    META[src/data/vgc-meta.json]
   end
 
-  subgraph Runtime["Runtime Loader Layer"]
-    LOADERS["src/lib/data/loaders.ts"]
+  subgraph Runtime[Runtime data modules]
+    DATA[src/lib/data/*]
   end
 
-  subgraph App["Runtime App Usage"]
-    PARSER["parser / autocomplete"]
-    CALC["damage engine"]
-    UI["summaries / editor / regulation badge"]
+  subgraph App[Runtime app usage]
+    DAMAGE[damage calculator]
+    SPEED[speed benchmark]
+    PARSER[parser / autocomplete]
+    UI[summary cards / editors / badges]
   end
 
   PKMN --> GEN_STATIC
@@ -50,161 +62,151 @@ flowchart TD
   PIKA --> GEN_META
   SEREBII_MEGA --> GEN_STATIC
   SEREBII_ITEMS --> GEN_STATIC
+  SEREBII_REG -. verification input .-> GEN_STATIC
   REG --> GEN_STATIC
-  REG --> LOADERS
-  ACTIVE --> LOADERS
+  REG --> DATA
+  ACTIVE --> DATA
   ALIASES --> GEN_META
-  ALIASES --> LOADERS
+  ALIASES --> DATA
   META_OVR --> GEN_META
-  POKEMON --> LOADERS
-  MOVES --> LOADERS
-  LEARNSETS --> LOADERS
-  ITEMS --> LOADERS
-  META --> LOADERS
+  FETCH --> GEN_STATIC
+  FETCH --> GEN_META
+  TRANSFORM --> GEN_STATIC
+  TRANSFORM --> GEN_META
   GEN_STATIC --> POKEMON
   GEN_STATIC --> MOVES
   GEN_STATIC --> LEARNSETS
   GEN_STATIC --> ITEMS
   GEN_META --> META
-  LOADERS --> PARSER
-  LOADERS --> CALC
-  LOADERS --> UI
+  POKEMON --> DATA
+  MOVES --> DATA
+  LEARNSETS --> DATA
+  ITEMS --> DATA
+  META --> DATA
+  DATA --> DAMAGE
+  DATA --> SPEED
+  DATA --> PARSER
+  DATA --> UI
   SPRITES --> UI
-  SEREBII_REG --> GEN_STATIC
-  SEREBII_REG -. verification input .-> REG
 ```
 
-## Source-Of-Truth Policy
+## External sources
 
-- Canonical species, moves, learnsets come from `@pkmn/dex` and `@pkmn/data`
-- Competitive Champions defaults come from Pikalytics, then normalize into `src/data/vgc-meta.json`
-- Champions mega ability gaps get patched from Serebii during generation
-- Legal Champions items come from Serebii, then snapshot into `src/data/champions-items.json`
-- Regulation legality stay local in `src/data/regulations/regulation-m-a.json`
-- Runtime gameplay logic no fetch live meta data. Runtime read committed JSON snapshots through `src/lib/data/loaders.ts`
-- Runtime network fetch only for Pokemon images in summary UI
+### `@pkmn/dex` and `@pkmn/data`
 
-## External Sources
+Used by:
 
-### 1. `@pkmn/dex` and `@pkmn/data`
+- `scripts/generate-static-data.ts`
+- `scripts/transform/build-static-data.ts`
 
-Purpose:
+Owns:
 
-- canonical Pokemon species data
+- canonical species data
 - canonical move data
 - canonical learnsets
 
-Used in:
-
-- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-static-data.ts)
-
 Outputs:
 
-- [src/data/pokemon.gen9.json](C:\Users\leand\Documents\GitHub\unburden\src\data\pokemon.gen9.json)
-- [src/data/moves.gen9.json](C:\Users\leand\Documents\GitHub\unburden\src\data\moves.gen9.json)
-- [src/data/learnsets.gen9.json](C:\Users\leand\Documents\GitHub\unburden\src\data\learnsets.gen9.json)
+- `src/data/pokemon.gen9.json`
+- `src/data/moves.gen9.json`
+- `src/data/learnsets.gen9.json`
 
-Why:
+### Pikalytics Champions AI pages
 
-- base structural dataset for species, forms, stats, moves, learnsets
-
-### 2. Pikalytics Champions AI pages
-
-Source:
+Sources:
 
 - `https://www.pikalytics.com/ai/pokedex/championspreview`
-- per-Pokemon AI pages under same route
+- per-Pokemon AI pages under the same route
 
-Purpose:
+Used by:
 
-- current Champions metagame usage
-- common moves
-- common abilities
-- common items
-- default move / ability / item derivation
-- current Champions species roster as enrichment input for generation
+- `scripts/generate-static-data.ts`
+- `scripts/generate-vgc-meta.ts`
+- `scripts/fetch/fetch-pikalytics.ts`
+- `scripts/transform/build-vgc-meta.ts`
 
-Used in:
+Owns:
 
-- [scripts/generate-vgc-meta.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-vgc-meta.ts)
-- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-static-data.ts)
+- Champions metagame usage order / `usageRank`
+- usage percent when available
+- common moves, abilities, and items
+- default move, ability, and item derivation inputs
+- additional Champions species coverage during static data generation
 
 Outputs:
 
-- [src/data/vgc-meta.json](C:\Users\leand\Documents\GitHub\unburden\src\data\vgc-meta.json)
-- extra Champions species coverage in [src/data/pokemon.gen9.json](C:\Users\leand\Documents\GitHub\unburden\src\data\pokemon.gen9.json)
+- `src/data/vgc-meta.json`
+- extra species coverage in `src/data/pokemon.gen9.json`
 
-Why:
-
-- Unburden need competitive meta layer on top of structural Dex data
-
-### 3. Serebii Champions mega abilities
+### Serebii Champions mega abilities
 
 Source:
 
 - `https://www.serebii.net/pokemonchampions/megaabilities.shtml`
 
-Purpose:
+Used by:
 
-- patch Champions mega form abilities when other sources incomplete
+- `scripts/generate-static-data.ts`
+- `scripts/fetch/fetch-serebii.ts`
 
-Used in:
+Owns:
 
-- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-static-data.ts)
+- Champions mega ability fixes when other sources are incomplete
 
-Outputs affected:
+Output affected:
 
-- [src/data/pokemon.gen9.json](C:\Users\leand\Documents\GitHub\unburden\src\data\pokemon.gen9.json)
+- `src/data/pokemon.gen9.json`
 
-Why:
-
-- some Champions mega abilities missing or incomplete elsewhere
-
-### 4. Serebii Champions legal items
+### Serebii Champions legal items
 
 Source:
 
 - `https://www.serebii.net/pokemonchampions/items.shtml`
 
-Purpose:
+Used by:
 
-- authoritative legal held-item pool for Pokemon Champions
-- exclude `Miscellaneous Items` section
+- `scripts/generate-static-data.ts`
+- `scripts/fetch/fetch-serebii.ts`
 
-Used in:
+Owns:
 
-- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-static-data.ts)
+- legal Pokemon Champions held-item pool
+- `Miscellaneous Items` are intentionally excluded
 
-Outputs affected:
+Outputs:
 
-- [src/data/champions-items.json](C:\Users\leand\Documents\GitHub\unburden\src\data\champions-items.json)
-- indirect legal-item constraint for [src/data/vgc-meta.json](C:\Users\leand\Documents\GitHub\unburden\src\data\vgc-meta.json)
+- `src/data/champions-items.json`
 
-Why:
+Also constrains:
 
-- meta-derived item pools incomplete; can miss legal items like type boosters and resist berries
+- legal item validation in `scripts/generate-vgc-meta.ts`
+- item suggestions and set editing at runtime
 
-### 5. Serebii Champions Regulation M-A roster
+### Serebii Champions Regulation M-A roster
 
 Source:
 
 - `https://www.serebii.net/pokemonchampions/recruit/regularrosterm-a.shtml`
 
-Purpose:
+Used by:
 
-- live verification input for local legality roster
+- `scripts/generate-static-data.ts`
 
-Used in:
+Owns:
 
-- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-static-data.ts)
-- compared against [src/data/regulations/regulation-m-a.json](C:\Users\leand\Documents\GitHub\unburden\src\data\regulations\regulation-m-a.json)
+- live verification input for the local Regulation M-A roster
 
-Why:
+Local source of truth:
 
-- legal but low-usage species can disappear from pure meta-driven pipelines
-- generation script verify local roster against live Serebii page and update `active.json` verification metadata when match happens
+- `src/data/regulations/regulation-m-a.json`
 
-### 6. Runtime image CDNs
+Why local:
+
+- legal low-usage species can disappear from pure meta-driven pipelines
+- local regulation data lets runtime filtering stay deterministic
+- generation can compare local roster with Serebii and update verification metadata in `src/data/regulations/active.json` when it matches
+
+### Runtime image CDNs
 
 Sources:
 
@@ -214,226 +216,174 @@ Sources:
 - `https://img.pokemondb.net/sprites/home/normal/...`
 - `https://img.pokemondb.net/artwork/large/...`
 
-Purpose:
+Used by:
 
-- sprite / artwork rendering in Pokemon side summaries
+- Pokemon summary / identity UI components under `src/components/omnibar/` and `src/components/pokemon/`
 
-Used in:
+Owns:
 
-- [src/components/omnibar/pokemon-side-summary.tsx](C:\Users\leand\Documents\GitHub\unburden\src\components\omnibar\pokemon-side-summary.tsx)
+- sprite and artwork rendering only
 
-Why:
+Gameplay data is not fetched at runtime.
 
-- repo no store image assets locally
+## Local config and snapshots
 
-## Local Config And Snapshot Files
-
-### 7. `src/data/regulations/active.json`
+### `src/data/regulations/active.json`
 
 Purpose:
 
-- choose active regulation at runtime
+- chooses the active regulation id
+- stores optional roster verification metadata
 
-Used in:
+Loaded by:
 
-- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\data\loaders.ts)
+- `src/lib/data/regulations.ts`
 
-Effects:
-
-- choose active regulation entry at runtime
-- affect regulation badge and legal Pokemon filtering
-
-### 8. `src/data/regulations/regulation-m-a.json`
+### `src/data/regulations/regulation-m-a.json`
 
 Purpose:
 
-- authoritative local legality list for Regulation M-A
+- local legality list for Regulation M-A
 
-Used in:
+Loaded by:
 
-- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\data\loaders.ts)
-- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-static-data.ts)
+- `src/lib/data/regulations.ts`
+- `src/lib/data/pokemon.ts`
 
-Effects:
+Used by generation:
 
-- build `legalPokemonData` at runtime
-- force all legal M-A species into generated dataset, even outside top meta slice
+- `scripts/generate-static-data.ts`
 
-### 9. `src/data/form-aliases.json`
+Runtime effect:
+
+- builds `legalPokemonData`
+- constrains legal Pokemon suggestions and filtering
+
+### `src/data/form-aliases.json`
 
 Purpose:
 
 - explicit alias and form resolution
 
-Used in:
+Loaded by:
 
-- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\data\loaders.ts)
-- [src/lib/parser/fuse-indexes.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\fuse-indexes.ts)
-- [src/lib/parser/showdown-import.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\showdown-import.ts)
-- [scripts/generate-vgc-meta.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-vgc-meta.ts)
+- `src/lib/data/form-aliases.ts`
 
-### 10. `src/data/vgc-meta.overrides.json`
+Used by:
+
+- parser / autocomplete
+- Showdown import normalization
+- meta generation form mapping
+
+### `src/data/vgc-meta.overrides.json`
 
 Purpose:
 
-- local overrides for generated competitive profiles
+- local overrides for generated competitive meta profiles
 
-Used in:
+Used by:
 
-- [scripts/generate-vgc-meta.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-vgc-meta.ts)
+- `scripts/generate-vgc-meta.ts`
 
 Effects:
 
-- can override generated defaults, limits, species mappings, profile fields
+- can override generated defaults, limits, species mappings, and profile fields
 
-## Generated Runtime Snapshots
+### Generated runtime snapshots
 
-These files = runtime gameplay source of truth.
+These committed files are runtime gameplay/meta sources of truth:
 
-### 11. `src/data/pokemon.gen9.json`
+- `src/data/pokemon.gen9.json`
+- `src/data/moves.gen9.json`
+- `src/data/learnsets.gen9.json`
+- `src/data/champions-items.json`
+- `src/data/vgc-meta.json`
 
-Purpose:
+## Runtime data modules
 
-- resolved Pokemon entries for runtime app
+Runtime snapshot access is split by domain:
 
-Loaded in:
+- `src/lib/data/pokemon.ts`
+  - `pokemonById`
+  - `legalPokemonData`
+  - mega evolution helpers
+  - canonical prompt Pokemon names
+- `src/lib/data/moves.ts`
+  - `moveData`
+  - `moveById`
+- `src/lib/data/learnsets.ts`
+  - `learnsetByPokemonId`
+- `src/lib/data/items.ts`
+  - `allowedItemIds`
+  - `itemDisplayById`
+- `src/lib/data/regulations.ts`
+  - `activeRegulation`
+- `src/lib/data/form-aliases.ts`
+  - `formAliasMap`
+- `src/lib/data/vgc-meta.ts`
+  - `vgcMetaProfiles`
+  - `vgcMetaByPokemonId`
 
-- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\data\loaders.ts)
+## Runtime consumers
 
-Consumed by:
+### Damage calculator
 
-- [src/lib/calc/damage-engine.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\calc\damage-engine.ts)
-- [src/lib/parser/fuse-indexes.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\fuse-indexes.ts)
-- [src/lib/parser/command-parser.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\command-parser.ts)
-- [src/lib/parser/inference.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\inference.ts)
-- [src/lib/parser/showdown-import.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\showdown-import.ts)
-- [src/store/use-omni-store.ts](C:\Users\leand\Documents\GitHub\unburden\src\store\use-omni-store.ts)
-- [src/components/omnibar/pokemon-set-editor-modal.tsx](C:\Users\leand\Documents\GitHub\unburden\src\components\omnibar\pokemon-set-editor-modal.tsx)
-- [src/components/omnibar/pokemon-side-summary.tsx](C:\Users\leand\Documents\GitHub\unburden\src\components\omnibar\pokemon-side-summary.tsx)
+Main consumers:
 
-### 12. `src/data/moves.gen9.json`
+- `src/lib/calc/damage-engine.ts`
+- parser modules under `src/lib/parser/`
+- omnibar components under `src/components/omnibar/`
+- `src/store/use-omni-store.ts`
 
-Purpose:
+Uses:
 
-- resolved move entries for runtime parsing and damage calc
+- Pokemon, moves, learnsets, items, regulation data, form aliases, meta defaults
 
-Loaded in:
+### Speed Benchmark
 
-- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\data\loaders.ts)
+Main consumers:
 
-Consumed by:
+- `src/lib/calc/speed-engine.ts`
+- `src/lib/speed/speed-command.ts`
+- `src/lib/speed/speed-autocomplete.ts`
+- `src/lib/speed/speed-benchmark.ts`
+- `src/store/use-speed-benchmark-store.ts`
+- components under `src/components/speed/`
 
-- [src/lib/calc/damage-engine.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\calc\damage-engine.ts)
-- [src/lib/parser/command-parser.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\command-parser.ts)
-- [src/lib/parser/inference.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\inference.ts)
-- [src/components/omnibar/pokemon-set-editor-modal.tsx](C:\Users\leand\Documents\GitHub\unburden\src\components\omnibar\pokemon-set-editor-modal.tsx)
-- [src/components/omnibar/pokemon-side-summary.tsx](C:\Users\leand\Documents\GitHub\unburden\src\components\omnibar\pokemon-side-summary.tsx)
+Uses:
 
-### 13. `src/data/learnsets.gen9.json`
+- legal Pokemon data
+- Pokemon base Speed and abilities
+- legal items
+- meta profiles and `usageRank`
+- active regulation
 
-Purpose:
-
-- legal move pools for fallback inference and set editing
-
-Loaded in:
-
-- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\data\loaders.ts)
-
-Consumed by:
-
-- [src/lib/parser/inference.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\inference.ts)
-- [src/components/omnibar/pokemon-set-editor-modal.tsx](C:\Users\leand\Documents\GitHub\unburden\src\components\omnibar\pokemon-set-editor-modal.tsx)
-
-### 14. `src/data/champions-items.json`
-
-Purpose:
-
-- legal held-item snapshot for Pokemon Champions
-
-Loaded in:
-
-- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\data\loaders.ts)
-
-Consumed by:
-
-- [src/lib/parser/command-parser.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\command-parser.ts)
-- [src/lib/parser/inference.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\inference.ts)
-- [src/components/omnibar/pokemon-set-editor-modal.tsx](C:\Users\leand\Documents\GitHub\unburden\src\components\omnibar\pokemon-set-editor-modal.tsx)
-- [src/components/omnibar/pokemon-side-summary.tsx](C:\Users\leand\Documents\GitHub\unburden\src\components\omnibar\pokemon-side-summary.tsx)
-
-### 15. `src/data/vgc-meta.json`
-
-Purpose:
-
-- normalized competitive defaults and suggestion pools for active Champions meta
-
-Loaded in:
-
-- [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\data\loaders.ts)
-
-Consumed by:
-
-- [src/lib/parser/command-parser.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\command-parser.ts)
-- [src/lib/parser/inference.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\parser\inference.ts)
-- [src/store/use-omni-store.ts](C:\Users\leand\Documents\GitHub\unburden\src\store\use-omni-store.ts)
-- [src/components/omnibar/pokemon-set-editor-modal.tsx](C:\Users\leand\Documents\GitHub\unburden\src\components\omnibar\pokemon-set-editor-modal.tsx)
-
-## Runtime Loader Layer
-
-### 16. `src/lib/data/loaders.ts`
-
-This file = runtime aggregation point for local data.
-
-It loads:
-
-- `pokemon.gen9.json`
-- `moves.gen9.json`
-- `learnsets.gen9.json`
-- `champions-items.json`
-- `vgc-meta.json`
-- `form-aliases.json`
-- `active.json`
-- `regulation-m-a.json`
-
-It builds and exports:
-
-- `pokemonById`
-- `moveById`
-- `learnsetByPokemonId`
-- `vgcMetaByPokemonId`
-- `formAliasMap`
-- `legalPokemonData`
-- `allowedItemIds`
-- `itemDisplayById`
-- `activeRegulation`
-- `resolveMegaEvolution()`
-
-This file = effective runtime source-of-truth layer for app code.
-
-## Practical Data Flow
+## Practical data flow
 
 ### Build time
 
-1. [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-static-data.ts) pull structural species/move/learnset data and write local JSON snapshots
-2. [scripts/generate-vgc-meta.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-vgc-meta.ts) pull Champions usage/meta data and write `vgc-meta.json`
-3. Generated files get committed under `src/data/`
+1. `scripts/generate-static-data.ts` fetches and transforms structural Pokemon, move, learnset, item, mega ability, and regulation verification inputs.
+2. `scripts/generate-vgc-meta.ts` fetches and transforms Champions usage/meta data.
+3. Generated snapshots are validated for minimum counts, unique ids, legal item references, and large profile deltas before writing.
+4. Generated JSON files are committed under `src/data/`.
 
 ### Runtime
 
-1. [src/lib/data/loaders.ts](C:\Users\leand\Documents\GitHub\unburden\src\lib\data\loaders.ts) load committed JSON snapshots
-2. Parser, autocomplete, calc, UI consume in-memory maps
-3. No live meta/gameplay fetch during normal app usage
-4. Images = only runtime network dependency
+1. Domain modules under `src/lib/data/` import committed JSON snapshots.
+2. Parser, autocomplete, damage calculator, Speed Benchmark, stores, and UI consume in-memory maps/arrays.
+3. No live gameplay or meta fetch runs during normal app usage.
+4. Images are the only runtime network dependency.
 
-## Important Constraint
+## Troubleshooting stale or missing data
 
-App look stale or miss legal species. First place to inspect not runtime code. Inspect one of these:
+If the app looks stale or a legal Pokemon/item is missing, inspect these first:
 
-- [scripts/generate-static-data.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-static-data.ts)
-- [scripts/generate-vgc-meta.ts](C:\Users\leand\Documents\GitHub\unburden\scripts\generate-vgc-meta.ts)
-- [src/data/regulations/regulation-m-a.json](C:\Users\leand\Documents\GitHub\unburden\src\data\regulations\regulation-m-a.json)
-- [src/data/vgc-meta.overrides.json](C:\Users\leand\Documents\GitHub\unburden\src\data\vgc-meta.overrides.json)
+- `scripts/generate-static-data.ts`
+- `scripts/generate-vgc-meta.ts`
+- `scripts/fetch/*`
+- `scripts/transform/*`
+- `src/data/regulations/regulation-m-a.json`
+- `src/data/vgc-meta.overrides.json`
+- the generated snapshots under `src/data/`
 
-Source accuracy decided there.
-
-
+Runtime UI code should usually not be the first place to change source accuracy.
