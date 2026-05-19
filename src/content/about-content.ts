@@ -20,6 +20,14 @@ export interface AboutContent {
     description: string;
     highlights: string[];
   };
+  workflow: {
+    eyebrow: string;
+    badge: string;
+    steps: Array<{
+      title: string;
+      description: string;
+    }>;
+  };
   cards: AboutCardContent[];
   dataSources: {
     eyebrow: string;
@@ -48,6 +56,27 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
         "Gramática de prompt simples para matchups, modificadores e checagens rápidas.",
         "Cálculo de dano com comparação simultânea entre Min, Mid e Max bulk.",
         "Ladder de Speed para visualizar tiers, empates e thresholds de move order.",
+      ],
+    },
+    workflow: {
+      eyebrow: "Como funciona",
+      badge: "3 passos",
+      steps: [
+        {
+          title: "Escreva um matchup",
+          description:
+            "Digite atacante, golpe, defensor e contexto de batalha em um único prompt.",
+        },
+        {
+          title: "Revise as premissas",
+          description:
+            "Confira sets, bulk, itens, abilities, efeitos de campo e modificadores de Speed antes de confiar no resultado.",
+        },
+        {
+          title: "Leia e compartilhe",
+          description:
+            "Use a faixa de dano ou threshold de Speed, depois copie uma URL ou texto de resultado para suas notas de teste.",
+        },
       ],
     },
     cards: [
@@ -128,6 +157,27 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
         "Fast prompt grammar for matchups, modifiers, and quick checks.",
         "Damage calculation comparing Min, Mid, and Max bulk at the same time.",
         "Speed ladder for reading tiers, ties, and move-order thresholds.",
+      ],
+    },
+    workflow: {
+      eyebrow: "How it works",
+      badge: "3 steps",
+      steps: [
+        {
+          title: "Write a matchup",
+          description:
+            "Type the attacker, move, defender, and battle context in one prompt.",
+        },
+        {
+          title: "Review assumptions",
+          description:
+            "Check sets, bulk, items, abilities, field effects, and Speed modifiers before trusting the result.",
+        },
+        {
+          title: "Read and share",
+          description:
+            "Use the damage range or Speed threshold, then copy a URL or result text for testing notes.",
+        },
       ],
     },
     cards: [

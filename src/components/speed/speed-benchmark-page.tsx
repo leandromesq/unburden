@@ -161,6 +161,7 @@ export function SpeedBenchmarkPage() {
 
   return (
     <section className="mx-auto w-full min-w-0 max-w-7xl text-left">
+      <h2 className="sr-only">{speed.title}</h2>
       <div className="grid min-w-0 gap-4 xl:grid-cols-[300px_minmax(0,1fr)_360px] xl:items-start">
         <div className="order-2 min-w-0 xl:order-1">
           <SpeedSidePanel
@@ -178,6 +179,22 @@ export function SpeedBenchmarkPage() {
         </div>
 
         <div className="order-1 min-w-0 xl:order-2">
+          <div className="theme-subpanel mb-3 rounded-lg p-3">
+            <div className="grid gap-2 sm:grid-cols-3">
+              <div className="min-w-0">
+                <div className="theme-data-label">{speed.sequenceSubject}</div>
+                <div className="theme-data-text mt-1 truncate text-[13px]">{subjectLabel}</div>
+              </div>
+              <div className="min-w-0">
+                <div className="theme-data-label">{speed.sequenceBenchmark}</div>
+                <div className="theme-data-text mt-1 truncate text-[13px]">{comparatorLabel}</div>
+              </div>
+              <div className="min-w-0">
+                <div className="theme-data-label">{speed.sequenceDecision}</div>
+                <div className="mt-1 text-[13px] font-medium leading-5">{thresholdStatus}</div>
+              </div>
+            </div>
+          </div>
           <SpeedCommandComposer
             command={command}
             subjectLabel={subjectLabel}
@@ -202,6 +219,14 @@ export function SpeedBenchmarkPage() {
         </div>
 
         <div className="order-3 min-w-0">
+          {modifiersOpen ? (
+            <div className="theme-subpanel mb-3 rounded-lg p-3">
+              <div className="theme-data-label">{speed.ladderContext}</div>
+              <p className="theme-text-dim mt-1 text-sm leading-6">
+                {speed.ladderContextModifiersOpen}
+              </p>
+            </div>
+          ) : null}
           <SpeedLadder
             groups={groups}
             focusedGroup={focusedGroup}

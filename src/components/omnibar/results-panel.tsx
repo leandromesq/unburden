@@ -5,43 +5,29 @@ import { Check, FileText, Link2 } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
 import { useI18n } from "@/i18n/I18nProvider";
-import { koTextTone } from "@/lib/calc/ko-text";
+import { getDamageOutcomeLabel, koTextTone } from "@/lib/calc/ko-text";
 import { serializeShareState } from "@/lib/share/serialize-share-state";
 import { resolveReferencedImportedSet } from "@/lib/team/set-references";
 import { useOmniStore } from "@/store/use-omni-store";
 import { useTeamStore } from "@/store/use-team-store";
 
-function BlockTitle({
-  archetype,
-  label,
-  fallbackLabels,
-}: {
-  archetype: string;
-  label?: string;
+function getBulkLabel(
+  archetype: string,
+  label: string | undefined,
   fallbackLabels: {
     minBulk: string;
     midBulk: string;
     maxBulk: string;
-  };
-}) {
-  return (
-    <div className="mb-2 flex items-center gap-2">
-      <div
-        className="h-3.5 w-0.5 rounded-full"
-        style={{ background: "var(--accent)" }}
-        aria-hidden
-      />
-      <div className="text-sm font-medium">
-        {label ??
-          (archetype === "glass"
-            ? fallbackLabels.minBulk
-            : archetype === "mid"
-              ? fallbackLabels.midBulk
-              : fallbackLabels.maxBulk)}
-      </div>
-    </div>
-  );
+  },
+) {
+  return label ??
+    (archetype === "glass"
+      ? fallbackLabels.minBulk
+      : archetype === "mid"
+        ? fallbackLabels.midBulk
+        : fallbackLabels.maxBulk);
 }
+
 
 function fallbackCopyText(text: string) {
   const textarea = document.createElement("textarea");
@@ -184,13 +170,17 @@ export function ResultsPanel() {
       aria-label={dictionary.resultsPanel.ariaLabel}
     >
       {results.map((result) => {
-        const resultLabel =
-          result.label ??
-          (result.archetype === "glass"
-            ? dictionary.resultsPanel.minBulk
-            : result.archetype === "mid"
-              ? dictionary.resultsPanel.midBulk
-              : dictionary.resultsPanel.maxBulk);
+        const resultLabel = getBulkLabel(
+          result.archetype,
+          result.label,
+          dictionary.resultsPanel,
+        );
+        const outcomeLabel = getDamageOutcomeLabel(
+          result.minPercentage,
+          result.maxPercentage,
+          result.koChanceText,
+          dictionary.resultsPanel,
+        );
         const band = getDamageBandMetrics(
           result.minPercentage,
           result.maxPercentage,
@@ -202,26 +192,28 @@ export function ResultsPanel() {
             id={`result-${result.archetype}`}
             className="theme-panel theme-results-card rounded-xl p-4"
           >
-            <div className="mb-3">
-              <BlockTitle
-                archetype={result.archetype}
-                label={result.label}
-                fallbackLabels={dictionary.resultsPanel}
-              />
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="theme-text-dim text-[12px] leading-5">
-                    {result.summary}
-                  </div>
-                  <div
-                    className="mt-1 font-mono text-[17px] leading-6 md:text-[18px]"
-                    style={{ color: "var(--text)" }}
-                  >
-                    {result.damageText}
-                  </div>
+            <div className="mb-4 grid gap-3 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
+              <div className="min-w-0">
+                <div className="mb-2 flex flex-wrap items-center gap-2">
+                  <span className="theme-results-outcome rounded-md px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.04em]">
+                    {outcomeLabel}
+                  </span>
+                  <h2 className="theme-text-faint text-xs">{resultLabel}</h2>
                 </div>
                 <div
-                  className={`shrink-0 font-mono text-[12px] font-semibold tabular-nums ${koTextTone(result.koChanceText)}`}
+                  className="font-mono text-[18px] leading-6 md:text-[20px]"
+                  style={{ color: "var(--text)" }}
+                >
+                  {result.damageText}
+                </div>
+                <div className="theme-text-dim mt-1 text-[12px] leading-5">
+                  {result.summary}
+                </div>
+              </div>
+              <div className="theme-results-ko rounded-lg px-3 py-2 text-left md:text-right">
+                <div className="theme-data-label">{dictionary.resultsPanel.koChance}</div>
+                <div
+                  className={`mt-1 font-mono text-[13px] font-semibold tabular-nums ${koTextTone(result.koChanceText)}`}
                 >
                   {result.koChanceText}
                 </div>
@@ -229,11 +221,11 @@ export function ResultsPanel() {
             </div>
             <div className="mb-3">
               <div className="mb-1.5 flex items-center justify-between gap-3">
-                <div className="theme-data-label">Damage range</div>
+                <div className="theme-data-label">{dictionary.resultsPanel.damageRange}</div>
                 <div className="theme-data-text text-[11px]">
                   {band.isGuaranteedOhko
-                    ? `Guaranteed OHKO · ${result.minPercentage.toFixed(1)}% - ${result.maxPercentage.toFixed(1)}%`
-                    : `${result.minPercentage.toFixed(1)}% - ${result.maxPercentage.toFixed(1)}%`}
+                    ? `Guaranteed OHKO, ${result.minPercentage.toFixed(1)}% to ${result.maxPercentage.toFixed(1)}%`
+                    : `${result.minPercentage.toFixed(1)}% to ${result.maxPercentage.toFixed(1)}%`}
                 </div>
               </div>
               <div
@@ -264,7 +256,7 @@ export function ResultsPanel() {
                     {result.damageRolls.map((roll, index) => (
                       <span
                         key={`${result.archetype}-roll-${index}-${roll.damage}`}
-                        className={`theme-roll-chip rounded-md px-2 py-1 font-mono text-[10px] leading-none tabular-nums ${
+                        className={`theme-roll-chip rounded-md px-2 py-1 font-mono text-[11px] leading-none tabular-nums ${
                           roll.percentage >= 100 ? "theme-roll-chip-ohko" : ""
                         }`}
                       >
@@ -281,7 +273,7 @@ export function ResultsPanel() {
                   {result.assumptions.map((assumption) => (
                     <div
                       key={`${result.archetype}-${assumption}`}
-                      className="theme-pill-muted rounded-md px-2.5 py-1 font-mono text-[10px]"
+                      className="theme-pill-muted rounded-md px-2.5 py-1 font-mono text-[11px]"
                     >
                       {assumption}
                     </div>

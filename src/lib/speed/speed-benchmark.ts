@@ -32,6 +32,7 @@ export interface SpeedSideMetrics {
   resolvedPokemon: PokemonEntry;
   rawSpeed: number;
   effectiveSpeed: number;
+  item: string | undefined;
 }
 
 export interface PinnedSpeedComparator {
@@ -77,6 +78,7 @@ export function resolveSpeedSide(side: SpeedSideState, globals: SpeedGlobalState
     resolvedPokemon,
     rawSpeed: result.rawSpeed,
     effectiveSpeed: result.effectiveSpeed,
+    item: side.item,
   };
 }
 

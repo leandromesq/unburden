@@ -3,6 +3,7 @@
 import { MoreHorizontal, X } from "lucide-react";
 import {
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -11,6 +12,7 @@ import {
 import { PokemonIdentitySummary } from "@/components/pokemon/pokemon-identity-summary";
 import { PokemonSprite } from "@/components/omnibar/pokemon-summary/pokemon-sprite";
 import { useI18n } from "@/i18n/I18nProvider";
+import type { AppDictionary } from "@/i18n/types";
 import { getSpeedRelevantItemMultiplier } from "@/lib/calc/speed-engine";
 import { normalizeAlias } from "@/lib/data/normalization";
 import type {
@@ -34,6 +36,17 @@ function relationClass(relation: SpeedTierGroup["relation"]) {
   }
 
   return "border-[color:var(--outcome-neutral)]";
+}
+
+function relationLabel(
+  relation: SpeedTierGroup["relation"],
+  labels: AppDictionary["speedBenchmark"],
+) {
+  if (relation === "subject-first") return labels.subjectFirst;
+  if (relation === "benchmark-first") return labels.benchmarkFirst;
+  if (relation === "tie") return labels.speedTie;
+
+  return labels.referenceTier;
 }
 
 function arcStyle(distance: number) {
@@ -127,6 +140,9 @@ function LadderTile({
             <span className="block text-xl font-semibold tabular-nums">
               {group.speed}
             </span>
+            <span className="theme-speed-relation mt-1 inline-block rounded px-1.5 py-0.5 text-[11px] font-medium">
+              {relationLabel(group.relation, speed)}
+            </span>
           </span>
         </button>
 
@@ -188,6 +204,7 @@ export function SpeedLadder({
   const rafRef = useRef<number | null>(null);
   const suppressScrollFocusTimeoutRef = useRef<number | null>(null);
   const [openTier, setOpenTier] = useState<SpeedTierGroup | null>(null);
+  const openTierTitleId = useId();
   const rows = useMemo(() => buildRows(groups), [groups]);
   const defaultKey = focusedGroup ? `tier-${focusedGroup.speed}` : rows[0]?.key;
   const [activeKey, setActiveKey] = useState(defaultKey);
@@ -308,6 +325,19 @@ export function SpeedLadder({
     };
   }, []);
 
+  useEffect(() => {
+    if (!openTier) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpenTier(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [openTier]);
+
   return (
     <section className={`theme-panel rounded-lg p-4 ${className}`}>
       <div>
@@ -327,6 +357,9 @@ export function SpeedLadder({
                 meta={
                   <div className="theme-text-faint flex flex-wrap gap-x-3 gap-y-1 text-xs">
                     <span>Base {comparator.metrics.resolvedPokemon.baseStats.spe}</span>
+                    {speedRelevantItem(comparator.metrics.item) ? (
+                      <span>{speedRelevantItem(comparator.metrics.item)}</span>
+                    ) : null}
                     <span>{speed.effectiveSpeed} {comparator.speed}</span>
                     {!comparator.matchesGeneratedTier ? (
                       <span>{speed.pinnedOffTier}</span>
@@ -383,24 +416,38 @@ export function SpeedLadder({
         </div>
 
         {openTier ? (
-          <div className="absolute bottom-4 left-3 right-8 z-[var(--z-popover)] rounded-lg border border-[var(--line)] bg-[var(--surface-2)] p-3 shadow-[var(--shadow-overlay)]">
-              <div className="flex items-center justify-between gap-2">
-                <div>
-                  <div className="theme-text-faint text-xs">{speed.tiedTier}</div>
-                  <div className="font-semibold tabular-nums">{openTier.speed}</div>
+          <div
+            role="dialog"
+            aria-labelledby={openTierTitleId}
+            className="theme-speed-tier-popover absolute bottom-4 left-3 right-8 z-[var(--z-popover)] rounded-xl p-3 shadow-[var(--shadow-overlay)]"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="theme-data-label">{speed.tiedTier}</div>
+                <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                  <h3 id={openTierTitleId} className="text-xl font-semibold tabular-nums">
+                    {openTier.speed}
+                  </h3>
+                  <span className="theme-speed-relation rounded px-1.5 py-0.5 text-[11px] font-medium">
+                    {openTier.members.length} Pokemon
+                  </span>
                 </div>
-                <button
-                  type="button"
-                  aria-label={speed.clear}
-                  title={speed.clear}
-                  onClick={() => setOpenTier(null)}
-                  className="theme-icon-button theme-icon-button-sm"
-                >
-                  <X size={14} aria-hidden="true" />
-                </button>
               </div>
-              <div className="mt-3 max-h-72 space-y-1 overflow-auto">
-                {openTier.members.map((member) => (
+              <button
+                type="button"
+                aria-label={speed.clear}
+                title={speed.clear}
+                onClick={() => setOpenTier(null)}
+                className="theme-icon-button theme-icon-button-sm shrink-0"
+              >
+                <X size={14} aria-hidden="true" />
+              </button>
+            </div>
+            <div className="mt-3 max-h-72 space-y-1.5 overflow-auto pr-1">
+              {openTier.members.map((member) => {
+                const relevantItem = speedRelevantItem(member.profile.defaultItem);
+
+                return (
                   <button
                     key={member.profile.pokemonId}
                     type="button"
@@ -409,20 +456,32 @@ export function SpeedLadder({
                       focusSelectedRow(rows.find((row) => row.speed === openTier.speed));
                       onSelectBenchmark(member);
                     }}
-                    className="block w-full rounded px-2 py-2 text-left text-xs hover:bg-[var(--surface-3)]"
+                    className="theme-speed-tier-option grid w-full grid-cols-[2.25rem_minmax(0,1fr)_auto] items-center gap-2 rounded-lg p-2 text-left"
                   >
-                    <span className="block font-medium">
-                      {member.resolvedPokemon.name}
+                    <span className="theme-summary-sprite-shell flex h-9 w-9 shrink-0 items-center justify-center rounded-md p-1.5">
+                      <PokemonSprite
+                        sources={getPokemonSpriteSources(member.resolvedPokemon)}
+                        name={member.resolvedPokemon.name}
+                        primaryType={member.resolvedPokemon.types[0] ?? null}
+                        loading="lazy"
+                      />
                     </span>
-                    <span className="theme-text-faint">
-                      Base {member.resolvedPokemon.baseStats.spe}
-                      {speedRelevantItem(member.profile.defaultItem)
-                        ? ` · ${member.profile.defaultItem}`
-                        : ""}
+                    <span className="min-w-0">
+                      <span className="block truncate text-sm font-medium">
+                        {member.resolvedPokemon.name}
+                      </span>
+                      <span className="theme-text-faint block truncate text-xs">
+                        Base {member.resolvedPokemon.baseStats.spe}
+                        {relevantItem ? ` · ${relevantItem}` : ""}
+                      </span>
+                    </span>
+                    <span className="theme-data-text text-[12px] tabular-nums">
+                      {openTier.speed}
                     </span>
                   </button>
-                ))}
-              </div>
+                );
+              })}
+            </div>
           </div>
         ) : null}
       </div>

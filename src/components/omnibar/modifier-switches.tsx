@@ -236,7 +236,7 @@ function StageControl({
           type="button"
           disabled={decrementDisabled}
           aria-label={`${title} down`}
-          className={`theme-icon-button theme-icon-button-sm ${
+          className={`theme-icon-button theme-icon-button-sm h-9 min-w-9 ${
             decrementDisabled
               ? "theme-chip-disabled cursor-not-allowed"
               : ""
@@ -263,7 +263,7 @@ function StageControl({
           type="button"
           disabled={incrementDisabled}
           aria-label={`${title} up`}
-          className={`theme-icon-button theme-icon-button-sm ${
+          className={`theme-icon-button theme-icon-button-sm h-9 min-w-9 ${
             incrementDisabled
               ? "theme-chip-disabled cursor-not-allowed"
               : ""
@@ -330,9 +330,9 @@ function SideColumn({
 }) {
   return (
     <section
-      className={`min-w-0 ${disabled ? "opacity-75" : ""}`}
+      className={`theme-modifier-side min-w-0 rounded-xl p-4 ${disabled ? "theme-modifier-inactive" : ""}`}
     >
-      <div className="mb-3 flex min-w-0 flex-wrap items-center justify-between gap-2 border-b border-[var(--line)] pb-3">
+      <div className="mb-4 flex min-w-0 flex-wrap items-center justify-between gap-2 border-b border-[var(--line)] pb-3">
         <SectionLabel>{title}</SectionLabel>
         {subtitle ? (
           <div className="theme-section-meta min-w-0 truncate">
@@ -639,7 +639,7 @@ export function ModifierSwitches() {
 
   return (
     <div className="min-w-0 px-4 py-4 md:px-5 md:py-5">
-      <section className="mb-5 min-w-0 border-b border-[var(--line)] pb-5">
+      <section className="theme-modifier-section mb-5 min-w-0 rounded-xl p-4">
         <div className="mb-3">
           <SectionLabel>{dictionary.modifierSwitches.global}</SectionLabel>
         </div>
@@ -670,7 +670,7 @@ export function ModifierSwitches() {
           />
         </div>
       </section>
-      <div className="grid min-w-0 gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <div className="grid min-w-0 gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <SideColumn
           side="attacker"
           title={dictionary.modifierSwitches.attacker}
@@ -689,7 +689,7 @@ export function ModifierSwitches() {
           onHpChange={(value) => handleHpChange("attacker", value)}
           labels={dictionary.modifierSwitches}
         />
-        <div className="min-w-0 md:border-l md:border-[var(--line)] md:pl-5">
+        <div className="min-w-0">
           <SideColumn
             side="defender"
             title={dictionary.modifierSwitches.defender}

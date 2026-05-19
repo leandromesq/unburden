@@ -40,8 +40,8 @@ function SpeedSideModifiers({
   const abilities = metrics?.resolvedPokemon.abilities ?? [];
 
   return (
-    <section className={`min-w-0 ${disabled ? "opacity-75" : ""}`}>
-      <div className="mb-3 flex min-w-0 flex-wrap items-center justify-between gap-2 border-b border-[var(--line)] pb-3">
+    <section className={`theme-modifier-side min-w-0 rounded-xl p-4 ${disabled ? "theme-modifier-inactive" : ""}`}>
+      <div className="mb-4 flex min-w-0 flex-wrap items-center justify-between gap-2 border-b border-[var(--line)] pb-3">
         <div className="theme-section-title">{title}</div>
         <div className="theme-section-meta min-w-0 truncate">
           {metrics?.resolvedPokemon.name ?? speed.noPokemon}
@@ -59,19 +59,19 @@ function SpeedSideModifiers({
                 disabled={disabled}
                 value={side?.speSp ?? 32}
                 onChange={(event) => onChange({ speSp: Number(event.currentTarget.value) })}
-                className="mt-2 w-full accent-[var(--accent)] disabled:cursor-not-allowed"
+                className="theme-range mt-2 w-full disabled:cursor-not-allowed"
               />
             </label>
             <div className="theme-divider border-t pt-3">
               <div className="mb-2 flex items-center justify-between gap-2">
                 <div className="theme-text-faint text-sm">{speed.stage}</div>
               </div>
-              <div className="grid grid-cols-[2.25rem_minmax(0,1fr)_2.25rem] gap-2">
+              <div className="grid grid-cols-[2.75rem_minmax(0,1fr)_2.75rem] gap-2 sm:grid-cols-[2.25rem_minmax(0,1fr)_2.25rem]">
                 <button
                   type="button"
                   disabled={disabled}
                   onClick={() => side && onChange({ speedStage: Math.max(-6, side.speedStage - 1) })}
-                  className="theme-icon-button theme-icon-button-sm disabled:cursor-not-allowed disabled:opacity-60"
+                  className="theme-icon-button theme-icon-button-sm h-11 sm:h-8"
                   aria-label={`${speed.stage} -1`}
                 >
                   -
@@ -93,7 +93,7 @@ function SpeedSideModifiers({
                   type="button"
                   disabled={disabled}
                   onClick={() => side && onChange({ speedStage: Math.min(6, side.speedStage + 1) })}
-                  className="theme-icon-button theme-icon-button-sm disabled:cursor-not-allowed disabled:opacity-60"
+                  className="theme-icon-button theme-icon-button-sm h-11 sm:h-8"
                   aria-label={`${speed.stage} +1`}
                 >
                   +
@@ -321,6 +321,7 @@ export function SpeedCommandComposer({
             type="button"
             aria-label={dictionary.home.swapSides}
             aria-keyshortcuts="Alt+X"
+            aria-disabled={!canSwapSides}
             onClick={() => {
               if (canSwapSides) onSwapSides();
             }}
@@ -386,7 +387,7 @@ export function SpeedCommandComposer({
         {modifiersOpen ? (
         <div className="theme-composer-secondary">
           <div className="min-w-0 px-4 py-4 md:px-5 md:py-5">
-            <section className="min-w-0 border-b border-[var(--line)] pb-5">
+            <section className="theme-modifier-section min-w-0 rounded-xl p-4">
               <div className="mb-3">
                 <div className="theme-section-title">{modifierLabels.global}</div>
               </div>
@@ -419,14 +420,14 @@ export function SpeedCommandComposer({
                 ))}
               </div>
             </section>
-            <div className="mt-5 grid min-w-0 gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+            <div className="mt-4 grid min-w-0 gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
               <SpeedSideModifiers
                 title={speed.subject}
                 side={subject}
                 globals={globals}
                 onChange={onSubjectChange}
               />
-              <div className="min-w-0 md:border-l md:border-[var(--line)] md:pl-5">
+              <div className="min-w-0">
                 <SpeedSideModifiers
                   title={speed.comparator}
                   side={comparator}

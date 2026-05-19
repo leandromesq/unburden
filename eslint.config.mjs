@@ -13,6 +13,8 @@ const eslintConfig = defineConfig([
     "build/**",
     "coverage/**",
     "next-env.d.ts",
+    // Third-party agent tooling:
+    ".agents/skills/impeccable/scripts/**",
   ]),
 ]);
 

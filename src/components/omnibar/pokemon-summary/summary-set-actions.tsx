@@ -62,12 +62,12 @@ export function SummarySetActions({
                 {set.nickname ?? set.speciesName}
               </div>
               {set.nickname ? (
-                <div className="theme-text-faint mt-0.5 text-[10px]">
+                <div className="theme-text-faint mt-0.5 text-[11px]">
                   {set.speciesName}
                 </div>
               ) : null}
               {set.item || set.ability ? (
-                <div className="theme-text-faint mt-0.5 text-[10px]">
+                <div className="theme-text-faint mt-0.5 text-[11px]">
                   {[set.item, set.ability].filter(Boolean).join(" / ")}
                 </div>
               ) : null}

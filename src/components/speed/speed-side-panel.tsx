@@ -318,18 +318,18 @@ export function SpeedSidePanel({
           max={32}
           value={side.speSp}
           onChange={(event) => onChange({ speSp: Number(event.currentTarget.value) })}
-          className="w-full accent-[var(--accent)]"
+          className="theme-range w-full"
         />
 
         <div>
           <label className="block" htmlFor={stageId}>
             <span className="theme-text-faint">{speed.stage}</span>
           </label>
-          <div className="mt-2 grid grid-cols-[2.25rem_minmax(0,1fr)_2.25rem] gap-2">
+          <div className="mt-2 grid grid-cols-[2.75rem_minmax(0,1fr)_2.75rem] gap-2 sm:grid-cols-[2.25rem_minmax(0,1fr)_2.25rem]">
             <button
               type="button"
               onClick={() => onChange({ speedStage: Math.max(-6, side.speedStage - 1) })}
-              className="theme-toolbar-button h-9 rounded px-0 text-base"
+              className="theme-icon-button theme-icon-button-sm h-11 rounded px-0 text-base sm:h-9"
               aria-label={`${speed.stage} -1`}
             >
               -
@@ -349,7 +349,7 @@ export function SpeedSidePanel({
             <button
               type="button"
               onClick={() => onChange({ speedStage: Math.min(6, side.speedStage + 1) })}
-              className="theme-toolbar-button h-9 rounded px-0 text-base"
+              className="theme-icon-button theme-icon-button-sm h-11 rounded px-0 text-base sm:h-9"
               aria-label={`${speed.stage} +1`}
             >
               +
@@ -390,6 +390,7 @@ export function SpeedSidePanel({
               <button
                 key={nature}
                 type="button"
+                aria-pressed={side.nature === nature}
                 onClick={() => onChange({ nature })}
                 className={`rounded px-2 py-2 text-xs ${
                   side.nature === nature ? "theme-chip-active" : "theme-chip"
@@ -404,6 +405,7 @@ export function SpeedSidePanel({
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
+            aria-pressed={Boolean(side.tailwind)}
             onClick={() => onChange({ tailwind: !side.tailwind })}
             className={`rounded px-3 py-2 text-xs ${side.tailwind ? "theme-chip-active" : "theme-chip"}`}
           >
@@ -411,6 +413,7 @@ export function SpeedSidePanel({
           </button>
           <button
             type="button"
+            aria-pressed={side.item === "Choice Scarf"}
             onClick={() => {
               const enabled = side.item !== "Choice Scarf";
               onChange({
@@ -426,6 +429,7 @@ export function SpeedSidePanel({
           </button>
           <button
             type="button"
+            aria-pressed={Boolean(side.paralysis)}
             onClick={() => onChange({ paralysis: !side.paralysis })}
             className={`rounded px-3 py-2 text-xs ${side.paralysis ? "theme-chip-active" : "theme-chip"}`}
           >

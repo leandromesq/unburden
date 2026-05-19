@@ -97,6 +97,14 @@ export interface AppDictionary {
     pokemonSpeedTie: (left: string, right: string) => string;
     rawSpeed: string;
     effectiveSpeed: string;
+    sequenceSubject: string;
+    sequenceBenchmark: string;
+    sequenceDecision: string;
+    subjectFirst: string;
+    benchmarkFirst: string;
+    referenceTier: string;
+    ladderContext: string;
+    ladderContextModifiersOpen: string;
   };
   testerLinks: {
     joinDiscord: string;
@@ -186,6 +194,8 @@ export interface AppDictionary {
     switch: string;
     save: string;
     edit: string;
+    savedSets: string;
+    removeSet: (name: string) => string;
   };
   modifierSwitches: {
     noOptionsYet: string;
@@ -220,6 +230,14 @@ export interface AppDictionary {
     minBulk: string;
     midBulk: string;
     maxBulk: string;
+    guaranteedOhko: string;
+    ohkoRoll: string;
+    guaranteedTwoHitPace: string;
+    twoHitRoll: string;
+    comfortableSurvive: string;
+    chipDamage: string;
+    koChance: string;
+    damageRange: string;
     copyResultText: (label: string) => string;
     copiedText: string;
     copyShareUrl: (label: string) => string;

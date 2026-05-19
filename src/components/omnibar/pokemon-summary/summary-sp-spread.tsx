@@ -31,7 +31,7 @@ export function SummarySpSpread({
     <div className="theme-divider mt-4 border-t pt-3">
       <div className="mb-3 flex items-center justify-between gap-2">
         <div className="theme-data-label">SP Spread</div>
-        <div className="theme-pill-muted rounded-md px-2 py-0.5 text-[10px] font-medium">
+        <div className="theme-pill-muted rounded-md px-2 py-0.5 text-[11px] font-medium">
           <span
             className="theme-text-dim"
             style={{
@@ -96,7 +96,7 @@ export function SummarySpSpread({
                     className="theme-control theme-input h-7 w-16 rounded-md px-2 py-1 font-mono text-xs"
                   />
 
-                  <span className="theme-text-dim font-mono text-[10px]">
+                  <span className="theme-text-dim font-mono text-[11px]">
                     SP
                   </span>
                 </div>

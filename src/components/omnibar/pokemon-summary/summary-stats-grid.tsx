@@ -128,7 +128,7 @@ function StatItem({
             <span className="relative ml-0.5 inline-flex h-4 w-4 shrink-0 items-end justify-center">
               {hasNatureArrow ? (
                 <span
-                  className="text-[9px] leading-none"
+                  className="text-[11px] leading-none"
                   style={{ color: arrowColor }}
                 >
                   {natureEffect === "boost" ? "▲" : "▼"}
@@ -138,8 +138,8 @@ function StatItem({
                 <span
                   className={`font-mono leading-none ${
                     hasNatureArrow
-                      ? "absolute -top-0.5 left-1/2 -translate-x-1/2 text-[8px]"
-                      : "text-[9px]"
+                      ? "absolute -top-0.5 left-1/2 -translate-x-1/2 text-[11px]"
+                      : "text-[11px]"
                   }`}
                   style={{
                     color: isBoosted ? "var(--accent-strong)" : "var(--text-dim)",
@@ -152,7 +152,7 @@ function StatItem({
           )}
           {itemMultiplier !== 1 && (
             <span
-              className="shrink-0 font-mono text-[9px]"
+              className="shrink-0 font-mono text-[11px]"
               style={{ color: "var(--accent-strong)" }}
             >
               ×{itemMultiplier}
@@ -160,7 +160,7 @@ function StatItem({
           )}
         </div>
         {statKey === "hp" ? (
-          <span className="theme-text-faint shrink-0 font-mono text-[10px]">
+          <span className="theme-text-faint shrink-0 font-mono text-[11px]">
             %
           </span>
         ) : null}

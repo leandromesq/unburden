@@ -168,6 +168,7 @@ export function OmniComposer() {
                 type="button"
                 aria-label={dictionary.home.swapSides}
                 aria-keyshortcuts="Alt+X"
+                aria-disabled={!canSwapSides}
                 onClick={handleSwapSides}
                 className="theme-icon-button theme-icon-button-sm px-2.5 text-sm"
               >

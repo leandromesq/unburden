@@ -34,7 +34,7 @@ function SubmitButton({
     <button
       type="submit"
       disabled={pending}
-      className="theme-chip-active theme-toolbar-button font-medium disabled:cursor-not-allowed disabled:opacity-50"
+      className="theme-chip-active theme-toolbar-button font-medium"
     >
       {pending ? pendingLabel : idleLabel}
     </button>
