@@ -1,5 +1,6 @@
 import { itemDisplayById } from "@/lib/data/items";
 import { legalPokemonData, pokemonById } from "@/lib/data/pokemon";
+import { activeRegulation } from "@/lib/data/regulations";
 
 describe("champions species data", () => {
   test("uses updated Champions mega abilities for newer megas", () => {
@@ -34,5 +35,10 @@ describe("champions species data", () => {
     expect(itemDisplayById.get("softsand")).toBe("Soft Sand");
     expect(itemDisplayById.get("occaberry")).toBe("Occa Berry");
     expect(itemDisplayById.has("potion")).toBe(false);
+  });
+
+  test("resolves active regulation from config", () => {
+    expect(activeRegulation.id).toBe("regulation-m-a");
+    expect(activeRegulation.allowedPokemonIds.length).toBeGreaterThan(300);
   });
 });

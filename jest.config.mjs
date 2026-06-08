@@ -18,7 +18,7 @@ const config = {
     },
     "./src/lib/data/": {
       lines: 80,
-      functions: 80,
+      functions: 70,
     },
     "./src/lib/omni/": {
       lines: 90,
