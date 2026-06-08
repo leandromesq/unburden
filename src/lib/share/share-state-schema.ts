@@ -55,7 +55,7 @@ export function parseImportedSetSnapshot(value: unknown): ImportedSet | null {
 	return normalizeImportedSet(candidate as unknown as ImportedSet);
 }
 
-export function parseSpeedGlobals(value: unknown): SpeedGlobalState | null {
+function parseSpeedGlobals(value: unknown): SpeedGlobalState | null {
 	if (!isRecord(value)) return null;
 
 	const candidate = value as Record<string, unknown>;
@@ -69,7 +69,7 @@ export function parseSpeedGlobals(value: unknown): SpeedGlobalState | null {
 	}, {} as SpeedGlobalState);
 }
 
-export function parseSpeedSideState(value: unknown): SpeedSideState | null {
+function parseSpeedSideState(value: unknown): SpeedSideState | null {
 	if (!isRecord(value)) return null;
 
 	const candidate = value as Record<string, unknown>;

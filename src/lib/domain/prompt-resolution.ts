@@ -51,7 +51,7 @@ export function resolvePokemonFromLeadingTokens(
 	return null;
 }
 
-export function resolveItemNameFromToken(token: string) {
+function resolveItemNameFromToken(token: string) {
 	const normalized = normalizeId(token.replace(/^@/, ""));
 	return itemNames.find((name) => normalizeId(name) === normalized);
 }
