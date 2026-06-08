@@ -18,8 +18,9 @@
     "generate:all": "npm run generate:data && npm run generate:vgc-meta"
   },
   "dependencies": {
-    "@pkmn/data": "^0.10.7",
-    "@pkmn/dex": "^0.10.7",
+    "@pkmn/dex": "^0.10.10",
+    "@pkmn/img": "^0.3.4",
+    "@pkmn/mods": "^0.10.10",
     "@smogon/calc": "^0.11.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",

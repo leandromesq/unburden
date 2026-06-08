@@ -1,5 +1,8 @@
 {
-  "format": "gen9championsvgc2026regma",
+  "source": "smogon",
+  "format": "championsvgc2026regma",
+  "month": "latest",
+  "cutoff": 1500,
   "commonMoveLimit": 15,
   "commonAbilityLimit": 3,
   "commonItemLimit": 10,

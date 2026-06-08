@@ -1,26 +1,19 @@
 "use client";
 
 import { MoreHorizontal, X } from "lucide-react";
-import {
-  useEffect,
-  useId,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { PokemonIdentitySummary } from "@/components/pokemon/pokemon-identity-summary";
 import { PokemonSprite } from "@/components/omnibar/pokemon-summary/pokemon-sprite";
 import { useI18n } from "@/i18n/I18nProvider";
 import type { AppDictionary } from "@/i18n/types";
 import { getSpeedRelevantItemMultiplier } from "@/lib/calc/speed-engine";
-import { normalizeAlias } from "@/lib/data/normalization";
+import { getPokemonSpriteSources } from "@/lib/pokemon-sprites";
 import type {
   PinnedSpeedComparator,
   SpeedBenchmarkIdentity,
   SpeedTierGroup,
 } from "@/lib/speed/speed-benchmark";
-import type { PokemonEntry } from "@/lib/types";
 
 function relationClass(relation: SpeedTierGroup["relation"]) {
   if (relation === "subject-first") {
@@ -61,19 +54,6 @@ function arcStyle(distance: number) {
   };
 }
 
-function getPokemonSpriteSources(pokemon: PokemonEntry) {
-  const slugs = [pokemon.name, ...pokemon.aliases, pokemon.id]
-    .map((value) => normalizeAlias(value).replace(/\s+/g, "-"))
-    .filter((value, index, collection) => value && collection.indexOf(value) === index);
-
-  return slugs.flatMap((slug) => [
-    `https://play.pokemonshowdown.com/sprites/home/${slug}.png`,
-    `https://play.pokemonshowdown.com/sprites/dex/${slug}.png`,
-    `https://play.pokemonshowdown.com/sprites/gen5/${slug}.png`,
-    `https://img.pokemondb.net/sprites/home/normal/${slug}.png`,
-  ]);
-}
-
 function speedRelevantItem(item: string | undefined) {
   return getSpeedRelevantItemMultiplier(item) !== 1 ? item : null;
 }
@@ -105,9 +85,9 @@ function LadderTile({
     <article
       ref={setRowRef}
       data-wheel-row={group.speed}
-      className={`relative z-[var(--z-content)] scroll-mt-36 rounded-lg border bg-[var(--surface-2)] p-2.5 transition-[transform,opacity,border-color,background-color,box-shadow] duration-150 [scroll-snap-align:center] ${
-        relationClass(group.relation)
-      } ${isSelected ? "shadow-[inset_0_0_0_1px_var(--accent)]" : ""} ${isFocused ? "border-[color:var(--accent)] bg-[var(--surface-3)]" : ""} ${arc.className}`}
+      className={`relative z-[var(--z-content)] scroll-mt-36 rounded-lg border bg-[var(--surface-2)] p-2.5 transition-[transform,opacity,border-color,background-color,box-shadow] duration-150 [scroll-snap-align:center] ${relationClass(
+        group.relation,
+      )} ${isSelected ? "shadow-[inset_0_0_0_1px_var(--accent)]" : ""} ${isFocused ? "border-[color:var(--accent)] bg-[var(--surface-3)]" : ""} ${arc.className}`}
       style={arc.style}
     >
       <div className="flex items-center gap-2">
@@ -233,7 +213,9 @@ export function SpeedLadder({
     if (!scrollElement || !rowElement) return;
 
     const targetTop =
-      rowElement.offsetTop - scrollElement.clientHeight / 2 + rowElement.clientHeight / 2;
+      rowElement.offsetTop -
+      scrollElement.clientHeight / 2 +
+      rowElement.clientHeight / 2;
 
     scrollElement.scrollTo({ top: targetTop });
   }
@@ -314,14 +296,15 @@ export function SpeedLadder({
     });
 
     return () => window.cancelAnimationFrame(frame);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultKey]); // intentionally omits `rows` — rows rebuild on every render but
-                    // defaultKey changing is the only signal that needs auto-scroll
+  // defaultKey changing is the only signal that needs auto-scroll
 
   useEffect(() => {
     return () => {
       if (rafRef.current !== null) window.cancelAnimationFrame(rafRef.current);
-      if (suppressScrollFocusTimeoutRef.current !== null) window.clearTimeout(suppressScrollFocusTimeoutRef.current);
+      if (suppressScrollFocusTimeoutRef.current !== null)
+        window.clearTimeout(suppressScrollFocusTimeoutRef.current);
     };
   }, []);
 
@@ -356,11 +339,15 @@ export function SpeedLadder({
                 showOrigin={false}
                 meta={
                   <div className="theme-text-faint flex flex-wrap gap-x-3 gap-y-1 text-xs">
-                    <span>Base {comparator.metrics.resolvedPokemon.baseStats.spe}</span>
+                    <span>
+                      Base {comparator.metrics.resolvedPokemon.baseStats.spe}
+                    </span>
                     {speedRelevantItem(comparator.metrics.item) ? (
                       <span>{speedRelevantItem(comparator.metrics.item)}</span>
                     ) : null}
-                    <span>{speed.effectiveSpeed} {comparator.speed}</span>
+                    <span>
+                      {speed.effectiveSpeed} {comparator.speed}
+                    </span>
                     {!comparator.matchesGeneratedTier ? (
                       <span>{speed.pinnedOffTier}</span>
                     ) : null}
@@ -392,25 +379,25 @@ export function SpeedLadder({
         >
           <div className="space-y-2">
             {rows.map((row, index) => (
-                <LadderTile
-                  key={row.key}
-                  group={row.group}
-                  setRowRef={(element) => {
-                    if (element) {
-                      rowRefs.current.set(row.key, element);
-                    } else {
-                      rowRefs.current.delete(row.key);
-                    }
-                  }}
-                  distance={index - (activeRowIndex === -1 ? 0 : activeRowIndex)}
-                  isFocused={row.key === activeKey}
-                  isSelected={row.speed === selectedSpeed}
-                  onSelect={(identity) => {
-                    focusSelectedRow(row);
-                    onSelectBenchmark(identity);
-                  }}
-                  onOpenTier={setOpenTier}
-                />
+              <LadderTile
+                key={row.key}
+                group={row.group}
+                setRowRef={(element) => {
+                  if (element) {
+                    rowRefs.current.set(row.key, element);
+                  } else {
+                    rowRefs.current.delete(row.key);
+                  }
+                }}
+                distance={index - (activeRowIndex === -1 ? 0 : activeRowIndex)}
+                isFocused={row.key === activeKey}
+                isSelected={row.speed === selectedSpeed}
+                onSelect={(identity) => {
+                  focusSelectedRow(row);
+                  onSelectBenchmark(identity);
+                }}
+                onOpenTier={setOpenTier}
+              />
             ))}
           </div>
         </div>
@@ -425,7 +412,10 @@ export function SpeedLadder({
               <div className="min-w-0">
                 <div className="theme-data-label">{speed.tiedTier}</div>
                 <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                  <h3 id={openTierTitleId} className="text-xl font-semibold tabular-nums">
+                  <h3
+                    id={openTierTitleId}
+                    className="text-xl font-semibold tabular-nums"
+                  >
                     {openTier.speed}
                   </h3>
                   <span className="theme-speed-relation rounded px-1.5 py-0.5 text-[11px] font-medium">
@@ -445,7 +435,9 @@ export function SpeedLadder({
             </div>
             <div className="mt-3 max-h-72 space-y-1.5 overflow-auto pr-1">
               {openTier.members.map((member) => {
-                const relevantItem = speedRelevantItem(member.profile.defaultItem);
+                const relevantItem = speedRelevantItem(
+                  member.profile.defaultItem,
+                );
 
                 return (
                   <button
@@ -453,14 +445,18 @@ export function SpeedLadder({
                     type="button"
                     onClick={() => {
                       setOpenTier(null);
-                      focusSelectedRow(rows.find((row) => row.speed === openTier.speed));
+                      focusSelectedRow(
+                        rows.find((row) => row.speed === openTier.speed),
+                      );
                       onSelectBenchmark(member);
                     }}
                     className="theme-speed-tier-option grid w-full grid-cols-[2.25rem_minmax(0,1fr)_auto] items-center gap-2 rounded-lg p-2 text-left"
                   >
                     <span className="theme-summary-sprite-shell flex h-9 w-9 shrink-0 items-center justify-center rounded-md p-1.5">
                       <PokemonSprite
-                        sources={getPokemonSpriteSources(member.resolvedPokemon)}
+                        sources={getPokemonSpriteSources(
+                          member.resolvedPokemon,
+                        )}
                         name={member.resolvedPokemon.name}
                         primaryType={member.resolvedPokemon.types[0] ?? null}
                         loading="lazy"

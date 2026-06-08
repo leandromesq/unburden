@@ -3,17 +3,15 @@ import path from "node:path";
 
 import type { ActiveRegulationConfig } from "../src/lib/types";
 import {
-  extractMarkdownSection,
-  fetchPikalyticsFormatIndex,
-  parseFormatDataDate,
-  parseFormatMetadata,
-  parseIndexEntries,
-  parseUsageEntries,
-  resolvePikalyticsAiMarkdown,
-} from "./fetch/fetch-pikalytics";
+  DEFAULT_SMOGON_STATS_CUTOFF,
+  DEFAULT_SMOGON_STATS_FORMAT,
+  fetchSmogonMetaRecords,
+  resolveSmogonStatsFormatId,
+  type SmogonMetaRecord,
+} from "./fetch/fetch-smogon-stats";
 import {
+  buildMetaSpeciesNameCandidates,
   buildMoveIndex,
-  buildPikalyticsSpeciesNameCandidates,
   buildPokemonIdIndex,
   buildSpeciesNameByPokemonId,
   DEFAULT_COMMON_ABILITY_LIMIT,
@@ -37,8 +35,8 @@ import {
 } from "./transform/build-vgc-meta";
 import { formatJsonWithCompactArrays } from "./transform/format-json";
 
-const REQUEST_CONCURRENCY = 6;
 const FALLBACK_ITEM_ID = "sitrusberry";
+const LATEST_MONTH = "latest";
 
 type LearnsetEntry = {
   pokemonId: string;
@@ -80,29 +78,6 @@ async function maybeReadJson<T>(filepath: string): Promise<T | null> {
   } catch {
     return null;
   }
-}
-
-async function mapWithConcurrency<T, U>(
-  items: T[],
-  concurrency: number,
-  task: (item: T, index: number) => Promise<U>,
-) {
-  const results = new Array<U>(items.length);
-  let nextIndex = 0;
-
-  async function worker() {
-    while (nextIndex < items.length) {
-      const currentIndex = nextIndex;
-      nextIndex += 1;
-      results[currentIndex] = await task(items[currentIndex], currentIndex);
-    }
-  }
-
-  await Promise.all(
-    Array.from({ length: Math.min(concurrency, items.length) }, () => worker()),
-  );
-
-  return results;
 }
 
 function normalizeId(value: string) {
@@ -196,6 +171,17 @@ function buildFallbackMetaProfile({
     moveById,
     commonMoveLimit,
   );
+  const knownMoveNames = new Set(
+    Array.from(moveById.values()).map((move) => normalizeId(move.name)),
+  );
+  const previousDefaultMove = knownMoveNames.has(
+    normalizeId(previousProfile?.defaultMove ?? ""),
+  )
+    ? previousProfile?.defaultMove
+    : null;
+  const previousCommonMoves = (previousProfile?.commonMoves ?? []).filter(
+    (moveName) => knownMoveNames.has(normalizeId(moveName)),
+  );
   const baseProfile: VgcMetaProfile = {
     pokemonId: pokemon.id,
     usageRank: previousProfile?.usageRank ?? Number.MAX_SAFE_INTEGER,
@@ -203,9 +189,9 @@ function buildFallbackMetaProfile({
     defaultItem: previousProfile?.defaultItem ?? fallbackItem,
     defaultAbility:
       previousProfile?.defaultAbility ?? pokemon.abilities[0] ?? "No Ability",
-    defaultMove: previousProfile?.defaultMove ?? moveProfile.defaultMove,
+    defaultMove: previousDefaultMove ?? moveProfile.defaultMove,
     commonMoves: dedupeStrings([
-      ...(previousProfile?.commonMoves ?? []),
+      ...previousCommonMoves,
       ...moveProfile.commonMoves,
     ]).slice(0, commonMoveLimit),
     commonAbilities: dedupeStrings([
@@ -219,6 +205,72 @@ function buildFallbackMetaProfile({
   };
 
   return mergeProfile(baseProfile, override);
+}
+
+function buildRecordIndexes(
+  records: SmogonMetaRecord[],
+  pokemonIdIndex: Map<string, string>,
+) {
+  const speciesNameByPokemonId = buildSpeciesNameByPokemonId(
+    records,
+    pokemonIdIndex,
+  );
+  const recordBySpeciesName = new Map(
+    records.map((record) => [record.speciesName, record]),
+  );
+  const recordByPokemonId = new Map<string, SmogonMetaRecord>();
+
+  for (const [pokemonId, speciesName] of speciesNameByPokemonId) {
+    const record = recordBySpeciesName.get(speciesName);
+
+    if (!record || recordByPokemonId.has(pokemonId)) {
+      continue;
+    }
+
+    recordByPokemonId.set(pokemonId, record);
+  }
+
+  return {
+    speciesNameByPokemonId,
+    recordBySpeciesName,
+    recordByPokemonId,
+  };
+}
+
+function resolveMetaRecord({
+  pokemon,
+  sourcePokemon,
+  speciesNameByPokemonId,
+  recordBySpeciesName,
+  recordByPokemonId,
+  pokemonById,
+}: {
+  pokemon: PokemonEntry;
+  sourcePokemon: PokemonEntry;
+  speciesNameByPokemonId: Map<string, string>;
+  recordBySpeciesName: Map<string, SmogonMetaRecord>;
+  recordByPokemonId: Map<string, SmogonMetaRecord>;
+  pokemonById: Map<string, PokemonEntry>;
+}) {
+  const directRecord = recordByPokemonId.get(pokemon.id);
+  const sourceRecord = recordByPokemonId.get(sourcePokemon.id);
+
+  if (directRecord ?? sourceRecord) {
+    return directRecord ?? sourceRecord ?? null;
+  }
+
+  const candidateSpeciesNames = dedupeStrings([
+    speciesNameByPokemonId.get(pokemon.id),
+    speciesNameByPokemonId.get(sourcePokemon.id),
+    ...buildMetaSpeciesNameCandidates(pokemon, pokemonById),
+    ...buildMetaSpeciesNameCandidates(sourcePokemon, pokemonById),
+  ]);
+
+  return (
+    candidateSpeciesNames
+      .map((speciesName) => recordBySpeciesName.get(speciesName) ?? null)
+      .find((record): record is SmogonMetaRecord => Boolean(record)) ?? null
+  );
 }
 
 async function main() {
@@ -237,6 +289,10 @@ async function main() {
       profileOverrides: {},
     } satisfies VgcMetaOverrides);
 
+  if (overrides.source && overrides.source !== "smogon") {
+    throw new Error(`Unsupported VGC meta source: ${overrides.source}.`);
+  }
+
   const commonMoveLimit = Number(
     args.get("--top-moves") ??
       overrides.commonMoveLimit ??
@@ -252,7 +308,12 @@ async function main() {
       overrides.commonItemLimit ??
       DEFAULT_COMMON_ITEM_LIMIT,
   );
-  const requestedFormat = args.get("--format") ?? overrides.format;
+  const requestedFormat =
+    args.get("--format") ?? overrides.format ?? DEFAULT_SMOGON_STATS_FORMAT;
+  const requestedMonth = args.get("--month") ?? overrides.month ?? LATEST_MONTH;
+  const requestedCutoff = Number(
+    args.get("--cutoff") ?? overrides.cutoff ?? DEFAULT_SMOGON_STATS_CUTOFF,
+  );
   const activeRegulationConfig =
     await readJson<ActiveRegulationConfig>(activeRegulationPath);
   const regulationPath = path.join(
@@ -268,15 +329,20 @@ async function main() {
     formAliasData,
     legalItemData,
     previousMeta,
-  ] =
-    await Promise.all([
-      readJson<PokemonEntry[]>(path.join(dataDir, "pokemon.gen9.json")),
-      readJson<MoveEntry[]>(path.join(dataDir, "moves.gen9.json")),
-      readJson<LearnsetEntry[]>(path.join(dataDir, "learnsets.gen9.json")),
-      readJson<FormAliasEntry[]>(path.join(dataDir, "form-aliases.json")),
-      readJson<ItemEntry[]>(path.join(dataDir, "champions-items.json")),
-      maybeReadJson<VgcMetaProfile[]>(outputPath),
-    ]);
+    smogonResult,
+  ] = await Promise.all([
+    readJson<PokemonEntry[]>(path.join(dataDir, "pokemon.gen9.json")),
+    readJson<MoveEntry[]>(path.join(dataDir, "moves.gen9.json")),
+    readJson<LearnsetEntry[]>(path.join(dataDir, "learnsets.gen9.json")),
+    readJson<FormAliasEntry[]>(path.join(dataDir, "form-aliases.json")),
+    readJson<ItemEntry[]>(path.join(dataDir, "champions-items.json")),
+    maybeReadJson<VgcMetaProfile[]>(outputPath),
+    fetchSmogonMetaRecords({
+      format: requestedFormat,
+      month: requestedMonth,
+      cutoff: requestedCutoff,
+    }),
+  ]);
 
   const previousMetaByPokemonId = new Map(
     (previousMeta ?? []).map((profile) => [profile.pokemonId, profile]),
@@ -313,216 +379,138 @@ async function main() {
     );
   }
 
-  const indexMarkdown = await fetchPikalyticsFormatIndex(requestedFormat);
-  const formatMetadata = parseFormatMetadata(indexMarkdown);
-  const resolvedFormat = formatMetadata?.formatCode ?? null;
-
-  if (!resolvedFormat) {
+  if (!smogonResult.records.length) {
     throw new Error(
-      "Unable to determine the current Pikalytics format code from the AI index.",
+      `No Pokemon entries were found for Smogon format ${smogonResult.formatId}.`,
     );
   }
 
-  const dataDate = formatMetadata?.dataDate ?? parseFormatDataDate(indexMarkdown);
-  const indexEntries = parseIndexEntries(indexMarkdown);
-
-  if (!indexEntries.length) {
-    throw new Error(`No Pokemon entries were found for ${resolvedFormat}.`);
-  }
-
-  const skippedSpecies: string[] = [];
   const fallbackSpecies: string[] = [];
-  const fetchFailures: string[] = [];
-  const speciesNameByPokemonId = buildSpeciesNameByPokemonId(
-    indexEntries,
-    pokemonIdIndex,
-  );
+  const skippedSpecies: string[] = [];
+  const { speciesNameByPokemonId, recordBySpeciesName, recordByPokemonId } =
+    buildRecordIndexes(smogonResult.records, pokemonIdIndex);
 
-  const profileResults = await mapWithConcurrency(
-    legalPokemon,
-    REQUEST_CONCURRENCY,
-    async (pokemon) => {
-      const sourcePokemon =
-        pokemonById.get(pokemon.defaultFormOf ?? "") ??
-        pokemonById.get(pokemon.baseSpeciesId ?? "") ??
-        pokemon;
-      const previousProfile = previousMetaByPokemonId.get(pokemon.id);
-      const directIndexSpeciesName = speciesNameByPokemonId.get(pokemon.id);
-      const sourceIndexSpeciesName = speciesNameByPokemonId.get(
-        sourcePokemon.id,
-      );
-      const candidateSpeciesNames = dedupeStrings([
-        directIndexSpeciesName,
-        sourceIndexSpeciesName,
-        ...buildPikalyticsSpeciesNameCandidates(pokemon, pokemonById),
-        ...buildPikalyticsSpeciesNameCandidates(sourcePokemon, pokemonById),
-      ]);
-      const indexEntry =
-        indexEntries.find(
-          (entry) => entry.speciesName === directIndexSpeciesName,
-        ) ??
-        indexEntries.find(
-          (entry) => entry.speciesName === sourceIndexSpeciesName,
-        ) ??
-        null;
+  const profileResults = legalPokemon.map((pokemon) => {
+    const sourcePokemon =
+      pokemonById.get(pokemon.defaultFormOf ?? "") ??
+      pokemonById.get(pokemon.baseSpeciesId ?? "") ??
+      pokemon;
+    const previousProfile = previousMetaByPokemonId.get(pokemon.id);
+    const override = overrides.profileOverrides?.[pokemon.id];
+    const record = resolveMetaRecord({
+      pokemon,
+      sourcePokemon,
+      speciesNameByPokemonId,
+      recordBySpeciesName,
+      recordByPokemonId,
+      pokemonById,
+    });
 
-      try {
-        const resolvedMarkdown = await resolvePikalyticsAiMarkdown(
-          resolvedFormat,
-          candidateSpeciesNames,
-          indexEntry?.aiUrl ?? null,
-        );
+    if (!record) {
+      fallbackSpecies.push(pokemon.name);
 
-        if (!resolvedMarkdown.markdown) {
-          fetchFailures.push(
-            `${pokemon.name}: ${
-              resolvedMarkdown.error ??
-              `No Pikalytics AI page resolved from candidates ${candidateSpeciesNames.join(", ")}`
-            }`,
-          );
-          fallbackSpecies.push(pokemon.name);
-
-          return {
-            usagePercent: indexEntry?.usagePercent ?? 0,
-            profile: buildFallbackMetaProfile({
-              pokemon,
-              previousProfile,
-              override: overrides.profileOverrides?.[pokemon.id],
-              learnset: learnsetByPokemonId.get(
-                normalizeId(pokemon.defaultFormOf ?? pokemon.id),
-              ),
-              moveById,
-              legalItemById,
-              commonMoveLimit,
-              commonAbilityLimit,
-              commonItemLimit,
-            }),
-          };
-        }
-
-        const commonMovesSection = parseUsageEntries(
-          extractMarkdownSection(resolvedMarkdown.markdown, "Common Moves"),
-        );
-        const commonAbilitiesSection = parseUsageEntries(
-          extractMarkdownSection(resolvedMarkdown.markdown, "Common Abilities"),
-        );
-        const commonItemsSection = parseUsageEntries(
-          extractMarkdownSection(resolvedMarkdown.markdown, "Common Items"),
-        );
-        const { defaultItem, commonItems } =
-          pokemon.isMega && pokemon.requiredItem
-            ? {
-                defaultItem: pokemon.requiredItem,
-                commonItems: [pokemon.requiredItem],
-              }
-            : resolveDefaultItem(
-                commonItemsSection,
-                previousProfile,
-                commonItemLimit,
-                legalItemById,
-              );
-        const { defaultAbility, commonAbilities } = resolveDefaultAbility(
-          commonAbilitiesSection,
+      return {
+        usagePercent: 0,
+        profile: buildFallbackMetaProfile({
           pokemon,
           previousProfile,
-          commonAbilityLimit,
-        );
-        const { defaultMove, commonMoves } = resolveMoveProfile(
-          commonMovesSection,
-          pokemon,
-          moveIndex,
-          previousProfile,
+          override,
+          learnset: learnsetByPokemonId.get(
+            normalizeId(pokemon.defaultFormOf ?? pokemon.id),
+          ),
+          moveById,
+          legalItemById,
           commonMoveLimit,
-        );
+          commonAbilityLimit,
+          commonItemLimit,
+        }),
+      };
+    }
 
-        if (!defaultItem || !defaultAbility || !defaultMove) {
-          skippedSpecies.push(
-            `${pokemon.name}${resolvedMarkdown.speciesName ? ` <- ${resolvedMarkdown.speciesName}` : ""}`,
-          );
-          fallbackSpecies.push(pokemon.name);
-
-          return {
-            usagePercent: indexEntry?.usagePercent ?? 0,
-            profile: buildFallbackMetaProfile({
-              pokemon,
-              previousProfile,
-              override: overrides.profileOverrides?.[pokemon.id],
-              learnset: learnsetByPokemonId.get(
-                normalizeId(pokemon.defaultFormOf ?? pokemon.id),
-              ),
-              moveById,
-              legalItemById,
-              commonMoveLimit,
-              commonAbilityLimit,
-              commonItemLimit,
-            }),
-          };
-        }
-
-        const mergedProfile = mergeProfile(
-          {
-            pokemonId: pokemon.id,
-            usageRank: Number.MAX_SAFE_INTEGER,
-            usagePercent: indexEntry?.usagePercent,
-            defaultItem,
-            defaultAbility,
-            defaultMove,
-            commonMoves,
-            commonAbilities,
-            commonItems,
-          },
-          overrides.profileOverrides?.[pokemon.id],
-        );
-
-        return {
-          usagePercent: indexEntry?.usagePercent ?? 0,
-          profile: {
-            ...mergedProfile,
-            usageRank: Number.MAX_SAFE_INTEGER,
-            usagePercent: indexEntry?.usagePercent,
-            commonMoves: dedupeStrings(mergedProfile.commonMoves ?? []).slice(
-              0,
-              commonMoveLimit,
-            ),
-            commonAbilities: dedupeStrings(
-              mergedProfile.commonAbilities ?? [],
-            ).slice(0, commonAbilityLimit),
-            commonItems: dedupeStrings(mergedProfile.commonItems ?? []).slice(
-              0,
-              commonItemLimit,
-            ),
-          },
-        };
-      } catch (error) {
-        fetchFailures.push(
-          `${pokemon.name}: ${error instanceof Error ? error.message : String(error)}`,
-        );
-        fallbackSpecies.push(pokemon.name);
-
-        return {
-          usagePercent: indexEntry?.usagePercent ?? 0,
-          profile: buildFallbackMetaProfile({
-            pokemon,
+    const { defaultItem, commonItems } =
+      pokemon.isMega && pokemon.requiredItem
+        ? {
+            defaultItem: pokemon.requiredItem,
+            commonItems: [pokemon.requiredItem],
+          }
+        : resolveDefaultItem(
+            record.items,
             previousProfile,
-            override: overrides.profileOverrides?.[pokemon.id],
-            learnset: learnsetByPokemonId.get(
-              normalizeId(pokemon.defaultFormOf ?? pokemon.id),
-            ),
-            moveById,
-            legalItemById,
-            commonMoveLimit,
-            commonAbilityLimit,
             commonItemLimit,
-          }),
-        };
-      }
-    },
-  );
+            legalItemById,
+          );
+    const { defaultAbility, commonAbilities } = resolveDefaultAbility(
+      record.abilities,
+      pokemon,
+      previousProfile,
+      commonAbilityLimit,
+    );
+    const { defaultMove, commonMoves } = resolveMoveProfile(
+      record.moves,
+      moveIndex,
+      previousProfile,
+      commonMoveLimit,
+    );
+
+    if (!defaultItem || !defaultAbility || !defaultMove) {
+      skippedSpecies.push(`${pokemon.name} <- ${record.speciesName}`);
+      fallbackSpecies.push(pokemon.name);
+
+      return {
+        usagePercent: record.usagePercent,
+        profile: buildFallbackMetaProfile({
+          pokemon,
+          previousProfile,
+          override,
+          learnset: learnsetByPokemonId.get(
+            normalizeId(pokemon.defaultFormOf ?? pokemon.id),
+          ),
+          moveById,
+          legalItemById,
+          commonMoveLimit,
+          commonAbilityLimit,
+          commonItemLimit,
+        }),
+      };
+    }
+
+    const mergedProfile = mergeProfile(
+      {
+        pokemonId: pokemon.id,
+        usageRank: Number.MAX_SAFE_INTEGER,
+        usagePercent: record.usagePercent,
+        defaultItem,
+        defaultAbility,
+        defaultMove,
+        commonMoves,
+        commonAbilities,
+        commonItems,
+      },
+      override,
+    );
+
+    return {
+      usagePercent: record.usagePercent,
+      profile: {
+        ...mergedProfile,
+        usageRank: Number.MAX_SAFE_INTEGER,
+        usagePercent: record.usagePercent,
+        commonMoves: dedupeStrings(mergedProfile.commonMoves ?? []).slice(
+          0,
+          commonMoveLimit,
+        ),
+        commonAbilities: dedupeStrings(
+          mergedProfile.commonAbilities ?? [],
+        ).slice(0, commonAbilityLimit),
+        commonItems: dedupeStrings(mergedProfile.commonItems ?? []).slice(
+          0,
+          commonItemLimit,
+        ),
+      },
+    };
+  });
 
   const baseProfiles = profileResults
-    .filter((entry): entry is NonNullable<(typeof profileResults)[number]> =>
-      Boolean(entry),
-    )
     .sort((left, right) => {
       if (right.usagePercent !== left.usagePercent) {
         return right.usagePercent - left.usagePercent;
@@ -558,10 +546,12 @@ async function main() {
 
   console.log(
     [
-      `Generated ${nextMeta.length} Champions meta profiles from Pikalytics format ${resolvedFormat}.`,
+      `Generated ${nextMeta.length} Champions meta profiles from Smogon stats format ${resolveSmogonStatsFormatId(smogonResult.formatId)}.`,
       `Active regulation: ${activeRegulation.id}.`,
-      dataDate ? `Data date: ${dataDate}.` : "Data date: unavailable.",
-      `Legal Pokemon crawled: ${legalPokemon.length}.`,
+      `Stats month: ${smogonResult.month}.`,
+      `Cutoff: ${smogonResult.cutoff}.`,
+      `Battles: ${smogonResult.stats.info["number of battles"]}.`,
+      `Legal Pokemon processed: ${legalPokemon.length}.`,
       unresolvedSpecies.length
         ? `Unresolved species (${unresolvedSpecies.length}): ${unresolvedSpecies.join(", ")}`
         : "Unresolved species: none.",
@@ -571,9 +561,6 @@ async function main() {
       fallbackSpecies.length
         ? `Fallback profiles generated (${fallbackSpecies.length}): ${dedupeStrings(fallbackSpecies).join(", ")}`
         : "Fallback profiles generated: none.",
-      fetchFailures.length
-        ? `Fetch failures (${fetchFailures.length}): ${fetchFailures.join(" | ")}`
-        : "Fetch failures: none.",
     ].join("\n"),
   );
 }

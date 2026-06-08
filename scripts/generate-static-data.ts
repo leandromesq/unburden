@@ -1,30 +1,27 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-import regulationMA from "../src/data/regulations/regulation-m-a.json";
-import {
-  fetchPikalyticsFormatIndex,
-  parseIndexSpeciesNames,
-} from "./fetch/fetch-pikalytics";
-import {
-  fetchChampionsItems,
-  fetchChampionsMegaAbilities,
-} from "./fetch/fetch-serebii";
 import {
   buildStaticDataSnapshot,
   type ItemEntry,
   type LearnsetEntry,
   type MoveEntry,
   type PokemonEntry,
+  type RegulationEntry,
 } from "./transform/build-static-data";
 import { formatJsonWithCompactArrays } from "./transform/format-json";
 
-const DEFAULT_CHAMPIONS_FORMAT = "championspreview";
-const MIN_POKEMON_ENTRY_COUNT = 400;
-const MIN_MOVE_ENTRY_COUNT = 200;
-const MIN_LEARNSET_ENTRY_COUNT = 350;
-const MIN_ITEM_ENTRY_COUNT = 50;
-const MAX_ENTRY_COUNT_DELTA = 75;
+const MIN_POKEMON_ENTRY_COUNT = 250;
+const MIN_MOVE_ENTRY_COUNT = 400;
+const MIN_LEARNSET_ENTRY_COUNT = 250;
+const MIN_ITEM_ENTRY_COUNT = 100;
+const MAX_ENTRY_COUNT_DELTA = 150;
+
+type ActiveRegulationConfig = {
+  regulationId: string;
+  rosterHash?: string;
+  formatId?: string;
+};
 
 async function readExistingJson<T>(filepath: string): Promise<T | null> {
   try {
@@ -35,7 +32,10 @@ async function readExistingJson<T>(filepath: string): Promise<T | null> {
   }
 }
 
-function assertUniqueIds<T extends { id: string }>(entries: T[], label: string) {
+function assertUniqueIds<T extends { id: string }>(
+  entries: T[],
+  label: string,
+) {
   const seen = new Set<string>();
 
   for (const entry of entries) {
@@ -165,16 +165,43 @@ function validateItemEntries(entries: ItemEntry[]) {
   }
 }
 
-function validateGeneratedData(
+function validateRegulationEntry(
+  entry: RegulationEntry,
   pokemonEntries: PokemonEntry[],
-  moveEntries: MoveEntry[],
-  learnsetEntries: LearnsetEntry[],
-  itemEntries: ItemEntry[],
 ) {
+  const pokemonIds = new Set(pokemonEntries.map((pokemon) => pokemon.id));
+
+  if (!entry.allowedPokemonIds.length) {
+    throw new Error(`Regulation ${entry.id} has no allowed Pokemon.`);
+  }
+
+  for (const pokemonId of entry.allowedPokemonIds) {
+    if (!pokemonIds.has(pokemonId)) {
+      throw new Error(
+        `Regulation ${entry.id} references unknown pokemon id: ${pokemonId}`,
+      );
+    }
+  }
+}
+
+function validateGeneratedData({
+  pokemonEntries,
+  moveEntries,
+  learnsetEntries,
+  itemEntries,
+  regulationEntry,
+}: {
+  pokemonEntries: PokemonEntry[];
+  moveEntries: MoveEntry[];
+  learnsetEntries: LearnsetEntry[];
+  itemEntries: ItemEntry[];
+  regulationEntry: RegulationEntry;
+}) {
   validatePokemonEntries(pokemonEntries);
   validateMoveEntries(moveEntries);
   validateLearnsetEntries(learnsetEntries, pokemonEntries);
   validateItemEntries(itemEntries);
+  validateRegulationEntry(regulationEntry, pokemonEntries);
 }
 
 function warnOnLargeCountDelta(
@@ -197,46 +224,45 @@ function warnOnLargeCountDelta(
 
 async function main() {
   const dataDir = path.join(process.cwd(), "src", "data");
-
-  const [
-    championsIndexMarkdown,
-    championsMegaAbilities,
-    itemEntries,
-  ] = await Promise.all([
-    fetchPikalyticsFormatIndex(DEFAULT_CHAMPIONS_FORMAT),
-    fetchChampionsMegaAbilities(),
-    fetchChampionsItems(),
-  ]);
-  const championSpeciesNames = parseIndexSpeciesNames(championsIndexMarkdown);
+  const regulationsDir = path.join(dataDir, "regulations");
 
   await mkdir(dataDir, { recursive: true });
+  await mkdir(regulationsDir, { recursive: true });
 
   const {
     pokemonEntries,
     moveEntries,
     learnsetEntries,
-    itemEntries: builtItemEntries,
-  } = await buildStaticDataSnapshot({
-    championSpeciesNames,
-    championsMegaAbilities,
     itemEntries,
-    regulationAllowedPokemonIds: regulationMA.allowedPokemonIds,
-  });
+    regulationEntry,
+    activeRegulationConfig,
+  } = await buildStaticDataSnapshot();
 
-  validateGeneratedData(
+  validateGeneratedData({
     pokemonEntries,
     moveEntries,
     learnsetEntries,
-    builtItemEntries,
-  );
+    itemEntries,
+    regulationEntry,
+  });
 
-  const [previousPokemonEntries, previousMoveEntries, previousLearnsetEntries, previousItemEntries] =
-    await Promise.all([
-      readExistingJson<PokemonEntry[]>(path.join(dataDir, "pokemon.gen9.json")),
-      readExistingJson<MoveEntry[]>(path.join(dataDir, "moves.gen9.json")),
-      readExistingJson<LearnsetEntry[]>(path.join(dataDir, "learnsets.gen9.json")),
-      readExistingJson<ItemEntry[]>(path.join(dataDir, "champions-items.json")),
-    ]);
+  const [
+    previousPokemonEntries,
+    previousMoveEntries,
+    previousLearnsetEntries,
+    previousItemEntries,
+    previousRegulationEntry,
+  ] = await Promise.all([
+    readExistingJson<PokemonEntry[]>(path.join(dataDir, "pokemon.gen9.json")),
+    readExistingJson<MoveEntry[]>(path.join(dataDir, "moves.gen9.json")),
+    readExistingJson<LearnsetEntry[]>(
+      path.join(dataDir, "learnsets.gen9.json"),
+    ),
+    readExistingJson<ItemEntry[]>(path.join(dataDir, "champions-items.json")),
+    readExistingJson<RegulationEntry>(
+      path.join(regulationsDir, `${regulationEntry.id}.json`),
+    ),
+  ]);
 
   warnOnLargeCountDelta(
     "pokemon",
@@ -256,11 +282,17 @@ async function main() {
   warnOnLargeCountDelta(
     "champions-items",
     previousItemEntries?.length ?? null,
-    builtItemEntries.length,
+    itemEntries.length,
+  );
+  warnOnLargeCountDelta(
+    "regulation allowed Pokemon",
+    previousRegulationEntry?.allowedPokemonIds.length ?? null,
+    regulationEntry.allowedPokemonIds.length,
   );
 
   const compactArrayKeysByFile = new Map<string, ReadonlySet<string>>([
     ["moves.gen9.json", new Set(["aliases"])],
+    ["regulations/regulation-m-a.json", new Set(["seasons"])],
   ]);
 
   const writeJson = async (filename: string, data: unknown) => {
@@ -277,7 +309,14 @@ async function main() {
   await writeJson("pokemon.gen9.json", pokemonEntries);
   await writeJson("moves.gen9.json", moveEntries);
   await writeJson("learnsets.gen9.json", learnsetEntries);
-  await writeJson("champions-items.json", builtItemEntries);
+  await writeJson("champions-items.json", itemEntries);
+  await writeJson(`regulations/${regulationEntry.id}.json`, regulationEntry);
+  await writeJson("regulations/active.json", {
+    ...((await readExistingJson<ActiveRegulationConfig>(
+      path.join(regulationsDir, "active.json"),
+    )) ?? {}),
+    ...activeRegulationConfig,
+  });
 }
 
 void main();

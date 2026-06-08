@@ -5,6 +5,7 @@ import { itemDisplayById } from "@/lib/data/items";
 import { moveById } from "@/lib/data/moves";
 import { normalizeAlias, normalizeId } from "@/lib/data/normalization";
 import { pokemonById, resolveMegaEvolution } from "@/lib/data/pokemon";
+import { getPokemonSpriteSources } from "@/lib/pokemon-sprites";
 import {
   DEFAULT_IV_SPREAD,
   EMPTY_STAT_SPREAD,
@@ -225,7 +226,8 @@ function buildStageBoosts(
     const attackingStatKey = resolveAttackingStatKey(moveId, moveCategory);
     stageBoosts[attackingStatKey] += clampedGenericStage;
   } else if (moveCategory) {
-    stageBoosts[moveCategory === "Special" ? "spd" : "def"] += clampedGenericStage;
+    stageBoosts[moveCategory === "Special" ? "spd" : "def"] +=
+      clampedGenericStage;
   }
 
   return {
@@ -280,8 +282,12 @@ function buildEffectiveSetPreview(
   nature: string | undefined,
   investment: SummaryInvestment,
 ) {
-  const baseStatPoints = statPoints ?? importedSet?.statPoints ?? EMPTY_STAT_SPREAD;
-  const effectiveStatPoints = applyInvestmentPreview(baseStatPoints, investment);
+  const baseStatPoints =
+    statPoints ?? importedSet?.statPoints ?? EMPTY_STAT_SPREAD;
+  const effectiveStatPoints = applyInvestmentPreview(
+    baseStatPoints,
+    investment,
+  );
   const effectiveNature = nature ?? importedSet?.nature ?? "Hardy";
 
   return {
@@ -312,7 +318,8 @@ function applyInvestmentPreview(
   }
 
   const nextStatPoints = { ...statPoints };
-  const nextTotal = sumStatPoints(nextStatPoints) - nextStatPoints[investmentStat] + 32;
+  const nextTotal =
+    sumStatPoints(nextStatPoints) - nextStatPoints[investmentStat] + 32;
 
   if (nextTotal > 66) {
     return {
@@ -423,43 +430,6 @@ function resolveSummaryStatus(
   return undefined;
 }
 
-function getPokemonSpriteSources(pokemon: PokemonEntry) {
-  const slugs = [pokemon.name, ...pokemon.aliases, pokemon.id]
-    .map((value) =>
-      value
-        .toLowerCase()
-        .replace(/['.:]/g, "")
-        .replace(/♀/g, "-f")
-        .replace(/♂/g, "-m")
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, ""),
-    )
-    .filter(Boolean);
-
-  return Array.from(
-    new Set(
-      slugs.flatMap((slug) => [
-        slug,
-        slug.replace(/-mega-x$/i, "-megax"),
-        slug.replace(/-mega-y$/i, "-megay"),
-        slug.replace(/-rapid-strike$/i, "-rapidstrike"),
-        slug.replace(/-single-strike$/i, "-singlestrike"),
-        slug.replace(/-paldea-combat$/i, "-paldeacombat"),
-        slug.replace(/-paldea-blaze$/i, "-paldeablaze"),
-        slug.replace(/-paldea-aqua$/i, "-paldeaaqua"),
-        slug.replace(/-blood-moon$/i, "-bloodmoon"),
-        normalizeId(slug),
-      ]),
-    ),
-  ).flatMap((slug) => [
-    `https://play.pokemonshowdown.com/sprites/home/${slug}.png`,
-    `https://play.pokemonshowdown.com/sprites/dex/${slug}.png`,
-    `https://play.pokemonshowdown.com/sprites/gen5/${slug}.png`,
-    `https://img.pokemondb.net/sprites/home/normal/${slug}.png`,
-    `https://img.pokemondb.net/artwork/large/${slug}.jpg`,
-  ]);
-}
-
 export function usePokemonSummary({
   side,
   commandStructure,
@@ -496,15 +466,13 @@ export function usePokemonSummary({
       resolveReferencedImportedSet(
         parsedCommand?.attackerSetReferenceId,
         importedSets,
-      ) ??
-      attackerReferenceSet;
+      ) ?? attackerReferenceSet;
 
     const defenderImportedSet =
       resolveReferencedImportedSet(
         parsedCommand?.defenderSetReferenceId,
         importedSets,
-      ) ??
-      defenderReferenceSet;
+      ) ?? defenderReferenceSet;
 
     const promptStatPoints =
       side === "attacker"
@@ -542,11 +510,15 @@ export function usePokemonSummary({
     );
     const attackerCurrentHpPercent = resolveCurrentHpPercent(
       parsedCommand?.attackerCurrentHpPercent ??
-        (structure.attacker.hpToken ? Number(structure.attacker.hpToken.value) : undefined),
+        (structure.attacker.hpToken
+          ? Number(structure.attacker.hpToken.value)
+          : undefined),
     );
     const defenderCurrentHpPercent = resolveCurrentHpPercent(
       parsedCommand?.defenderCurrentHpPercent ??
-        (structure.defender.hpToken ? Number(structure.defender.hpToken.value) : undefined),
+        (structure.defender.hpToken
+          ? Number(structure.defender.hpToken.value)
+          : undefined),
     );
 
     const attackerItemDisplay = structure.attacker.itemToken?.value

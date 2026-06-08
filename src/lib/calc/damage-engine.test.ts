@@ -1,455 +1,526 @@
 import {
-  buildCalculationContext,
-  calculateDamageResults,
+	buildCalculationContext,
+	calculateDamageResults,
 } from "@/lib/calc/damage-engine";
 import { createImportedSet } from "@/lib/team/imported-set-utils";
 import { parseCommand } from "@/lib/parser/command-parser";
 
 describe("damage engine", () => {
-  test("returns three archetype rows for an explicit symbolic command", () => {
-    const parsed = parseCommand("politoed !muddy-water x incineroar").parsed;
-
-    expect(parsed).not.toBeNull();
-    expect(calculateDamageResults(parsed!)).toHaveLength(3);
-  });
-
-  test("always assumes max IVs even under trick room", () => {
-    const parsed = parseCommand(
-      "politoed !muddy-water ~trick-room x incineroar",
-    ).parsed;
-    const context = buildCalculationContext(parsed!);
-
-    expect(context?.attackerPokemon.ivs.spe).toBe(31);
-  });
-
-  test("emits compact showdown-like damage text and exposes rolls separately", () => {
-    const parsed = parseCommand("politoed !muddy-water x incineroar").parsed;
-    const [result] = calculateDamageResults(parsed!);
-
-    expect(result.damageText).toContain("%");
-    expect(result.damageText).toContain("--");
-    expect(result.damageText).not.toContain("Rolls:");
-    expect(result.damageRolls).toHaveLength(16);
-    expect(result.damageRolls[0]).toHaveProperty("damage");
-    expect(result.damageRolls[0]).toHaveProperty("percentage");
-  });
-
-  test("applies defender stages to the relevant defensive stat", () => {
-    const neutral = parseCommand("politoed !muddy-water x incineroar").parsed;
-    const boosted = parseCommand(
-      "politoed !muddy-water x incineroar +6",
-    ).parsed;
-
-    const [neutralResult] = calculateDamageResults(neutral!);
-    const [boostedResult] = calculateDamageResults(boosted!);
-
-    expect(boostedResult.maxPercentage).toBeLessThan(
-      neutralResult.maxPercentage,
-    );
-    expect(boostedResult.assumptions).toContain("Defender stage: +6 SpD");
-  });
-
-  test("applies explicit named attacker and defender stages to the calculation", () => {
-    const neutral = parseCommand("archaludon !body-press x incineroar").parsed;
-    const boosted = parseCommand(
-      "archaludon !body-press def+6 x incineroar def+4",
-    ).parsed;
-
-    const [neutralResult] = calculateDamageResults(neutral!);
-    const [boostedResult] = calculateDamageResults(boosted!);
-
-    expect(boostedResult.maxPercentage).toBeGreaterThan(
-      neutralResult.maxPercentage,
-    );
-    expect(boostedResult.assumptions).toContain("Attacker stage: +6 Def");
-    expect(boostedResult.assumptions).toContain("Defender stage: +4 Def");
-  });
-
-  test("uses current hp percentages and critical hits in the calculation context", () => {
-    const parsed = parseCommand(
-      "politoed !muddy-water %75 * x incineroar %50",
-    ).parsed;
-    const context = buildCalculationContext(parsed!);
-    const [result] = calculateDamageResults(parsed!);
-
-    expect(context?.attackerPokemon.curHP()).toBeLessThan(
-      context!.attackerPokemon.maxHP(),
-    );
-    expect(result.contextText.toLowerCase()).toContain("critical hit");
-    expect(result.assumptions).toContain("Attacker HP: 75%");
-    expect(result.assumptions).toContain("Defender HP: 50%");
-    expect(result.assumptions).toContain("Critical hit");
-  });
-
-  test("applies burn to physical attacker damage", () => {
-    const neutral = parseCommand("incineroar !flare-blitz x tinkaton").parsed;
-    const burned = parseCommand(
-      "incineroar !flare-blitz burn x tinkaton",
-    ).parsed;
-
-    const [neutralResult] = calculateDamageResults(neutral!);
-    const [burnedResult] = calculateDamageResults(burned!);
-
-    expect(burnedResult.maxPercentage).toBeLessThan(
-      neutralResult.maxPercentage,
-    );
-    expect(burnedResult.assumptions).toContain("Attacker status: Burn");
-  });
-
-  test("uses the averaged default hit count for variable multi-hit moves", () => {
-    const parsed = parseCommand(
-      "maushold !population-bomb x incineroar",
-    ).parsed;
-    const [result] = calculateDamageResults(parsed!);
-
-    expect(result.assumptions).toContain("Assumed hits: 10");
-  });
-
-  test("respects explicit multi-hit counts in the prompt", () => {
-    const defaultParsed = parseCommand(
-      "maushold !population-bomb x incineroar",
-    ).parsed;
-    const explicitParsed = parseCommand(
-      "maushold !population-bomb[2] x incineroar",
-    ).parsed;
-
-    const [defaultResult] = calculateDamageResults(defaultParsed!);
-    const [explicitResult] = calculateDamageResults(explicitParsed!);
-
-    expect(explicitResult.maxPercentage).toBeLessThan(
-      defaultResult.maxPercentage,
-    );
-    expect(explicitResult.assumptions).toContain("Hits: 2");
-  });
-
-  test("applies Last Respects stacks as base power overrides", () => {
-    const base = parseCommand(
-      "basculegion !last-respects[0] x incineroar",
-    ).parsed;
-    const stacked = parseCommand(
-      "basculegion !last-respects[3] x incineroar",
-    ).parsed;
-
-    const [baseResult] = calculateDamageResults(base!);
-    const [stackedResult] = calculateDamageResults(stacked!);
-
-    expect(stackedResult.maxPercentage).toBeGreaterThan(
-      baseResult.maxPercentage,
-    );
-    expect(stackedResult.assumptions).toContain("Last Respects stacks: 3");
-  });
-
-  test("can calculate spread moves as single-target hits", () => {
-    const spread = parseCommand("charizard !heat-wave x tinkaton").parsed;
-    const singleTarget = parseCommand(
-      "charizard !heat-wave single-target x tinkaton",
-    ).parsed;
-
-    const [spreadResult] = calculateDamageResults(spread!);
-    const [singleTargetResult] = calculateDamageResults(singleTarget!);
-
-    expect(singleTargetResult.maxPercentage).toBeGreaterThan(
-      spreadResult.maxPercentage,
-    );
-    expect(spreadResult.assumptions).toContain(
-      "Spread move: 0.75x doubles modifier",
-    );
-    expect(singleTargetResult.assumptions).toContain(
-      "Spread move: single target",
-    );
-  });
-
-  test("applies attacker and defender speed stages to speed-based move calculations", () => {
-    const slower = parseCommand(
-      "tinkaton !gyro-ball spe-6 x incineroar spe+6",
-    ).parsed;
-    const faster = parseCommand(
-      "tinkaton !gyro-ball spe+6 x incineroar spe-6",
-    ).parsed;
-
-    const [slowerResult] = calculateDamageResults(slower!);
-    const [fasterResult] = calculateDamageResults(faster!);
-
-    expect(slowerResult.maxPercentage).toBeGreaterThan(
-      fasterResult.maxPercentage,
-    );
-    expect(fasterResult.assumptions).toContain("Attacker speed stage: +6 Spe");
-    expect(fasterResult.assumptions).toContain("Defender speed stage: -6 Spe");
-    expect(
-      fasterResult.assumptions.some((assumption) =>
-        assumption.startsWith("Attacker Spe: "),
-      ),
-    ).toBe(true);
-    expect(
-      fasterResult.assumptions.some((assumption) =>
-        assumption.startsWith("Defender Spe: "),
-      ),
-    ).toBe(true);
-    expect(
-      fasterResult.assumptions.some((assumption) =>
-        assumption.startsWith("Speed ratio: "),
-      ),
-    ).toBe(true);
-  });
-
-  test("does not crash when calc desc fails on a no-damage interaction", () => {
-    const parsed = parseCommand("incineroar !fake-out x mimikyu").parsed;
-
-    expect(() => calculateDamageResults(parsed!)).not.toThrow();
-
-    const [result] = calculateDamageResults(parsed!);
-    expect(result.damageText).toContain("0-0");
-  });
-
-  test("maps Aegislash to a calc-supported form instead of crashing", () => {
-    const parsed = parseCommand("aegislash !poltergeist x incineroar").parsed;
-
-    expect(parsed).not.toBeNull();
-    expect(() => calculateDamageResults(parsed!)).not.toThrow();
-    expect(calculateDamageResults(parsed!)).toHaveLength(3);
-  });
-
-  test("defaults Aegislash to Blade as attacker and Shield as defender", () => {
-    const attackerParsed = parseCommand(
-      "aegislash !poltergeist x incineroar",
-    ).parsed;
-    const defenderParsed = parseCommand(
-      "incineroar !flare-blitz x aegislash",
-    ).parsed;
-    const attackerContext = buildCalculationContext(attackerParsed!);
-    const defenderContext = buildCalculationContext(defenderParsed!);
-
-    expect(attackerContext?.attackerCalcSpeciesName).toBe("Aegislash-Blade");
-    expect(defenderContext?.defenderCalcSpeciesName).toBe("Aegislash-Shield");
-  });
-
-  test("respects explicitly stated Aegislash forms", () => {
-    const parsed = parseCommand(
-      "aegislash shield !shadow-ball x aegislash blade",
-    ).parsed;
-    const context = buildCalculationContext(parsed!);
-
-    expect(context?.attackerCalcSpeciesName).toBe("Aegislash-Shield");
-    expect(context?.defenderCalcSpeciesName).toBe("Aegislash-Blade");
-  });
-
-  test("assumes a defender item for Poltergeist when none is explicit", () => {
-    const parsed = parseCommand("aegislash !poltergeist x incineroar").parsed;
-    const [result] = calculateDamageResults(parsed!);
-
-    expect(result.damageText).not.toContain("0-0");
-    expect(
-      result.assumptions.some((assumption) =>
-        assumption.startsWith("Assumed defender item:"),
-      ),
-    ).toBe(true);
-  });
-
-  test("auto max bulk prioritizes the relevant defense for the move category", () => {
-    const physicalParsed = parseCommand(
-      "incineroar !flare-blitz x tinkaton",
-    ).parsed;
-    const specialParsed = parseCommand(
-      "politoed !muddy-water x tinkaton",
-    ).parsed;
-    const physicalContext = buildCalculationContext(physicalParsed!);
-    const specialContext = buildCalculationContext(specialParsed!);
-
-    expect(physicalContext?.archetypes[2]).toMatchObject({
-      evs: { hp: 252, atk: 0, def: 252, spa: 0, spd: 4, spe: 0 },
-      nature: "Bold",
-    });
-    expect(specialContext?.archetypes[2]).toMatchObject({
-      evs: { hp: 252, atk: 0, def: 4, spa: 0, spd: 252, spe: 0 },
-      nature: "Calm",
-    });
-  });
-
-  test("resolves mega evolution from a mega stone item", () => {
-    const parsed = parseCommand(
-      "charizard !heat-wave @charizardite-y x tinkaton",
-    ).parsed;
-    const context = buildCalculationContext(parsed!);
-
-    expect(context?.attacker.name).toBe("Charizard-Mega-Y");
-    expect(context?.attackerAbility).toBe("Drought");
-    expect(context?.assumptions).toContain("Mega Evolution: Charizard-Mega-Y");
-  });
-
-  test("resolves mega evolution when mega form is explicit in the prompt", () => {
-    const parsed = parseCommand(
-      "charizard-mega-y !heat-wave @charizardite-y x tinkaton",
-    ).parsed;
-    const context = buildCalculationContext(parsed!);
-
-    expect(context?.attacker.name).toBe("Charizard-Mega-Y");
-    expect(context?.attackerAbility).toBe("Drought");
-  });
-
-  test("only Floette-Eternal can access Floette-Mega", () => {
-    const regular = parseCommand(
-      "floette !moonblast @floettite x incineroar",
-    ).parsed;
-    const eternalBase = parseCommand(
-      "floette eternal flower !moonblast @floettite x incineroar",
-    ).parsed;
-    const eternalMega = parseCommand(
-      "floette-mega !moonblast @floettite x incineroar",
-    ).parsed;
-
-    const regularContext = buildCalculationContext(regular!);
-    const eternalBaseContext = buildCalculationContext(eternalBase!);
-    const eternalMegaContext = buildCalculationContext(eternalMega!);
-
-    expect(regularContext?.attacker.name).toBe("Floette");
-    expect(eternalBaseContext?.attacker.name).toBe("Floette-Mega");
-    expect(eternalMegaContext?.attacker.name).toBe("Floette-Mega");
-  });
-
-  test("does not assume mega abilities for a base species without its mega stone", () => {
-    const parsed = parseCommand("charizard !heat-wave x tinkaton").parsed;
-    const context = buildCalculationContext(parsed!);
-
-    expect(context?.attacker.name).toBe("Charizard");
-    expect(context?.attackerAbility).not.toBe("Drought");
-  });
-
-  test("applies defender items that mitigate or bulk special damage", () => {
-    const neutral = parseCommand("charizard !heat-wave x tinkaton").parsed;
-    const occa = parseCommand(
-      "charizard !heat-wave x tinkaton @occa-berry",
-    ).parsed;
-    const leftovers = parseCommand(
-      "charizard !heat-wave x tinkaton @leftovers",
-    ).parsed;
-
-    const [neutralResult] = calculateDamageResults(neutral!);
-    const [occaResult] = calculateDamageResults(occa!);
-    const [leftoversResult] = calculateDamageResults(leftovers!);
-
-    expect(occaResult.maxPercentage).toBeLessThan(neutralResult.maxPercentage);
-    expect(leftoversResult.assumptions).toContain("Defender item: Leftovers");
-    expect(occaResult.assumptions).toContain("Defender item: Occa Berry");
-  });
-
-  test("uses referenced attacker sets in the damage calculation", () => {
-    const importedSets = {
-      politoed: createImportedSet({
-        speciesId: "politoed",
-        speciesName: "Politoed",
-        item: "Mystic Water",
-        ability: "Drizzle",
-        nature: "Modest",
-        statPoints: {
-          hp: 32,
-          atk: 0,
-          def: 1,
-          spa: 13,
-          spd: 1,
-          spe: 19,
-        },
-        moves: ["Muddy Water", "Ice Beam", "Protect", "Helping Hand"],
-      }),
-    };
-    const parsed = parseCommand("#politoed !muddy-water x incineroar", importedSets).parsed;
-
-    const context = buildCalculationContext(parsed!, importedSets);
-    const [result] = calculateDamageResults(parsed!, importedSets);
-
-    expect(context?.attackerPokemon.item).toBe("Mystic Water");
-    expect(context?.attackerPokemon.nature).toBe("Modest");
-    expect(result.assumptions).toContain("Set item: Mystic Water");
-    expect(result.assumptions).toContain("Set ability: Drizzle");
-  });
-
-  test("uses prompt SP overrides in the damage calculation", () => {
-    const lower = parseCommand(
-      "politoed !muddy-water sp:0/0/0/0/0/0 x incineroar",
-    ).parsed;
-    const higher = parseCommand(
-      "politoed !muddy-water sp:32/0/1/32/1/0 x incineroar",
-    ).parsed;
-
-    const [lowerResult] = calculateDamageResults(lower!);
-    const [higherResult] = calculateDamageResults(higher!);
-
-    expect(higherResult.maxPercentage).toBeGreaterThan(
-      lowerResult.maxPercentage,
-    );
-  });
-
-  test("uses prompt defender SPs as a single custom set row", () => {
-    const parsed = parseCommand(
-      "politoed !muddy-water x incineroar sp:32/0/12/0/22/0",
-    ).parsed;
-    const context = buildCalculationContext(parsed!);
-    const results = calculateDamageResults(parsed!);
-
-    expect(context?.archetypes).toHaveLength(1);
-    expect(context?.archetypes[0]?.label).toBe("Custom Set");
-    expect(results).toHaveLength(1);
-  });
-
-  test("treats attacker moves as sun-affected when using Mega Sol", () => {
-    const neutral = parseCommand("meganium !weather-ball x tinkaton").parsed;
-    const explicitSun = parseCommand(
-      "meganium-mega !weather-ball ~sun x tinkaton",
-    ).parsed;
-    const megaSol = parseCommand(
-      "meganium-mega !weather-ball x tinkaton",
-    ).parsed;
-
-    const [neutralResult] = calculateDamageResults(neutral!);
-    const [explicitSunResult] = calculateDamageResults(explicitSun!);
-    const [megaSolResult] = calculateDamageResults(megaSol!);
-    const megaSolContext = buildCalculationContext(megaSol!);
-
-    expect(megaSolResult.maxPercentage).toBeGreaterThanOrEqual(
-      neutralResult.maxPercentage,
-    );
-    expect(megaSolResult.minPercentage).toBe(explicitSunResult.minPercentage);
-    expect(megaSolResult.maxPercentage).toBe(explicitSunResult.maxPercentage);
-    expect(megaSolContext?.field.weather).toBe("Sun");
-    expect(
-      megaSolResult.assumptions.some((assumption) =>
-        assumption.includes("Mega Sol"),
-      ),
-    ).toBe(true);
-    expect(megaSolResult.assumptions).toContain(
-      "Mega Sol: attacker move is treated as Sun weather",
-    );
-  });
-
-  test("uses referenced defender sets as an explicit custom bulk row", () => {
-    const importedSets = {
-      incineroar: createImportedSet({
-        speciesId: "incineroar",
-        speciesName: "Incineroar",
-        item: "Leftovers",
-        ability: "Intimidate",
-        nature: "Careful",
-        statPoints: {
-          hp: 32,
-          atk: 0,
-          def: 8,
-          spa: 0,
-          spd: 16,
-          spe: 10,
-        },
-        moves: ["Flare Blitz", "Knock Off", "Parting Shot", "Fake Out"],
-      }),
-    };
-    const parsed = parseCommand(
-      "politoed !muddy-water x #incineroar",
-      importedSets,
-    ).parsed;
-
-    const context = buildCalculationContext(parsed!, importedSets);
-    const results = calculateDamageResults(parsed!, importedSets);
-
-    expect(context?.archetypes).toHaveLength(1);
-    expect(context?.archetypes[0]?.label).toBe("Custom Set");
-    expect(results).toHaveLength(1);
-    expect(results[0].assumptions).toContain("Defender set item: Leftovers");
-  });
+	test("returns three archetype rows for an explicit symbolic command", () => {
+		const parsed = parseCommand("politoed !muddy-water x incineroar").parsed;
+
+		expect(parsed).not.toBeNull();
+		expect(calculateDamageResults(parsed!)).toHaveLength(3);
+	});
+
+	test("always assumes max IVs even under trick room", () => {
+		const parsed = parseCommand(
+			"politoed !muddy-water ~trick-room x incineroar",
+		).parsed;
+		const context = buildCalculationContext(parsed!);
+
+		expect(context?.attackerPokemon.ivs.spe).toBe(31);
+	});
+
+	test("emits compact showdown-like damage text and exposes rolls separately", () => {
+		const parsed = parseCommand("politoed !muddy-water x incineroar").parsed;
+		const [result] = calculateDamageResults(parsed!);
+
+		expect(result.damageText).toContain("%");
+		expect(result.damageText).toContain("--");
+		expect(result.damageText).not.toContain("Rolls:");
+		expect(result.damageRolls).toHaveLength(16);
+		expect(result.damageRolls[0]).toHaveProperty("damage");
+		expect(result.damageRolls[0]).toHaveProperty("percentage");
+	});
+
+	test("applies defender stages to the relevant defensive stat", () => {
+		const neutral = parseCommand("politoed !muddy-water x incineroar").parsed;
+		const boosted = parseCommand(
+			"politoed !muddy-water x incineroar +6",
+		).parsed;
+
+		const [neutralResult] = calculateDamageResults(neutral!);
+		const [boostedResult] = calculateDamageResults(boosted!);
+
+		expect(boostedResult.maxPercentage).toBeLessThan(
+			neutralResult.maxPercentage,
+		);
+		expect(boostedResult.assumptions).toContain("Defender stage: +6 SpD");
+	});
+
+	test("applies explicit named attacker and defender stages to the calculation", () => {
+		const neutral = parseCommand("archaludon !body-press x incineroar").parsed;
+		const boosted = parseCommand(
+			"archaludon !body-press def+6 x incineroar def+4",
+		).parsed;
+
+		const [neutralResult] = calculateDamageResults(neutral!);
+		const [boostedResult] = calculateDamageResults(boosted!);
+
+		expect(boostedResult.maxPercentage).toBeGreaterThan(
+			neutralResult.maxPercentage,
+		);
+		expect(boostedResult.assumptions).toContain("Attacker stage: +6 Def");
+		expect(boostedResult.assumptions).toContain("Defender stage: +4 Def");
+	});
+
+	test("uses current hp percentages and critical hits in the calculation context", () => {
+		const parsed = parseCommand(
+			"politoed !muddy-water %75 * x incineroar %50",
+		).parsed;
+		const context = buildCalculationContext(parsed!);
+		const [result] = calculateDamageResults(parsed!);
+
+		expect(context?.attackerPokemon.curHP()).toBeLessThan(
+			context!.attackerPokemon.maxHP(),
+		);
+		expect(result.contextText.toLowerCase()).toContain("critical hit");
+		expect(result.assumptions).toContain("Attacker HP: 75%");
+		expect(result.assumptions).toContain("Defender HP: 50%");
+		expect(result.assumptions).toContain("Critical hit");
+	});
+
+	test("applies burn to physical attacker damage", () => {
+		const neutral = parseCommand("incineroar !flare-blitz x tinkaton").parsed;
+		const burned = parseCommand(
+			"incineroar !flare-blitz burn x tinkaton",
+		).parsed;
+
+		const [neutralResult] = calculateDamageResults(neutral!);
+		const [burnedResult] = calculateDamageResults(burned!);
+
+		expect(burnedResult.maxPercentage).toBeLessThan(
+			neutralResult.maxPercentage,
+		);
+		expect(burnedResult.assumptions).toContain("Attacker status: Burn");
+	});
+
+	test("uses the averaged default hit count for variable multi-hit moves", () => {
+		const parsed = parseCommand(
+			"maushold !population-bomb x incineroar",
+		).parsed;
+		const [result] = calculateDamageResults(parsed!);
+
+		expect(result.assumptions).toContain("Assumed hits: 10");
+	});
+
+	test("respects explicit multi-hit counts in the prompt", () => {
+		const defaultParsed = parseCommand(
+			"maushold !population-bomb x incineroar",
+		).parsed;
+		const explicitParsed = parseCommand(
+			"maushold !population-bomb[2] x incineroar",
+		).parsed;
+
+		const [defaultResult] = calculateDamageResults(defaultParsed!);
+		const [explicitResult] = calculateDamageResults(explicitParsed!);
+
+		expect(explicitResult.maxPercentage).toBeLessThan(
+			defaultResult.maxPercentage,
+		);
+		expect(explicitResult.assumptions).toContain("Hits: 2");
+	});
+
+	test("applies Last Respects stacks as base power overrides", () => {
+		const base = parseCommand(
+			"basculegion !last-respects[0] x incineroar",
+		).parsed;
+		const stacked = parseCommand(
+			"basculegion !last-respects[3] x incineroar",
+		).parsed;
+
+		const [baseResult] = calculateDamageResults(base!);
+		const [stackedResult] = calculateDamageResults(stacked!);
+
+		expect(stackedResult.maxPercentage).toBeGreaterThan(
+			baseResult.maxPercentage,
+		);
+		expect(stackedResult.assumptions).toContain("Last Respects stacks: 3");
+	});
+
+	test("can calculate spread moves as single-target hits", () => {
+		const spread = parseCommand("charizard !heat-wave x tinkaton").parsed;
+		const singleTarget = parseCommand(
+			"charizard !heat-wave single-target x tinkaton",
+		).parsed;
+
+		const [spreadResult] = calculateDamageResults(spread!);
+		const [singleTargetResult] = calculateDamageResults(singleTarget!);
+
+		expect(singleTargetResult.maxPercentage).toBeGreaterThan(
+			spreadResult.maxPercentage,
+		);
+		expect(spreadResult.assumptions).toContain(
+			"Spread move: 0.75x doubles modifier",
+		);
+		expect(singleTargetResult.assumptions).toContain(
+			"Spread move: single target",
+		);
+	});
+
+	test("applies attacker and defender speed stages to speed-based move calculations", () => {
+		const slower = parseCommand(
+			"tinkaton !gyro-ball spe-6 x incineroar spe+6",
+		).parsed;
+		const faster = parseCommand(
+			"tinkaton !gyro-ball spe+6 x incineroar spe-6",
+		).parsed;
+
+		const [slowerResult] = calculateDamageResults(slower!);
+		const [fasterResult] = calculateDamageResults(faster!);
+
+		expect(slowerResult.maxPercentage).toBeGreaterThan(
+			fasterResult.maxPercentage,
+		);
+		expect(fasterResult.assumptions).toContain("Attacker speed stage: +6 Spe");
+		expect(fasterResult.assumptions).toContain("Defender speed stage: -6 Spe");
+		expect(
+			fasterResult.assumptions.some((assumption) =>
+				assumption.startsWith("Attacker Spe: "),
+			),
+		).toBe(true);
+		expect(
+			fasterResult.assumptions.some((assumption) =>
+				assumption.startsWith("Defender Spe: "),
+			),
+		).toBe(true);
+		expect(
+			fasterResult.assumptions.some((assumption) =>
+				assumption.startsWith("Speed ratio: "),
+			),
+		).toBe(true);
+	});
+
+	test("does not crash when calc desc fails on a no-damage interaction", () => {
+		const parsed = parseCommand("incineroar !fake-out x mimikyu").parsed;
+
+		expect(() => calculateDamageResults(parsed!)).not.toThrow();
+
+		const [result] = calculateDamageResults(parsed!);
+		expect(result.damageText).toContain("0-0");
+	});
+
+	test("maps Aegislash to a calc-supported form instead of crashing", () => {
+		const parsed = parseCommand("aegislash !poltergeist x incineroar").parsed;
+
+		expect(parsed).not.toBeNull();
+		expect(() => calculateDamageResults(parsed!)).not.toThrow();
+		expect(calculateDamageResults(parsed!)).toHaveLength(3);
+	});
+
+	test("defaults Aegislash to Blade as attacker and Shield as defender", () => {
+		const attackerParsed = parseCommand(
+			"aegislash !poltergeist x incineroar",
+		).parsed;
+		const defenderParsed = parseCommand(
+			"incineroar !flare-blitz x aegislash",
+		).parsed;
+		const attackerContext = buildCalculationContext(attackerParsed!);
+		const defenderContext = buildCalculationContext(defenderParsed!);
+
+		expect(attackerContext?.attackerCalcSpeciesName).toBe("Aegislash-Blade");
+		expect(defenderContext?.defenderCalcSpeciesName).toBe("Aegislash-Shield");
+	});
+
+	test("respects explicitly stated Aegislash forms", () => {
+		const parsed = parseCommand(
+			"aegislash shield !shadow-ball x aegislash blade",
+		).parsed;
+		const context = buildCalculationContext(parsed!);
+
+		expect(context?.attackerCalcSpeciesName).toBe("Aegislash-Shield");
+		expect(context?.defenderCalcSpeciesName).toBe("Aegislash-Blade");
+	});
+
+	test("assumes a defender item for Poltergeist when none is explicit", () => {
+		const parsed = parseCommand("aegislash !poltergeist x incineroar").parsed;
+		const [result] = calculateDamageResults(parsed!);
+
+		expect(result.damageText).not.toContain("0-0");
+		expect(
+			result.assumptions.some((assumption) =>
+				assumption.startsWith("Assumed defender item:"),
+			),
+		).toBe(true);
+	});
+
+	test("auto max bulk prioritizes the relevant defense for the move category", () => {
+		const physicalParsed = parseCommand(
+			"incineroar !flare-blitz x tinkaton",
+		).parsed;
+		const specialParsed = parseCommand(
+			"politoed !muddy-water x tinkaton",
+		).parsed;
+		const physicalContext = buildCalculationContext(physicalParsed!);
+		const specialContext = buildCalculationContext(specialParsed!);
+
+		expect(physicalContext?.archetypes[2]).toMatchObject({
+			evs: { hp: 252, atk: 0, def: 252, spa: 0, spd: 4, spe: 0 },
+			nature: "Bold",
+		});
+		expect(specialContext?.archetypes[2]).toMatchObject({
+			evs: { hp: 252, atk: 0, def: 4, spa: 0, spd: 252, spe: 0 },
+			nature: "Calm",
+		});
+	});
+
+	test("resolves mega evolution from a mega stone item", () => {
+		const parsed = parseCommand(
+			"charizard !heat-wave @charizardite-y x tinkaton",
+		).parsed;
+		const context = buildCalculationContext(parsed!);
+
+		expect(context?.attacker.name).toBe("Charizard-Mega-Y");
+		expect(context?.attackerAbility).toBe("Drought");
+		expect(context?.assumptions).toContain("Mega Evolution: Charizard-Mega-Y");
+	});
+
+	test("resolves mega evolution when mega form is explicit in the prompt", () => {
+		const parsed = parseCommand(
+			"charizard-mega-y !heat-wave @charizardite-y x tinkaton",
+		).parsed;
+		const context = buildCalculationContext(parsed!);
+
+		expect(context?.attacker.name).toBe("Charizard-Mega-Y");
+		expect(context?.attackerAbility).toBe("Drought");
+	});
+
+	test("only Floette-Eternal can access Floette-Mega", () => {
+		const regular = parseCommand(
+			"floette !moonblast @floettite x incineroar",
+		).parsed;
+		const eternalBase = parseCommand(
+			"floette eternal flower !moonblast @floettite x incineroar",
+		).parsed;
+		const eternalMega = parseCommand(
+			"floette-mega !moonblast @floettite x incineroar",
+		).parsed;
+
+		const regularContext = buildCalculationContext(regular!);
+		const eternalBaseContext = buildCalculationContext(eternalBase!);
+		const eternalMegaContext = buildCalculationContext(eternalMega!);
+
+		expect(regularContext?.attacker.name).toBe("Floette");
+		expect(eternalBaseContext?.attacker.name).toBe("Floette-Mega");
+		expect(eternalMegaContext?.attacker.name).toBe("Floette-Mega");
+	});
+
+	test("does not assume mega abilities for a base species without its mega stone", () => {
+		const parsed = parseCommand("charizard !heat-wave x tinkaton").parsed;
+		const context = buildCalculationContext(parsed!);
+
+		expect(context?.attacker.name).toBe("Charizard");
+		expect(context?.attackerAbility).not.toBe("Drought");
+	});
+
+	test("applies defender items that mitigate or bulk special damage", () => {
+		const neutral = parseCommand("charizard !heat-wave x tinkaton").parsed;
+		const occa = parseCommand(
+			"charizard !heat-wave x tinkaton @occa-berry",
+		).parsed;
+		const leftovers = parseCommand(
+			"charizard !heat-wave x tinkaton @leftovers",
+		).parsed;
+
+		const [neutralResult] = calculateDamageResults(neutral!);
+		const [occaResult] = calculateDamageResults(occa!);
+		const [leftoversResult] = calculateDamageResults(leftovers!);
+
+		expect(occaResult.maxPercentage).toBeLessThan(neutralResult.maxPercentage);
+		expect(leftoversResult.assumptions).toContain("Defender item: Leftovers");
+		expect(occaResult.assumptions).toContain("Defender item: Occa Berry");
+	});
+
+	test("uses referenced attacker sets in the damage calculation", () => {
+		const importedSets = {
+			politoed: createImportedSet({
+				speciesId: "politoed",
+				speciesName: "Politoed",
+				item: "Mystic Water",
+				ability: "Drizzle",
+				nature: "Modest",
+				statPoints: {
+					hp: 32,
+					atk: 0,
+					def: 1,
+					spa: 13,
+					spd: 1,
+					spe: 19,
+				},
+				moves: ["Muddy Water", "Ice Beam", "Protect", "Helping Hand"],
+			}),
+		};
+		const parsed = parseCommand(
+			"#politoed !muddy-water x incineroar",
+			importedSets,
+		).parsed;
+
+		const context = buildCalculationContext(parsed!, importedSets);
+		const [result] = calculateDamageResults(parsed!, importedSets);
+
+		expect(context?.attackerPokemon.item).toBe("Mystic Water");
+		expect(context?.attackerPokemon.nature).toBe("Modest");
+		expect(result.assumptions).toContain("Set item: Mystic Water");
+		expect(result.assumptions).toContain("Set ability: Drizzle");
+	});
+
+	test("uses prompt SP overrides in the damage calculation", () => {
+		const lower = parseCommand(
+			"politoed !muddy-water sp:0/0/0/0/0/0 x incineroar",
+		).parsed;
+		const higher = parseCommand(
+			"politoed !muddy-water sp:32/0/1/32/1/0 x incineroar",
+		).parsed;
+
+		const [lowerResult] = calculateDamageResults(lower!);
+		const [higherResult] = calculateDamageResults(higher!);
+
+		expect(higherResult.maxPercentage).toBeGreaterThan(
+			lowerResult.maxPercentage,
+		);
+	});
+
+	test("uses prompt defender SPs as a single custom set row", () => {
+		const parsed = parseCommand(
+			"politoed !muddy-water x incineroar sp:32/0/12/0/22/0",
+		).parsed;
+		const context = buildCalculationContext(parsed!);
+		const results = calculateDamageResults(parsed!);
+
+		expect(context?.archetypes).toHaveLength(1);
+		expect(context?.archetypes[0]?.label).toBe("Custom Set");
+		expect(results).toHaveLength(1);
+	});
+
+	test("treats attacker moves as sun-affected when using Mega Sol", () => {
+		const neutral = parseCommand("meganium !weather-ball x tinkaton").parsed;
+		const explicitSun = parseCommand(
+			"meganium-mega !weather-ball ~sun x tinkaton",
+		).parsed;
+		const megaSol = parseCommand(
+			"meganium-mega !weather-ball x tinkaton",
+		).parsed;
+
+		const [neutralResult] = calculateDamageResults(neutral!);
+		const [explicitSunResult] = calculateDamageResults(explicitSun!);
+		const [megaSolResult] = calculateDamageResults(megaSol!);
+		const megaSolContext = buildCalculationContext(megaSol!);
+
+		expect(megaSolResult.maxPercentage).toBeGreaterThanOrEqual(
+			neutralResult.maxPercentage,
+		);
+		expect(megaSolResult.minPercentage).toBe(explicitSunResult.minPercentage);
+		expect(megaSolResult.maxPercentage).toBe(explicitSunResult.maxPercentage);
+		expect(megaSolContext?.field.weather).toBe("Sun");
+		expect(
+			megaSolResult.assumptions.some((assumption) =>
+				assumption.includes("Mega Sol"),
+			),
+		).toBe(true);
+		expect(megaSolResult.assumptions).toContain(
+			"Mega Sol: attacker move is treated as Sun weather",
+		);
+	});
+
+	test("applies Dragonize type change and power boost to Normal-type moves", () => {
+		const parsed = parseCommand(
+			"feraligatr-mega !body-slam @feraligite x incineroar",
+		).parsed;
+
+		const context = buildCalculationContext(parsed!);
+		const results = calculateDamageResults(parsed!);
+		const dragonizeResult = results.find(
+			(result) => result.archetype === "mid",
+		);
+
+		expect(context?.attackerAbility).toBe("Dragonize");
+		expect(dragonizeResult!.assumptions).toContain(
+			"Dragonize: Normal-type move becomes Dragon-type with 1.2x power",
+		);
+
+		const neutral = parseCommand(
+			"feraligatr-mega !ice-punch @feraligite x incineroar",
+		).parsed;
+		const neutralResults = calculateDamageResults(neutral!);
+		const neutralResult = neutralResults.find(
+			(result) => result.archetype === "mid",
+		);
+
+		expect(
+			neutralResult!.assumptions.some((a) => a.includes("Dragonize: Normal")),
+		).toBe(false);
+	});
+
+	test("uses referenced defender sets as an explicit custom bulk row", () => {
+		const importedSets = {
+			incineroar: createImportedSet({
+				speciesId: "incineroar",
+				speciesName: "Incineroar",
+				item: "Leftovers",
+				ability: "Intimidate",
+				nature: "Careful",
+				statPoints: {
+					hp: 32,
+					atk: 0,
+					def: 8,
+					spa: 0,
+					spd: 16,
+					spe: 10,
+				},
+				moves: ["Flare Blitz", "Knock Off", "Parting Shot", "Fake Out"],
+			}),
+		};
+		const parsed = parseCommand(
+			"politoed !muddy-water x #incineroar",
+			importedSets,
+		).parsed;
+
+		const context = buildCalculationContext(parsed!, importedSets);
+		const results = calculateDamageResults(parsed!, importedSets);
+
+		expect(context?.archetypes).toHaveLength(1);
+		expect(context?.archetypes[0]?.label).toBe("Custom Set");
+		expect(results).toHaveLength(1);
+		expect(results[0].assumptions).toContain("Defender set item: Leftovers");
+	});
+
+	test("applies Fickle Beam double-power modifier via [1] syntax", () => {
+		const parsed = parseCommand(
+			"dragapult !fickle-beam[1] x incineroar",
+		).parsed;
+
+		const results = calculateDamageResults(parsed!);
+		const mid = results.find((r) => r.archetype === "mid")!;
+
+		expect(mid.assumptions).toContain(
+			"Fickle Beam: double damage (30% chance)",
+		);
+
+		const normal = parseCommand("dragapult !fickle-beam x incineroar").parsed;
+		const normalResults = calculateDamageResults(normal!);
+		const normalMid = normalResults.find((r) => r.archetype === "mid")!;
+
+		expect(mid.maxPercentage).toBeGreaterThan(normalMid.maxPercentage);
+		expect(normalMid.assumptions.some((a) => a.includes("Fickle Beam"))).toBe(
+			false,
+		);
+	});
+
+	test("applies Round double-power modifier via [1] syntax", () => {
+		const parsed = parseCommand("sylveon !round[1] x incineroar").parsed;
+
+		const results = calculateDamageResults(parsed!);
+		const mid = results.find((r) => r.archetype === "mid")!;
+
+		expect(mid.assumptions).toContain(
+			"Round: double damage (another Pok&eacute;mon used Round)",
+		);
+
+		const normal = parseCommand("sylveon !round x incineroar").parsed;
+		const normalResults = calculateDamageResults(normal!);
+		const normalMid = normalResults.find((r) => r.archetype === "mid")!;
+
+		expect(mid.maxPercentage).toBeGreaterThan(normalMid.maxPercentage);
+	});
 });

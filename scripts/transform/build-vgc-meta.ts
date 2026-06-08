@@ -1,7 +1,11 @@
-import type {
-  PikalyticsIndexEntry,
-  UsageEntry,
-} from "../fetch/fetch-pikalytics";
+export type UsageEntry = {
+  name: string;
+  usage: number;
+};
+
+export type MetaIndexEntry = {
+  speciesName: string;
+};
 
 export type PokemonEntry = {
   id: string;
@@ -47,7 +51,10 @@ export type VgcMetaProfile = {
 };
 
 export type VgcMetaOverrides = {
+  source?: "smogon";
   format?: string;
+  month?: string;
+  cutoff?: number;
   minWeightedUsage?: number;
   commonMoveLimit?: number;
   commonAbilityLimit?: number;
@@ -65,20 +72,8 @@ export const DEFAULT_COMMON_MOVE_LIMIT = 8;
 export const DEFAULT_COMMON_ABILITY_LIMIT = 6;
 export const DEFAULT_COMMON_ITEM_LIMIT = 6;
 const DOMINANT_UNMATCHED_ABILITY_USAGE_PERCENT = 60;
-const HIGH_DAMAGE_THRESHOLD = 90;
-const MEDIUM_DAMAGE_THRESHOLD = 70;
 const MIN_META_PROFILE_COUNT = 50;
 const MAX_META_PROFILE_COUNT_DELTA = 40;
-
-const EFFECTIVE_POWER_OVERRIDES = new Map<string, number>([
-  ["surgingstrikes", 75],
-  ["wickedblow", 75],
-  ["populationbomb", 100],
-  ["tripleaxel", 120],
-  ["rockblast", 75],
-  ["bulletseed", 75],
-  ["scaleshot", 100],
-]);
 
 function normalizeId(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "");
@@ -109,12 +104,6 @@ function canonicalizeLegalItemName(
   }
 
   return legalItemById.get(normalizeId(itemName)) ?? null;
-}
-
-function getEffectiveDamagePower(move: MoveEntry) {
-  return (
-    EFFECTIVE_POWER_OVERRIDES.get(normalizeId(move.name)) ?? move.basePower
-  );
 }
 
 function assertUniquePokemonIds(entries: VgcMetaProfile[]) {
@@ -270,7 +259,7 @@ export function buildMoveIndex(moveData: MoveEntry[]) {
 }
 
 export function buildSpeciesNameByPokemonId(
-  indexEntries: PikalyticsIndexEntry[],
+  indexEntries: MetaIndexEntry[],
   pokemonIdIndex: Map<string, string>,
 ) {
   const speciesNameByPokemonId = new Map<string, string>();
@@ -288,7 +277,7 @@ export function buildSpeciesNameByPokemonId(
   return speciesNameByPokemonId;
 }
 
-export function buildPikalyticsSpeciesNameCandidates(
+export function buildMetaSpeciesNameCandidates(
   pokemon: PokemonEntry,
   pokemonById: Map<string, PokemonEntry>,
 ) {
@@ -353,24 +342,27 @@ export function resolveDefaultAbility(
   previousProfile: VgcMetaProfile | undefined,
   commonAbilityLimit: number,
 ) {
-  const legalAbilities = new Set(pokemon.abilities.map((ability) => ability));
+  const legalAbilityByAlias = new Map(
+    pokemon.abilities.map((ability) => [compactAlias(ability), ability]),
+  );
+  const canonicalizedAbilityUsage = abilityUsage.map((entry) => ({
+    ...entry,
+    ability: legalAbilityByAlias.get(compactAlias(entry.name)) ?? null,
+  }));
   const commonAbilities = dedupeStrings(
-    abilityUsage
-      .filter((entry) => legalAbilities.has(entry.name))
-      .map((entry) => entry.name),
+    canonicalizedAbilityUsage.map((entry) => entry.ability),
   ).slice(0, commonAbilityLimit);
   const matchedDominantAbility =
-    abilityUsage.find((entry) => legalAbilities.has(entry.name))?.name ?? null;
-  const dominantUnmatchedAbility = abilityUsage.find(
+    canonicalizedAbilityUsage.find((entry) => entry.ability)?.ability ?? null;
+  const dominantUnmatchedAbility = canonicalizedAbilityUsage.find(
     (entry) =>
-      !legalAbilities.has(entry.name) &&
-      entry.usage >= DOMINANT_UNMATCHED_ABILITY_USAGE_PERCENT,
+      !entry.ability && entry.usage >= DOMINANT_UNMATCHED_ABILITY_USAGE_PERCENT,
   );
   const defaultAbility =
     matchedDominantAbility ??
     (dominantUnmatchedAbility
       ? pokemon.abilities[0]
-      : commonAbilities[0] ?? previousProfile?.defaultAbility ?? null);
+      : (commonAbilities[0] ?? previousProfile?.defaultAbility ?? null));
 
   return {
     defaultAbility,
@@ -380,7 +372,6 @@ export function resolveDefaultAbility(
 
 export function resolveMoveProfile(
   moveUsage: UsageEntry[],
-  pokemon: PokemonEntry,
   moveIndex: Map<string, MoveEntry>,
   previousProfile: VgcMetaProfile | undefined,
   commonMoveLimit: number,
@@ -390,52 +381,15 @@ export function resolveMoveProfile(
       usage: entry.usage,
       move: moveIndex.get(compactAlias(entry.name)) ?? null,
     }))
-    .filter(
-      (entry): entry is { usage: number; move: MoveEntry } => Boolean(entry.move),
+    .filter((entry): entry is { usage: number; move: MoveEntry } =>
+      Boolean(entry.move),
     );
 
   const commonMoves = dedupeStrings(
     candidateMoves.map((entry) => entry.move.name),
   ).slice(0, commonMoveLimit);
-  const highestPowerMove = [...candidateMoves]
-    .sort((left, right) => {
-      const powerDelta =
-        getEffectiveDamagePower(right.move) - getEffectiveDamagePower(left.move);
-
-      if (powerDelta !== 0) {
-        return powerDelta;
-      }
-
-      return right.usage - left.usage;
-    })[0]?.move;
   const highestUsageMove = candidateMoves[0]?.move ?? null;
-  const physicalMoves = candidateMoves.filter(
-    (entry) => entry.move.category === "Physical",
-  );
-  const specialMoves = candidateMoves.filter(
-    (entry) => entry.move.category === "Special",
-  );
   const defaultMove =
-    (pokemon.types.includes("Fire") &&
-    specialMoves.find((entry) => entry.move.type === "Fire")?.usage &&
-    specialMoves[0]?.usage
-      ? specialMoves.find((entry) => entry.move.type === "Fire")?.move
-      : null) ??
-    (highestPowerMove &&
-    getEffectiveDamagePower(highestPowerMove) >= HIGH_DAMAGE_THRESHOLD
-      ? highestPowerMove
-      : null) ??
-    (physicalMoves[0]?.usage &&
-    specialMoves[0]?.usage &&
-    Math.abs(physicalMoves[0].usage - specialMoves[0].usage) <=
-      MEDIUM_DAMAGE_THRESHOLD
-      ? [physicalMoves[0], specialMoves[0]]
-          .sort(
-            (left, right) =>
-              getEffectiveDamagePower(right.move) -
-                getEffectiveDamagePower(left.move) || right.usage - left.usage,
-          )[0]?.move
-      : null) ??
     highestUsageMove ??
     moveIndex.get(compactAlias(previousProfile?.defaultMove ?? "")) ??
     null;

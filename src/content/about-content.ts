@@ -125,15 +125,15 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
     ],
     dataSources: {
       eyebrow: "Dados de Meta",
-      title: "Benchmarks e sets informados por Pikalytics",
+      title: "Benchmarks e sets informados por estatísticas do Smogon",
       description:
-        "Os dados atuais de meta do Pokemon Champions VGC, incluindo uso, itens comuns, abilities e padrões usados em benchmarks, são informados pelo Pikalytics quando disponíveis.",
+        "Os dados atuais de meta do Pokemon Champions VGC, incluindo uso, itens comuns, abilities e padrões usados em benchmarks, são informados pelas estatísticas públicas do Smogon quando disponíveis.",
       notes: [
         "O Unburden usa esses dados para acelerar o ponto de partida de resumos, sugestões e tiers de Speed.",
-        "Dados do Pikalytics são um ponto de partida, não uma garantia de legalidade, otimização ou uso atual em torneios.",
-        "O Unburden não é afiliado ao Pikalytics.",
+        "Estatísticas do Smogon são um ponto de partida, não uma garantia de legalidade, otimização ou uso atual em torneios.",
+        "O Unburden não é afiliado ao Smogon.",
       ],
-      links: [{ label: "Pikalytics", href: "https://www.pikalytics.com/" }],
+      links: [{ label: "Smogon Stats", href: "https://www.smogon.com/stats/" }],
     },
     support: {
       eyebrow: "Suporte e Comunidade",
@@ -150,7 +150,8 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
   en: {
     intro: {
       eyebrow: "About the Project",
-      title: "A prompt-first VGC workspace for damage calcs and Speed benchmarks.",
+      title:
+        "A prompt-first VGC workspace for damage calcs and Speed benchmarks.",
       description:
         "Unburden is designed to speed up competitive teambuilding. Instead of filling long forms, you describe matchups and Speed interactions in text, tune visible assumptions, and share the full state. It is built for quickly answering: does this survive, what outspeeds this, and which assumption changed the result?",
       highlights: [
@@ -226,15 +227,15 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
     ],
     dataSources: {
       eyebrow: "Meta Data",
-      title: "Benchmarks and sets informed by Pikalytics",
+      title: "Benchmarks and sets informed by Smogon stats",
       description:
-        "Current Pokemon Champions VGC meta data, including usage, common items, abilities, and benchmark defaults, is informed by Pikalytics where available.",
+        "Current Pokemon Champions VGC meta data, including usage, common items, abilities, and benchmark defaults, is informed by public Smogon statistics where available.",
       notes: [
         "Unburden uses this data to make summaries, suggestions, and Speed tiers faster to start from.",
-        "Pikalytics data is a starting point, not a guarantee of legality, optimality, or current tournament usage.",
-        "Unburden is not affiliated with Pikalytics.",
+        "Smogon statistics are a starting point, not a guarantee of legality, optimality, or current tournament usage.",
+        "Unburden is not affiliated with Smogon.",
       ],
-      links: [{ label: "Pikalytics", href: "https://www.pikalytics.com/" }],
+      links: [{ label: "Smogon Stats", href: "https://www.smogon.com/stats/" }],
     },
     support: {
       eyebrow: "Support and Community",
