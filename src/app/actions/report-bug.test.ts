@@ -28,13 +28,13 @@ describe("reportBug", () => {
 
   beforeEach(() => {
     process.env.GITHUB_BUG_REPORT_TOKEN = "github-token";
-    process.env.GITHUB_BUG_REPORT_REPO = "leandromesq/unburden-issues";
+    process.env.GITHUB_BUG_REPORT_REPO = "leandromesq/unburden";
     resetBugReportAbuseGuard();
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
       json: jest.fn().mockResolvedValue({
         number: 42,
-        html_url: "https://github.com/leandromesq/unburden-issues/issues/42",
+        html_url: "https://github.com/leandromesq/unburden/issues/42",
       }),
     } as unknown as Response);
     warnSpy = jest.spyOn(console, "warn").mockImplementation(() => undefined);
@@ -92,10 +92,10 @@ describe("reportBug", () => {
     expect(result).toEqual({
       status: "success",
       message: "Bug report filed as issue #42.",
-      issueUrl: "https://github.com/leandromesq/unburden-issues/issues/42",
+      issueUrl: "https://github.com/leandromesq/unburden/issues/42",
     });
     expect(global.fetch).toHaveBeenCalledWith(
-      "https://api.github.com/repos/leandromesq/unburden-issues/issues",
+      "https://api.github.com/repos/leandromesq/unburden/issues",
       expect.objectContaining({
         method: "POST",
         headers: expect.objectContaining({

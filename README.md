@@ -126,7 +126,7 @@ cp .env.example .env.local
 
 Set `GITHUB_BUG_REPORT_TOKEN` in `.env.local` to enable the in-app `Report bug` form. The token needs issue creation access for the target repo.
 
-Set `GITHUB_BUG_REPORT_REPO` if you want reports to land somewhere other than `leandromesq/unburden-issues`.
+Set `GITHUB_BUG_REPORT_REPO` if you want reports to land somewhere other than `leandromesq/unburden`.
 
 Set the repository secret `DISCORD_BUG_REPORT_WEBHOOK_URL` in GitHub Actions so new app-created issues are forwarded to Discord.
 
@@ -181,7 +181,7 @@ GitHub Actions:
 
 - `.github/workflows/validation.yml` runs lint, coverage tests, dead-code check, production build on push to `main`
 - `.github/workflows/data-freshness.yml` runs snapshot freshness check on demand and monthly
-- `leandromesq/unburden-issues/.github/workflows/issues-to-discord.yml` forwards app-created GitHub bug reports to Discord when new issues open
+- `leandromesq/unburden/.github/workflows/issues-to-discord.yml` forwards app-created GitHub bug reports to Discord when new issues open
 
 ## Data Generation
 

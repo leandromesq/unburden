@@ -18,7 +18,7 @@ interface ReportBugState {
 }
 
 const APP_BUG_REPORT_MARKER = "<!-- source: app-bug-report -->";
-const DEFAULT_GITHUB_BUG_REPORT_REPO = "leandromesq/unburden-issues";
+const DEFAULT_GITHUB_BUG_REPORT_REPO = "leandromesq/unburden";
 const HONEYPOT_FIELD_NAME = "teamName";
 const TRUSTED_ORIGIN_HOSTS: readonly string[] = [
   "localhost:3000",
