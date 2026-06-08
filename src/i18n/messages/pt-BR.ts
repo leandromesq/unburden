@@ -112,10 +112,10 @@ export const ptBRDictionary: AppDictionary = {
   },
   legalFooter: {
     eyebrow: "Aviso Legal",
-    title: "Software Proprietário",
+    title: "Licença",
     copyright: "Copyright © Leandro Mesquita. Todos os direitos reservados.",
-    proprietary:
-      "O Unburden é software proprietario e não é open source. Fora da funcionalidade padrao da plataforma do GitHub e dos termos aplicaveis da plataforma, não há permissão para copiar, redistribuir, sublicenciar ou criar derivados sem autorização prévia por escrito.",
+    license:
+      "O Unburden é software open source distribuído sob a Licença MIT.",
     thirdParty:
       "Pokemon, Pokemon Champions e nomes, dados e artes relacionados pertencem aos seus respectivos titulares. Materiais de terceiros continuam sujeitos aos seus proprios direitos e termos.",
   },

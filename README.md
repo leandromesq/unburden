@@ -2,15 +2,13 @@
 
 Web damage calc workspace for Pokemon Champions / VGC-style doubles. Prompt-first. Client-side calc. UI act more like editor, less like old-school form.
 
-## License and Usage
+## License
 
-Unburden is proprietary software and is not open source.
+[MIT](./LICENSE.md)
 
-This repository contains proprietary software and no open-source license is granted. Outside GitHub's standard platform functionality and applicable GitHub Terms, you may not copy, modify, distribute, sublicense, sell, host, deploy for third parties, or create derivative works from this codebase without prior written permission from the copyright holder.
+## Disclaimer
 
-See [LICENSE.md](./LICENSE.md) for the full proprietary notice.
-
-Third-party trademarks, gameplay data sources, and artwork referenced by this project remain the property of their respective owners and are not licensed to you by this repository.
+Pokémon names, sprites, game data, and related trademarks are the property of Nintendo, Creatures Inc., Game Freak, and The Pokémon Company. Usage statistics are sourced from Smogon and Pokémon Showdown. This project is not affiliated with, endorsed by, or sponsored by any of these parties.
 
 ## What It Does
 

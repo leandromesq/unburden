@@ -1,8 +1,7 @@
 {
   "name": "unburden",
   "version": "0.1.0",
-  "license": "UNLICENSED",
-  "private": true,
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "dev:webpack": "next dev --webpack",

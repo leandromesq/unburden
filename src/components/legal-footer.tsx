@@ -15,7 +15,7 @@ export function LegalFooter() {
         {legal.copyright}
       </p>
       <div className="theme-text-dim mt-4 space-y-3 text-sm leading-6">
-        <p>{legal.proprietary}</p>
+        <p>{legal.license}</p>
         <p>{legal.thirdParty}</p>
       </div>
     </section>

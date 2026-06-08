@@ -123,7 +123,7 @@ export interface AppDictionary {
     eyebrow: string;
     title: string;
     copyright: string;
-    proprietary: string;
+    license: string;
     thirdParty: string;
   };
   helpBubble: {

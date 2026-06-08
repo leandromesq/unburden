@@ -143,7 +143,7 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
       notes: [
         "Reporte problemas ou sugira features via GitHub Issues.",
         "Acompanhe o roadmap de atualizacoes do projeto.",
-        "O Unburden continua proprietario e nao open source.",
+        "O Unburden é software open source (MIT).",
       ],
     },
   },
@@ -245,7 +245,7 @@ export const aboutContentByLocale: Record<AppLocale, AboutContent> = {
       notes: [
         "Report problems or suggest features through GitHub Issues.",
         "Follow the project roadmap updates.",
-        "Unburden remains proprietary and is not open source.",
+        "Unburden is open source software (MIT).",
       ],
     },
   },
