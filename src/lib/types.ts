@@ -15,7 +15,7 @@ export interface ActiveRegulationConfig {
 
 export type BulkArchetype = "glass" | "mid" | "tank";
 export type PokemonStatus = "brn" | "par" | "psn" | "slp" | "frz";
-export type OmniIssueId =
+type OmniIssueId =
 	| "parser.use_separator"
 	| "parser.unknown_saved_set_reference"
 	| "parser.saved_set_reference_attacker_slot_only"
@@ -66,7 +66,7 @@ export type SideEffect =
 	| "battery"
 	| "power_spot";
 
-export type SuggestionSlot =
+type SuggestionSlot =
 	| "attacker_pokemon"
 	| "attacker_move"
 	| "attacker_modifier_or_item_or_ability"
@@ -128,7 +128,7 @@ export interface ParsedCommand {
 	moveTargetMode?: "single" | "multi";
 }
 
-export interface DamageRoll {
+interface DamageRoll {
 	damage: number;
 	percentage: number;
 }
@@ -248,7 +248,7 @@ export interface ImportedSet {
 
 export type SpeedNatureBucket = "plus" | "neutral" | "minus";
 
-export type SpeedBenchmarkSource = "species" | "saved-set" | "shared-snapshot";
+type SpeedBenchmarkSource = "species" | "saved-set" | "shared-snapshot";
 
 export type SpeedAbilityActiveState = "unburden-active";
 

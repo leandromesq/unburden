@@ -1,11 +1,11 @@
 import type { AppLocale } from "@/i18n/locales";
 
-export interface AboutLink {
+interface AboutLink {
 	label: string;
 	href: string;
 }
 
-export interface AboutCardContent {
+interface AboutCardContent {
 	eyebrow: string;
 	title: string;
 	description: string;

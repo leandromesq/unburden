@@ -8,7 +8,7 @@ import type {
 } from "@/lib/types";
 
 export type ModifierScope = "attacker" | "defender" | "global";
-export type ModifierSection =
+type ModifierSection =
   | "multipliers"
   | "stats"
   | "move_effects"

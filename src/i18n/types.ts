@@ -1,17 +1,17 @@
 import type { AppLocale } from "@/i18n/locales";
 
-export interface HotkeyMessage {
+interface HotkeyMessage {
 	keys: string[];
 	description: string;
 }
 
-export interface SyntaxRowMessage {
+interface SyntaxRowMessage {
 	token: string;
 	description: string;
 	example: string;
 }
 
-export interface TokenHelpMessage {
+interface TokenHelpMessage {
 	token: string;
 	label: string;
 }
