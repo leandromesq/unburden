@@ -1,9 +1,9 @@
-export type UsageEntry = {
+type UsageEntry = {
   name: string;
   usage: number;
 };
 
-export type SmogonChaosPokemonStats = {
+type SmogonChaosPokemonStats = {
   "Raw count"?: number;
   usage: number;
   "Viability Ceiling"?: [number, number, number, number];
@@ -111,7 +111,7 @@ export function parseSmogonStatsMonths(indexHtml: string) {
   return Array.from(months).sort((left, right) => right.localeCompare(left));
 }
 
-export function smogonStatsDirectoryIncludesFormat({
+function smogonStatsDirectoryIncludesFormat({
   directoryHtml,
   format,
   cutoff,
@@ -125,7 +125,7 @@ export function smogonStatsDirectoryIncludesFormat({
   return directoryHtml.includes(`href="${filename}"`);
 }
 
-export async function resolveLatestSmogonStatsMonth({
+async function resolveLatestSmogonStatsMonth({
   format,
   cutoff,
 }: {
@@ -174,7 +174,7 @@ function validateSmogonChaosStats(stats: SmogonChaosStats) {
   }
 }
 
-export async function fetchSmogonChaosStats({
+async function fetchSmogonChaosStats({
   format = DEFAULT_SMOGON_STATS_FORMAT,
   month = LATEST_MONTH,
   cutoff = DEFAULT_SMOGON_STATS_CUTOFF,
@@ -255,10 +255,6 @@ export function parseSmogonMetaRecords(stats: SmogonChaosStats) {
 
       return left.speciesName.localeCompare(right.speciesName);
     });
-}
-
-export function parseSmogonSpeciesNames(stats: SmogonChaosStats) {
-  return Object.keys(stats.data).filter((speciesName) => speciesName.trim());
 }
 
 export async function fetchSmogonMetaRecords(options?: {
