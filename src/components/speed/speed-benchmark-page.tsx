@@ -1,11 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 import { SpeedCommandComposer } from "@/components/speed/speed-command-composer";
 import { SpeedLadder } from "@/components/speed/speed-ladder";
 import { SpeedSidePanel } from "@/components/speed/speed-side-panel";
 import { useI18n } from "@/i18n/I18nProvider";
+import type { AppDictionary } from "@/i18n/types";
 import { legalPokemonData } from "@/lib/data/pokemon";
 import { parseSpeedShareState } from "@/lib/share/parse-share-state";
 import { serializeSpeedShareState } from "@/lib/share/serialize-share-state";
@@ -13,13 +15,78 @@ import { createSpeedSideFromPokemon } from "@/lib/speed/speed-command";
 import {
   buildPinnedSpeedComparator,
   buildSpeedTierGroups,
+  buildSpeedUsageTierGroups,
   createSpeedSideFromBenchmark,
   describeSubjectThreshold,
   findFocusedTierIndex,
   resolveSpeedSide,
   type SpeedBenchmarkIdentity,
+  type SpeedUsageTierGroup,
 } from "@/lib/speed/speed-benchmark";
 import { useSpeedBenchmarkStore } from "@/store/use-speed-benchmark-store";
+
+function SpeedUsageOverlay({
+  groups,
+  labels,
+  onSelectBenchmark,
+}: {
+  groups: SpeedUsageTierGroup[];
+  labels: AppDictionary["speedBenchmark"];
+  onSelectBenchmark: (identity: SpeedBenchmarkIdentity) => void;
+}) {
+  if (!groups.length) return null;
+
+  return (
+    <section className="theme-subpanel mt-3 rounded-lg p-3">
+      <div>
+        <h3 className="text-sm font-semibold">{labels.speedUsageTitle}</h3>
+        <p className="theme-text-faint mt-0.5 text-xs">
+          {labels.speedUsageDescription}
+        </p>
+      </div>
+      <div className="mt-3 space-y-1.5">
+        {groups.map((group) => {
+          const representative = group.representative;
+
+          return (
+            <button
+              key={`${group.speed}-${representative.profile.pokemonId}-${representative.nature}-${representative.speSp}`}
+              type="button"
+              onClick={() => onSelectBenchmark(representative)}
+              className="theme-speed-tier-option grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-2 rounded-lg p-2 text-left"
+            >
+              <span className="min-w-0">
+                <span className="block truncate text-sm font-medium">
+                  {representative.resolvedPokemon.name}
+                </span>
+                <span className="theme-text-faint block truncate text-xs">
+                  {labels.speedUsageMeta(
+                    representative.nature,
+                    representative.speSp,
+                    representative.usagePercent,
+                  )}
+                </span>
+                {group.members.length > 1 ? (
+                  <span className="theme-text-faint block text-[11px]">
+                    {labels.speedUsageMembers(group.members.length)}
+                  </span>
+                ) : null}
+              </span>
+              <span className="text-right">
+                <span className="theme-text-faint block text-[11px]">
+                  {labels.effectiveSpeed}
+                </span>
+                <span className="block text-lg font-semibold tabular-nums">
+                  {group.speed}
+                </span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
 
 export function SpeedBenchmarkPage() {
   const { dictionary } = useI18n();
@@ -41,6 +108,7 @@ export function SpeedBenchmarkPage() {
   const hydrateShareState = useSpeedBenchmarkStore((state) => state.hydrateShareState);
   const [copiedShareUrl, setCopiedShareUrl] = useState(false);
   const [modifiersOpen, setModifiersOpen] = useState(false);
+  const [usageOverlayOpen, setUsageOverlayOpen] = useState(false);
   const [subjectSpeciesInput, setSubjectSpeciesInput] = useState("");
 
   const subjectMetrics = useMemo(
@@ -71,6 +139,27 @@ export function SpeedBenchmarkPage() {
       globals.trickRoom,
     );
   const focusedGroup = groups[focusedIndex];
+  const speedUsageGroups = useMemo(() => {
+    const allGroups = buildSpeedUsageTierGroups(
+      globals,
+      subjectMetrics?.effectiveSpeed ?? null,
+    );
+    const anchorSpeed =
+      comparatorMetrics?.effectiveSpeed ??
+      subjectMetrics?.effectiveSpeed ??
+      focusedGroup?.speed ??
+      null;
+
+    return (anchorSpeed === null
+      ? allGroups
+      : [...allGroups].sort(
+          (left, right) =>
+            Math.abs(left.speed - anchorSpeed) - Math.abs(right.speed - anchorSpeed),
+        )
+    )
+      .slice(0, 6)
+      .sort((left, right) => right.speed - left.speed);
+  }, [globals, comparatorMetrics?.effectiveSpeed, subjectMetrics?.effectiveSpeed, focusedGroup?.speed]);
   const pinnedComparator = buildPinnedSpeedComparator(
     groups,
     comparatorMetrics,
@@ -179,22 +268,6 @@ export function SpeedBenchmarkPage() {
         </div>
 
         <div className="order-1 min-w-0 xl:order-2">
-          <div className="theme-subpanel mb-3 rounded-lg p-3">
-            <div className="grid gap-2 sm:grid-cols-3">
-              <div className="min-w-0">
-                <div className="theme-data-label">{speed.sequenceSubject}</div>
-                <div className="theme-data-text mt-1 truncate text-[13px]">{subjectLabel}</div>
-              </div>
-              <div className="min-w-0">
-                <div className="theme-data-label">{speed.sequenceBenchmark}</div>
-                <div className="theme-data-text mt-1 truncate text-[13px]">{comparatorLabel}</div>
-              </div>
-              <div className="min-w-0">
-                <div className="theme-data-label">{speed.sequenceDecision}</div>
-                <div className="mt-1 text-[13px] font-medium leading-5">{thresholdStatus}</div>
-              </div>
-            </div>
-          </div>
           <SpeedCommandComposer
             command={command}
             subjectLabel={subjectLabel}
@@ -219,14 +292,6 @@ export function SpeedBenchmarkPage() {
         </div>
 
         <div className="order-3 min-w-0">
-          {modifiersOpen ? (
-            <div className="theme-subpanel mb-3 rounded-lg p-3">
-              <div className="theme-data-label">{speed.ladderContext}</div>
-              <p className="theme-text-dim mt-1 text-sm leading-6">
-                {speed.ladderContextModifiersOpen}
-              </p>
-            </div>
-          ) : null}
           <SpeedLadder
             groups={groups}
             focusedGroup={focusedGroup}
@@ -235,6 +300,28 @@ export function SpeedBenchmarkPage() {
             onClearComparator={clearComparator}
             onSelectBenchmark={handleSelectBenchmark}
           />
+          {speedUsageGroups.length > 0 ? (
+            <button
+              type="button"
+              aria-expanded={usageOverlayOpen}
+              onClick={() => setUsageOverlayOpen((value) => !value)}
+              className="mt-3 flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm"
+            >
+              <span className="theme-text-dim">{speed.speedUsageTitle}</span>
+              {usageOverlayOpen ? (
+                <ChevronUp size={14} strokeWidth={1.9} aria-hidden="true" />
+              ) : (
+                <ChevronDown size={14} strokeWidth={1.9} aria-hidden="true" />
+              )}
+            </button>
+          ) : null}
+          {usageOverlayOpen ? (
+            <SpeedUsageOverlay
+              groups={speedUsageGroups}
+              labels={speed}
+              onSelectBenchmark={handleSelectBenchmark}
+            />
+          ) : null}
         </div>
       </div>
     </section>

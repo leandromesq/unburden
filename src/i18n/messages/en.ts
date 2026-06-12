@@ -31,12 +31,15 @@ export const enDictionary: AppDictionary = {
   },
   speedBenchmark: {
     title: "Speed Benchmark",
-    description: "Compare level 50 Speed tiers against current VGC meta profiles.",
+    description:
+      "Compare level 50 Speed tiers against current VGC meta profiles.",
     commandLabel: "Speed Prompt",
-    commandPlaceholder: "basculegion choice scarf x aerodactyl -1 tailwind ~rain…",
+    commandPlaceholder:
+      "basculegion choice scarf x aerodactyl -1 tailwind ~rain…",
     helpTrigger: "Show Speed syntax reference",
     helpTitle: "Speed syntax",
-    helpDescription: "subject [speed tokens] x comparator [speed tokens] [~global tokens]",
+    helpDescription:
+      "subject [speed tokens] x comparator [speed tokens] [~global tokens]",
     helpClose: "Close Speed help",
     subject: "Your Pokemon",
     comparator: "Comparator",
@@ -80,9 +83,17 @@ export const enDictionary: AppDictionary = {
     movesFirstTrickRoom: "Moves first under Trick Room.",
     comparatorMovesFirstTrickRoom: "Comparator moves first under Trick Room.",
     pokemonMovesFirst: (name) => `${name} moves first.`,
-    pokemonMovesFirstTrickRoom: (name) => `${name} moves first under Trick Room.`,
+    pokemonMovesFirstTrickRoom: (name) =>
+      `${name} moves first under Trick Room.`,
     pokemonSpeedTie: (left, right) => `${left} and ${right}: Speed tie.`,
     baselineLabel: "Generated: Level 50 · 32 Spe SP · +Speed",
+    speedUsageTitle: "Common usage speeds",
+    speedUsageDescription:
+      "Optional Smogon usage spreads. The Speed Ladder baseline remains max Speed.",
+    speedUsageMeta: (nature, speSp, usagePercent) =>
+      `${nature} · ${speSp} Spe SP · ${usagePercent.toFixed(1)}% usage`,
+    speedUsageMembers: (count) =>
+      `${count} usage spread${count === 1 ? "" : "s"}`,
     rawSpeed: "Unmodified",
     effectiveSpeed: "Effective",
     sequenceSubject: "1. Subject",
@@ -312,6 +323,8 @@ export const enDictionary: AppDictionary = {
   },
   resultsPanel: {
     ariaLabel: "Calculation results",
+    resultsUpdated: (count) =>
+      `${count} damage ${count === 1 ? "range" : "ranges"} updated.`,
     minBulk: "Min Bulk",
     midBulk: "Mid Bulk",
     maxBulk: "Max Bulk",

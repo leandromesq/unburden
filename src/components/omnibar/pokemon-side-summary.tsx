@@ -233,7 +233,7 @@ export function PokemonSideSummary({ side }: { side: SummarySide }) {
       onPointerDown={() => {
         activeSummaryShortcutSide = side;
       }}
-      className="theme-panel min-w-0 overflow-visible rounded-xl p-4 sm:p-5"
+      className="theme-support-panel min-w-0 overflow-visible rounded-xl p-3.5 sm:p-4"
     >
       <SummaryHeader
         title={summary.title}

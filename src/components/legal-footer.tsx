@@ -9,11 +9,11 @@ export function LegalFooter() {
 	return (
 		<section
 			aria-labelledby="legal-title"
-			className="mt-6 theme-panel rounded-xl p-5"
+			className="mt-8 border-t theme-divider pt-5"
 		>
-			<h2 id="legal-title" className="text-lg font-semibold tracking-[-0.02em]">
+			<h3 id="legal-title" className="text-lg font-semibold tracking-[-0.02em]">
 				{legal.title}
-			</h2>
+			</h3>
 			<p className="theme-text-dim mt-2 text-sm leading-6">{legal.copyright}</p>
 			<div className="theme-text-dim mt-4 space-y-3 text-sm leading-6">
 				<p>{legal.license}</p>

@@ -38,6 +38,17 @@ export type ItemEntry = {
   name: string;
 };
 
+export type VgcMetaSpeedUsage = {
+  nature: string;
+  speSp: number;
+  usagePercent: number;
+};
+
+export type VgcMetaItemUsage = {
+  item: string;
+  usagePercent: number;
+};
+
 export type VgcMetaProfile = {
   pokemonId: string;
   usageRank: number;
@@ -48,6 +59,8 @@ export type VgcMetaProfile = {
   commonMoves?: string[];
   commonAbilities?: string[];
   commonItems?: string[];
+  itemUsages?: VgcMetaItemUsage[];
+  speedUsages?: VgcMetaSpeedUsage[];
 };
 
 export type VgcMetaOverrides = {
@@ -59,6 +72,7 @@ export type VgcMetaOverrides = {
   commonMoveLimit?: number;
   commonAbilityLimit?: number;
   commonItemLimit?: number;
+  commonSpeedUsageLimit?: number;
   speciesIdOverrides?: Record<string, string>;
   profileOverrides?: Record<string, Partial<VgcMetaProfile>>;
 };
@@ -71,6 +85,7 @@ export type RegulationEntry = {
 export const DEFAULT_COMMON_MOVE_LIMIT = 8;
 export const DEFAULT_COMMON_ABILITY_LIMIT = 6;
 export const DEFAULT_COMMON_ITEM_LIMIT = 6;
+export const DEFAULT_COMMON_SPEED_USAGE_LIMIT = 6;
 const DOMINANT_UNMATCHED_ABILITY_USAGE_PERCENT = 60;
 const MIN_META_PROFILE_COUNT = 50;
 const MAX_META_PROFILE_COUNT_DELTA = 40;
@@ -89,6 +104,14 @@ function normalizeAlias(value: string) {
 
 function compactAlias(value: string) {
   return normalizeAlias(value).replace(/\s+/g, "");
+}
+
+function evToStatPointsValue(ev: number) {
+  return Math.min(32, Math.round(ev / 8));
+}
+
+function spreadValueToSpeSp(value: number) {
+  return Math.max(0, Math.min(32, value <= 32 ? Math.round(value) : evToStatPointsValue(value)));
 }
 
 export function dedupeStrings(values: Array<string | null | undefined>) {
@@ -175,6 +198,14 @@ export function validateMetaProfiles(
       if (!legalItemById.has(normalizeId(itemName))) {
         throw new Error(
           `Meta profile ${entry.pokemonId} references illegal common item: ${itemName}`,
+        );
+      }
+    }
+
+    for (const itemUsage of entry.itemUsages ?? []) {
+      if (!legalItemById.has(normalizeId(itemUsage.item))) {
+        throw new Error(
+          `Meta profile ${entry.pokemonId} references illegal item usage: ${itemUsage.item}`,
         );
       }
     }
@@ -321,10 +352,16 @@ export function resolveDefaultItem(
   commonItemLimit: number,
   legalItemById: Map<string, string>,
 ) {
+  const canonicalizedItemUsage = itemUsage
+    .map((entry) => ({
+      ...entry,
+      item: canonicalizeLegalItemName(entry.name, legalItemById),
+    }))
+    .filter((entry): entry is UsageEntry & { item: string } =>
+      Boolean(entry.item),
+    );
   const items = dedupeStrings(
-    itemUsage
-      .map((entry) => canonicalizeLegalItemName(entry.name, legalItemById))
-      .filter(Boolean),
+    canonicalizedItemUsage.map((entry) => entry.item),
   );
   const fallbackDefault =
     canonicalizeLegalItemName(previousProfile?.defaultItem, legalItemById) ??
@@ -333,6 +370,9 @@ export function resolveDefaultItem(
   return {
     defaultItem: items[0] ?? fallbackDefault,
     commonItems: items.slice(0, commonItemLimit),
+    itemUsages: canonicalizedItemUsage
+      .map((entry) => ({ item: entry.item, usagePercent: entry.usage }))
+      .slice(0, commonItemLimit),
   };
 }
 
@@ -368,6 +408,46 @@ export function resolveDefaultAbility(
     defaultAbility,
     commonAbilities,
   };
+}
+
+export function resolveSpeedUsages(
+  spreadUsage: UsageEntry[],
+  previousProfile: VgcMetaProfile | undefined,
+  commonSpeedUsageLimit = DEFAULT_COMMON_SPEED_USAGE_LIMIT,
+) {
+  const seen = new Set<string>();
+  const speedUsages = spreadUsage
+    .map((entry) => {
+      const [nature, spread] = entry.name.split(":");
+      const spreadValues = (spread ?? "")
+        .split("/")
+        .map((value) => Number(value.trim()));
+      const speedValue = spreadValues[5];
+
+      if (!nature?.trim() || !Number.isFinite(speedValue)) {
+        return null;
+      }
+
+      return {
+        nature: nature.trim(),
+        speSp: spreadValueToSpeSp(speedValue),
+        usagePercent: entry.usage,
+      } satisfies VgcMetaSpeedUsage;
+    })
+    .filter((entry): entry is VgcMetaSpeedUsage => Boolean(entry))
+    .filter((entry) => {
+      const key = `${entry.nature}:${entry.speSp}`;
+
+      if (seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+      return true;
+    })
+    .slice(0, commonSpeedUsageLimit);
+
+  return speedUsages.length ? speedUsages : previousProfile?.speedUsages;
 }
 
 export function resolveMoveProfile(
@@ -420,6 +500,8 @@ export function mergeProfile(
     commonItems: dedupeStrings([
       ...(override.commonItems ?? baseProfile.commonItems ?? []),
     ]),
+    itemUsages: override.itemUsages ?? baseProfile.itemUsages,
+    speedUsages: override.speedUsages ?? baseProfile.speedUsages,
   };
 }
 

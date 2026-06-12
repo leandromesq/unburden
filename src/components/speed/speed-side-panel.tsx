@@ -159,7 +159,7 @@ export function SpeedSidePanel({
 
   if (!side || !metrics) {
     return (
-      <section className="theme-panel rounded-lg p-4">
+      <section className="theme-support-panel rounded-lg p-4">
         <SummaryHeader title={title} />
         <div className="mt-3 flex min-w-0 items-start gap-3">
           <div className="theme-subpanel flex h-16 w-16 shrink-0 items-center justify-center rounded-lg p-2">
@@ -238,7 +238,7 @@ export function SpeedSidePanel({
   }
 
   return (
-    <section className="theme-panel rounded-lg p-4">
+    <section className="theme-support-panel rounded-lg p-4">
       <SummaryHeader
         title={title}
         megaToggle={

@@ -34,6 +34,7 @@ export type SmogonMetaRecord = {
 	moves: UsageEntry[];
 	abilities: UsageEntry[];
 	items: UsageEntry[];
+	spreads: UsageEntry[];
 };
 
 export type SmogonStatsFetchResult = {
@@ -243,6 +244,7 @@ export function parseSmogonMetaRecords(stats: SmogonChaosStats) {
 			abilities: usageMapToEntries(pokemonStats.Abilities),
 			items: usageMapToEntries(pokemonStats.Items),
 			moves: usageMapToEntries(pokemonStats.Moves),
+			spreads: usageMapToEntries(pokemonStats.Spreads),
 		}))
 		.filter(
 			(entry) =>

@@ -1,4 +1,9 @@
-import { buildEffectiveSpeed, compareMoveOrder, findSpeSpThreshold } from "@/lib/calc/speed-engine";
+import {
+  buildEffectiveSpeed,
+  compareMoveOrder,
+  findSpeSpThreshold,
+  getSpeedRelevantItemMultiplier,
+} from "@/lib/calc/speed-engine";
 import { legalPokemonData, pokemonById, resolveMegaEvolution } from "@/lib/data/pokemon";
 import { vgcMetaProfiles } from "@/lib/data/vgc-meta";
 import type {
@@ -12,18 +17,38 @@ import type {
 } from "@/lib/types";
 
 const legalPokemonIds = new Set(legalPokemonData.map((pokemon) => pokemon.id));
+const MIN_SPEED_ITEM_USAGE_PERCENT = 10;
+const MIN_SPEED_ITEM_WEIGHTED_USAGE_PERCENT = 0.5;
+
+type SpeedItemUsage = { item: string; usagePercent?: number };
 
 export interface SpeedBenchmarkIdentity {
   profile: VgcMetaProfile;
   pokemon: PokemonEntry;
   resolvedPokemon: PokemonEntry;
   speed: number;
+  item?: string;
+  itemUsagePercent?: number;
+  weightedUsagePercent?: number;
+}
+
+export interface SpeedUsageBenchmarkIdentity extends SpeedBenchmarkIdentity {
+  nature: string;
+  speSp: number;
+  usagePercent: number;
 }
 
 export interface SpeedTierGroup {
   speed: number;
   representative: SpeedBenchmarkIdentity;
   members: SpeedBenchmarkIdentity[];
+  relation: MoveOrderRelation | "unset";
+}
+
+export interface SpeedUsageTierGroup {
+  speed: number;
+  representative: SpeedUsageBenchmarkIdentity;
+  members: SpeedUsageBenchmarkIdentity[];
   relation: MoveOrderRelation | "unset";
 }
 
@@ -54,6 +79,85 @@ function speedTerrain(globals: SpeedGlobalState) {
   return globals.electricTerrain ? ("Electric" as const) : undefined;
 }
 
+function isSpeedRelevantItem(item: string | undefined) {
+  return getSpeedRelevantItemMultiplier(item) !== 1;
+}
+
+function normalizeItemUsagePercentages(itemUsages: SpeedItemUsage[]) {
+  if (!itemUsages.length) return itemUsages;
+
+  const firstUsage = itemUsages[0].usagePercent;
+
+  if (firstUsage === undefined || firstUsage <= 100) {
+    return itemUsages;
+  }
+
+  const divisor = firstUsage / 100;
+
+  return itemUsages.map((entry) => ({
+    ...entry,
+    usagePercent:
+      entry.usagePercent === undefined ? undefined : entry.usagePercent / divisor,
+  }));
+}
+
+function normalizeSpeedUsagePercentages<T extends { usagePercent: number }>(
+  usages: T[],
+) {
+  if (!usages.length) return usages;
+
+  const firstUsage = usages[0].usagePercent;
+
+  if (firstUsage <= 100) return usages;
+
+  const divisor = firstUsage / 100;
+
+  return usages.map((entry) => ({
+    ...entry,
+    usagePercent: entry.usagePercent / divisor,
+  }));
+}
+
+function isExpressiveSpeedItem(
+  profile: VgcMetaProfile,
+  itemUsage: SpeedItemUsage,
+) {
+  if (!isSpeedRelevantItem(itemUsage.item)) {
+    return false;
+  }
+
+  if (itemUsage.usagePercent === undefined) {
+    return (profile.usagePercent ?? 0) >= MIN_SPEED_ITEM_WEIGHTED_USAGE_PERCENT;
+  }
+
+  const weightedUsage = ((profile.usagePercent ?? 0) * itemUsage.usagePercent) / 100;
+
+  return (
+    itemUsage.usagePercent >= MIN_SPEED_ITEM_USAGE_PERCENT &&
+    weightedUsage >= MIN_SPEED_ITEM_WEIGHTED_USAGE_PERCENT
+  );
+}
+
+function speedNatureBucketFromNatureName(nature: string | undefined) {
+  const normalized = nature?.toLowerCase() ?? "";
+
+  if (["timid", "hasty", "jolly", "naive"].includes(normalized)) {
+    return "plus" as const;
+  }
+
+  if (["brave", "relaxed", "quiet", "sassy"].includes(normalized)) {
+    return "minus" as const;
+  }
+
+  return "neutral" as const;
+}
+
+function isSpeedUsageBenchmarkIdentity(
+  identity: SpeedBenchmarkIdentity,
+): identity is SpeedUsageBenchmarkIdentity {
+  return "speSp" in identity && "nature" in identity;
+}
+
 export function resolveSpeedSide(side: SpeedSideState, globals: SpeedGlobalState): SpeedSideMetrics | null {
   const pokemon = pokemonById.get(side.speciesId);
 
@@ -82,7 +186,15 @@ export function resolveSpeedSide(side: SpeedSideState, globals: SpeedGlobalState
   };
 }
 
-function buildBenchmarkIdentity(profile: VgcMetaProfile, globals: SpeedGlobalState) {
+function getBenchmarkBaselineItem(profile: VgcMetaProfile, pokemon: PokemonEntry) {
+  if (pokemon.isMega || pokemon.requiredItem) {
+    return pokemon.requiredItem ?? profile.defaultItem;
+  }
+
+  return undefined;
+}
+
+function resolveBenchmarkPokemon(profile: VgcMetaProfile, item?: string) {
   if (!legalPokemonIds.has(profile.pokemonId)) {
     return null;
   }
@@ -91,33 +203,118 @@ function buildBenchmarkIdentity(profile: VgcMetaProfile, globals: SpeedGlobalSta
 
   if (!pokemon) return null;
 
-  const resolvedPokemon = resolveMegaEvolution(profile.pokemonId, profile.defaultItem) ?? pokemon;
-  const speed = buildEffectiveSpeed(resolvedPokemon, {
+  return {
+    pokemon,
+    resolvedPokemon: resolveMegaEvolution(profile.pokemonId, item) ?? pokemon,
+  };
+}
+
+function buildBenchmarkIdentity(profile: VgcMetaProfile, globals: SpeedGlobalState) {
+  const baseResolved = resolveBenchmarkPokemon(profile);
+
+  if (!baseResolved) return null;
+
+  const item = getBenchmarkBaselineItem(profile, baseResolved.pokemon);
+  const resolved = resolveBenchmarkPokemon(profile, item) ?? baseResolved;
+  const speed = buildEffectiveSpeed(resolved.resolvedPokemon, {
     speSp: 32,
     natureBucket: "plus",
     ability: profile.defaultAbility,
-    item: profile.defaultItem,
+    item,
     weather: speedWeather(globals),
     terrain: speedTerrain(globals),
   }).effectiveSpeed;
 
   return {
     profile,
-    pokemon,
-    resolvedPokemon,
+    pokemon: resolved.pokemon,
+    resolvedPokemon: resolved.resolvedPokemon,
     speed,
+    item,
   };
+}
+
+function buildSpeedItemBenchmarkIdentities(
+  profile: VgcMetaProfile,
+  globals: SpeedGlobalState,
+) {
+  const itemUsages: SpeedItemUsage[] = normalizeItemUsagePercentages(
+    profile.itemUsages ??
+    [{ item: profile.defaultItem }],
+  );
+
+  return itemUsages
+    .filter((itemUsage) => isExpressiveSpeedItem(profile, itemUsage))
+    .flatMap((itemUsage): SpeedBenchmarkIdentity[] => {
+      const resolved = resolveBenchmarkPokemon(profile, itemUsage.item);
+
+      if (!resolved) return [];
+
+      return [{
+        profile,
+        pokemon: resolved.pokemon,
+        resolvedPokemon: resolved.resolvedPokemon,
+        speed: buildEffectiveSpeed(resolved.resolvedPokemon, {
+          speSp: 32,
+          natureBucket: "plus",
+          ability: profile.defaultAbility,
+          item: itemUsage.item,
+          weather: speedWeather(globals),
+          terrain: speedTerrain(globals),
+        }).effectiveSpeed,
+        item: itemUsage.item,
+        itemUsagePercent: itemUsage.usagePercent,
+        weightedUsagePercent:
+          itemUsage.usagePercent === undefined
+            ? undefined
+            : ((profile.usagePercent ?? 0) * itemUsage.usagePercent) / 100,
+      } satisfies SpeedBenchmarkIdentity];
+    });
+}
+
+function buildSpeedUsageIdentities(
+  profile: VgcMetaProfile,
+  globals: SpeedGlobalState,
+) {
+  const baseResolved = resolveBenchmarkPokemon(profile);
+
+  if (!baseResolved) return [];
+
+  const item = getBenchmarkBaselineItem(profile, baseResolved.pokemon);
+  const resolved = resolveBenchmarkPokemon(profile, item) ?? baseResolved;
+  const rawUsages = profile.speedUsages ?? [];
+  const normalizedUsages = normalizeSpeedUsagePercentages(rawUsages);
+
+  return normalizedUsages.map((speedUsage) => ({
+    profile,
+    pokemon: resolved.pokemon,
+    resolvedPokemon: resolved.resolvedPokemon,
+    nature: speedUsage.nature,
+    speSp: speedUsage.speSp,
+    usagePercent: speedUsage.usagePercent,
+    speed: buildEffectiveSpeed(resolved.resolvedPokemon, {
+      speSp: speedUsage.speSp,
+      nature: speedUsage.nature,
+      ability: profile.defaultAbility,
+      item,
+      weather: speedWeather(globals),
+      terrain: speedTerrain(globals),
+    }).effectiveSpeed,
+    item,
+  }));
 }
 
 export function createSpeedSideFromBenchmark(identity: SpeedBenchmarkIdentity): SpeedSideState {
   return {
     source: "species",
     speciesId: identity.profile.pokemonId,
-    item: identity.profile.defaultItem,
+    item: identity.item,
     ability: identity.profile.defaultAbility,
     abilityActiveStates: [],
-    nature: "plus",
-    speSp: 32,
+    nature: isSpeedUsageBenchmarkIdentity(identity)
+      ? speedNatureBucketFromNatureName(identity.nature)
+      : "plus",
+    speSp: isSpeedUsageBenchmarkIdentity(identity) ? identity.speSp : 32,
     speedStage: 0,
     tailwind: false,
     paralysis: false,
@@ -128,10 +325,16 @@ export function createSpeedSideFromBenchmark(identity: SpeedBenchmarkIdentity): 
 export function buildSpeedTierGroups(
   globals: SpeedGlobalState,
   subjectSpeed: number | null,
+  profiles: VgcMetaProfile[] = vgcMetaProfiles,
 ) {
-  const identities = vgcMetaProfiles
-    .map((profile) => buildBenchmarkIdentity(profile, globals))
-    .filter((entry): entry is SpeedBenchmarkIdentity => Boolean(entry));
+  const identities = profiles.flatMap((profile) => {
+    const baseline = buildBenchmarkIdentity(profile, globals);
+
+    return [
+      ...(baseline ? [baseline] : []),
+      ...buildSpeedItemBenchmarkIdentities(profile, globals),
+    ];
+  });
   const bySpeed = new Map<number, SpeedBenchmarkIdentity[]>();
 
   for (const identity of identities) {
@@ -146,6 +349,45 @@ export function buildSpeedTierGroups(
       const sortedMembers = [...members].sort(
         (left, right) => left.profile.usageRank - right.profile.usageRank,
       );
+
+      return {
+        speed,
+        representative: sortedMembers[0],
+        members: sortedMembers,
+        relation:
+          subjectSpeed === null
+            ? "unset"
+            : compareMoveOrder(subjectSpeed, speed, globals.trickRoom),
+      };
+    });
+}
+
+export function buildSpeedUsageTierGroups(
+  globals: SpeedGlobalState,
+  subjectSpeed: number | null,
+  profiles: VgcMetaProfile[] = vgcMetaProfiles,
+) {
+  const identities = profiles.flatMap((profile) =>
+    buildSpeedUsageIdentities(profile, globals),
+  );
+  const bySpeed = new Map<number, SpeedUsageBenchmarkIdentity[]>();
+
+  for (const identity of identities) {
+    const tier = bySpeed.get(identity.speed) ?? [];
+    tier.push(identity);
+    bySpeed.set(identity.speed, tier);
+  }
+
+  return Array.from(bySpeed.entries())
+    .sort(([left], [right]) => right - left)
+    .map(([speed, members]): SpeedUsageTierGroup => {
+      const sortedMembers = [...members].sort((left, right) => {
+        if (right.usagePercent !== left.usagePercent) {
+          return right.usagePercent - left.usagePercent;
+        }
+
+        return left.profile.usageRank - right.profile.usageRank;
+      });
 
       return {
         speed,

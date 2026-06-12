@@ -54,6 +54,10 @@ export interface AppDictionary {
 		comparator: string;
 		benchmarkLadder: string;
 		baselineLabel: string;
+		speedUsageTitle: string;
+		speedUsageDescription: string;
+		speedUsageMeta: (nature: string, speSp: number, usagePercent: number) => string;
+		speedUsageMembers: (count: number) => string;
 		globalModifiers: string;
 		noPokemon: string;
 		explicitComparator: string;
@@ -227,6 +231,7 @@ export interface AppDictionary {
 	};
 	resultsPanel: {
 		ariaLabel: string;
+		resultsUpdated: (count: number) => string;
 		minBulk: string;
 		midBulk: string;
 		maxBulk: string;

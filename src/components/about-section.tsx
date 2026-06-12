@@ -1,5 +1,7 @@
 "use client";
 
+import { Gauge, Scale, Zap } from "lucide-react";
+
 import { useI18n } from "@/i18n/I18nProvider";
 import { getAboutContent } from "@/i18n/messages";
 
@@ -14,7 +16,7 @@ function AboutWorkflowPanel({
 }) {
   return (
     <aside
-      className="theme-about-workflow rounded-2xl px-4 py-3 sm:px-5 sm:py-4"
+      className="theme-about-workflow rounded-xl px-4 py-3 sm:px-5 sm:py-4"
       aria-label={workflow.eyebrow}
     >
       <div className="mb-3 flex items-center justify-between gap-3">
@@ -101,14 +103,18 @@ export function AboutSection() {
       </div>
 
       <h3 className="sr-only">{dictionary.aboutSection.highlight}</h3>
-      <div className="theme-about-highlights grid gap-0 overflow-hidden rounded-xl border border-[var(--line)] sm:grid-cols-3">
+      <div className="theme-about-highlights grid gap-0 overflow-hidden rounded-xl sm:grid-cols-3">
         {aboutContent.intro.highlights.map((highlight, index) => (
           <div
             key={highlight}
             className="min-w-0 border-b border-[var(--line)] p-4 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0"
           >
-            <div className="theme-data-label mb-3 tabular-nums">
-              {String(index + 1).padStart(2, "0")}
+            <div className="mb-3" style={{ color: "var(--accent-text-mid)" }} aria-hidden="true">
+              {[
+                <Zap key="zap" size={18} strokeWidth={1.9} />,
+                <Scale key="scale" size={18} strokeWidth={1.9} />,
+                <Gauge key="gauge" size={18} strokeWidth={1.9} />,
+              ][index]}
             </div>
             <p className="text-sm leading-6">{highlight}</p>
           </div>
@@ -116,10 +122,10 @@ export function AboutSection() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)]">
-        {aboutContent.cards.map((card, index) => (
+        {aboutContent.cards.slice(0, 2).map((card) => (
           <article
             key={card.title}
-            className={`theme-panel flex h-full flex-col rounded-xl p-5 ${index === 2 ? "lg:col-span-2" : ""}`}
+            className="theme-panel flex h-full flex-col rounded-xl p-5"
           >
             <div className="theme-data-label mb-2">{card.eyebrow}</div>
             <h3 className="text-lg font-semibold tracking-[-0.02em]">
@@ -129,13 +135,11 @@ export function AboutSection() {
               {card.description}
             </p>
 
-            <ul className="theme-text-dim mt-4 grid gap-2 text-sm leading-6 sm:grid-cols-2 lg:grid-cols-1">
+            <ul className="theme-text-dim mt-4 space-y-2 text-sm leading-6">
               {card.bullets.map((bullet) => (
-                <li
-                  key={bullet}
-                  className="theme-about-bullet min-w-0 rounded-lg px-3 py-2"
-                >
-                  {bullet}
+                <li key={bullet} className="flex items-start gap-2">
+                  <span className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: "var(--accent-text-mid)" }} />
+                  <span className="min-w-0">{bullet}</span>
                 </li>
               ))}
             </ul>
@@ -161,7 +165,7 @@ export function AboutSection() {
 
       <section
         aria-labelledby="about-data-sources-title"
-        className="theme-panel rounded-xl p-5"
+        className="theme-support-panel rounded-xl p-5"
       >
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(18rem,0.8fr)]">
           <div>
@@ -179,7 +183,7 @@ export function AboutSection() {
             </p>
           </div>
 
-          <div className="border-t border-[var(--line)] pt-4 lg:border-t-0 lg:border-l lg:pl-5 lg:pt-0">
+          <div className="pt-4 lg:pt-0 lg:pl-6">
             <ul className="theme-text-dim space-y-2 text-sm leading-6">
               {aboutContent.dataSources.notes.map((note) => (
                 <li key={note}>{note}</li>
@@ -206,7 +210,7 @@ export function AboutSection() {
 
       <section
         aria-labelledby="about-support-title"
-        className="theme-panel rounded-xl p-5"
+        className="theme-support-panel rounded-xl p-5"
       >
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(18rem,0.8fr)]">
           <div>
@@ -229,7 +233,7 @@ export function AboutSection() {
             </ul>
           </div>
 
-          <div className="border-t border-[var(--line)] pt-4 lg:border-t-0 lg:border-l lg:pl-5 lg:pt-0">
+          <div className="pt-4 lg:pt-0 lg:pl-6">
             <div className="theme-text-dim text-sm leading-6">
               {dictionary.aboutSection.actionsDescription}
             </div>

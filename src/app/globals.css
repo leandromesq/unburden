@@ -383,6 +383,27 @@ html[data-theme="light"] .theme-logo-image-light {
     box-shadow: var(--shadow-soft);
 }
 
+.theme-support-panel {
+    border: 1px solid var(--line);
+    background: color-mix(in srgb, var(--surface) 82%, var(--bg) 18%);
+    box-shadow: none;
+    transition: border-color 140ms ease;
+}
+
+.theme-support-panel:focus-within {
+    border-color: color-mix(in srgb, var(--accent-border) 62%, var(--line) 38%);
+}
+
+.theme-decision-strip {
+    border: 1px solid var(--accent-border);
+    background: var(--surface);
+    box-shadow: var(--shadow-soft);
+}
+
+.theme-decision-text {
+    color: var(--accent-text-strong);
+}
+
 .theme-subpanel {
     border: 1px solid var(--line);
     background: var(--surface-2);
@@ -848,7 +869,11 @@ html[data-theme="light"] .theme-logo-image-light {
 }
 
 .theme-results-card {
-    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    background:
+        linear-gradient(180deg, color-mix(in srgb, var(--surface-2) 42%, transparent), transparent 48%),
+        var(--surface);
+    box-shadow: var(--shadow-soft);
 }
 
 .theme-results-outcome {
@@ -881,7 +906,7 @@ html[data-theme="light"] .theme-logo-image-light {
 
 .theme-summary-sprite-shell {
     background: var(--surface-2);
-    border: 1px solid var(--line-strong);
+    border: 1px solid var(--line);
 }
 
 .theme-type-badge {
@@ -916,13 +941,11 @@ html[data-theme="light"] .theme-logo-image-light {
 }
 
 .theme-modifier-side {
-    background:
-        linear-gradient(180deg, color-mix(in srgb, var(--surface-3) 42%, transparent), transparent 46%),
-        var(--surface-2);
+    background: var(--surface-2);
 }
 
 .theme-modifier-inactive {
-    background: var(--surface-1);
+    background: var(--surface-2);
     border-color: var(--line);
 }
 
@@ -960,11 +983,6 @@ html[data-theme="light"] .theme-logo-image-light {
 
 .theme-about-workflow {
     border: 1px solid var(--line-strong);
-    background: var(--surface-2);
-}
-
-.theme-about-bullet {
-    border: 1px solid var(--line);
     background: var(--surface-2);
 }
 

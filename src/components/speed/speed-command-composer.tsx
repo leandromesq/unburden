@@ -15,7 +15,9 @@ import { resolveSpeedSide } from "@/lib/speed/speed-benchmark";
 import type { SpeedGlobalState, SpeedSideState } from "@/lib/types";
 
 function addOverride(side: SpeedSideState, value: string) {
-  return side.overrides.includes(value) ? side.overrides : [...side.overrides, value];
+  return side.overrides.includes(value)
+    ? side.overrides
+    : [...side.overrides, value];
 }
 
 function removeOverride(side: SpeedSideState, value: string) {
@@ -40,10 +42,12 @@ function SpeedSideModifiers({
   const abilities = metrics?.resolvedPokemon.abilities ?? [];
 
   return (
-    <section className={`theme-modifier-side min-w-0 rounded-xl p-4 ${disabled ? "theme-modifier-inactive" : ""}`}>
+    <section
+      className={`theme-modifier-side min-w-0 rounded-xl p-4 ${disabled ? "theme-modifier-inactive" : ""}`}
+    >
       <div className="mb-4 flex min-w-0 flex-wrap items-center justify-between gap-2 border-b border-[var(--line)] pb-3">
         <div className="theme-section-title">{title}</div>
-        <div className="theme-section-meta min-w-0 truncate">
+        <div className="theme-section-meta min-w-0 w-full break-words">
           {metrics?.resolvedPokemon.name ?? speed.noPokemon}
         </div>
       </div>
@@ -51,14 +55,18 @@ function SpeedSideModifiers({
         <section className="min-w-0">
           <div className="grid gap-3">
             <label className="block">
-              <span className="theme-text-faint">{speed.speSp}: {side?.speSp ?? 32}</span>
+              <span className="theme-text-faint">
+                {speed.speSp}: {side?.speSp ?? 32}
+              </span>
               <input
                 type="range"
                 min={0}
                 max={32}
                 disabled={disabled}
                 value={side?.speSp ?? 32}
-                onChange={(event) => onChange({ speSp: Number(event.currentTarget.value) })}
+                onChange={(event) =>
+                  onChange({ speSp: Number(event.currentTarget.value) })
+                }
                 className="theme-range mt-2 w-full disabled:cursor-not-allowed"
               />
             </label>
@@ -70,7 +78,10 @@ function SpeedSideModifiers({
                 <button
                   type="button"
                   disabled={disabled}
-                  onClick={() => side && onChange({ speedStage: Math.max(-6, side.speedStage - 1) })}
+                  onClick={() =>
+                    side &&
+                    onChange({ speedStage: Math.max(-6, side.speedStage - 1) })
+                  }
                   className="theme-icon-button theme-icon-button-sm h-11 sm:h-8"
                   aria-label={`${speed.stage} -1`}
                 >
@@ -92,7 +103,10 @@ function SpeedSideModifiers({
                 <button
                   type="button"
                   disabled={disabled}
-                  onClick={() => side && onChange({ speedStage: Math.min(6, side.speedStage + 1) })}
+                  onClick={() =>
+                    side &&
+                    onChange({ speedStage: Math.min(6, side.speedStage + 1) })
+                  }
                   className="theme-icon-button theme-icon-button-sm h-11 sm:h-8"
                   aria-label={`${speed.stage} +1`}
                 >
@@ -105,7 +119,9 @@ function SpeedSideModifiers({
         <section className="theme-divider border-t pt-4">
           <div className="grid gap-4">
             <div>
-              <div className="theme-text-dim mb-2 min-w-0 break-words text-[13px] font-medium leading-5">{speed.ability}</div>
+              <div className="theme-text-dim mb-2 min-w-0 break-words text-[13px] font-medium leading-5">
+                {speed.ability}
+              </div>
               <select
                 aria-label={`${title} ${speed.ability}`}
                 disabled={disabled}
@@ -113,19 +129,34 @@ function SpeedSideModifiers({
                 onChange={(event) => {
                   if (!side) return;
                   const ability = event.currentTarget.value || undefined;
-                  onChange({ ability, overrides: ability ? addOverride(side, ability) : side.overrides });
+                  onChange({
+                    ability,
+                    overrides: ability
+                      ? addOverride(side, ability)
+                      : side.overrides,
+                  });
                 }}
                 className="theme-control h-9 w-full rounded px-2 text-sm disabled:cursor-not-allowed"
               >
                 {abilities.map((ability) => (
-                  <option key={ability} value={ability}>{ability}</option>
+                  <option key={ability} value={ability}>
+                    {ability}
+                  </option>
                 ))}
               </select>
             </div>
             <div className="theme-divider border-t pt-4">
-              <div className="theme-text-dim mb-2 min-w-0 break-words text-[13px] font-medium leading-5">{speed.nature}</div>
+              <div className="theme-text-dim mb-2 min-w-0 break-words text-[13px] font-medium leading-5">
+                {speed.nature}
+              </div>
               <div className="flex flex-wrap items-start gap-2">
-                {([["minus", speed.minusNature], ["neutral", speed.neutralNature], ["plus", speed.plusNature]] as const).map(([nature, label]) => (
+                {(
+                  [
+                    ["minus", speed.minusNature],
+                    ["neutral", speed.neutralNature],
+                    ["plus", speed.plusNature],
+                  ] as const
+                ).map(([nature, label]) => (
                   <button
                     key={nature}
                     type="button"
@@ -140,11 +171,51 @@ function SpeedSideModifiers({
               </div>
             </div>
             <div className="theme-divider border-t pt-4">
-              <div className="theme-text-dim mb-2 min-w-0 break-words text-[13px] font-medium leading-5">{dictionary.modifierSwitches.battleEffects}</div>
+              <div className="theme-text-dim mb-2 min-w-0 break-words text-[13px] font-medium leading-5">
+                {dictionary.modifierSwitches.battleEffects}
+              </div>
               <div className="flex flex-wrap items-start gap-2">
-                <button type="button" aria-pressed={Boolean(side?.tailwind)} disabled={disabled} onClick={() => side && onChange({ tailwind: !side.tailwind })} className={`max-w-full rounded-md px-3 py-1.5 text-left text-sm leading-4 ${side?.tailwind ? "theme-chip-active" : disabled ? "theme-chip-disabled cursor-not-allowed" : "theme-chip"}`}>{speed.tailwind}</button>
-                <button type="button" aria-pressed={side?.item === "Choice Scarf"} disabled={disabled} onClick={() => side && onChange({ item: side.item === "Choice Scarf" ? undefined : "Choice Scarf", overrides: side.item === "Choice Scarf" ? removeOverride(side, "Choice Scarf") : addOverride(side, "Choice Scarf") })} className={`max-w-full rounded-md px-3 py-1.5 text-left text-sm leading-4 ${side?.item === "Choice Scarf" ? "theme-chip-active" : disabled ? "theme-chip-disabled cursor-not-allowed" : "theme-chip"}`}>{speed.choiceScarf}</button>
-                <button type="button" aria-pressed={Boolean(side?.paralysis)} disabled={disabled} onClick={() => side && onChange({ paralysis: !side.paralysis })} className={`max-w-full rounded-md px-3 py-1.5 text-left text-sm leading-4 ${side?.paralysis ? "theme-chip-active" : disabled ? "theme-chip-disabled cursor-not-allowed" : "theme-chip"}`}>{speed.paralysis}</button>
+                <button
+                  type="button"
+                  aria-pressed={Boolean(side?.tailwind)}
+                  disabled={disabled}
+                  onClick={() => side && onChange({ tailwind: !side.tailwind })}
+                  className={`max-w-full rounded-md px-3 py-1.5 text-left text-sm leading-4 ${side?.tailwind ? "theme-chip-active" : disabled ? "theme-chip-disabled cursor-not-allowed" : "theme-chip"}`}
+                >
+                  {speed.tailwind}
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={side?.item === "Choice Scarf"}
+                  disabled={disabled}
+                  onClick={() =>
+                    side &&
+                    onChange({
+                      item:
+                        side.item === "Choice Scarf"
+                          ? undefined
+                          : "Choice Scarf",
+                      overrides:
+                        side.item === "Choice Scarf"
+                          ? removeOverride(side, "Choice Scarf")
+                          : addOverride(side, "Choice Scarf"),
+                    })
+                  }
+                  className={`max-w-full rounded-md px-3 py-1.5 text-left text-sm leading-4 ${side?.item === "Choice Scarf" ? "theme-chip-active" : disabled ? "theme-chip-disabled cursor-not-allowed" : "theme-chip"}`}
+                >
+                  {speed.choiceScarf}
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={Boolean(side?.paralysis)}
+                  disabled={disabled}
+                  onClick={() =>
+                    side && onChange({ paralysis: !side.paralysis })
+                  }
+                  className={`max-w-full rounded-md px-3 py-1.5 text-left text-sm leading-4 ${side?.paralysis ? "theme-chip-active" : disabled ? "theme-chip-disabled cursor-not-allowed" : "theme-chip"}`}
+                >
+                  {speed.paralysis}
+                </button>
               </div>
             </div>
           </div>
@@ -250,7 +321,8 @@ export function SpeedCommandComposer({
   const { dictionary } = useI18n();
   const speed = dictionary.speedBenchmark;
   const modifierLabels = dictionary.modifierSwitches;
-  const [highlightedSuggestionIndex, setHighlightedSuggestionIndex] = useState(0);
+  const [highlightedSuggestionIndex, setHighlightedSuggestionIndex] =
+    useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const suggestions = useMemo(
     () => getSpeedAutocompleteOptions(command),
@@ -265,8 +337,9 @@ export function SpeedCommandComposer({
 
   function moveSuggestion(delta: number) {
     if (!visibleSuggestions.length) return;
-    setHighlightedSuggestionIndex((index) =>
-      (index + delta + visibleSuggestions.length) % visibleSuggestions.length,
+    setHighlightedSuggestionIndex(
+      (index) =>
+        (index + delta + visibleSuggestions.length) % visibleSuggestions.length,
     );
   }
 
@@ -308,12 +381,7 @@ export function SpeedCommandComposer({
                 size={14}
                 strokeWidth={1.9}
               />
-              <X
-                className="t-icon"
-                data-icon="b"
-                size={14}
-                strokeWidth={2.1}
-              />
+              <X className="t-icon" data-icon="b" size={14} strokeWidth={2.1} />
             </span>
             <span>{dictionary.home.modifiers}</span>
           </button>
@@ -354,6 +422,7 @@ export function SpeedCommandComposer({
             suggestions={visibleSuggestions}
             highlightedSuggestionIndex={highlightedSuggestionIndex}
             textareaRef={textareaRef}
+            placeholder={speed.commandPlaceholder}
             onChange={(value) => {
               onCommandChange(value);
               setHighlightedSuggestionIndex(0);
@@ -374,73 +443,85 @@ export function SpeedCommandComposer({
             textareaRef={textareaRef}
           />
 
-          <div
-            className="theme-status px-5 py-3 text-sm"
-            role="status"
-            aria-live="polite"
-            aria-atomic="true"
-          >
+          <div className="theme-status px-5 py-3 text-sm">
             {issues.length ? issues.join(" ") : statusText}
           </div>
         </div>
 
         {modifiersOpen ? (
-        <div className="theme-composer-secondary">
-          <div className="min-w-0 px-4 py-4 md:px-5 md:py-5">
-            <section className="theme-modifier-section min-w-0 rounded-xl p-4">
-              <div className="mb-3">
-                <div className="theme-section-title">{modifierLabels.global}</div>
-              </div>
-              <div className="grid gap-4 md:grid-cols-3">
-                {([
-                  [modifierLabels.weather, [["sun", speed.sun], ["rain", speed.rain], ["sand", speed.sand], ["snow", speed.snow]]],
-                  [modifierLabels.terrain, [["electricTerrain", speed.electricTerrain]]],
-                  [modifierLabels.fieldEffects, [["trickRoom", speed.trickRoom]]],
-                ] as const).map(([groupLabel, options]) => (
-                  <section key={groupLabel} className="min-w-0">
-                    <div className="theme-text-dim mb-2 min-w-0 break-words text-[13px] font-medium leading-5">
-                      {groupLabel}
-                    </div>
-                    <div className="flex flex-wrap items-start gap-2">
-                      {options.map(([key, label]) => (
-                        <button
-                          key={key}
-                          type="button"
-                          aria-pressed={globals[key]}
-                          onClick={() => onToggleGlobal(key)}
-                          className={`max-w-full rounded-md px-3 py-1.5 text-left text-sm leading-4 whitespace-normal break-words ${
-                            globals[key] ? "theme-chip-active" : "theme-chip"
-                          }`}
-                        >
-                          {label}
-                        </button>
-                      ))}
-                    </div>
-                  </section>
-                ))}
-              </div>
-            </section>
-            <div className="mt-4 grid min-w-0 gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-              <SpeedSideModifiers
-                title={speed.subject}
-                side={subject}
-                globals={globals}
-                onChange={onSubjectChange}
-              />
-              <div className="min-w-0">
+          <div className="theme-composer-secondary">
+            <div className="min-w-0 px-4 py-4 md:px-5 md:py-5">
+              <section className="theme-modifier-section min-w-0 rounded-xl p-4">
+                <div className="mb-3">
+                  <div className="theme-section-title">
+                    {modifierLabels.global}
+                  </div>
+                </div>
+                <div className="grid gap-4 md:grid-cols-3">
+                  {(
+                    [
+                      [
+                        modifierLabels.weather,
+                        [
+                          ["sun", speed.sun],
+                          ["rain", speed.rain],
+                          ["sand", speed.sand],
+                          ["snow", speed.snow],
+                        ],
+                      ],
+                      [
+                        modifierLabels.terrain,
+                        [["electricTerrain", speed.electricTerrain]],
+                      ],
+                      [
+                        modifierLabels.fieldEffects,
+                        [["trickRoom", speed.trickRoom]],
+                      ],
+                    ] as const
+                  ).map(([groupLabel, options]) => (
+                    <section key={groupLabel} className="min-w-0">
+                      <div className="theme-text-dim mb-2 min-w-0 break-words text-[13px] font-medium leading-5">
+                        {groupLabel}
+                      </div>
+                      <div className="flex flex-wrap items-start gap-2">
+                        {options.map(([key, label]) => (
+                          <button
+                            key={key}
+                            type="button"
+                            aria-pressed={globals[key]}
+                            onClick={() => onToggleGlobal(key)}
+                            className={`max-w-full rounded-md px-3 py-1.5 text-left text-sm leading-4 whitespace-normal break-words ${
+                              globals[key] ? "theme-chip-active" : "theme-chip"
+                            }`}
+                          >
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+                    </section>
+                  ))}
+                </div>
+              </section>
+              <div className="mt-4 grid min-w-0 gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
                 <SpeedSideModifiers
-                  title={speed.comparator}
-                  side={comparator}
+                  title={speed.subject}
+                  side={subject}
                   globals={globals}
-                  onChange={onComparatorChange}
+                  onChange={onSubjectChange}
                 />
+                <div className="min-w-0">
+                  <SpeedSideModifiers
+                    title={speed.comparator}
+                    side={comparator}
+                    globals={globals}
+                    onChange={onComparatorChange}
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
         ) : null}
       </div>
-
     </>
   );
 }

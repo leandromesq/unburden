@@ -17,12 +17,14 @@ import {
   DEFAULT_COMMON_ABILITY_LIMIT,
   DEFAULT_COMMON_ITEM_LIMIT,
   DEFAULT_COMMON_MOVE_LIMIT,
+  DEFAULT_COMMON_SPEED_USAGE_LIMIT,
   dedupeStrings,
   finalizeMetaProfiles,
   mergeProfile,
   resolveDefaultAbility,
   resolveDefaultItem,
   resolveMoveProfile,
+  resolveSpeedUsages,
   validateMetaProfiles,
   warnOnLargeProfileDelta,
   type FormAliasEntry,
@@ -202,6 +204,8 @@ function buildFallbackMetaProfile({
       ...(previousProfile?.commonItems ?? []),
       fallbackItem,
     ]).slice(0, commonItemLimit),
+    itemUsages: previousProfile?.itemUsages,
+    speedUsages: previousProfile?.speedUsages,
   };
 
   return mergeProfile(baseProfile, override);
@@ -307,6 +311,11 @@ async function main() {
     args.get("--top-items") ??
       overrides.commonItemLimit ??
       DEFAULT_COMMON_ITEM_LIMIT,
+  );
+  const commonSpeedUsageLimit = Number(
+    args.get("--top-speed-usages") ??
+      overrides.commonSpeedUsageLimit ??
+      DEFAULT_COMMON_SPEED_USAGE_LIMIT,
   );
   const requestedFormat =
     args.get("--format") ?? overrides.format ?? DEFAULT_SMOGON_STATS_FORMAT;
@@ -427,11 +436,12 @@ async function main() {
       };
     }
 
-    const { defaultItem, commonItems } =
+    const { defaultItem, commonItems, itemUsages } =
       pokemon.isMega && pokemon.requiredItem
         ? {
             defaultItem: pokemon.requiredItem,
             commonItems: [pokemon.requiredItem],
+            itemUsages: [{ item: pokemon.requiredItem, usagePercent: 100 }],
           }
         : resolveDefaultItem(
             record.items,
@@ -485,6 +495,7 @@ async function main() {
         commonMoves,
         commonAbilities,
         commonItems,
+        itemUsages,
       },
       override,
     );
@@ -505,6 +516,12 @@ async function main() {
         commonItems: dedupeStrings(mergedProfile.commonItems ?? []).slice(
           0,
           commonItemLimit,
+        ),
+        itemUsages: mergedProfile.itemUsages?.slice(0, commonItemLimit),
+        speedUsages: resolveSpeedUsages(
+          record.spreads,
+          previousProfile,
+          commonSpeedUsageLimit,
         ),
       },
     };
@@ -539,6 +556,8 @@ async function main() {
       compactArrayMaxLengthByKey: new Map([
         ["commonItems", 4],
         ["commonMoves", 4],
+        ["itemUsages", 3],
+        ["speedUsages", 3],
       ]),
     })}\n`,
     "utf8",

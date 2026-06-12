@@ -84,6 +84,12 @@ export const ptBRDictionary: AppDictionary = {
     pokemonMovesFirstTrickRoom: (name) => `${name} move primeiro sob Trick Room.`,
     pokemonSpeedTie: (left, right) => `${left} e ${right}: Empate de Speed.`,
     baselineLabel: "Gerado: Nível 50 · 32 Spe SP · +Speed",
+    speedUsageTitle: "Speeds comuns em uso",
+    speedUsageDescription:
+      "Spreads opcionais do uso Smogon. A baseline da Escada de Speed continua Speed máxima.",
+    speedUsageMeta: (nature, speSp, usagePercent) =>
+      `${nature} · ${speSp} Spe SP · ${usagePercent.toFixed(1)}% de uso`,
+    speedUsageMembers: (count) => `${count} spread${count === 1 ? "" : "s"} de uso`,
     rawSpeed: "Não-modificada",
     effectiveSpeed: "Efetiva",
     sequenceSubject: "1. Sujeito",
@@ -326,6 +332,7 @@ export const ptBRDictionary: AppDictionary = {
   },
   resultsPanel: {
     ariaLabel: "Resultados do cálculo",
+    resultsUpdated: (count) => `${count} ${count === 1 ? "faixa de dano atualizada" : "faixas de dano atualizadas"}.`,
     minBulk: "Bulk Min",
     midBulk: "Bulk Mid",
     maxBulk: "Bulk Max",

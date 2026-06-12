@@ -4,6 +4,10 @@ import {
 	buildCustomSetArchetypeConfig,
 	getArchetypeConfigs,
 } from "@/lib/calc/archetypes";
+import {
+	buildDamageMoveOverrides,
+	hasDragonizeAbility,
+} from "@/lib/calc/damage-adjustments";
 import { resolveAttackingStatKey } from "@/lib/calc/move-stat-context";
 import {
 	DEFAULT_IV_SPREAD,
@@ -97,10 +101,6 @@ function getWeather(parsed: ParsedCommand) {
 function hasMegaSolWeatherOverride(ability: string | undefined) {
 	const normalizedAbility = normalizeId(ability ?? "");
 	return normalizedAbility === "megasol";
-}
-
-function hasDragonizeOverride(ability: string | undefined) {
-	return normalizeId(ability ?? "") === "dragonize";
 }
 
 function getEffectiveWeather(
@@ -878,8 +878,7 @@ function describeAssumptions(
 		assumptions.push("Mega Sol: attacker move is treated as Sun weather");
 	}
 
-	const hasDragonize =
-		normalizeId(attackerAbility ?? "") === "dragonize" && moveType === "Normal";
+	const hasDragonize = hasDragonizeAbility(attackerAbility) && moveType === "Normal";
 
 	if (hasDragonize) {
 		assumptions.push(
@@ -1285,42 +1284,17 @@ export function calculateDamageResults(
 		}
 
 		const defenderPokemon = defenderPokemonResult.pokemon;
-
-		const isDragonizeAffected =
-			hasDragonizeOverride(context.attackerAbility) &&
-			context.move.type === "Normal";
-		const dragonizePower = Math.floor(context.move.basePower * 1.2);
-		const dragonizeOverrides = isDragonizeAffected
-			? { type: "Dragon" as const, basePower: dragonizePower }
-			: {};
-		const fickleBeamDouble =
-			parsed.fickleBeamDouble && normalizeId(parsed.move) === "ficklebeam";
-		const roundDouble =
-			parsed.roundDouble && normalizeId(parsed.move) === "round";
-		const rageFistPower =
-			parsed.rageFistHits !== undefined &&
-			normalizeId(parsed.move) === "ragefist"
-				? Math.min(50 + 50 * parsed.rageFistHits, 350)
-				: undefined;
-		const moveOverrides = {
-			...dragonizeOverrides,
-			...(fickleBeamDouble ? { basePower: 160 } : {}),
-			...(roundDouble ? { basePower: 120 } : {}),
-			...(rageFistPower !== undefined ? { basePower: rageFistPower } : {}),
-			...(normalizeId(parsed.move) === "lastrespects" &&
-			parsed.lastRespectsStacks !== undefined
-				? { basePower: 50 * (parsed.lastRespectsStacks + 1) }
-				: {}),
-			...(context.move.isSpread && !parsed.isDoubleTarget
-				? { target: "normal" as const }
-				: {}),
-		};
+		const moveOverrides = buildDamageMoveOverrides({
+			parsed,
+			move: context.move,
+			attackerAbility: context.attackerAbility,
+		});
 		const calcMove = new Move(9, parsed.move, {
 			ability: context.attackerAbility,
 			hits: context.moveHitCount,
 			item: context.attackerItem,
 			isCrit: parsed.isCriticalHit,
-			overrides: Object.keys(moveOverrides).length ? moveOverrides : undefined,
+			overrides: moveOverrides,
 			species: context.attackerCalcSpeciesName,
 		});
 		const result = calculate(

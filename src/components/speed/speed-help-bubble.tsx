@@ -74,9 +74,9 @@ export function SpeedHelpBubble() {
         >
           <div className="mb-3 flex items-start justify-between gap-3">
             <div>
-              <h2 id={titleId} className="text-sm font-semibold">
+              <h3 id={titleId} className="text-sm font-semibold">
                 {speed.helpTitle}
-              </h2>
+              </h3>
               <p
                 id={descriptionId}
                 className="theme-text-muted mt-1 font-mono text-[12px] leading-5"

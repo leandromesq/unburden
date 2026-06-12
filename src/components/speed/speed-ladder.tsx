@@ -42,18 +42,6 @@ function relationLabel(
   return labels.referenceTier;
 }
 
-function arcStyle(distance: number) {
-  const arcDistance = Math.min(Math.abs(distance), 5);
-
-  return {
-    className: "",
-    style: {
-      transform: `translateX(${arcDistance * 5}px) scale(${Math.max(0.92, 1 - arcDistance * 0.018)})`,
-      opacity: Math.max(0.66, 1 - arcDistance * 0.06),
-    },
-  };
-}
-
 function speedRelevantItem(item: string | undefined) {
   return getSpeedRelevantItemMultiplier(item) !== 1 ? item : null;
 }
@@ -61,7 +49,6 @@ function speedRelevantItem(item: string | undefined) {
 function LadderTile({
   group,
   setRowRef,
-  distance,
   isFocused,
   isSelected,
   onSelect,
@@ -69,7 +56,6 @@ function LadderTile({
 }: {
   group: SpeedTierGroup;
   setRowRef: (element: HTMLElement | null) => void;
-  distance: number;
   isFocused: boolean;
   isSelected: boolean;
   onSelect: (identity: SpeedBenchmarkIdentity) => void;
@@ -78,17 +64,14 @@ function LadderTile({
   const { dictionary } = useI18n();
   const speed = dictionary.speedBenchmark;
   const representative = group.representative;
-  const relevantItem = speedRelevantItem(representative.profile.defaultItem);
-  const arc = arcStyle(distance);
-
+  const relevantItem = speedRelevantItem(representative.item);
   return (
     <article
       ref={setRowRef}
       data-wheel-row={group.speed}
-      className={`relative z-[var(--z-content)] scroll-mt-36 rounded-lg border bg-[var(--surface-2)] p-2.5 transition-[transform,opacity,border-color,background-color,box-shadow] duration-150 [scroll-snap-align:center] ${relationClass(
+      className={`relative z-[var(--z-content)] scroll-mt-36 rounded-lg border bg-[var(--surface-2)] p-2.5 transition-[border-color,background-color,box-shadow] duration-150 [scroll-snap-align:center] ${relationClass(
         group.relation,
-      )} ${isSelected ? "shadow-[inset_0_0_0_1px_var(--accent)]" : ""} ${isFocused ? "border-[color:var(--accent)] bg-[var(--surface-3)]" : ""} ${arc.className}`}
-      style={arc.style}
+      )} ${isSelected ? "shadow-[inset_0_0_0_1px_var(--accent)]" : ""} ${isFocused ? "border-[color:var(--accent)] bg-[var(--surface-3)]" : ""}`}
     >
       <div className="flex items-center gap-2">
         <button
@@ -188,7 +171,6 @@ export function SpeedLadder({
   const rows = useMemo(() => buildRows(groups), [groups]);
   const defaultKey = focusedGroup ? `tier-${focusedGroup.speed}` : rows[0]?.key;
   const [activeKey, setActiveKey] = useState(defaultKey);
-  const activeRowIndex = rows.findIndex((row) => row.key === activeKey);
   const selectedSpeed = comparator?.speed ?? null;
 
   function focusCenteredRow(row: LadderRow | undefined) {
@@ -322,7 +304,7 @@ export function SpeedLadder({
   }, [openTier]);
 
   return (
-    <section className={`theme-panel rounded-lg p-4 ${className}`}>
+    <section className={`theme-support-panel rounded-lg p-4 ${className}`}>
       <div>
         <h2 className="text-sm font-semibold">{speed.benchmarkLadder}</h2>
         <p className="theme-text-faint mt-0.5 text-xs">{speed.baselineLabel}</p>
@@ -378,7 +360,7 @@ export function SpeedLadder({
           className="relative mt-4 h-[36rem] max-h-[72vh] overflow-y-auto overflow-x-hidden px-1 pb-40 pt-52 pr-6 scroll-pb-40 scroll-pt-52 [scroll-snap-type:y_mandatory]"
         >
           <div className="space-y-2">
-            {rows.map((row, index) => (
+            {rows.map((row) => (
               <LadderTile
                 key={row.key}
                 group={row.group}
@@ -389,7 +371,7 @@ export function SpeedLadder({
                     rowRefs.current.delete(row.key);
                   }
                 }}
-                distance={index - (activeRowIndex === -1 ? 0 : activeRowIndex)}
+
                 isFocused={row.key === activeKey}
                 isSelected={row.speed === selectedSpeed}
                 onSelect={(identity) => {
@@ -436,12 +418,12 @@ export function SpeedLadder({
             <div className="mt-3 max-h-72 space-y-1.5 overflow-auto pr-1">
               {openTier.members.map((member) => {
                 const relevantItem = speedRelevantItem(
-                  member.profile.defaultItem,
+                  member.item,
                 );
 
                 return (
                   <button
-                    key={member.profile.pokemonId}
+                    key={`${member.profile.pokemonId}-${member.item ?? "baseline"}-${member.speed}`}
                     type="button"
                     onClick={() => {
                       setOpenTier(null);

@@ -75,6 +75,17 @@ type SuggestionSlot =
 	| "defender_modifier_or_item_or_ability"
 	| "global_modifier";
 
+export interface VgcMetaSpeedUsage {
+	nature: string;
+	speSp: number;
+	usagePercent: number;
+}
+
+export interface VgcMetaItemUsage {
+	item: string;
+	usagePercent: number;
+}
+
 export interface VgcMetaProfile {
 	pokemonId: string;
 	usageRank: number;
@@ -85,6 +96,8 @@ export interface VgcMetaProfile {
 	commonMoves?: string[];
 	commonAbilities?: string[];
 	commonItems?: string[];
+	itemUsages?: VgcMetaItemUsage[];
+	speedUsages?: VgcMetaSpeedUsage[];
 }
 
 export interface ParsedCommand {

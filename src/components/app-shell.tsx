@@ -24,20 +24,18 @@ export function AppShell({ activeTool, children }: AppShellProps) {
 
   return (
     <main className="theme-page">
-      <div className="mx-auto flex min-h-screen w-full max-w-[1360px] flex-col px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
-        <header className="border-b theme-divider pb-5">
-          <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:items-start">
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-2xl font-semibold tracking-[-0.03em]">
+      <div className="mx-auto flex min-h-screen w-full max-w-[1360px] flex-col px-4 py-3 sm:px-6 sm:py-4 lg:px-8">
+        <header className="border-b theme-divider pb-3">
+          <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2.5">
+              <div className="flex min-w-0 items-center gap-2">
+                <AppLogoMark />
+                <h1 className="text-xl font-semibold tracking-[-0.03em] sm:text-2xl">
                   Unburden VGC
                 </h1>
                 <RegulationBadge />
               </div>
-              <p className="theme-text-dim mt-2 max-w-2xl text-sm leading-6">
-                {dictionary.home.heroDescription}
-              </p>
-              <nav className="mt-4 flex flex-wrap gap-1.5" aria-label="Calculator tools">
+              <nav className="flex flex-wrap gap-1.5" aria-label="Calculator tools">
                 {tabs.map((tab) => (
                   <Link
                     key={tab.id}
@@ -53,11 +51,7 @@ export function AppShell({ activeTool, children }: AppShellProps) {
               </nav>
             </div>
 
-            <div className="hidden justify-center md:flex">
-              <AppLogoMark />
-            </div>
-
-            <div className="flex flex-wrap items-center justify-start gap-2 md:justify-end">
+            <div className="flex flex-wrap items-center justify-start gap-2 lg:justify-end">
               <TesterLinks className="text-sm" />
               <Link
                 href="/about"
@@ -69,9 +63,12 @@ export function AppShell({ activeTool, children }: AppShellProps) {
               <ThemeToggle />
             </div>
           </div>
+          <p className="theme-text-faint mt-2 hidden max-w-3xl text-sm leading-5 md:block">
+            {dictionary.home.heroDescription}
+          </p>
         </header>
 
-        <section id="calculator" className="flex-1 py-5 sm:py-6">
+        <section id="calculator" className="flex-1 py-4 sm:py-5">
           {children}
         </section>
 

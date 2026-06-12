@@ -200,6 +200,7 @@ interface SpeedPromptTextareaProps {
   suggestions: SpeedAutocompleteOption[];
   highlightedSuggestionIndex: number;
   textareaRef: RefObject<HTMLTextAreaElement | null>;
+  placeholder?: string;
   onChange: (value: string) => void;
   onClear: () => void;
   onMoveSuggestion: (delta: number) => void;
@@ -214,6 +215,7 @@ export function SpeedPromptTextarea({
   suggestions,
   highlightedSuggestionIndex,
   textareaRef,
+  placeholder,
   onChange,
   onClear,
   onMoveSuggestion,
@@ -321,7 +323,7 @@ export function SpeedPromptTextarea({
         rows={1}
         value={value}
         spellCheck={false}
-        placeholder="basculegion @choice-scarf x aerodactyl spe-1 tailwind ~rain"
+        placeholder={placeholder}
         aria-label="Speed prompt"
         aria-keyshortcuts="Alt+X Alt+Backspace"
         className="theme-input theme-prompt-input relative z-10 block min-h-18 w-full min-w-0 resize-none border-0 bg-transparent px-4 py-3 pr-12 text-left outline-none md:min-h-20 md:px-5 md:pr-14"

@@ -77,6 +77,7 @@ export function ResultsPanel() {
     };
   }, []);
 
+
   if (!parsed || !results.length) {
     return null;
   }
@@ -160,15 +161,31 @@ export function ResultsPanel() {
     setCopied(`text:${archetype}`);
   };
 
+  const resultsAnnouncement = dictionary.resultsPanel.resultsUpdated(results.length);
+  const resultsAnnouncementKey = results
+    .map((result) => [
+      result.archetype,
+      result.damageText,
+      result.koChanceText,
+      result.summary,
+    ].join(":"))
+    .join("|");
+
   return (
     <div
       className="space-y-2.5"
       data-testid="results-panel"
-      role="status"
-      aria-live="polite"
-      aria-atomic="true"
       aria-label={dictionary.resultsPanel.ariaLabel}
     >
+      <p
+        key={resultsAnnouncementKey}
+        className="sr-only"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {resultsAnnouncement}
+      </p>
       {results.map((result) => {
         const resultLabel = getBulkLabel(
           result.archetype,
@@ -190,7 +207,7 @@ export function ResultsPanel() {
           <article
             key={result.archetype}
             id={`result-${result.archetype}`}
-            className="theme-panel theme-results-card rounded-xl p-4"
+            className="theme-results-card rounded-xl p-4"
           >
             <div className="mb-4 grid gap-3 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
               <div className="min-w-0">
